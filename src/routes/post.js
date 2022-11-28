@@ -1,18 +1,26 @@
 const express = require('express');
 const upload = require('../middleware/upload');
-const Post = require('../models/post');
 const { Image } = require('../models/image');
+const Post = require('../models/post');
 const { uploadToCloudinary, removeFromCloudinary } = require('../services/cloudinary.config');
+
 const router = new express.Router();
 
 router.get('/posts', async (req, res) => {
   try {
     const allPosts = await Post.find();
-    console.log(allPosts)
-    res.send(allPosts);
+    res.render("posts", {posts: allPosts});
   } catch (err) {
     res.status(400).send(err);
   }
+});
+
+router.get("/login", (req, res) => {
+  res.render("login")
+})
+
+router.get("/", (req, res) => {
+  res.render("adminForm")
 });
 
 router.post('/posts', upload.array('postImages', 20), async (req, res) => {
@@ -22,19 +30,17 @@ router.post('/posts', upload.array('postImages', 20), async (req, res) => {
     const savedPost = await post.save();
     // adds images to the post
     const images = req.files;
-    await Promise.all(images.forEach(async (image) => {
+    await Promise.all(images.map(async (image) => {
       const data = await uploadToCloudinary(image.path, 'emaJons_dev');
       const newImage = new Image({
         publicId: data.public_id,
         imageUrl: data.url,
-      })
+      });
       await Post.updateOne(
         { _id: savedPost._id },
         { $addToSet: { images: [newImage]}}
         )
-      }
-      )
-      )
+      }));
       res.redirect('/posts')
     }
     catch (err) {
