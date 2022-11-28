@@ -1,6 +1,5 @@
 const cloudinary = require('cloudinary')
 const dotenv = require("dotenv")
-
 dotenv.config();
 
 cloudinary.config({
@@ -10,7 +9,8 @@ cloudinary.config({
 })
 
 const uploadToCloudinary = (path, folder) => {
-  return cloudinary.v2.uploader.upload(path, {
+  return cloudinary.v2.uploader
+  .upload(path, {
     folder
   }).then((data) => {
     return { url: data.url, public_id: data.public_id };

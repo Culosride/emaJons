@@ -25,10 +25,8 @@ router.get("/", (req, res) => {
 
 router.post('/posts', upload.array('postImages', 20), async (req, res) => {
   try {
-    // creates post
     const post = new Post(req.body);
     const savedPost = await post.save();
-    // adds images to the post
     const images = req.files;
     await Promise.all(images.map(async (image) => {
       const data = await uploadToCloudinary(image.path, 'emaJons_dev');
@@ -47,6 +45,7 @@ router.post('/posts', upload.array('postImages', 20), async (req, res) => {
       res.status(400).send(err);
     }
 });
+
 
 // router.delete('/image/:id', async (req, res) => {
 //   try {
