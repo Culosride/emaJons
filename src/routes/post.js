@@ -21,6 +21,15 @@ postRouter.get('/posts', async (req, res) => {
   }
 });
 
+postRouter.get('/rawPosts', async (req, res) => {
+  try {
+    const allPosts = await Post.find();
+    res.json(allPosts);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
 postRouter.post('/posts', (req, res) => {
   multerUpload(req, res, async (err) => {
     if (err instanceof multer.MulterError) {
