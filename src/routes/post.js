@@ -17,14 +17,6 @@ postRouter.get('/posts', async (req, res) => {
   }
 });
 
-postRouter.get("/login", (req, res) => {
-  res.render("login")
-})
-
-postRouter.get("/", (req, res) => {
-  res.render("adminForm")
-});
-
 postRouter.post('/posts', (req, res) => {
   multerUpload(req, res, async (err) => {
     if (err instanceof multer.MulterError) {
