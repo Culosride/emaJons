@@ -4,12 +4,11 @@ const Post = require('../models/post');
 const { Image } = require('../models/image');
 const { uploadToCloudinary, removeFromCloudinary } = require('../services/cloudinary.config');
 
-const router = new express.Router();
-const upload = require('../middleware/upload');
+const postRouter = new express.Router();
 const multer = require('multer');
 const multerUpload = upload.array('postImages', 5);
 
-router.get('/posts', async (req, res) => {
+postRouter.get('/posts', async (req, res) => {
   try {
     const allPosts = await Post.find();
     res.render("posts", {posts: allPosts});
@@ -18,15 +17,15 @@ router.get('/posts', async (req, res) => {
   }
 });
 
-router.get("/login", (req, res) => {
+postRouter.get("/login", (req, res) => {
   res.render("login")
 })
 
-router.get("/", (req, res) => {
+postRouter.get("/", (req, res) => {
   res.render("adminForm")
 });
 
-router.post('/posts', (req, res) => {
+postRouter.post('/posts', (req, res) => {
   multerUpload(req, res, async (err) => {
     if (err instanceof multer.MulterError) {
       res.send(err.message);
@@ -52,7 +51,7 @@ router.post('/posts', (req, res) => {
   })
 })
 
-// router.delete('/image/:id', async (req, res) => {
+// postRouter.delete('/image/:id', async (req, res) => {
 //   try {
 //     const user = await User.findOne({ _id: req.params.id });
 //     const publicId = user.publicId;
@@ -72,4 +71,4 @@ router.post('/posts', (req, res) => {
 //   }
 // });
 
-module.exports = router;
+module.exports = postRouter;
