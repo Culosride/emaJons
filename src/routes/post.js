@@ -8,6 +8,10 @@ const postRouter = new express.Router();
 const multer = require('multer');
 const multerUpload = upload.array('postImages', 5);
 
+postRouter.get("/", async (req, res) => {
+  res.redirect("posts")
+})
+
 postRouter.get('/posts', async (req, res) => {
   try {
     const allPosts = await Post.find();

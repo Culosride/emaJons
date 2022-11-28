@@ -1,6 +1,6 @@
 const express = require("express")
 require("./src/db/mongoose")
-const User = require("./src/models/user")
+const User = require("./src/models/user") // needed to authenticate session
 const { authRouter, postRouter } = require("./src/routes/routers")
 const passport = require("passport");
 const session = require("express-session")
