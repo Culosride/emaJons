@@ -1,7 +1,7 @@
 import React from "react"
 
 export default function Post (props) {
-  const imagesEl = props.images.map(image => <img src={image.imageUrl} alt={image.publicId} width="500" height="600"/>)
+  const imagesEl = props.images.map(image => <img src={image.imageUrl} key={image.publicId} alt={image.publicId} width="500" height="600"/>)
 
   return (
     <div>

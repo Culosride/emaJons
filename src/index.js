@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client"
 import Header from "./components/header/Header.jsx"
 import LogoutBtn from "./components/logout-btn/LogoutBtn.jsx"
 import Post from "./components/post/Post.jsx"
+import PostForm from "./components/postForm/PostForm.jsx"
 import Axios from "axios"
 
 export default function App() {
@@ -20,6 +21,7 @@ export default function App() {
 
   return (
     <div>
+      <PostForm />
       {postElements}
     </div>
   )
