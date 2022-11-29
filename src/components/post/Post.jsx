@@ -5,7 +5,7 @@ export default function Post (props) {
 
   return (
     <div>
-      <h1 className="cacca">{props.title}</h1>
+      <h1 className="">{props.title}</h1>
       <p>{props.subtitle}</p>
       <p>{props.content}</p>
       <p>{imagesEl}</p>

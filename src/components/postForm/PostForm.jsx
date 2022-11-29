@@ -11,8 +11,6 @@ export default function PostForm () {
     postTags: []
   })
 
-  const [img, setImg] = useState([])
-
   function handleChange(e) {
     const { name, value, files } = e.target;
     setPostData(prev => name === "images" ? ({ ...prev, images: [...prev.images, ...files] }) : ({ ...prev, [name]: value }));
