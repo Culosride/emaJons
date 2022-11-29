@@ -3,7 +3,7 @@ import Axios from "axios"
 
 
 export default function PostForm () {
-  const [formData, setFormData] = useState({
+  const [postData, setPostData] = useState({
     title: "",
     subtitle:"",
     content:"",
@@ -11,42 +11,48 @@ export default function PostForm () {
     postTags: []
   })
 
-  function handleChange(event) {
-    const { name, value } = event.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-    console.log({value})
+  const [img, setImg] = useState([])
+
+  function handleChange(e) {
+    const { name, value, files } = e.target;
+    setPostData(prev => name === "images" ? ({ ...prev, images: [...prev.images, ...files] }) : ({ ...prev, [name]: value }));
   }
 
-  function handleSubmit() {
-
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    const formData = new FormData()
+    Object.keys(postData).map((key) => {
+      key === "images" ? postData.images.map(img => formData.append("images", img)) : formData.append(key, postData[key]);
+    });
+    const result = await Axios.post("/posts", formData, { headers: {'Content-Type': 'multipart/form-data'}})
   }
 
   return (
     <div className="wrapper">
       <form onSubmit={handleSubmit}>
         <label>Title</label>
-        <input type="text" value={formData.title} name="title" onChange={handleChange} className="" />
+        <input type="text" placeholder= "Untitled" value={postData.title} name="title" onChange={handleChange} className="" />
 
         <label>Subtitle</label>
-        <input type="text" value={formData.subtitle} name="subtitle" onChange={handleChange} className="" />
+        <input type="text" value={postData.subtitle} name="subtitle" onChange={handleChange} className="" />
 
         <label>Content</label>
-        <textarea value={formData.content} name="content" onChange={handleChange} className="" />
+        <textarea value={postData.content} name="content" onChange={handleChange} className="" />
+
+        <input type="file" onChange={handleChange} name="images" multiple />
+
+        <input type="submit" value="Submit images!" />
 
         {/* <select
           id="postTags"
-          value={formData.postTags}
+          value={postData.postTags}
           onChange={handleChange}
           name="postTags"
         >
           <option value="">clicca qui pirla</option>
-          <option value="red">Red</option>
-          <option value="orange">Orange</option>
-          <option value="yellow">Yellow</option>
-          <option value="green">Green</option>
-          <option value="blue">Blue</option>
-          <option value="indigo">Indigo</option>
-          <option value="violet">Violet</option>
+          <option value="palermo">palermo</option>
+          <option value="2019">2019</option>
+          iterate each tag option
         </select> */}
       </form>
     </div>
