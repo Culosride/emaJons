@@ -5,8 +5,6 @@ const { Image } = require('../models/image');
 const { uploadToCloudinary, removeFromCloudinary } = require('../services/cloudinary.config');
 
 const postRouter = new express.Router();
-const multer = require('multer');
-const multerUpload = upload.array('postImages', 5);
 
 postRouter.get("/", async (req, res) => {
   res.redirect("posts")
@@ -23,7 +21,7 @@ postRouter.get('/posts', async (req, res) => {
 
 postRouter.post('/posts', upload.array('postImages', 20), async (req, res) => {
   try {
-    const post = new Post(req.body, {setDefaultsOnInsert: true});
+    const post = new Post(req.body);
     const savedPost = await post.save();
     const images = req.files;
     await Promise.all(images.map(async (image) => {
