@@ -4,6 +4,7 @@ const User = require("./src/models/user") // needed to authenticate session
 const { authRouter, postRouter } = require("./src/routes/routers")
 const passport = require("passport");
 const session = require("express-session")
+const errorHandler = require("./src/middleware/errorHandler")
 const app = express()
 
 app.use(session ({
@@ -20,6 +21,8 @@ app.set("view engine", "ejs")
 app.set("views", "./src/views")
 app.use(express.static("public"))
 app.use(express.urlencoded({extended: true}))
+
 app.use(postRouter, authRouter)
+app.use(errorHandler)
 
 app.listen(3000)

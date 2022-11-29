@@ -4,7 +4,7 @@ const { imageSchema } = require("./image")
 const postSchema = new mongoose.Schema({
   title: {
     type: String,
-    required: true,
+    default: 'Untitled'
   },
   subtitle: String,
   content: String,
