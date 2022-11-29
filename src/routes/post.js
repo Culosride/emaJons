@@ -21,12 +21,10 @@ postRouter.get('/posts', async (req, res) => {
   }
 });
 
-router.post('/posts', upload.array('postImages', 20), async (req, res) => {
+postRouter.post('/posts', upload.array('postImages', 20), async (req, res) => {
   try {
     const post = new Post(req.body, {setDefaultsOnInsert: true});
-    console.log(post);
     const savedPost = await post.save();
-    console.log(savedPost);
     const images = req.files;
     await Promise.all(images.map(async (image) => {
       const data = await uploadToCloudinary(image.path, 'emaJons_dev');
