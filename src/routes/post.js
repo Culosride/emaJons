@@ -3,6 +3,7 @@ const upload = require('../middleware/upload');
 const Post = require('../models/post');
 const { Image } = require('../models/image');
 const { uploadToCloudinary, removeFromCloudinary } = require('../services/cloudinary.config');
+const _ = require('lodash');
 
 const postRouter = new express.Router();
 
