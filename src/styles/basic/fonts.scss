@@ -1,0 +1,24 @@
+$main-font: Helvetica, Arial, sans-serif;
+$secondary-font: 'Minion-Pro', Georgia, serif;
+
+.title {
+  font-family: $main-font;
+  font-weight: bold;
+  font-size: 1.25rem;
+  text-transform: uppercase;
+  margin-bottom: 0;
+}
+
+.subtitle {
+  font-family: $secondary-font;
+  font-size: 0.875rem;
+  line-height: 1.5rem;
+  margin-top: 0;
+  margin-bottom: 1.25rem;
+}
+
+.content {
+  font-family: $main-font;
+  font-size: 1rem;
+  line-height: 1.625rem;
+}
