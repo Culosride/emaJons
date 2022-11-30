@@ -8,7 +8,7 @@
     "webpack": "webpack --watch",
     "test": "echo \"Error: no test specified\" && exit 1",
     "nodemon-dotenv": "nodemon -r dotenv/config server.js",
-    "sass": "sass --no-source-map --watch src/styles/styles.scss public/css/styles.css"
+    "sass": "sass --watch src/styles/styles.scss:public/css/styles.css src/components:src/syles/styles.scss"
   },
   "author": "Culosride",
   "license": "ISC",
