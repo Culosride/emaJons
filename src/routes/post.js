@@ -3,9 +3,10 @@ const upload = require('../middleware/upload');
 const Post = require('../models/post');
 const { Image } = require('../models/image');
 const { uploadToCloudinary, removeFromCloudinary } = require('../services/cloudinary.config');
-const _ = require('lodash');
 
 const postRouter = new express.Router();
+const multer = require('multer');
+const multerUpload = upload.array('images', 20);
 
 postRouter.get("/", async (req, res) => {
   res.redirect("posts")
@@ -20,7 +21,16 @@ postRouter.get('/posts', async (req, res) => {
   }
 });
 
-postRouter.post('/posts', upload.array('postImages', 20), async (req, res) => {
+postRouter.get('/rawPosts', async (req, res) => {
+  try {
+    const allPosts = await Post.find();
+    res.json(allPosts);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
+postRouter.post('/posts', multerUpload, async (req, res) => {
   try {
     const post = new Post(req.body);
     const savedPost = await post.save();
