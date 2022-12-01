@@ -35,6 +35,15 @@
   max-height: 100%;
 }
 
+input, textarea, label, select {
+  width: 50%;
+  display: block;
+}
+
+input, textarea, select {
+  margin-bottom: 20px;
+}
+
 body {
   margin: 0;
   padding: 0;
