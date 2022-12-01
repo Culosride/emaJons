@@ -1,2 +1,9 @@
 // import evereything here
-@import "../components/post/post.scss";
+@import 'basic/fonts.scss';
+@import '../components/category/category.scss';
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: $main-font;
+}

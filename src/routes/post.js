@@ -15,15 +15,6 @@ postRouter.get("/", async (req, res) => {
 postRouter.get('/posts', async (req, res) => {
   try {
     const allPosts = await Post.find();
-    res.render("posts", {posts: allPosts});
-  } catch (err) {
-    res.status(400).send(err);
-  }
-});
-
-postRouter.get('/api', async (req, res) => {
-  try {
-    const allPosts = await Post.find();
     res.json(allPosts);
   } catch (err) {
     res.status(400).send(err);
