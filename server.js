@@ -21,7 +21,17 @@ app.set("view engine", "ejs")
 app.set("views", "./src/views")
 app.use(express.static("public"))
 app.use(express.urlencoded({extended: false}))
+
 app.use(postRouter, authRouter)
 app.use(errorHandler)
+
+// fixes React Routes 404 on reload
+app.get('/*', (req, res) => {
+  try {
+    res.render('dashboard');
+  } catch (err) {
+    res.status(400).send(err);
+  }
+})
 
 app.listen(3000)

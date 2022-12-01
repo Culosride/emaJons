@@ -10,7 +10,7 @@ export default function Post (props) {
   })
 
   return (
-    <div className="post-container">
+    <div className="posts-container">
       <div>
         <div className="images-container">{imagesEl}</div>
         <div className="text-container">

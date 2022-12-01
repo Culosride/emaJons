@@ -12,7 +12,7 @@ postRouter.get("/", async (req, res) => {
   res.redirect("posts")
 })
 
-postRouter.get('/posts', async (req, res) => {
+postRouter.get('/raw-posts', async (req, res) => {
   try {
     const allPosts = await Post.find();
     res.json(allPosts);
@@ -21,14 +21,6 @@ postRouter.get('/posts', async (req, res) => {
   }
 });
 
-postRouter.get('/rawPosts', async (req, res) => {
-  try {
-    const allPosts = await Post.find();
-    res.json(allPosts);
-  } catch (err) {
-    res.status(400).send(err);
-  }
-});
 
 postRouter.post('/posts', multerUpload, async (req, res) => {
   try {

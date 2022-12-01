@@ -1,32 +1,26 @@
 import React, { useState, useEffect } from 'react';
-import Axios from 'axios';
-import Post from './components/post/Post'
+import Category from './components/category/Category';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Link
+} from 'react-router-dom';
 
 export default function App() {
-  const [posts, setPosts] = useState([])
-
-  useEffect(() => {
-    async function loadPosts() {
-      const response = await Axios.get("/posts")
-      setPosts(response.data)
-    }
-    loadPosts()
-  }, [])
-
-  const postElements = posts.map((post) => {
-    return <Post
-      images={post.images}
-      title={post.title}
-      subtitle={post.subtitle}
-      content={post.content}
-      id={post._id}
-      key={post._id}
-    />
-  })
 
   return (
-    <div>
-      {postElements}
-    </div>
+    <Router>
+      <div className="App">
+        <ul>
+          <li><Link to="/walls">Walls</Link></li>
+          <li><Link to="/sketchbooks">Sketchbooks</Link></li>
+        </ul>
+        <Routes>
+          <Route exact path='/walls' element={<Category categoryName="walls" />}></Route>
+          <Route exact path='/sketchbooks' element={<Category categoryName="sketchbooks" />}></Route>
+        </Routes>
+      </div>
+    </Router>
   )
 }
