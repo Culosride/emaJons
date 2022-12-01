@@ -35,6 +35,10 @@
   max-height: 100%;
 }
 
+.navbarWrapper {
+  display: flex;
+}
+
 body {
   margin: 0;
   padding: 0;

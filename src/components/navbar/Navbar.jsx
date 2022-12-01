@@ -1,20 +1,21 @@
 import React, {useEffect, useState} from 'react'
+import * as api from "../../API/index"
 
 export default function Navbar(props) {
-  const [categories, setCategories] = useState([])
+  const [categories, setCategories] = useState()
 
   useEffect(() => {
     async function loadCategories() {
-      const response = await Axios.get("/rawPosts")
-      setCategories(response.data)
+      const {data} = await api.getCategories()
+      setCategories(data[0].name)
     }
     loadCategories()
   }, [])
 
   return (
-    <navabar>
+    <div className='navbarWrapper'>
       <h1>EMAJONS / </h1>
-      <p>{categories}</p>
-    </navabar>
+      <h1>{categories}</h1>
+    </div>
   )
 }

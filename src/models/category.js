@@ -1,6 +1,6 @@
 const mongoose = require("mongoose")
 
-const categorySchema = ({
+const categorySchema = new mongoose.Schema({
     name: String,
     allTags: []
   }, {timestamps: true})
