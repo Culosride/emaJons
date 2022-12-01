@@ -1,13 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Axios from 'axios';
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Link
-} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
-export default function Category({ categoryName }) {
+export default function Category({ categoryName, post }) {
   const [posts, setPosts] = useState([])
 
   useEffect(() => {
@@ -18,15 +13,11 @@ export default function Category({ categoryName }) {
     loadPosts()
   }, [])
 
-  const gridPostElements = posts.map((post) => {
-    return (post.images.length) ?
-      <Link to={`${post._id}`} id={post._id} key={post._id} >
-        <img src={post.images[0].imageUrl}/>
-      </Link> : "";
-  })
-
-  const postRoutesElements = posts.map((post) => {
-    <Route exact path={`${post._id}`} element={<Post />}></Route>
+  const postElements = posts.map((post) => {
+    console.log(post)
+    return <Link to={`/walls/${post}`} id={post._id} key={post._id} >
+      <img src={post.images[0].imageUrl}/>
+    </Link>
   })
 
   return (
@@ -40,12 +31,9 @@ export default function Category({ categoryName }) {
         </div>
 
         <div className="posts-grid">
-          {gridPostElements}
+          {postElements}
         </div>
       </div>
-      <Routes>
-        {postRoutesElements}
-      </Routes>
     </div>
   )
 }

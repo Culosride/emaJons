@@ -21,6 +21,15 @@ postRouter.get('/raw-posts', async (req, res) => {
   }
 });
 
+postRouter.get('/walls/:postId', async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.postId);
+    res.json(post);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
 
 postRouter.post('/posts', multerUpload, async (req, res) => {
   try {

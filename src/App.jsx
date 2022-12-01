@@ -7,7 +7,7 @@ import {
   Route,
   Link
 } from 'react-router-dom';
-import axios from 'axios';
+import Post from './components/post/Post'
 
 export default function App() {
 
@@ -20,8 +20,12 @@ export default function App() {
           <li><Link to="/admin/dashboard">Dashboard</Link></li>
         </ul>
         <Routes>
-          <Route exact path='/walls' element={<Category categoryName="walls" />}></Route>
-          <Route exact path='/sketchbooks' element={<Category categoryName="sketchbooks" />}></Route>
+          <Route exact path='/walls' element={<Category post=':postId'/>}>
+            <Route path=":postId" element={<Post post=':postId'/>} />
+          </Route>
+          <Route exact path='/sketchbooks' element={<Category post=':postId'/>}>
+            <Route path=":postId" element={<Post post=':postId'/>} />
+          </Route>
           <Route exact path='/admin/dashboard' element={<PostForm />}></Route>
         </Routes>
       </div>
