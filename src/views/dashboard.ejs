@@ -1,5 +1,5 @@
+<%- include('partials/header.ejs') %>
 
-  <%- include('partials/header.ejs') %>
   <h1>Submit an image</h1>
   <form action="/posts" enctype="multipart/form-data" method="post">
     <div class="form-group">
@@ -8,10 +8,10 @@
       <label for="post-subtitle">Subtitle</label>
       <input type="text" name="subtitle" id="post-subtitle">
       <label for="content">Content</label>
-      <input type="text" name="content" id="content">
+      <textarea name="content" id="content" rows="4" cols="50"></textarea>
       <input type="file" class="form-control-file" name="postImages" multiple>
       <input type="submit" value="Submit images!" class="btn btn-default">
     </div>
-    <button></button>
   </form>
+
 <%- include('partials/footer') %>

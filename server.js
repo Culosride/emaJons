@@ -29,7 +29,7 @@ app.use('/assets', express.static(path.join(__dirname, '../public')))
 // fixes React Routes 404 on reload
 app.get('/*', (req, res) => {
   try {
-    res.render('dashboard');
+    res.render('home');
   } catch (err) {
     res.status(400).send(err);
   }
