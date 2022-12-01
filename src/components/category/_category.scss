@@ -1,0 +1,14 @@
+.category-container {
+  display: grid;
+  grid-template-columns: 1fr 5fr;
+}
+
+.posts-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  column-gap: 40px;
+  img {
+    max-width: 100%;
+    max-height: 100%;
+  }
+}
