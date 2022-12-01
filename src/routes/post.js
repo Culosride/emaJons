@@ -21,7 +21,7 @@ postRouter.get('/posts', async (req, res) => {
   }
 });
 
-postRouter.get('/rawPosts', async (req, res) => {
+postRouter.get('/api', async (req, res) => {
   try {
     const allPosts = await Post.find();
     res.json(allPosts);
