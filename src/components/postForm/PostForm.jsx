@@ -12,8 +12,6 @@ export default function PostForm () {
     postTags: []
   })
 
-  console.log(postData);
-
   function handleChange(e) {
     const { name, value, files } = e.target;
     setPostData(prev => {

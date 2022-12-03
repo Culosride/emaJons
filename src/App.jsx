@@ -1,15 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import Category from './components/category/Category';
+import AllPosts from './components/allPosts/AllPosts';
 import PostForm from './components/postForm/PostForm';
+import Post from './components/post/Post';
 import {
   BrowserRouter as Router,
   Routes,
   Route,
   Link
 } from 'react-router-dom';
-import Post from './components/post/Post'
+import Axios from 'axios'
 
 export default function App() {
+  const [posts, setPosts] = useState([])
+
+  useEffect(() => {
+    async function loadPosts() {
+      const response = await Axios.get("/raw-posts")
+      setPosts(response.data)
+    }
+    loadPosts()
+  }, [])
 
   return (
     <Router>
@@ -20,12 +30,10 @@ export default function App() {
           <li><Link to="/admin/dashboard">Dashboard</Link></li>
         </ul>
         <Routes>
-          <Route exact path='/walls' element={<Category post=':postId'/>}>
-            <Route path=":postId" element={<Post post=':postId'/>} />
-          </Route>
-          <Route exact path='/sketchbooks' element={<Category post=':postId'/>}>
-            <Route path=":postId" element={<Post post=':postId'/>} />
-          </Route>
+          <Route exact path='/walls' element={<AllPosts category="walls" />} />
+          <Route path="/walls/:postId" element={<Post category="walls"/>} />
+          <Route exact path='/sketchbooks' element={<AllPosts category="sketchbooks" />} />
+          <Route path="/sketchbooks/:postId" element={<Post category="sketchbooks" />} />
           <Route exact path='/admin/dashboard' element={<PostForm />}></Route>
         </Routes>
       </div>
