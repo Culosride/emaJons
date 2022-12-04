@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import Axios from 'axios';
 import { useParams } from 'react-router-dom';
 
-export default function Post({ category }) {
+export default function Post() {
   const params = useParams()
   const [post, setPost] = useState([])
+  let imageElements;
 
   useEffect(() => {
     async function loadPost() {
@@ -14,11 +15,24 @@ export default function Post({ category }) {
     loadPost()
   }, [])
 
+  if (post.images !== undefined) {
+    imageElements = post.images.map((image) => {
+      return <img src={image.imageUrl} key={image._id}/>
+    })
+  }
+
   return (
-    <div className="posts-container">
-      <h1 className="title">{post.title}</h1>
-      <p className="subtitle">{post.subtitle}</p>
-      <p className="content">{post.content}</p>
-    </div>
+      <div className="post-container">
+        <div>
+          <div className="images-container">
+            {imageElements}
+          </div>
+          <div className="text-container">
+            <h1 className="title">{post.title}</h1>
+            <p className="subtitle">{post.subtitle}</p>
+            <p className="content">{post.content}</p>
+          </div>
+        </div>
+      </div>
   )
 }

@@ -27,23 +27,18 @@ export default function AllPosts() {
     setFilteredPosts(filteredPosts);
   }
 
-  // display posts
-  const postElements = posts.map((post) => {
-    return <Link reloadDocument to={`/${params.category}/${post._id}`} id={post._id} key={post._id} >
-      <img src={post.images[0].imageUrl}/>
-    </Link>
-  })
-
-  const filteredElements = filteredPosts.map((post) => {
-    return <Link reloadDocument to={`/${params.category}/${post._id}`} id={post._id} key={post._id} >
-      <img src={post.images[0].imageUrl}/>
-    </Link>
-  })
+  const displayPosts = (selectedPosts) => {
+    return selectedPosts.map((post) => {
+      return <Link reloadDocument to={`/${params.category}/${post._id}`} id={post._id} key={post._id} >
+        <img src={post.images[0].imageUrl}/>
+      </Link>
+    })
+  }
 
   // display category tags
   const tagElements = tags.map((tag, i) => {
     return <li key={`${tag}-${i}`}>
-      <a href='mexico' data-value={`${tag}`} onClick={handleClick}>{tag}</a>
+      <a href={tag} data-value={`${tag}`} onClick={handleClick}>{tag}</a>
     </li>
   })
 
@@ -57,7 +52,7 @@ export default function AllPosts() {
         </div>
 
         <div className="posts-grid">
-          {filteredPosts.length && filteredElements || postElements}
+          {filteredPosts.length && displayPosts(filteredPosts) || displayPosts(posts)}
         </div>
       </div>
     </div>
