@@ -6,7 +6,7 @@ const postSchema = new mongoose.Schema({
   subtitle: String,
   content: String,
   images: [imageSchema],
-  postTags: []
+  postTags: [String]
 }, {timestamps: true})
 
 const Post = mongoose.model('Post', postSchema);

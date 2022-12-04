@@ -15,9 +15,9 @@ postRouter.get("/", async (req, res) => {
 postRouter.get('/posts', async (req, res) => {
   try {
     const allPosts = await Post.find();
-    res.json(allPosts);
+    res.status(200).json(allPosts);
   } catch (err) {
-    res.status(400).send(err);
+    res.status(404).send(err);
   }
 });
 
@@ -25,7 +25,9 @@ postRouter.post('/posts', multerUpload, async (req, res) => {
   try {
     const post = new Post(req.body);
     const savedPost = await post.save();
+
     const images = req.files;
+    // res.status(200).json(post)
     await Promise.all(images.map(async (image) => {
       const data = await uploadToCloudinary(image.path, 'emaJons_dev');
       const newImage = new Image({
@@ -35,9 +37,9 @@ postRouter.post('/posts', multerUpload, async (req, res) => {
       await Post.updateOne(
         { _id: savedPost._id },
         { $addToSet: { images: [newImage]}}
-      )
-    }))
-    res.redirect('/posts');
+        )
+      }))
+      res.redirect("/grid")
   }
   catch (err) {
     res.status(400).send(err);

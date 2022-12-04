@@ -1,23 +1,18 @@
 import React from "react"
+import Image from "../image/Image"
 
 export default function Post (props) {
-  const imagesEl = props.images.map(image => {
-    return <img
-      src={image.imageUrl}
-      key={image.publicId}
-      alt={image.publicId}
-    />
-  })
+  const pics = props.images.map(img => <Image key={img.publicId} url={img.imageUrl}/>)
+  const tags = props.tags.map(tag => tag)
 
   return (
     <div className="posts-container">
-      <div>
-        <div className="images-container">{imagesEl}</div>
-        <div className="text-container">
-          <h1 className="title">{props.title}</h1>
-          <p className="subtitle">{props.subtitle}</p>
-          <p className="content">{props.content}</p>
-        </div>
+      <div className="text-container">
+        <h1 className="title">{props.title}</h1>
+        <p className="subtitle">{props.subtitle}</p>
+        <p className="content">{props.content}</p>
+        {pics}
+        {tags}
       </div>
     </div>
   )
