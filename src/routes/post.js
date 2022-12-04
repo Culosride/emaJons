@@ -13,7 +13,7 @@ postRouter.get("/", async (req, res) => {
   res.redirect("/admin/dashboard")
 })
 
-postRouter.get('/api/:category', async (req, res) => {
+postRouter.get('/api/posts/:category', async (req, res) => {
   try {
     const allPosts = await Post.find({category: _.capitalize(req.params.category)});
     res.json(allPosts);
@@ -22,7 +22,7 @@ postRouter.get('/api/:category', async (req, res) => {
   }
 });
 
-postRouter.get('/api/:category/:postId', async (req, res) => {
+postRouter.get('/api/posts/:category/:postId', async (req, res) => {
   try {
     const post = await Post.findById(req.params.postId);
     res.json(post);

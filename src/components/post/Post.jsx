@@ -8,7 +8,7 @@ export default function Post({ category }) {
 
   useEffect(() => {
     async function loadPost() {
-      const response = await Axios.get(`/api/${params.category}/${params.postId}`)
+      const response = await Axios.get(`/api/posts/${params.category}/${params.postId}`)
       setPost(response.data)
     }
     loadPost()

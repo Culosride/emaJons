@@ -3,21 +3,48 @@ import Axios from 'axios';
 import { Link, useParams } from 'react-router-dom';
 
 export default function AllPosts() {
-  const params = useParams()
-  const [posts, setPosts] = useState([])
+  const params = useParams();
+  const [posts, setPosts] = useState([]);
+  const [tags, setTags] = useState([]);
+  const [filteredPosts, setFilteredPosts] = useState([]);
 
   useEffect(() => {
-    async function loadPosts() {
-      const response = await Axios.get(`/api/${params.category}`)
-      setPosts(response.data)
+    async function loadData() {
+      const posts = await Axios.get(`/api/posts/${params.category}`)
+      setPosts(posts.data)
+      const tags = await Axios.get(`/api/categories/${params.category}`)
+      setTags(tags.data[0].allTags)
     }
-    loadPosts()
-  }, [])
+    loadData()
+  }, []);
 
+  const handleClick = (e) => {
+    e.preventDefault();
+    const filter = e.target.getAttribute('data-value');
+    const filteredPosts = posts.filter((post) => {
+      return post.postTags.includes(filter);
+    })
+    setFilteredPosts(filteredPosts);
+  }
+
+  // display posts
   const postElements = posts.map((post) => {
     return <Link reloadDocument to={`/${params.category}/${post._id}`} id={post._id} key={post._id} >
       <img src={post.images[0].imageUrl}/>
     </Link>
+  })
+
+  const filteredElements = filteredPosts.map((post) => {
+    return <Link reloadDocument to={`/${params.category}/${post._id}`} id={post._id} key={post._id} >
+      <img src={post.images[0].imageUrl}/>
+    </Link>
+  })
+
+  // display category tags
+  const tagElements = tags.map((tag, i) => {
+    return <li key={`${tag}-${i}`}>
+      <a href='mexico' data-value={`${tag}`} onClick={handleClick}>{tag}</a>
+    </li>
   })
 
   return (
@@ -25,13 +52,12 @@ export default function AllPosts() {
       <div className="category-container">
         <div className="tags-container">
           <ul>
-            <Link to="/"><li>2021</li></Link>
-            <Link to="/"><li>2020</li></Link>
+            {tagElements}
           </ul>
         </div>
 
         <div className="posts-grid">
-          {postElements}
+          {filteredPosts.length && filteredElements || postElements}
         </div>
       </div>
     </div>
