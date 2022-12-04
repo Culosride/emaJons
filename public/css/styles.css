@@ -56,8 +56,10 @@ input, textarea, select {
   text-align: center;
   margin: 0 auto;
   height: 100vh;
+  width: 100vw;
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 
 .images-container {
