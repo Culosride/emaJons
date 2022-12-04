@@ -24,7 +24,7 @@ export default function AllPosts() {
     const filteredPosts = posts.filter((post) => {
       return post.postTags.includes(filter);
     })
-    setFilteredPosts(filteredPosts);
+    filteredPosts.length ? setFilteredPosts(filteredPosts) : setFilteredPosts({message: 'Sorry, no posts'});
   }
 
   const displayPosts = (selectedPosts) => {
@@ -52,7 +52,11 @@ export default function AllPosts() {
         </div>
 
         <div className="posts-grid">
-          {filteredPosts.length && displayPosts(filteredPosts) || displayPosts(posts)}
+          {
+            filteredPosts.message && filteredPosts.message ||
+            filteredPosts.length && displayPosts(filteredPosts) ||
+            displayPosts(posts)
+          }
         </div>
       </div>
     </div>
