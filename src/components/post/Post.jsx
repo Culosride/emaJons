@@ -8,14 +8,11 @@ export default function Post({ category }) {
 
   useEffect(() => {
     async function loadPost() {
-      const response = await Axios.get(`/api/${category}/${params.postId}`)
+      const response = await Axios.get(`/api/${params.category}/${params.postId}`)
       setPost(response.data)
     }
     loadPost()
   }, [])
-
-  console.log(params.postId)
-  console.log(post.images)
 
   return (
     <div className="posts-container">

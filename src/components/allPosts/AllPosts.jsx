@@ -1,20 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import Axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
-export default function AllPosts({ category }) {
+export default function AllPosts() {
+  const params = useParams()
   const [posts, setPosts] = useState([])
 
   useEffect(() => {
     async function loadPosts() {
-      const response = await Axios.get(`/api/${category}`)
+      const response = await Axios.get(`/api/${params.category}`)
       setPosts(response.data)
     }
     loadPosts()
   }, [])
 
   const postElements = posts.map((post) => {
-    return <Link to={`/${category}/${post._id}`} id={post._id} key={post._id} >
+    return <Link reloadDocument to={`/${params.category}/${post._id}`} id={post._id} key={post._id} >
       <img src={post.images[0].imageUrl}/>
     </Link>
   })

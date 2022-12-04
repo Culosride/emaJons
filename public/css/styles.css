@@ -1,9 +1,9 @@
 .title {
   font-family: Helvetica, Arial, sans-serif;
   font-weight: bold;
+  font-size: 1.25rem;
   text-transform: uppercase;
   margin-bottom: 0;
-  font-size: 200px;
 }
 
 .subtitle {
