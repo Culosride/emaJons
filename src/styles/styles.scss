@@ -2,6 +2,10 @@
 @import 'basic/fonts.scss';
 @import '../components/category/category.scss';
 @import '../components/navbar/navbar.scss';
+@import '../components/header/header.scss';
+@import '../components/allPosts/all-posts.scss';
+@import '../components/postForm/postForm.scss';
+@import '../components/post/post.scss';
 
 body {
   margin: 0;

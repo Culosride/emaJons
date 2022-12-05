@@ -3,13 +3,14 @@ const upload = require('../middleware/upload');
 const Post = require('../models/post');
 const { Image } = require('../models/image');
 const { uploadToCloudinary, removeFromCloudinary } = require('../services/cloudinary.config');
+const _ = require('lodash');
 
 const postRouter = new express.Router();
 const multer = require('multer');
 const multerUpload = upload.array('images', 20);
 
 postRouter.get("/", async (req, res) => {
-  res.redirect("posts")
+  res.redirect("/admin/dashboard")
 })
 
 postRouter.get('/posts', async (req, res) => {
@@ -20,6 +21,25 @@ postRouter.get('/posts', async (req, res) => {
     res.status(404).send(err);
   }
 });
+
+postRouter.get('/api/posts/:category', async (req, res) => {
+  try {
+    const allPosts = await Post.find({category: _.capitalize(req.params.category)});
+    res.json(allPosts);
+  } catch (err) {
+    res.status(404).send(err);
+  }
+});
+
+postRouter.get('/api/posts/:category/:postId', async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.postId);
+    res.json(post);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
 
 postRouter.post('/posts', multerUpload, async (req, res) => {
   try {
@@ -37,9 +57,9 @@ postRouter.post('/posts', multerUpload, async (req, res) => {
       await Post.updateOne(
         { _id: savedPost._id },
         { $addToSet: { images: [newImage]}}
-        )
-      }))
-      res.redirect("/grid")
+      )
+    }))
+    res.status(200).json({lastId: post._id})
   }
   catch (err) {
     res.status(400).send(err);
