@@ -13,7 +13,7 @@ export default function AllPosts() {
       const posts = await Axios.get(`/api/posts/${params.category}`)
       setPosts(posts.data)
       const tags = await Axios.get(`/api/categories/${params.category}`)
-      setTags(tags.data[0].allTags)
+      if (tags.data.length) setTags(tags.data[0].allTags)
     }
     loadData()
   }, []);
@@ -28,15 +28,14 @@ export default function AllPosts() {
   }
 
   const displayPosts = (selectedPosts) => {
-    return selectedPosts.map((post) => {
+    return selectedPosts && selectedPosts.map((post) => {
       return <Link reloadDocument to={`/${params.category}/${post._id}`} id={post._id} key={post._id} >
-        <img src={post.images[0].imageUrl}/>
+        {(post.images.length) ? <img src={post.images[0].imageUrl} /> : <p>{post.title}</p>}
       </Link>
     })
   }
 
-  // display category tags
-  const tagElements = tags.map((tag, i) => {
+  const tagElements = tags && tags.map((tag, i) => {
     return <li key={`${tag}-${i}`}>
       <a href={tag} data-value={`${tag}`} onClick={handleClick}>{tag}</a>
     </li>
@@ -51,13 +50,16 @@ export default function AllPosts() {
           </ul>
         </div>
 
-        <div className="posts-grid">
-          {
-            filteredPosts.message && filteredPosts.message ||
-            filteredPosts.length && displayPosts(filteredPosts) ||
-            displayPosts(posts)
-          }
-        </div>
+        {(posts.length !== 0) &&
+          <div className="posts-grid">
+            {
+              filteredPosts.message && filteredPosts.message ||
+              filteredPosts.length && displayPosts(filteredPosts) ||
+              displayPosts(posts)
+            }
+          </div> ||
+          <p>No posts yet</p>
+        }
       </div>
     </div>
   )
