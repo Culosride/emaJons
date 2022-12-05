@@ -9,14 +9,13 @@ import {
   Route,
   Link
 } from 'react-router-dom';
-import { getPosts } from "./actions/posts"
 
 export default function App() {
-  const dispatch = useDispatch()
+  // const dispatch = useDispatch()
 
-  useEffect(() => {
-    dispatch(getPosts())
-  }, [dispatch])
+  // useEffect(() => {
+  //   dispatch(getPosts())
+  // }, [dispatch])
 
   return (
     <Router>
