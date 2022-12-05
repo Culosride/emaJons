@@ -1,5 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import Category from './components/category/Category';
+import React from 'react';
+import Header from './components/header/Header';
+import AllPosts from './components/allPosts/AllPosts';
+import PostForm from './components/postForm/PostForm';
+import Post from './components/post/Post';
+import Bio from './components/bio/Bio';
+import Contact from './components/contact/Contact';
 import {
   BrowserRouter as Router,
   Routes,
@@ -8,17 +13,16 @@ import {
 } from 'react-router-dom';
 
 export default function App() {
-
   return (
     <Router>
       <div className="App">
-        <ul>
-          <li><Link to="/walls">Walls</Link></li>
-          <li><Link to="/sketchbooks">Sketchbooks</Link></li>
-        </ul>
+        <Header />
         <Routes>
-          <Route exact path='/walls' element={<Category categoryName="walls" />}></Route>
-          <Route exact path='/sketchbooks' element={<Category categoryName="sketchbooks" />}></Route>
+          <Route exact path='/:category' element={<AllPosts />} />
+          <Route path="/:category/:postId" element={<Post />} />
+          <Route exact path='/bio' element={<Bio />}></Route>
+          <Route exact path='/contact' element={<Contact />}></Route>
+          <Route exact path='/admin/dashboard' element={<PostForm />}></Route>
         </Routes>
       </div>
     </Router>
