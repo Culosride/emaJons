@@ -40,7 +40,6 @@ export default function PostForm () {
       }
     });
     const res = await Axios.post("/posts", formData, { headers: {'Content-Type': 'multipart/form-data'}})
-    console.log(res)
     navigate(`/${postData.category}/${res.data.lastId}`)
   }
 
@@ -76,18 +75,6 @@ export default function PostForm () {
         <input type="file" onChange={handleChange} name="images" multiple />
 
         <input type="submit" value="Submit images!" />
-
-        {/* <select
-          id="postTags"
-          value={postData.postTags}
-          onChange={handleChange}
-          name="postTags"
-        >
-          <option value="">clicca qui pirla</option>
-          <option value="palermo">palermo</option>
-          <option value="2019">2019</option>
-          iterate each tag option
-        </select> */}
       </form>
     </div>
   )
