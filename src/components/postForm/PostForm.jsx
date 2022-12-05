@@ -16,11 +16,15 @@ export default function PostForm () {
   })
 
   useEffect(() => {
-    async function loadData() {
+    async function loadTags() {
       const tags = await Axios.get(`/api/categories/${postData.category}`)
-      if (tags.data.length) setTags(tags.data[0].allTags)
+      if (tags.data[0]) {
+        setTags(tags.data[0].allTags)
+      } else {
+        setTags([])
+      }
     }
-    loadData()
+    loadTags()
   }, [postData]);
 
   function handleChange(e) {
@@ -53,7 +57,7 @@ export default function PostForm () {
   }
 
   const tagOptions = tags && tags.map((tag, i) => {
-    return <option value={tag} key={tag + i}>{tag}</option>
+    return <option value={tag} key={`${tag}-${i}`}>{tag}</option>
   })
 
   return (
