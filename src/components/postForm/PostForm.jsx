@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Axios from "axios";
 import { useNavigate } from 'react-router-dom';
 
 
 export default function PostForm () {
   const navigate = useNavigate();
+  const [tags, setTags] = useState([]);
   const [postData, setPostData] = useState({
     title: "",
     subtitle:"",
@@ -13,6 +14,14 @@ export default function PostForm () {
     category: "",
     postTags: []
   })
+
+  useEffect(() => {
+    async function loadData() {
+      const tags = await Axios.get(`/api/categories/${postData.category}`)
+      if (tags.data.length) setTags(tags.data[0].allTags)
+    }
+    loadData()
+  }, [postData]);
 
   function handleChange(e) {
     const { name, value, files } = e.target;
@@ -43,6 +52,10 @@ export default function PostForm () {
     navigate(`/${postData.category}/${res.data.lastId}`)
   }
 
+  const tagOptions = tags && tags.map((tag, i) => {
+    return <option value={tag} key={tag + i}>{tag}</option>
+  })
+
   return (
     <div className="wrapper">
       <form onSubmit={handleSubmit}>
@@ -66,10 +79,9 @@ export default function PostForm () {
         </select>
 
         <label htmlFor="postTags" multiple>Tags:</label>
-        <select name="postTags" id="postTags" onChange={handleChange}>
+        <select name="postTags" id="postTags" onChange={handleChange} disabled={postData.category === ''}>
           <option value="">-- Please choose a tag --</option>
-          <option value="Palermo">Palermo</option>
-          <option value="Mexico">Mexico</option>
+          {tagOptions}
         </select>
 
         <input type="file" onChange={handleChange} name="images" multiple />
