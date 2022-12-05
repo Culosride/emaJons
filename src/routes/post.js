@@ -4,6 +4,7 @@ const Post = require('../models/post');
 const { Image } = require('../models/image');
 const { uploadToCloudinary, removeFromCloudinary } = require('../services/cloudinary.config');
 const _ = require('lodash');
+// const authRouter = require("./auth")
 
 const postRouter = new express.Router();
 const multer = require('multer');
@@ -43,6 +44,7 @@ postRouter.get('/api/posts/:category/:postId', async (req, res) => {
 
 postRouter.post('/posts', multerUpload, async (req, res) => {
   try {
+    if (req.isAuthenticated()) {
     const post = new Post(req.body);
     const savedPost = await post.save();
 
@@ -60,6 +62,10 @@ postRouter.post('/posts', multerUpload, async (req, res) => {
       )
     }))
     res.status(200).json({lastId: post._id})
+    } else {
+      console.log(req.isAuthenticated)
+      res.send("/login")
+    }
   }
   catch (err) {
     res.status(400).send(err);
