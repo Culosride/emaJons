@@ -39,8 +39,9 @@ export default function PostForm () {
         return formData.append(key, postData[key]);
       }
     });
-    await Axios.post("/posts", formData, { headers: {'Content-Type': 'multipart/form-data'}})
-    navigate(`/${postData.category}`)
+    const res = await Axios.post("/posts", formData, { headers: {'Content-Type': 'multipart/form-data'}})
+    console.log(res)
+    navigate(`/${postData.category}/${res.data.lastId}`)
   }
 
   return (
