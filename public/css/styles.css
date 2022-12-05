@@ -20,6 +20,10 @@
   line-height: 1.625rem;
 }
 
+.navbarWrapper {
+  display: flex;
+}
+
 .header {
   display: flex;
 }
