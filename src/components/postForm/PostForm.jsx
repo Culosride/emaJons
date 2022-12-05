@@ -1,8 +1,10 @@
-import React, {useState, useEffect} from "react"
-import Axios from "axios"
+import React, { useState } from "react";
+import Axios from "axios";
+import { useNavigate } from 'react-router-dom';
 
 
 export default function PostForm () {
+  const navigate = useNavigate();
   const [postData, setPostData] = useState({
     title: "",
     subtitle:"",
@@ -37,7 +39,8 @@ export default function PostForm () {
         return formData.append(key, postData[key]);
       }
     });
-    const result = await Axios.post("/posts", formData, { headers: {'Content-Type': 'multipart/form-data'}})
+    const res = await Axios.post("/posts", formData, { headers: {'Content-Type': 'multipart/form-data'}})
+    navigate(`/${postData.category}/${res.data.lastId}`)
   }
 
   return (
@@ -72,18 +75,6 @@ export default function PostForm () {
         <input type="file" onChange={handleChange} name="images" multiple />
 
         <input type="submit" value="Submit images!" />
-
-        {/* <select
-          id="postTags"
-          value={postData.postTags}
-          onChange={handleChange}
-          name="postTags"
-        >
-          <option value="">clicca qui pirla</option>
-          <option value="palermo">palermo</option>
-          <option value="2019">2019</option>
-          iterate each tag option
-        </select> */}
       </form>
     </div>
   )

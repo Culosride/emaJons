@@ -48,7 +48,7 @@ postRouter.post('/posts', multerUpload, async (req, res) => {
         { $addToSet: { images: [newImage]}}
       )
     }))
-    res.redirect('/posts');
+    res.status(200).json({lastId: post._id})
   }
   catch (err) {
     res.status(400).send(err);

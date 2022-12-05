@@ -6,7 +6,10 @@ const passport = require("passport");
 const session = require("express-session")
 const errorHandler = require("./src/middleware/errorHandler")
 const path = require('path')
+const cors = require('cors')
 const app = express()
+
+app.use(cors())
 
 app.use(session ({
   secret: process.env.SECRET,
