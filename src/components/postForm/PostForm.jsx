@@ -1,8 +1,10 @@
-import React, {useState, useEffect} from "react"
-import Axios from "axios"
+import React, { useState } from "react";
+import Axios from "axios";
+import { useNavigate } from 'react-router-dom';
 
 
 export default function PostForm () {
+  const navigate = useNavigate();
   const [postData, setPostData] = useState({
     title: "",
     subtitle:"",
@@ -37,7 +39,8 @@ export default function PostForm () {
         return formData.append(key, postData[key]);
       }
     });
-    const result = await Axios.post("/posts", formData, { headers: {'Content-Type': 'multipart/form-data'}})
+    await Axios.post("/posts", formData, { headers: {'Content-Type': 'multipart/form-data'}})
+    navigate(`/${postData.category}`)
   }
 
   return (
