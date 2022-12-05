@@ -1,6 +1,7 @@
 <%- include('partials/header.ejs') %>
+  <div id="root"></div>
 
-  <h1>Submit an image</h1>
+  <!-- <h1>Submit an image</h1>
   <form action="/posts" enctype="multipart/form-data" method="post">
     <div class="form-group">
       <label for="post-title">Title</label>
@@ -9,9 +10,26 @@
       <input type="text" name="subtitle" id="post-subtitle">
       <label for="content">Content</label>
       <textarea name="content" id="content" rows="4" cols="50"></textarea>
+
+      <label for="categories">Category:</label>
+      <select name="category" id="categories">
+        <option value="">-- Please choose a category --</option>
+        <option value="walls">Walls</option>
+        <option value="paintings">Paintings</option>
+        <option value="sketchbooks">Skethbooks</option>
+        <option value="video">Video</option>
+        <option value="sculpture">Sculpture</option>
+      </select>
+
+      <label for="tags">Tags:</label>
+      <select name="category" id="tags">
+        <option value="">-- Please choose a tag --</option>
+        <option value="palermo">Palermo</option>
+      </select>
+
       <input type="file" class="form-control-file" name="postImages" multiple>
       <input type="submit" value="Submit images!" class="btn btn-default">
     </div>
-  </form>
+  </form> -->
 
 <%- include('partials/footer') %>

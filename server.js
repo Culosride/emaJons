@@ -1,7 +1,7 @@
 const express = require("express")
 require("./src/db/mongoose")
 const User = require("./src/models/user") // needed to authenticate session
-const { authRouter, postRouter } = require("./src/routes/routers")
+const { authRouter, postRouter, categoryRouter } = require("./src/routes/routers")
 const passport = require("passport");
 const session = require("express-session")
 const errorHandler = require("./src/middleware/errorHandler")
@@ -22,7 +22,7 @@ app.set("view engine", "ejs")
 app.set("views", "./src/views")
 app.use(express.static("public"))
 app.use(express.urlencoded({extended: true}))
-app.use(postRouter, authRouter)
+app.use(postRouter, authRouter, categoryRouter)
 app.use(errorHandler)
 app.use('/assets', express.static(path.join(__dirname, '../public')))
 
