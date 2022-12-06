@@ -35,7 +35,7 @@ export default function AllPosts() {
   // if (status === 'loading') {
   //   postElements = <p>Loading...</p>
   // } else if (status === 'succeeded') {
-  //   postElements = posts.map(post => <img src={post.images[0].imageUrl} alt="diocane" key={post._id}/>)
+  //   postElements = posts.map(post => <img src={post.images[0].imageUrl} alt="" key={post._id}/>)
   // } else if (status === 'failed') {
   //   postElements = <div>{error}</div>
   // }
