@@ -1,28 +1,32 @@
-import React, { useState, useEffect } from "react"
-import { createRoot } from "react-dom/client"
-import Header from "./components/header/Header.jsx"
-import LogoutBtn from "./components/logout-btn/LogoutBtn.jsx"
-import Post from "./components/post/Post.jsx"
-import PostForm from "./components/postForm/PostForm.jsx"
-import Axios from "axios"
-
+import React, { useState, useEffect } from 'react';
+import Header from './components/header/Header';
+import AllPosts from './components/allPosts/AllPosts';
+import PostForm from './components/postForm/PostForm';
+import Post from './components/post/Post';
+import Bio from './components/bio/Bio';
+import Contact from './components/contact/Contact';
+import { useParams } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Link
+} from 'react-router-dom';
 export default function App() {
-  const [posts, setPosts] = useState([])
-
-  useEffect(() => {
-    async function loadPosts() {
-      const response = await Axios.get("/rawPosts")
-      setPosts(response.data)
-    }
-    loadPosts()
-  }, [])
-
-  const postElements = posts.map(post => <Post title={post.title} images={post.images} id={post._id} key={post._id} />)
-
+  const params = useParams()
+  // console.log("par",params)
   return (
-    <div>
-      <PostForm />
-      {postElements}
-    </div>
+    <Router>
+      <div className="App">
+        <Header />
+        <Routes>
+          <Route exact path='/:category' element={<AllPosts />} />
+          <Route path="/:category/:postId" element={<Post />} />
+          <Route exact path='/bio' element={<Bio />}></Route>
+          <Route exact path='/contact' element={<Contact />}></Route>
+          <Route exact path='/admin/dashboard' element={<PostForm />}></Route>
+        </Routes>
+      </div>
+    </Router>
   )
 }

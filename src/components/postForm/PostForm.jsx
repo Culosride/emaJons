@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 export default function PostForm () {
   const navigate = useNavigate();
   const [tags, setTags] = useState([]);
+  const [error, setError] = useState(false)
   const [postData, setPostData] = useState({
     title: "",
     subtitle:"",
@@ -16,6 +17,7 @@ export default function PostForm () {
   })
 
   useEffect(() => {
+    postData.category && setError(false);
     async function loadTags() {
       const tags = await Axios.get(`/api/categories/${postData.category}`)
       if (tags.data[0]) {
@@ -42,6 +44,10 @@ export default function PostForm () {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    if(!postData.category) {
+      setError(true);
+      return
+    }
     const formData = new FormData()
     Object.keys(postData).map((key) => {
       if (key === "images") {
@@ -81,6 +87,7 @@ export default function PostForm () {
           <option value="Video">Video</option>
           <option value="Sculpture">Sculpture</option>
         </select>
+        {error && <p>Devi pigliarne una</p>}
 
         <label htmlFor="postTags" multiple>Tags:</label>
         <select name="postTags" id="postTags" onChange={handleChange} disabled={postData.category === ''}>

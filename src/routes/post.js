@@ -4,6 +4,7 @@ const Post = require('../models/post');
 const { Image } = require('../models/image');
 const { uploadToCloudinary, removeFromCloudinary } = require('../services/cloudinary.config');
 const _ = require('lodash');
+// const authRouter = require("./auth")
 
 const postRouter = new express.Router();
 const multer = require('multer');
@@ -13,19 +14,28 @@ postRouter.get("/", async (req, res) => {
   res.redirect("/admin/dashboard")
 })
 
+postRouter.get('/posts', async (req, res) => {
+  try {
+    const allPosts = await Post.find();
+    res.status(200).json(allPosts);
+  } catch (err) {
+    res.status(404).send(err);
+  }
+});
+
 postRouter.get('/api/posts/:category', async (req, res) => {
   try {
     const allPosts = await Post.find({category: _.capitalize(req.params.category)});
-    res.json(allPosts);
+    res.status(200).json(allPosts);
   } catch (err) {
-    res.status(400).send(err);
+    res.status(404).send(err);
   }
 });
 
 postRouter.get('/api/posts/:category/:postId', async (req, res) => {
   try {
     const post = await Post.findById(req.params.postId);
-    res.json(post);
+    res.status(200).json(post);
   } catch (err) {
     res.status(400).send(err);
   }
@@ -34,9 +44,12 @@ postRouter.get('/api/posts/:category/:postId', async (req, res) => {
 
 postRouter.post('/posts', multerUpload, async (req, res) => {
   try {
+    if (req.isAuthenticated()) {
     const post = new Post(req.body);
     const savedPost = await post.save();
+
     const images = req.files;
+    // res.status(200).json(post)
     await Promise.all(images.map(async (image) => {
       const data = await uploadToCloudinary(image.path, 'emaJons_dev');
       const newImage = new Image({
@@ -49,6 +62,10 @@ postRouter.post('/posts', multerUpload, async (req, res) => {
       )
     }))
     res.status(200).json({lastId: post._id})
+    } else {
+      console.log(req.isAuthenticated)
+      res.send("/login")
+    }
   }
   catch (err) {
     res.status(400).send(err);
