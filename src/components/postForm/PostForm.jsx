@@ -53,7 +53,7 @@ export default function PostForm () {
       }
     });
     const res = await Axios.post("/posts", formData, { headers: {'Content-Type': 'multipart/form-data'}})
-    navigate(`/${postData.category}/${res.data.lastId}`)
+    navigate(`/posts/${postData.category}/${res.data.lastId}`)
   }
 
   const tagOptions = tags && tags.map((tag, i) => {

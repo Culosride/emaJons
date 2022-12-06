@@ -9,7 +9,6 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
-  Link
 } from 'react-router-dom';
 
 export default function App() {
@@ -18,8 +17,8 @@ export default function App() {
       <div className="App">
         <Header />
         <Routes>
-          <Route exact path='/:category' element={<AllPosts />} />
-          <Route path="/:category/:postId" element={<Post />} />
+          <Route exact path='/posts/:category' element={<AllPosts />} />
+          <Route path="/posts/:category/:postId" element={<Post />} />
           <Route exact path='/bio' element={<Bio />}></Route>
           <Route exact path='/contact' element={<Contact />}></Route>
           <Route exact path='/admin/dashboard' element={<PostForm />}></Route>
