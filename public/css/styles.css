@@ -57,25 +57,43 @@ input, textarea, select {
   margin: 0 auto;
   height: 100vh;
   width: 100vw;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .images-container {
   display: flex;
-  height: 65vh;
+  justify-content: center;
+  height: 75vh;
   max-width: 100vw;
-  overflow: scroll;
 }
 .images-container img {
   margin: 0 10px;
+  height: 100%;
 }
 
 .text-container {
   margin: 50px auto 0;
   max-width: 750px;
   text-align: center;
+}
+
+.e-resize {
+  cursor: e-resize;
+}
+
+.w-resize {
+  cursor: w-resize;
+}
+
+.images-slider {
+  width: 100%;
+  height: 75vh;
+  background-size: cover;
+  opacity: 0.2;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.images-slider:hover {
+  opacity: 1;
 }
 
 body {

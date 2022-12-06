@@ -3,18 +3,16 @@
   margin: 0 auto;
   height: 100vh;
   width: 100vw;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .images-container {
   display: flex;
-  height: 65vh;
+  justify-content: center;
+  height: 75vh;
   max-width: 100vw;
-  overflow: scroll;
   img {
     margin: 0 10px;
+    height: 100%;
   }
 }
 

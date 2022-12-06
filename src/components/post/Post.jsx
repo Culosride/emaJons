@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import Axios from 'axios';
 import { useParams } from 'react-router-dom';
+import Item from '../item/Item';
+import Carousel from '../carousel/Carousel';
 
 export default function Post() {
   const params = useParams()
   const [post, setPost] = useState([])
-  let imageElements;
 
+  // is loaded after HTML from current and child component is loaded
   useEffect(() => {
     async function loadPost() {
       const response = await Axios.get(`/api/posts/${params.category}/${params.postId}`)
@@ -15,18 +17,18 @@ export default function Post() {
     loadPost()
   }, [])
 
-  if (post.images !== undefined) {
-    imageElements = post.images.map((image) => {
-      return <img src={image.imageUrl} key={image._id}/>
-    })
-  }
+  // only happens once post state is loaded
+  // const imageElements = post.images && post.images.map(image => (
+  //   <Item key={image.publicId} imageUrl={image.imageUrl} />
+  // ))
 
   return (
       <div className="post-container">
         <div>
-          <div className="images-container">
-            {imageElements}
-          </div>
+          {post.images &&
+            <Carousel className="images-container" images={post.images}>
+            </Carousel>
+          }
           <div className="text-container">
             <h1 className="title">{post.title}</h1>
             <p className="subtitle">{post.subtitle}</p>
