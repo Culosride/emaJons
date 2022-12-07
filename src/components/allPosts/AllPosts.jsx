@@ -32,24 +32,23 @@ export default function AllPosts() {
     })
   }
 
-  // if (status === 'loading') {
-  //   postElements = <p>Loading...</p>
-  // } else if (status === 'succeeded') {
-  //   postElements = posts.map(post => <img src={post.images[0].imageUrl} alt="" key={post._id}/>)
-  // } else if (status === 'failed') {
-  //   postElements = <div>{error}</div>
-  // }
-
+  if (status === 'loading') {
+    postElements = <p>Loading...</p>
+  } else if (status === 'succeeded') {
+    postElements = displayPosts(posts)
+  } else if (status === 'failed') {
+    postElements = <div>{error}</div>
+  }
 
   return (
     <div>
       <div className="category-container">
         <div className="tags-container">
           <ul>
-            {/* {tagElements} */}
+            {postElements}
           </ul>
         </div>
-        {status === 'succeeded' && displayPosts(posts)}
+        {/* {status === 'succeeded' && displayPosts(posts)} */}
         {/* {(posts.length !== 0) &&
           <div className="posts-grid">
             {
