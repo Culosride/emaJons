@@ -191,6 +191,35 @@ input, textarea, select {
   background-color: black;
 }
 
+.carousel {
+  width: 100vw;
+  height: 74vh;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.inner {
+  height: 74vh;
+  display: flex;
+  transition: transform 0.3s;
+}
+.inner img {
+  height: 74vh;
+  opacity: 0.2;
+  transition: all ease-in 0.3s;
+  margin: 0 10px;
+}
+.inner img:hover {
+  opacity: 0.5;
+}
+.inner img.current {
+  opacity: 1;
+}
+
+.handles {
+  cursor: pointer;
+}
+
 body {
   margin: 0;
   padding: 0;

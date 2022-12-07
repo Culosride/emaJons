@@ -5,7 +5,6 @@ export default function Header () {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const match = matchPath("/posts/:category/:postId", pathname);
-  console.log(match)
 
   return (
     <>
