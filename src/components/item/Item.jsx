@@ -1,13 +1,13 @@
 import React from "react";
 
-export default function Item({ imageUrl, className, handleClick, dataValue }) {
-  console.log('Child ITEM render')
+export default function Item({ imageUrl, handleClick, dataValue, id, className}) {
   return (
-    <img
-      src={imageUrl}
-      className={className}
-      onClick={handleClick}
-      data-value={dataValue}
-    />
+    <div className={className} id={id}>
+      <img
+        src={imageUrl}
+        onClick={handleClick}
+        data-value={dataValue}
+      />
+    </div>
   );
 }
