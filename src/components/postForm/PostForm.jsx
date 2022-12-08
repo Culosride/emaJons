@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from "react";
 import Axios from "axios";
 import { useNavigate } from 'react-router-dom';
-import { addPost, addTag } from "../../features/posts/postsSlice"
+import { addPost } from "../../features/posts/postsSlice"
+import { addTag } from "../../features/tags/tagsSlice"
 import { useSelector, useDispatch } from "react-redux";
 
 
 export default function PostForm () {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const id = useSelector(state => state.posts.lastId);
   const [tag, setTag] = useState("");
-  const [error, setError] = useState(false)
+  const [error, setError] = useState(false);
   const [postData, setPostData] = useState({
     title: "",
     subtitle:"",
@@ -17,21 +19,8 @@ export default function PostForm () {
     images: [],
     category: "",
     postTags: []
-  })
-  const allTags = useSelector(state => state.posts.allTags)
-
-  // useEffect(() => {
-  //   postData.category && setError(false);
-  //   async function loadTags() {
-  //     const tags = await Axios.get(`/api/categories/${postData.category}`)
-  //     if (tags.data[0]) {
-  //       setTags(tags.data[0].allTags)
-  //     } else {
-  //       setTags([])
-  //     }
-  //   }
-  //   loadTags()
-  // }, [postData]);
+  });
+  const allTags = useSelector(state => state.tags.allTags);
 
   function handleChange(e) {
     const { name, value, files } = e.target;
@@ -48,18 +37,21 @@ export default function PostForm () {
         return ({ ...prev, [name]: value })
       }
     });
+    console.log(postData)
   }
 
-  const handleSubmit = async (e) => {
+  function addNewTag() {
     e.preventDefault()
     const { name, value } = e.target;
     if(name === "addPostTag") {
       setPostData(prev => {
         return ({ ...prev, [name]: value })
       })
-      console.log(postData)
-      return
     }
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
     if(!postData.category) {
       setError(true);
       return
@@ -70,13 +62,14 @@ export default function PostForm () {
       if (key === "images") {
         return postData.images.map(img => formData.append("images", img))
       } else if (key === "postTags") {
-        return postData.postTags.map(tag => formData.append("postTags", tag))
+        return postData.postTags.map(postTag => formData.append("postTags", postTag))
       } else {
         return formData.append(key, postData[key]);
       }
     });
-    const res = await Axios.post("/posts", formData, { headers: {'Content-Type': 'multipart/form-data'}})
-    navigate(`/${postData.category}/${res.data.lastId}`)
+
+    dispatch(addPost(formData))
+      .then((res) => navigate(`/${postData.category}/${res.payload._id}`))
   }
 
   const tagOptions = allTags.map((tag, i) => {
@@ -113,11 +106,11 @@ export default function PostForm () {
               <option value="">-- Please choose a tag --</option>
               {tagOptions}
             </select>
-            <button name="addPostTag" onClick={handleSubmit}>+</button>
+            <button name="addPostTag" onClick={handleSubmit}>Add tag</button>
           </div>
           <label>Or create a new one</label>
           <input type="text" value={tag} placeholder="New tag" name="tag" onChange={handleChange} className="" />
-          <button onClick={() => dispatch(addTag(tag)) && setTag("")}>+</button>
+          <button onClick={() => dispatch(addTag(tag)) && setTag("")}>Create new tag</button>
         </div>
 
         <input type="file" onChange={handleChange} name="images" multiple />

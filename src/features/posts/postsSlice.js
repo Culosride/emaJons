@@ -3,7 +3,8 @@ import * as api from "../../API/index"
 
 const initialState = {
   posts: [],
-  allTags: [],
+  lastId: "",
+  selectedPost: "",
   status: 'idle' || 'loading' || 'succeeded' || 'failed',
   error: "" || null
 }
@@ -12,32 +13,42 @@ export const fetchPosts = createAsyncThunk("/posts/fetchPosts", async () => {
   const response = await api.fetchPosts()
   return response.data
 })
+export const addPost = createAsyncThunk("/posts", async (data) => {
+  const response = await api.addPost(data)
+  return response.data
+})
 
 export const fetchPostsByCategory = createAsyncThunk("/api/posts/fetchPostsByCategory", async (params) => {
   const response = await api.fetchPostsByCategory(params)
-  // console.log("data", response.data)
   return response.data
 })
 
 export const fetchPostById = createAsyncThunk("/api/posts/fetchPostById", async (params) => {
   const response = await api.fetchPostById(params)
-  // console.log("data", response.data)
   return response.data
 })
 
 const postsSlice = createSlice({
   name: 'posts',
   initialState,
-  reducers: {
-    addPost: (state) => {
-      return state
-    },
-    addTag: (state, action) => {
-      state.allTags = state.allTags.concat(action.payload);
-    }
-  },
+  reducers: {},
   extraReducers(builder) {
     builder
+      .addCase(addPost.pending, (state, action) => {
+        state.status = 'loading'
+      })
+      .addCase(addPost.fulfilled, (state, action) => {
+        return state = {
+          ...state,
+          lastId: action.payload._id,
+          status: 'succeeded',
+          selectedPost: action.payload
+       }
+      })
+      .addCase(addPost.rejected, (state, action) => {
+        state.status = 'failed'
+        state.error = action.error.message
+      })
       .addCase(fetchPostsByCategory.pending, (state, action) => {
         state.status = 'loading'
       })
@@ -66,9 +77,11 @@ const postsSlice = createSlice({
         state.status = 'loading'
       })
       .addCase(fetchPostById.fulfilled, (state, action) => {
-        state.status = 'succeeded'
-        // Add any fetched posts to the array
-        state.posts = action.payload
+        return state = {
+          ...state,
+          status: 'succeeded',
+          selectedPost: action.payload
+       }
       })
       .addCase(fetchPostById.rejected, (state, action) => {
         state.status = 'failed'
@@ -81,7 +94,7 @@ const postsSlice = createSlice({
     // }
 })
 
-export const { addTag, addPost } = postsSlice.actions
+// export const { addPost } = postsSlice.actions
 
 
 export default postsSlice.reducer

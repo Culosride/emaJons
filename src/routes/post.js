@@ -43,13 +43,10 @@ postRouter.get('/api/posts/:category/:postId', async (req, res) => {
 
 
 postRouter.post('/posts', multerUpload, async (req, res) => {
-  try {
     if (req.isAuthenticated()) {
     const post = new Post(req.body);
     const savedPost = await post.save();
-
     const images = req.files;
-    // res.status(200).json(post)
     await Promise.all(images.map(async (image) => {
       const data = await uploadToCloudinary(image.path, 'emaJons_dev');
       const newImage = new Image({
@@ -59,18 +56,44 @@ postRouter.post('/posts', multerUpload, async (req, res) => {
       await Post.updateOne(
         { _id: savedPost._id },
         { $addToSet: { images: [newImage]}}
-      )
-    }))
-    res.status(200).json({lastId: post._id})
+        )
+      }))
+      const updatedPost = await Post.findById(post._id)
+      console.log("savedpost", updatedPost)
+      res.status(200).json(updatedPost)
     } else {
-      console.log(req.isAuthenticated)
-      res.send("/login")
+      res.redirect("/login")
     }
-  }
-  catch (err) {
-    res.status(400).send(err);
-  }
 });
+// postRouter.post('/posts', multerUpload, async (req, res) => {
+//   console.log("req.body", req.files)
+//   try {
+//     if (req.isAuthenticated()) {
+//     const post = new Post(req.body);
+//     const savedPost = await post.save();
+
+//     const images = req.files;
+//     // res.status(200).json(post)
+//     await Promise.all(images.map(async (image) => {
+//       const data = await uploadToCloudinary(image.path, 'emaJons_dev');
+//       const newImage = new Image({
+//         publicId: data.public_id,
+//         imageUrl: data.url,
+//       });
+//       await Post.updateOne(
+//         { _id: savedPost._id },
+//         { $addToSet: { images: [newImage]}}
+//       )
+//     }))
+//     res.status(200).json({lastId: post._id})
+//     } else {
+//       res.send("/login")
+//     }
+//   }
+//   catch (err) {
+//     res.status(400).send(err);
+//   }
+// });
 
 
 // router.delete('/image/:id', async (req, res) => {

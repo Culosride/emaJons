@@ -14,7 +14,6 @@ export default function AllPosts() {
   const posts = useSelector(state => state.posts.posts)
   const status = useSelector(state => state.posts.status)
   const error = useSelector(state => state.posts.error)
-  console.log("log from AllPosts", posts, "filtered")
 
   let postElements = []
 
