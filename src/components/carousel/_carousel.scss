@@ -23,7 +23,7 @@
   img {
     height: 74vh;
     margin: 0 auto;
-    padding: 0 10px;
+    padding: 0 5vw;
   }
 }
 
@@ -39,7 +39,7 @@
   opacity: 0.3;
 }
 .w-resize:hover, .e-resize:hover {
-  opacity: .5;
+  opacity: .6;
 }
 .selected-slide {
   opacity: 1;

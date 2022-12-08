@@ -45,27 +45,6 @@ export default function Carousel({ images }) {
     ),
   };
 
-  const fadeOutImages = () => {
-    const images = document.querySelectorAll('.slides')
-    images.forEach(image => {
-      image.classList.add('fade-out')
-    })
-  }
-
-  const fadeInImages = () => {
-    const images = document.querySelectorAll('.slides')
-    images.forEach(image => {
-      image.classList.remove('fade-out')
-    })
-  }
-
-  let timer
-  document.addEventListener(`mousemove`, () => {
-      clearTimeout(timer)
-      timer = setTimeout(fadeOutImages, 500)
-  })
-  document.addEventListener('mousemove', fadeInImages)
-
   const imageElements = images.map((image, i) => {
     const direction = (activeSlide + 1 === i) && 'e-resize' || (activeSlide - 1 === i) && 'w-resize';
     return <Item

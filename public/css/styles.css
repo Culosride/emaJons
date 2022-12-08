@@ -183,7 +183,7 @@ input, textarea, select {
 .inner-slider-div img {
   height: 74vh;
   margin: 0 auto;
-  padding: 0 10px;
+  padding: 0 5vw;
 }
 
 .e-resize {
@@ -201,7 +201,7 @@ input, textarea, select {
 }
 
 .w-resize:hover, .e-resize:hover {
-  opacity: 0.5;
+  opacity: 0.6;
 }
 
 .selected-slide {
