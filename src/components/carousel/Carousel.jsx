@@ -10,49 +10,21 @@ export default function Carousel({ images }) {
 
   const settings = {
     className: "slider variable-width inner-slider-div",
-    arrows: false,
+    dots: true,
+    fade: true,
     infinite: false,
-    centerMode: true,
+    speed: 500,
     slidesToShow: 1,
-    slidesToScroll: 1,
-    variableWidth: true,
-    focusOnSelect: true,
-    beforeChange: (current, next) => setActiveSlide(next),
-    afterChange: (current) => setNextSlide(current),
-    appendDots: dots => (
-      <div
-        style={{
-          backgroundColor: "#ddd",
-          borderRadius: "10px",
-          padding: "10px"
-        }}
-      >
-        <ul style={{ margin: "0px" }}> {dots} </ul>
-      </div>
-    ),
-    customPaging: i => (
-      <div
-        style={{
-          width: "30px",
-          color: "blue",
-          margin: '0 4px',
-          backgroundColor: 'green',
-          border: "1px blue solid"
-        }}
-      >
-        {_}
-      </div>
-    ),
+    slidesToScroll: 1
   };
 
   const imageElements = images.map((image, i) => {
-    const direction = (activeSlide + 1 === i) && 'e-resize' || (activeSlide - 1 === i) && 'w-resize';
     return <Item
       imageUrl={image.imageUrl}
       key={image.publicId}
       id={i}
       className={
-        (activeSlide === i) ? 'selected-slide' : `slides ${direction}`
+        (activeSlide === i) ? 'selected-slide' : `slides`
       } />
   })
 

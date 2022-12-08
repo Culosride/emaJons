@@ -18,21 +18,21 @@ export default function Post() {
 
   return (
       <div className="post-container">
-        <div>
-          {post.images &&
-            <Carousel className="images-container" images={post.images}>
-            </Carousel>
-          }
-            <div className="text-container">
-              <div className="headline">
-                <div>
-                  <h1 className="title">{post.title}</h1>
-                  {post.subtitle && <p className="subtitle">{post.subtitle}</p>}
-                </div>
+        {post.images &&
+          <Carousel className="images-container" images={post.images}>
+          </Carousel>
+        }
+          <div className="text-container">
+          <div>
+            <div className="headline">
+              <div>
+                <h1 className="title">{post.title}</h1>
+                {post.subtitle && <p className="subtitle">{post.subtitle}</p>}
               </div>
-              {post.content && <p className="content">{post.content}</p>}
             </div>
-        </div>
+            {post.content && <p className="content">{post.content}</p>}
+          </div>
+          </div>
       </div>
   )
 }

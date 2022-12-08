@@ -1,17 +1,17 @@
 .post-container {
   text-align: center;
+  display: grid;
+  grid-template-columns: 72vw 28vw;
   margin: 0 auto;
   height: calc(100vh - 110px);
   width: 100vw;
-  margin-top: 70px;
-  // padding: 0 60px;
   box-sizing: border-box;
 }
 
 .images-container {
   display: flex;
   justify-content: center;
-  height: 74vh;
+  height: 100vh;
   max-width: 100vw;
   img {
     margin: 0 10px;
@@ -28,18 +28,20 @@
 }
 
 .text-container {
-  padding: 0 60px;
-  text-align: center;
+  padding: 30px;
+  box-sizing: border-box;
+  text-align: left;
   max-width: 780px;
   margin: 0 auto;
+  display: flex;
+  align-items: flex-end;
+  height: 100vh;
+  border-left: 1px solid black;
 }
 
 .headline {
-  position: sticky;
-  top: 0px;
+  position: relative;
   background-color: white;
   display: flex;
   align-items: center;
-  justify-content: center;
-  padding: 24px;
 }
