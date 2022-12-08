@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Slider from "react-slick";
 import Item from '../item/Item';
 
@@ -10,7 +10,7 @@ export default function Carousel({ images }) {
 
   const settings = {
     className: "slider variable-width inner-slider-div",
-    arrows: true,
+    arrows: false,
     infinite: false,
     centerMode: true,
     slidesToShow: 1,
@@ -40,10 +40,31 @@ export default function Carousel({ images }) {
           border: "1px blue solid"
         }}
       >
-        {i + 1}
+        {_}
       </div>
     ),
   };
+
+  const fadeOutImages = () => {
+    const images = document.querySelectorAll('.slides')
+    images.forEach(image => {
+      image.classList.add('fade-out')
+    })
+  }
+
+  const fadeInImages = () => {
+    const images = document.querySelectorAll('.slides')
+    images.forEach(image => {
+      image.classList.remove('fade-out')
+    })
+  }
+
+  let timer
+  document.addEventListener(`mousemove`, () => {
+      clearTimeout(timer)
+      timer = setTimeout(fadeOutImages, 500)
+  })
+  document.addEventListener('mousemove', fadeInImages)
 
   const imageElements = images.map((image, i) => {
     const direction = (activeSlide + 1 === i) && 'e-resize' || (activeSlide - 1 === i) && 'w-resize';

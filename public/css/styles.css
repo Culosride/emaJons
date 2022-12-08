@@ -196,13 +196,11 @@ input, textarea, select {
 
 .slides {
   position: relative;
-}
-.slides img {
   transition: all ease-in-out 0.3s;
-  opacity: 0;
+  opacity: 0.3;
 }
 
-.w-resize:hover img, .e-resize:hover img {
+.w-resize:hover, .e-resize:hover {
   opacity: 0.5;
 }
 
@@ -238,6 +236,10 @@ input, textarea, select {
 }
 
 .slick-next.slick-disabled:before, .slick-prev.slick-disabled:before {
+  opacity: 0;
+}
+
+.fade-out {
   opacity: 0;
 }
 
