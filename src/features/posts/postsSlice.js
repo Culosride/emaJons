@@ -61,18 +61,6 @@ const postsSlice = createSlice({
         state.status = 'failed'
         state.error = action.error.message
       })
-      .addCase(fetchPosts.pending, (state, action) => {
-        state.status = 'loading'
-      })
-      .addCase(fetchPosts.fulfilled, (state, action) => {
-        state.status = 'succeeded'
-        // Add any fetched posts to the array
-        state.posts = state.posts.concat(action.payload)
-      })
-      .addCase(fetchPosts.rejected, (state, action) => {
-        state.status = 'failed'
-        state.error = action.error.message
-      })
       .addCase(fetchPostById.pending, (state, action) => {
         state.status = 'loading'
       })

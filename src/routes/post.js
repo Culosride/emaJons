@@ -59,7 +59,6 @@ postRouter.post('/posts', multerUpload, async (req, res) => {
         )
       }))
       const updatedPost = await Post.findById(post._id)
-      console.log("savedpost", updatedPost)
       res.status(200).json(updatedPost)
     } else {
       res.redirect("/login")

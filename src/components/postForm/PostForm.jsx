@@ -24,10 +24,6 @@ export default function PostForm () {
 
   function handleChange(e) {
     const { name, value, files } = e.target;
-
-    if(name === "tag") {setTag(() => {
-      return value
-    })}
     setPostData(prev => {
       if (name === "images") {
         return ({ ...prev, images: [...prev.images, ...files] })
@@ -40,14 +36,18 @@ export default function PostForm () {
     console.log(postData)
   }
 
-  function addNewTag() {
+  function addNewTag(e) {
     e.preventDefault()
     const { name, value } = e.target;
-    if(name === "addPostTag") {
-      setPostData(prev => {
-        return ({ ...prev, [name]: value })
-      })
-    }
+    setPostData(prev => {
+      return ({ ...prev, [name]: value })
+    })
+  }
+  function handleTag(e) {
+    const { name, value } = e.target;
+    if(name === "tag") {setTag(() => {
+      return value
+    })}
   }
 
   const handleSubmit = async (e) => {
@@ -106,11 +106,11 @@ export default function PostForm () {
               <option value="">-- Please choose a tag --</option>
               {tagOptions}
             </select>
-            <button name="addPostTag" onClick={handleSubmit}>Add tag</button>
+            <button name="addPostTag" onClick={addNewTag}>Add tag</button>
           </div>
           <label>Or create a new one</label>
-          <input type="text" value={tag} placeholder="New tag" name="tag" onChange={handleChange} className="" />
-          <button onClick={() => dispatch(addTag(tag)) && setTag("")}>Create new tag</button>
+          <input type="text" value={tag} placeholder="New tag" name="tag" onChange={handleTag} className="" />
+          <button type="button" onClick={() => dispatch(addTag(tag)) && setTag("")}>Create new tag</button>
         </div>
 
         <input type="file" onChange={handleChange} name="images" multiple />
