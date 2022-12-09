@@ -8,11 +8,10 @@ import { useSelector, useDispatch } from "react-redux";
 export default function PostForm () {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
   const tagsByCategory = useSelector(state => state.categories.categoryTags);
   const error = useSelector(state => state.categories.error);
   const status = useSelector(state => state.categories.status);
-
+  const [tags, setTags] = useState(tagsByCategory)
   const [tag, setTag] = useState("");
   const [emptyCategory, setEmptyCategory] = useState(false);
   const [postData, setPostData] = useState({
@@ -23,10 +22,12 @@ export default function PostForm () {
     category: "",
     postTags: []
   });
+  // console.log(postData)
 
   useEffect(() => {
     if(postData.category){
       dispatch(fetchCategoryTags(postData.category))
+      // setTags(tagsByCategory)
     }
     }, [postData.category])
 
@@ -41,9 +42,8 @@ export default function PostForm () {
       if (name === "images") {
         return ({ ...prev, images: [...prev.images, ...files] })
       } else if (name === "postTags") {
+        // setTags((prev => prev.filter(singleTag => singleTag !== value)));
         return ({ ...prev, postTags: [...prev.postTags, value]  })
-      } else if (name === "category") {
-        return ({ ...prev, [name]: value })
       } else {
         return ({ ...prev, [name]: value })
       }
