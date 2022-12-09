@@ -13,6 +13,7 @@ export const fetchPosts = createAsyncThunk("/posts/fetchPosts", async () => {
   const response = await api.fetchPosts()
   return response.data
 })
+
 export const addPost = createAsyncThunk("/posts", async (data) => {
   const response = await api.addPost(data)
   return response.data
