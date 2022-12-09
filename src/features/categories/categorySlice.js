@@ -24,7 +24,7 @@ const categorySlice = createSlice({
         state.status = 'loading'
       })
       .addCase(addCategoryTag.fulfilled, (state, action) => {
-        state.categoryTags = state.categoryTags.concat(action.payload.allTags);
+        state.categoryTags = state.categoryTags.concat(action.payload.categoryTags);
       })
       .addCase(addCategoryTag.rejected, (state, action) => {
         state.status = 'failed'

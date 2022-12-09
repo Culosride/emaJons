@@ -14,12 +14,12 @@ categoryRouter.get('/api/categories/:category', async (req, res) => {
 
 module.exports = categoryRouter;
 
-categoryRouter.post("/categories", async (req, res) => {
+categoryRouter.patch("/categories", async (req, res) => {
   const [tag, category] = req.body
   try {
     const selectedCategory = await Category.findOneAndUpdate(
       { name: _.capitalize(category) },
-      { allTags: tag },
+      { $push: { categoryTags: tag } },
       {new: true}
       );
     res.status(200).json(selectedCategory);
