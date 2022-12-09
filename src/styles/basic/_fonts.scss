@@ -4,7 +4,7 @@ $secondary-font: 'Minion-Pro', Georgia, serif;
 .title {
   font-family: $main-font;
   font-weight: bold;
-  font-size: 1.375rem;
+  font-size: 1.25rem;
   text-transform: uppercase;
   margin: 0;
 }
@@ -23,8 +23,8 @@ $secondary-font: 'Minion-Pro', Georgia, serif;
   font-family: $main-font;
   font-size: 1rem;
   line-height: 1.5rem;
-  padding-bottom: 40px;
+  padding-bottom: 30px;
   text-align: left;
   max-width: 800px;
-  margin: 0;
+  margin: 20px 0 0 0;
 }

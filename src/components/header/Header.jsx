@@ -11,7 +11,7 @@ export default function Header () {
       {match &&
         <ul className="header-post">
           <li><Link reloadDocument to="/" className="logo">EmaJons</Link></li>
-          <button onClick={() => navigate(-1)}>X</button>
+          <button onClick={() => navigate(-1)}><i className="close-icon"></i></button>
         </ul> ||
         <ul className="header-global">
           <li><Link reloadDocument to="/" className="logo">EmaJons</Link></li>

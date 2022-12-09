@@ -11,11 +11,19 @@ export default function Carousel({ images }) {
   const settings = {
     className: "slider variable-width inner-slider-div",
     dots: true,
+    infinite: true,
     fade: true,
-    infinite: false,
-    speed: 500,
+    speed: 600,
     slidesToShow: 1,
-    slidesToScroll: 1
+    slidesToScroll: 1,
+    dotsClass: "slick-dots",
+    customPaging: function(i) {
+      return (
+        <a>
+          <div className='indicator'></div>
+        </a>
+      );
+    },
   };
 
   const imageElements = images.map((image, i) => {
@@ -28,11 +36,25 @@ export default function Carousel({ images }) {
       } />
   })
 
+  function next() {
+    slider.current.slickNext();
+  }
+  function previous() {
+    slider.current.slickPrev();
+  }
+
+
   return (
-    <div style={{margin: '0 auto'}}>
+    <div style={{height: '100vh'}}>
       <Slider {...settings} ref={slider}>
         {imageElements}
       </Slider>
+      <div className="slider-navigation">
+        <div className="button-prev" onClick={previous}>
+        </div>
+        <div className="button-next" onClick={next}>
+        </div>
+      </div>
     </div>
   );
 }

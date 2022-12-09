@@ -22,7 +22,7 @@ export default function Post() {
           <Carousel className="images-container" images={post.images}>
           </Carousel>
         }
-          <div className="text-container">
+        <div className={post.content ? 'text-container text-container-content' : 'text-container'}>
           <div>
             <div className="headline">
               <div>
@@ -32,7 +32,7 @@ export default function Post() {
             </div>
             {post.content && <p className="content">{post.content}</p>}
           </div>
-          </div>
+        </div>
       </div>
   )
 }
