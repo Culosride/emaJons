@@ -3,6 +3,7 @@ const Category = require("./src/models/category")
 
 const main = async () => {
   await mongoose.connect("mongodb://localhost:27017/emaJonsDB")
+
   const categories = [
     { name: 'Walls', categoryTags: []},
     { name: 'Video', categoryTags: []},
