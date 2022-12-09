@@ -2,6 +2,7 @@ const express = require('express');
 const Category = require('../models/category');
 const categoryRouter = new express.Router();
 const _ = require('lodash');
+const noDups = require("../middleware/validation")
 
 categoryRouter.get('/api/categories/:category', async (req, res) => {
   try {
@@ -12,9 +13,8 @@ categoryRouter.get('/api/categories/:category', async (req, res) => {
   }
 })
 
-module.exports = categoryRouter;
 
-categoryRouter.patch("/categories", async (req, res) => {
+categoryRouter.patch("/categories", noDups, async (req, res) => {
   const [tag, category] = req.body
   try {
     const selectedCategory = await Category.findOneAndUpdate(
@@ -22,8 +22,10 @@ categoryRouter.patch("/categories", async (req, res) => {
       { $push: { categoryTags: tag } },
       {new: true}
       );
-    res.status(200).json(selectedCategory);
-  } catch (error) {
-    console.error();
-  }
+      res.status(200).json(selectedCategory);
+    } catch (error) {
+      console.error();
+    }
 })
+
+module.exports = categoryRouter;

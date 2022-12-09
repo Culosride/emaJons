@@ -24,11 +24,12 @@ const categorySlice = createSlice({
         state.status = 'loading'
       })
       .addCase(addCategoryTag.fulfilled, (state, action) => {
+        state.status = 'succeeded';
         state.categoryTags = state.categoryTags.concat(action.payload.categoryTags);
       })
       .addCase(addCategoryTag.rejected, (state, action) => {
-        state.status = 'failed'
-        state.error = action.error.message
+        state.status = "failed";
+        state.error = action.error.errorMessage
       })
   }
 })

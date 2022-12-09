@@ -11,7 +11,7 @@ export default function PostForm () {
   const navigate = useNavigate();
   // const id = useSelector(state => state.posts.lastId);
   const [tag, setTag] = useState("");
-  const [error, setError] = useState(false);
+  const [emptyCategory, setEmptyCategory] = useState(false);
   const [postData, setPostData] = useState({
     title: "",
     subtitle:"",
@@ -21,6 +21,7 @@ export default function PostForm () {
     postTags: []
   });
   const tagsByCategory = useSelector(state => state.categories.categoryTags);
+  const error = useSelector(state => state.categories.error);
 
   function handleChange(e) {
     const { name, value, files } = e.target;
@@ -46,7 +47,7 @@ export default function PostForm () {
   const handleSubmit = async (e) => {
     e.preventDefault()
     if(!postData.category) {
-      setError(true);
+      setEmptyCategory(true);
       return
     }
 
@@ -90,7 +91,7 @@ export default function PostForm () {
           <option value="Video">Video</option>
           <option value="Sculpture">Sculpture</option>
         </select>
-        {error && <p>Devi pigliarne una</p>}
+        {emptyCategory && <p>Devi pigliarne una</p>}
 
         {postData.category && <div className="tags-container">
           <div>
@@ -103,6 +104,7 @@ export default function PostForm () {
           <label>Or create a new one</label>
           <input type="text" value={tag} placeholder="New tag" name="tag" onChange={handleTag} className="" />
           <button type="button" onClick={() => dispatch(addCategoryTag([tag, postData.category])) && setTag("")}>Create new tag</button>
+          {error && <p>{error}</p>}
         </div>}
 
         <input type="file" onChange={handleChange} name="images" multiple />
