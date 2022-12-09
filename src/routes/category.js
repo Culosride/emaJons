@@ -23,8 +23,8 @@ categoryRouter.patch("/categories", noDups, async (req, res) => {
       {new: true}
       );
       res.status(200).json(selectedCategory);
-    } catch (error) {
-      console.error();
+    } catch (err) {
+      res.status(400).send(err);
     }
 })
 

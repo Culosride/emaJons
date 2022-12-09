@@ -2,9 +2,8 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import * as api from "../../API/index"
 
 export const addCategoryTag = createAsyncThunk("/categories", async (data) => {
-  const response = await api.addCategoryTag(data)
-  console.log(response.data)
-  return response.data
+    const response = await api.addCategoryTag(data)
+    return response.data
 })
 
 
@@ -27,9 +26,9 @@ const categorySlice = createSlice({
         state.status = 'succeeded';
         state.categoryTags = state.categoryTags.concat(action.payload.categoryTags);
       })
-      .addCase(addCategoryTag.rejected, (state, action) => {
+      .addCase(addCategoryTag.rejected, (state) => {
         state.status = "failed";
-        state.error = action.error.errorMessage
+        state.error = "Tag already exists for this category"
       })
   }
 })

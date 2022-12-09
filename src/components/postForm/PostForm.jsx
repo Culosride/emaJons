@@ -9,7 +9,6 @@ import { useSelector, useDispatch } from "react-redux";
 export default function PostForm () {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  // const id = useSelector(state => state.posts.lastId);
   const [tag, setTag] = useState("");
   const [emptyCategory, setEmptyCategory] = useState(false);
   const [postData, setPostData] = useState({
@@ -23,6 +22,11 @@ export default function PostForm () {
   const tagsByCategory = useSelector(state => state.categories.categoryTags);
   const error = useSelector(state => state.categories.error);
 
+  function createNewTag() {
+    dispatch(addCategoryTag([tag, postData.category])) &&
+    setTag("")
+  }
+
   function handleChange(e) {
     const { name, value, files } = e.target;
     setPostData(prev => {
@@ -34,7 +38,6 @@ export default function PostForm () {
         return ({ ...prev, [name]: value })
       }
     });
-    console.log(postData)
   }
 
   function handleTag(e) {
@@ -103,7 +106,7 @@ export default function PostForm () {
           </div>
           <label>Or create a new one</label>
           <input type="text" value={tag} placeholder="New tag" name="tag" onChange={handleTag} className="" />
-          <button type="button" onClick={() => dispatch(addCategoryTag([tag, postData.category])) && setTag("")}>Create new tag</button>
+          <button type="button" onClick={createNewTag}>Create new tag</button>
           {error && <p>{error}</p>}
         </div>}
 
