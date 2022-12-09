@@ -44,7 +44,7 @@ const postsSlice = createSlice({
           lastId: action.payload._id,
           status: 'succeeded',
           selectedPost: action.payload
-       }
+        }
       })
       .addCase(addPost.rejected, (state, action) => {
         state.status = 'failed'

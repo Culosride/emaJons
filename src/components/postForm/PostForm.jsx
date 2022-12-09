@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from "react";
-import Axios from "axios";
 import { useNavigate } from 'react-router-dom';
 import { addPost } from "../../features/posts/postsSlice"
-import { addCategoryTag } from "../../features/categories/categorySlice"
+import { fetchCategoryTags, addCategoryTag } from "../../features/categories/categorySlice"
 import { useSelector, useDispatch } from "react-redux";
 
 
 export default function PostForm () {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const tagsByCategory = useSelector(state => state.categories.categoryTags);
+  const error = useSelector(state => state.categories.error);
+  const status = useSelector(state => state.categories.status);
+
   const [tag, setTag] = useState("");
   const [emptyCategory, setEmptyCategory] = useState(false);
   const [postData, setPostData] = useState({
@@ -19,8 +23,12 @@ export default function PostForm () {
     category: "",
     postTags: []
   });
-  const tagsByCategory = useSelector(state => state.categories.categoryTags);
-  const error = useSelector(state => state.categories.error);
+
+  useEffect(() => {
+    if(postData.category){
+      dispatch(fetchCategoryTags(postData.category))
+    }
+    }, [postData.category])
 
   function createNewTag() {
     dispatch(addCategoryTag([tag, postData.category])) &&
@@ -34,6 +42,8 @@ export default function PostForm () {
         return ({ ...prev, images: [...prev.images, ...files] })
       } else if (name === "postTags") {
         return ({ ...prev, postTags: [...prev.postTags, value]  })
+      } else if (name === "category") {
+        return ({ ...prev, [name]: value })
       } else {
         return ({ ...prev, [name]: value })
       }

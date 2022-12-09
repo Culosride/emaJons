@@ -13,7 +13,6 @@ categoryRouter.get('/api/categories/:category', async (req, res) => {
   }
 })
 
-
 categoryRouter.patch("/categories", noDups, async (req, res) => {
   const [tag, category] = req.body
   try {
