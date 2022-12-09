@@ -56,6 +56,12 @@ input, textarea, select {
   margin-bottom: 20px;
 }
 
+.tags-container {
+  width: 50%;
+  display: flex;
+  justify-content: space-between;
+}
+
 .post-container {
   text-align: center;
   margin: 0 auto;

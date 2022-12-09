@@ -6,3 +6,9 @@ input, textarea, label, select {
 input, textarea, select {
   margin-bottom: 20px;
 }
+
+.tags-container {
+  width: 50%;
+  display: flex;
+  justify-content: space-between;
+}

@@ -13,8 +13,6 @@ import {
   Link
 } from 'react-router-dom';
 export default function App() {
-  const params = useParams()
-  // console.log("par",params)
   return (
     <Router>
       <div className="App">

@@ -1,17 +1,15 @@
 import React, { useState, useEffect } from 'react';
 // import Axios from 'axios';
 import { useParams } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux'; // hook to select data from redux store
+import { useSelector, useDispatch } from 'react-redux'; // hook to select data from state (in redux store)
 import { fetchPostById } from '../../features/posts/postsSlice';
-
 
 export default function Post() {
   const dispatch = useDispatch()
+  const post = useSelector(state => state.posts.selectedPost)
   const params = useParams()
-  const post = useSelector(state => state.posts.posts)
   const status = useSelector(state => state.posts.status)
   const error = useSelector(state => state.posts.error)
-  console.log("post",post)
 
   let imageElements = []
   useEffect(() => {
@@ -23,15 +21,17 @@ export default function Post() {
   if (status === 'loading') {
     imageElements = <p>Loading...</p>
   } else if (status === 'succeeded') {
-      imageElements = post.images.map((image) => {
-        return <img src={image.imageUrl} key={image.publicId}/>
-      })
+      post && displayImgs(post)
   } else if (status === 'failed') {
     imageElements = <div>{error}</div>
   }
 
+  function displayImgs(post) {
+    imageElements = post.images.map((image) => {
+      return <img src={image.imageUrl} key={image.publicId}/>
+    })
+  }
 
-  console.log(imageElements)
   return (
       <div className="post-container">
         <div>
