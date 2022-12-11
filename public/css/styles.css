@@ -48,8 +48,10 @@
 }
 
 input, textarea, label, select {
-  width: 50%;
+  width: 100%;
   display: block;
+  outline: none;
+  border-style: hidden;
 }
 
 input, textarea, select {
@@ -60,6 +62,19 @@ input, textarea, select {
   width: 50%;
   display: flex;
   justify-content: space-between;
+}
+
+.post-form {
+  display: grid;
+  grid-template-columns: 8fr 4fr;
+  grid-column-gap: 20px;
+  grid-row-gap: 20px;
+  justify-items: stretch;
+  align-items: stretch;
+  width: 40%;
+}
+.post-form .form-post-imgs {
+  justify-content: flex-end;
 }
 
 .post-container {
