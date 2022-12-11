@@ -84,16 +84,16 @@ export default function PostForm () {
   })
 
   return (
-    <div className="wrapper">
-      <form onSubmit={handleSubmit}>
-        <label>Title</label>
-        <input type="text" placeholder= "Untitled" value={postData.title} name="title" onChange={handleChange} className="" />
+    <div className="form-wrapper">
+      <form className="post-form" onSubmit={handleSubmit}>
+        {/* <label className="">TITLE</label> */}
+        <input classNmae="form-post-title" type="text" placeholder= "UNTITLED" value={postData.title} name="title" onChange={handleChange} className="" />
 
-        <label>Subtitle</label>
-        <input type="text" value={postData.subtitle} name="subtitle" onChange={handleChange} className="" />
+        {/* <label className="form-post-subtitle">Subtitle</label> */}
+        <input type="text" className="form-post-subtitle" placeholder= "Subtitle" value={postData.subtitle} name="Subtitle" onChange={handleChange}/>
 
-        <label>Content</label>
-        <textarea value={postData.content} name="content" onChange={handleChange} className="" />
+        {/* <label>Content</label> */}
+        <textarea className="form-post-content" placeholder= "Add content here....." value={postData.content} name="content" onChange={handleChange}/>
 
         <label htmlFor="categories">Category:</label>
         <select name="category" id="categories" onChange={handleChange}>
@@ -120,7 +120,7 @@ export default function PostForm () {
           {error && <p>{error}</p>}
         </div>}
 
-        <input type="file" onChange={handleChange} name="images" multiple />
+        <input className="form-post-imgs" type="file" onChange={handleChange} name="images" multiple />
 
         <input type="submit" value="Submit post!" />
       </form>
