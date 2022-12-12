@@ -1,6 +1,7 @@
 input, textarea, label, select {
   width: 100%;
   display: block;
+  height: fit-content;
   // outline: none;
   // border-style: hidden;
 
@@ -11,7 +12,7 @@ input, textarea, select {
 }
 
 .tags-container {
-  width: 50%;
+  // width: 50%;
   display: flex;
   justify-content: space-between;
 }

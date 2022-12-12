@@ -3,12 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { addPost } from "../../features/posts/postsSlice"
 import { fetchAllTags, addNewTag } from "../../features/categories/categorySlice"
 import { useSelector, useDispatch } from "react-redux";
-
+import Tag from "../tag/Tag";
 
 export default function PostForm () {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const tagsByCategory = useSelector(state => state.categories.allTags);
+  const availableTags = useSelector(state => state.categories.allTags);
   const error = useSelector(state => state.categories.error);
   const status = useSelector(state => state.categories.status);
   // const [tags, setTags] = useState(tagsByCategory)
@@ -22,7 +22,6 @@ export default function PostForm () {
     category: "",
     postTags: []
   });
-  // console.log(postData)
 
   useEffect(() => {
   if (status === 'idle') {
@@ -32,7 +31,6 @@ export default function PostForm () {
     }, [dispatch, status])
 
   function createNewTag() {
-    // console.log("tag at post is", tag)
     dispatch(addNewTag(tag)) &&
     setTag("")
   }
@@ -80,8 +78,14 @@ export default function PostForm () {
       .then((res) => navigate(`/${postData.category}/${res.payload._id}`))
   }
 
-  const tagOptions = tagsByCategory.map((tag, i) => {
-    return <option name="postTags" value={tag} key={`${tag}-${i}`}>{tag}</option>
+  // const tagOptions = tagsByCategory.map((tag, i) => {
+  //   return <option name="postTags" value={tag} key={`${tag}-${i}`}>{tag}</option>
+  // })
+
+  const tagsElements = availableTags.map((t, i) => {
+    if(t.startsWith(tag)) {
+      return <Tag name={t} key={`${t}-${i}`}/>
+    }
   })
 
   return (
@@ -110,15 +114,15 @@ export default function PostForm () {
         <div className="tags-container">
           <div>
             <label htmlFor="postTags" multiple>Add tags:</label>
-            <select name="postTags" id="postTags" onChange={handleChange}>
+            {/* <select name="postTags" id="postTags" onChange={handleChange}>
               <option value="">-- Please choose a tag --</option>
               {tagOptions}
-            </select>
+            </select> */}
+            {tagsElements}
           </div>
-          <label>Or create a new one</label>
           <input type="text" value={tag} placeholder="New tag" name="tag" onChange={handleTag} className="" />
           <button type="button" onClick={createNewTag}>Create new tag</button>
-          {error && <p>{error}</p>}
+          {/* {error && <p>{error}</p>} */}
         </div>
 
         <input className="form-post-imgs" type="file" onChange={handleChange} name="images" multiple />
