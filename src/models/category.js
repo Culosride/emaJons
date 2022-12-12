@@ -1,8 +1,12 @@
 const mongoose = require("mongoose")
 
 const categorySchema = new mongoose.Schema({
-    name: String,
-    allTags: [String]
+    name: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    categoryTags: [String],
   }, {timestamps: true})
 
 const Category = mongoose.model('Category', categorySchema);

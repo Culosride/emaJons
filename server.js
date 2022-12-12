@@ -1,6 +1,7 @@
 const express = require("express")
 require("./src/db/mongoose")
 const User = require("./src/models/user") // needed to authenticate session
+const Category = require('./src/models/category');
 const { authRouter, postRouter, categoryRouter } = require("./src/routes/routers")
 const passport = require("passport");
 const session = require("express-session")
@@ -8,7 +9,6 @@ const errorHandler = require("./src/middleware/errorHandler")
 const path = require('path')
 const cors = require('cors')
 const app = express()
-
 app.use(cors())
 
 app.use(session ({

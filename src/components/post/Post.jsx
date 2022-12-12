@@ -1,20 +1,37 @@
 import React, { useState, useEffect } from 'react';
-import Axios from 'axios';
+// import Axios from 'axios';
 import { useParams } from 'react-router-dom';
 import Carousel from '../carousel/Carousel';
+import { useSelector, useDispatch } from 'react-redux'; // hook to select data from state (in redux store)
+import { fetchPostById } from '../../features/posts/postsSlice';
 
 export default function Post() {
+  const dispatch = useDispatch()
+  const post = useSelector(state => state.posts.selectedPost)
   const params = useParams()
-  const [post, setPost] = useState([])
+  const status = useSelector(state => state.posts.status)
+  const error = useSelector(state => state.posts.error)
 
-  // is loaded after HTML from current and child component is loaded
+  let imageElements = []
   useEffect(() => {
-    async function loadPost() {
-      const response = await Axios.get(`/api/posts/${params.category}/${params.postId}`)
-      setPost(response.data)
+    if (status === 'idle') {
+      dispatch(fetchPostById(params))
     }
-    loadPost()
-  }, [])
+  }, [status, dispatch])
+
+  if (status === 'loading') {
+    imageElements = <p>Loading...</p>
+  } else if (status === 'succeeded') {
+      post && displayImgs(post)
+  } else if (status === 'failed') {
+    imageElements = <div>{error}</div>
+  }
+
+  function displayImgs(post) {
+    imageElements = post.images.map((image) => {
+      return <img src={image.imageUrl} key={image.publicId}/>
+    })
+  }
 
   return (
       <div className="post-container">
@@ -31,6 +48,17 @@ export default function Post() {
               </div>
             </div>
             {post.content && <p className="content">{post.content}</p>}
+
+  {/* return (
+      <div className="post-container">
+        <div>
+          <div className="images-container">
+            {post && imageElements}
+          </div>
+          <div className="text-container">
+            <h1 className="title">{post && post.title}</h1>
+            <p className="subtitle">{post && post.subtitle}</p>
+            <p className="content">{post && post.content}</p> */}
           </div>
         </div>
       </div>

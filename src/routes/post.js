@@ -13,26 +13,35 @@ postRouter.get("/", async (req, res) => {
   res.redirect("/admin/dashboard")
 })
 
+postRouter.get('/posts', async (req, res) => {
+  try {
+    const allPosts = await Post.find();
+    res.status(200).json(allPosts);
+  } catch (err) {
+    res.status(404).send(err);
+  }
+});
+
 postRouter.get('/api/posts/:category', async (req, res) => {
   try {
     const allPosts = await Post.find({category: _.capitalize(req.params.category)});
-    res.json(allPosts);
+    res.status(200).json(allPosts);
   } catch (err) {
-    res.status(400).send(err);
+    res.status(404).send(err);
   }
 });
 
 postRouter.get('/api/posts/:category/:postId', async (req, res) => {
   try {
     const post = await Post.findById(req.params.postId);
-    res.json(post);
+    res.status(200).json(post);
   } catch (err) {
     res.status(400).send(err);
   }
 });
 
 postRouter.post('/posts', multerUpload, async (req, res) => {
-  try {
+    if (req.isAuthenticated()) {
     const post = new Post(req.body);
     const savedPost = await post.save();
     const images = req.files;
@@ -45,15 +54,14 @@ postRouter.post('/posts', multerUpload, async (req, res) => {
       await Post.updateOne(
         { _id: savedPost._id },
         { $addToSet: { images: [newImage]}}
-      )
-    }))
-    res.status(200).json({lastId: post._id})
-  }
-  catch (err) {
-    res.status(400).send(err);
-  }
+        )
+      }))
+      const updatedPost = await Post.findById(post._id)
+      res.status(200).json(updatedPost)
+    } else {
+      res.redirect("/login")
+    }
 });
-
 
 // router.delete('/image/:id', async (req, res) => {
 //   try {
