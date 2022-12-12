@@ -22,7 +22,7 @@ categoryRouter.get("/api/categories/", async (req, res) => {
   }
 })
 
-categoryRouter.patch("/api/categories/tags", async (req, res) => {
+categoryRouter.patch("/api/categories/tags", noDups, async (req, res) => {
   const { newTag } = req.body
   try {
     await Category.updateMany(

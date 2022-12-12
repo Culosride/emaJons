@@ -7,9 +7,13 @@ const initialState = {
   error: "" || null
 }
 
-export const addNewTag = createAsyncThunk("api/categories/tags", async (tag) => {
-  const response = await api.addNewTag(tag)
-  return response.data
+export const addNewTag = createAsyncThunk("api/categories/tags", async (tag, { rejectWithValue }) => {
+  try {
+    const response = await api.addNewTag(tag)
+    return response.data
+  } catch (error) {
+    return rejectWithValue(error.response.data.message)
+  }
 })
 
 export const fetchAllTags = createAsyncThunk("/api/categories/", async () => {
@@ -44,9 +48,10 @@ const categorySlice = createSlice({
         state.status = 'succeeded';
         state.allTags = state.allTags.concat(action.payload)
       })
-      .addCase(addNewTag.rejected, (state) => {
+      .addCase(addNewTag.rejected, (state, action) => {
         state.status = "failed";
-        state.error = action.payload.err
+        console.log()
+        state.error = action.payload
       })
   }
 })
