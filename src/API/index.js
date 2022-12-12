@@ -9,3 +9,4 @@ export const addPost = (data) => axios.post("/posts", (data), { headers: {'Conte
 
 export const fetchAllTags = () => axios.get("/api/categories/");
 export const addNewTag = (tag) => axios.patch("/api/categories/tags", { newTag: tag })
+export const deleteTag = (tagToDelete) => axios.patch("/api/categories/deleteTag", { tagToDelete: tagToDelete })

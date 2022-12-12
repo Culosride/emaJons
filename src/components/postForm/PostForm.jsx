@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import { addPost } from "../../features/posts/postsSlice"
-import { fetchAllTags, addNewTag } from "../../features/categories/categorySlice"
+import { deleteTag, fetchAllTags, addNewTag } from "../../features/categories/categorySlice"
 import { useSelector, useDispatch } from "react-redux";
 import Tag from "../tag/Tag";
 
@@ -28,11 +28,16 @@ export default function PostForm () {
     dispatch(fetchAllTags())
       // setTags(tagsByCategory)
     }
-    }, [dispatch, status])
+  }, [dispatch, status])
 
   function createNewTag() {
     dispatch(addNewTag(tag)) &&
     setTag("")
+  }
+
+  function handleTagDelete(tagName) {
+    // console.log(tagName)
+    dispatch(deleteTag(tagName))
   }
 
   function handleChange(e) {
@@ -48,6 +53,7 @@ export default function PostForm () {
       }
     });
   }
+
 
   function handleTag(e) {
     const { name, value } = e.target;
@@ -84,7 +90,7 @@ export default function PostForm () {
 
   const tagsElements = availableTags.map((t, i) => {
     if(t.startsWith(tag)) {
-      return <Tag name={t} key={`${t}-${i}`}/>
+      return <Tag handleTagDelete={handleTagDelete} name={t} id={`${t}-${i}`} key={`${t}-${i}`}/>
     }
   })
 
