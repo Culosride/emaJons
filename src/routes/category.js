@@ -13,7 +13,7 @@ categoryRouter.get('/api/categories/:category', async (req, res) => {
   }
 })
 
-categoryRouter.get('/categories/tags', async (req, res) => {
+categoryRouter.get("/api/categories/", async (req, res) => {
   try {
     const category = await Category.findOne({});
     res.status(200).json(category.allTags);
@@ -22,15 +22,14 @@ categoryRouter.get('/categories/tags', async (req, res) => {
   }
 })
 
-categoryRouter.patch("/categories", noDups, async (req, res) => {
-  const newTag = req.body.newTag
+categoryRouter.patch("/api/categories/tags", async (req, res) => {
+  const { newTag } = req.body
   try {
     await Category.updateMany(
       {},
-      { $push: { allTags: newTag } },
-      {new: true}
+      { $push: { allTags: newTag } }
       );
-      res.status(200).json(newTag);
+    res.json(newTag);
     } catch (err) {
       res.status(400).send(err);
     }

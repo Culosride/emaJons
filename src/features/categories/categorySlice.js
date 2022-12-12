@@ -7,12 +7,12 @@ const initialState = {
   error: "" || null
 }
 
-export const addCategoryTag = createAsyncThunk("/categories", async (data) => {
-    const response = await api.addCategoryTag(data)
-    return response.data
+export const addNewTag = createAsyncThunk("api/categories/tags", async (tag) => {
+  const response = await api.addNewTag(tag)
+  return response.data
 })
 
-export const fetchAllTags = createAsyncThunk("/categories", async () => {
+export const fetchAllTags = createAsyncThunk("/api/categories/", async () => {
   const response = await api.fetchAllTags()
   return response.data
 })
@@ -28,26 +28,25 @@ const categorySlice = createSlice({
         state.status = 'loading'
       })
       .addCase(fetchAllTags.fulfilled, (state, action) => {
-        const [ {tags} ] = action.payload
         return state = {
           ...state,
-          allTags: tags,
+          allTags: [...action.payload],
           status: 'succeeded',
         }
       })
       .addCase(fetchAllTags.rejected, (state) => {
         state.status = "failed";
       })
-      .addCase(addCategoryTag.pending, (state, action) => {
+      .addCase(addNewTag.pending, (state) => {
         state.status = 'loading'
       })
-      .addCase(addCategoryTag.fulfilled, (state, action) => {
+      .addCase(addNewTag.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.allTags = state.allTags.push(action.payload.newTag);
+        state.allTags = state.allTags.concat(action.payload)
       })
-      .addCase(addCategoryTag.rejected, (state) => {
+      .addCase(addNewTag.rejected, (state) => {
         state.status = "failed";
-        state.error = "Tag already exists for this category"
+        state.error = action.payload.err
       })
   }
 })

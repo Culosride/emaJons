@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import { addPost } from "../../features/posts/postsSlice"
-import { fetchAllTags, addCategoryTag } from "../../features/categories/categorySlice"
+import { fetchAllTags, addNewTag } from "../../features/categories/categorySlice"
 import { useSelector, useDispatch } from "react-redux";
 
 
@@ -11,7 +11,7 @@ export default function PostForm () {
   const tagsByCategory = useSelector(state => state.categories.allTags);
   const error = useSelector(state => state.categories.error);
   const status = useSelector(state => state.categories.status);
-  const [tags, setTags] = useState(tagsByCategory)
+  // const [tags, setTags] = useState(tagsByCategory)
   const [tag, setTag] = useState("");
   const [emptyCategory, setEmptyCategory] = useState(false);
   const [postData, setPostData] = useState({
@@ -25,14 +25,15 @@ export default function PostForm () {
   // console.log(postData)
 
   useEffect(() => {
-    if(postData.category){
-      dispatch(fetchAllTags(postData.category))
+  if (status === 'idle') {
+    dispatch(fetchAllTags())
       // setTags(tagsByCategory)
     }
-    }, [postData.category])
+    }, [dispatch, status])
 
   function createNewTag() {
-    dispatch(addCategoryTag([tag, postData.category])) &&
+    // console.log("tag at post is", tag)
+    dispatch(addNewTag(tag)) &&
     setTag("")
   }
 
@@ -87,7 +88,7 @@ export default function PostForm () {
     <div className="form-wrapper">
       <form className="post-form" onSubmit={handleSubmit}>
         {/* <label className="">TITLE</label> */}
-        <input classNmae="form-post-title" type="text" placeholder= "UNTITLED" value={postData.title} name="title" onChange={handleChange} className="" />
+        <input className="form-post-title" type="text" placeholder= "UNTITLED" value={postData.title} name="title" onChange={handleChange} />
 
         {/* <label className="form-post-subtitle">Subtitle</label> */}
         <input type="text" className="form-post-subtitle" placeholder= "Subtitle" value={postData.subtitle} name="Subtitle" onChange={handleChange}/>
@@ -106,10 +107,10 @@ export default function PostForm () {
         </select>
         {emptyCategory && <p>Devi pigliarne una</p>}
 
-        {postData.category && <div className="tags-container">
+        <div className="tags-container">
           <div>
             <label htmlFor="postTags" multiple>Add tags:</label>
-            <select name="postTags" id="postTags" onChange={handleChange} disabled={!tagsByCategory.length}>
+            <select name="postTags" id="postTags" onChange={handleChange}>
               <option value="">-- Please choose a tag --</option>
               {tagOptions}
             </select>
@@ -118,7 +119,7 @@ export default function PostForm () {
           <input type="text" value={tag} placeholder="New tag" name="tag" onChange={handleTag} className="" />
           <button type="button" onClick={createNewTag}>Create new tag</button>
           {error && <p>{error}</p>}
-        </div>}
+        </div>
 
         <input className="form-post-imgs" type="file" onChange={handleChange} name="images" multiple />
 
