@@ -1,7 +1,6 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux'; // hook to select data from redux store
-import Post from "../post/Post"
 import { selectAllPosts, fetchPosts, fetchPostsByCategory } from "../../features/posts/postsSlice";
 const _ = require('lodash');
 
@@ -12,11 +11,13 @@ export default function AllPosts() {
   const params = useParams();
   const dispatch = useDispatch()
   const posts = useSelector(state => state.posts.posts)
-  // const categoryTags = useSelector(state => tags)
   const status = useSelector(state => state.posts.status)
   const error = useSelector(state => state.posts.error)
 
   let postElements = []
+
+  const [categoryTags, setCategoryTags] = useState([])
+  const [filteredPosts, setFilteredPosts] = useState([])
 
   useEffect(() => {
     if (status === 'idle') {
@@ -24,6 +25,16 @@ export default function AllPosts() {
     }
   }, [status, dispatch])
 
+  // collects all tags from posts
+  useEffect(() => {
+    posts.forEach(post => {
+      post.postTags.forEach(tag => {
+        setCategoryTags((prev) => [...prev, tag])
+      })
+    })
+  }, [posts])
+
+  // filter posts on tag click
   const handleClick = (e) => {
     e.preventDefault();
     const filter = e.target.getAttribute('data-value');
@@ -33,22 +44,29 @@ export default function AllPosts() {
     filteredPosts.length ? setFilteredPosts(filteredPosts) : setFilteredPosts({message: 'Sorry, no posts'});
   }
 
-  // const displayPosts = (selectedPosts) => {
-  //   return selectedPosts && selectedPosts.map((post) => {
-  //     return <Link reloadDocument to={`/posts/${params.category}/${post._id}`} id={post._id} key={post._id} >
-  //       {(post.images.length) ? <img src={post.images[0].imageUrl} /> : <p>{post.title}</p>}
+  // remove duplicate tags
+  const cleanedTags = [...new Set(categoryTags.sort((a, b) => b.localeCompare(a)))];
+
+  // create tag elements
+  const tagElements = cleanedTags.map((tag, i) => (
+    <a href="#"><li key={i} onClick={handleClick} data-value={tag}>{tag}</li></a>
+  ))
+
+  // helper function to show posts
   const displayPosts = (posts) => {
-    return posts.map((post) => {
-      return <Link reloadDocument to={`/posts/${params.category}/${post._id}`} id={post._id} key={post._id} >
-        {post.images.length && <img src={post.images[0].imageUrl}/>}
+    return posts.map((post) => (
+      <Link reloadDocument to={`/posts/${params.category}/${post._id}`} id={post._id} key={post._id} >
+        {post.images.length ? <img src={post.images[0].imageUrl}/> : <p>{post.title}</p>}
       </Link>
-    })
+    ))
   }
 
   if (status === 'loading') {
     postElements = <p>Loading...</p>
   } else if (status === 'succeeded') {
-    postElements = displayPosts(posts)
+    postElements = filteredPosts.message && filteredPosts.message ||
+    filteredPosts.length && displayPosts(filteredPosts) ||
+    displayPosts(posts)
   } else if (status === 'failed') {
     postElements = <div>{error}</div>
   }
@@ -58,20 +76,13 @@ export default function AllPosts() {
       <div className="category-container">
         <div className="tags-container">
           <ul>
-            {postElements}
+            {tagElements}
           </ul>
         </div>
-        {/* {status === 'succeeded' && displayPosts(posts)} */}
-        {/* {(posts.length !== 0) &&
           <div className="posts-grid">
-            {
-              filteredPosts.message && filteredPosts.message ||
-              filteredPosts.length && displayPosts(filteredPosts) ||
-              displayPosts(posts)
-            }
-          </div> ||
-          <p>No posts yet</p>
-        } */}
+            {postElements && postElements || <p>No posts yet</p>}
+          </div>
+        {/* {status === 'succeeded' && displayPosts(posts)} */}
       </div>
     </div>
   )
