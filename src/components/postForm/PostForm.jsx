@@ -11,7 +11,7 @@ export default function PostForm () {
   const availableTags = useSelector(state => state.categories.allTags);
   const error = useSelector(state => state.categories.error);
   const status = useSelector(state => state.categories.status);
-  // const [tags, setTags] = useState(tagsByCategory)
+  const [selectedTags, setSelectedTags] = useState([])
   const [tag, setTag] = useState("");
   const [emptyCategory, setEmptyCategory] = useState(false);
   const [postData, setPostData] = useState({
@@ -40,13 +40,18 @@ export default function PostForm () {
     dispatch(deleteTag(tagName))
   }
 
+  function toggleTag(tagName) {
+    console.log(tagName);
+    setPostData(prev => ({ ...prev, postTags: [...prev.postTags, tagName] }));
+  }
+  console.log(postData)
+
   function handleChange(e) {
     const { name, value, files } = e.target;
     setPostData(prev => {
       if (name === "images") {
         return ({ ...prev, images: [...prev.images, ...files] })
       } else if (name === "postTags") {
-        // setTags((prev => prev.filter(singleTag => singleTag !== value)));
         return ({ ...prev, postTags: [...prev.postTags, value]  })
       } else {
         return ({ ...prev, [name]: value })
@@ -84,14 +89,14 @@ export default function PostForm () {
       .then((res) => navigate(`/${postData.category}/${res.payload._id}`))
   }
 
-  // const tagOptions = tagsByCategory.map((tag, i) => {
-  //   return <option name="postTags" value={tag} key={`${tag}-${i}`}>{tag}</option>
-  // })
-
-  const tagsElements = availableTags.map((t, i) => {
+  const tagElements = availableTags.map((t, i) => {
     if(t.startsWith(tag)) {
-      return <Tag handleTagDelete={handleTagDelete} name={t} id={`${t}-${i}`} key={`${t}-${i}`}/>
+      return <Tag toggleTag={toggleTag} handleTagDelete={handleTagDelete} name={t} id={`${t}-${i}`} key={`${t}-${i}`}/>
     }
+  })
+
+  const selectedTagElements = postData.postTags.map((t, i) => {
+    return <Tag toggleTag={toggleTag} handleTagDelete={handleTagDelete} name={t} id={`${t}-${i}`} key={`${t}-${i}`}/>
   })
 
   return (
@@ -116,15 +121,11 @@ export default function PostForm () {
           <option value="Sculpture">Sculpture</option>
         </select>
         {emptyCategory && <p>Devi pigliarne una</p>}
-
+        {selectedTagElements}
         <div className="tags-container">
           <div>
             <label htmlFor="postTags" multiple>Add tags:</label>
-            {/* <select name="postTags" id="postTags" onChange={handleChange}>
-              <option value="">-- Please choose a tag --</option>
-              {tagOptions}
-            </select> */}
-            {tagsElements}
+            {tagElements}
           </div>
           <input type="text" value={tag} placeholder="New tag" name="tag" onChange={handleTag} className="" />
           <button type="button" onClick={createNewTag}>Create new tag</button>
