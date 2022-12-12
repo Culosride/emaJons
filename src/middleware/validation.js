@@ -8,7 +8,7 @@ module.exports = async function noDups(req, res, next) {
   const [ tag, category ] = req.body
   const selectedCategory = await Category.findOne({ name: _.capitalize(category) });
   // console.log(selectedCategory)
-    selectedCategory.categoryTags.some(catTag => tag === catTag) ?
+    selectedCategory.allTags.some(catTag => tag === catTag) ?
     res.status(400).send({message: "Tag already exists"}) :
     next()
 };

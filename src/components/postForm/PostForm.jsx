@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import { addPost } from "../../features/posts/postsSlice"
-import { fetchCategoryTags, addCategoryTag } from "../../features/categories/categorySlice"
+import { fetchAllTags, addCategoryTag } from "../../features/categories/categorySlice"
 import { useSelector, useDispatch } from "react-redux";
 
 
 export default function PostForm () {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const tagsByCategory = useSelector(state => state.categories.categoryTags);
+  const tagsByCategory = useSelector(state => state.categories.allTags);
   const error = useSelector(state => state.categories.error);
   const status = useSelector(state => state.categories.status);
   const [tags, setTags] = useState(tagsByCategory)
@@ -26,7 +26,7 @@ export default function PostForm () {
 
   useEffect(() => {
     if(postData.category){
-      dispatch(fetchCategoryTags(postData.category))
+      dispatch(fetchAllTags(postData.category))
       // setTags(tagsByCategory)
     }
     }, [postData.category])

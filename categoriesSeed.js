@@ -5,11 +5,11 @@ const main = async () => {
   await mongoose.connect("mongodb://localhost:27017/emaJonsDB")
 
   const categories = [
-    { name: 'Walls', categoryTags: []},
-    { name: 'Video', categoryTags: []},
-    { name: 'Sketchbooks', categoryTags: []},
-    { name: 'Paintings', categoryTags: []},
-    { name: 'Sculptures', categoryTags: []},
+    { name: 'Walls', allTags: []},
+    { name: 'Video', allTags: []},
+    { name: 'Sketchbooks', allTags: []},
+    { name: 'Paintings', allTags: []},
+    { name: 'Sculptures', allTags: []},
   ];
     Category.insertMany(categories);
     console.log("Categories seeded")

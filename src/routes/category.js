@@ -13,15 +13,24 @@ categoryRouter.get('/api/categories/:category', async (req, res) => {
   }
 })
 
-categoryRouter.patch("/categories", noDups, async (req, res) => {
-  const [tag, category] = req.body
+categoryRouter.get('/categories/tags', async (req, res) => {
   try {
-    const selectedCategory = await Category.findOneAndUpdate(
-      { name: _.capitalize(category) },
-      { $push: { categoryTags: tag } },
+    const category = await Category.findOne({});
+    res.status(200).json(category.allTags);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+})
+
+categoryRouter.patch("/categories", noDups, async (req, res) => {
+  const newTag = req.body.newTag
+  try {
+    await Category.updateMany(
+      {},
+      { $push: { allTags: newTag } },
       {new: true}
       );
-      res.status(200).json(selectedCategory);
+      res.status(200).json(newTag);
     } catch (err) {
       res.status(400).send(err);
     }

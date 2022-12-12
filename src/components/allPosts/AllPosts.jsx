@@ -12,7 +12,6 @@ export default function AllPosts() {
   const params = useParams();
   const dispatch = useDispatch()
   const posts = useSelector(state => state.posts.posts)
-  // const categoryTags = useSelector(state => tags)
   const status = useSelector(state => state.posts.status)
   const error = useSelector(state => state.posts.error)
 

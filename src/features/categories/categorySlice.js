@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import * as api from "../../API/index"
 
 const initialState = {
-  categoryTags: [],
+  allTags: [],
   status: 'idle' || 'loading' || 'succeeded' || 'failed',
   error: "" || null
 }
@@ -12,8 +12,8 @@ export const addCategoryTag = createAsyncThunk("/categories", async (data) => {
     return response.data
 })
 
-export const fetchCategoryTags = createAsyncThunk("/api/categories/fetchCategoryTags", async (category) => {
-  const response = await api.fetchCategoryTags(category)
+export const fetchAllTags = createAsyncThunk("/categories", async () => {
+  const response = await api.fetchAllTags()
   return response.data
 })
 
@@ -24,18 +24,18 @@ const categorySlice = createSlice({
   reducers: {},
   extraReducers(builder) {
     builder
-      .addCase(fetchCategoryTags.pending, (state, action) => {
+      .addCase(fetchAllTags.pending, (state) => {
         state.status = 'loading'
       })
-      .addCase(fetchCategoryTags.fulfilled, (state, action) => {
-        const [ {categoryTags} ] = action.payload
+      .addCase(fetchAllTags.fulfilled, (state, action) => {
+        const [ {tags} ] = action.payload
         return state = {
           ...state,
-          categoryTags: categoryTags,
+          allTags: tags,
           status: 'succeeded',
         }
       })
-      .addCase(fetchCategoryTags.rejected, (state) => {
+      .addCase(fetchAllTags.rejected, (state) => {
         state.status = "failed";
       })
       .addCase(addCategoryTag.pending, (state, action) => {
@@ -43,7 +43,7 @@ const categorySlice = createSlice({
       })
       .addCase(addCategoryTag.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.categoryTags = state.categoryTags.concat(action.payload.categoryTags);
+        state.allTags = state.allTags.push(action.payload.newTag);
       })
       .addCase(addCategoryTag.rejected, (state) => {
         state.status = "failed";
