@@ -11,7 +11,7 @@ export default function PostForm () {
   const availableTags = useSelector(state => state.categories.allTags);
   const error = useSelector(state => state.categories.error);
   const status = useSelector(state => state.categories.status);
-  const [selectedTags, setSelectedTags] = useState([])
+  // const [selectedTags, setSelectedTags] = useState([])
   const [tag, setTag] = useState("");
   const [emptyCategory, setEmptyCategory] = useState(false);
   const [postData, setPostData] = useState({
@@ -44,7 +44,6 @@ export default function PostForm () {
     console.log(tagName);
     setPostData(prev => ({ ...prev, postTags: [...prev.postTags, tagName] }));
   }
-  console.log(postData)
 
   function handleChange(e) {
     const { name, value, files } = e.target;
@@ -58,7 +57,7 @@ export default function PostForm () {
       }
     });
   }
-
+  console.log(postData)
 
   function handleTag(e) {
     const { name, value } = e.target;
@@ -84,9 +83,10 @@ export default function PostForm () {
         return formData.append(key, postData[key]);
       }
     });
-    console.log(formData)
     dispatch(addPost(formData))
-      .then((res) => navigate(`/posts/${postData.category}/${res.payload._id}`))
+      .then((res) => {
+        console.log(res)
+        navigate(`/posts/${postData.category}/${res.payload._id}`)})
   }
 
   const tagElements = availableTags.map((t, i) => {
@@ -114,11 +114,11 @@ export default function PostForm () {
         <label htmlFor="categories">Category:</label>
         <select name="category" id="categories" onChange={handleChange}>
           <option value="">-- Please choose a category --</option>
-          <option value="Walls">Walls</option>
-          <option value="Paintings">Paintings</option>
-          <option value="Sketchbooks">Skethbooks</option>
-          <option value="Video">Video</option>
-          <option value="Sculpture">Sculpture</option>
+          <option value="walls">Walls</option>
+          <option value="paintings">Paintings</option>
+          <option value="sketchbooks">Skethbooks</option>
+          <option value="video">Video</option>
+          <option value="sculpture">Sculpture</option>
         </select>
         {emptyCategory && <p>Devi pigliarne una</p>}
         {selectedTagElements}
