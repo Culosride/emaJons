@@ -11,6 +11,7 @@
   width: 16px;
   margin: 2px;
 }
+
 .slick-active {
   .indicator {
     background-color: black;
@@ -33,42 +34,49 @@
     object-fit: contain;
   }
 }
+
 .selected-slide {
   opacity: 1;
   cursor: pointer;
 }
+
 .slick-next, .slick-prev {
   height: 100%;
-  z-index: 1;
   width: 20vw;
+  z-index: 1;
 }
+
 .slick-next {
   right: 0;
 }
 .slick-prev {
   left: 0;
 }
+
 .slick-arrow.slick-next:before {
   content: '';
 }
 .slick-next:hover {
-  filter: invert(100%);
   cursor: url('../img/ArrowIcon.svg'), auto;
 }
+
 .slick-arrow.slick-prev:before {
   content: '';
 }
 .slick-prev:hover {
   cursor: url('../img/ArrowBack.svg'), auto;
 }
+
 .slick-next.slick-disabled:before, .slick-prev.slick-disabled:before {
   opacity: 0;
 }
+
 .slick-next.slick-disabled:hover, .slick-prev.slick-disabled:hover {
   cursor: auto;
 }
+
 .slick-dots {
-  width: calc($slider-width - 60px);
+  width: calc($slider-width - $slider-padding);
   bottom: 0;
   height: 40px;
   z-index: 2;
@@ -77,11 +85,12 @@
     height: 10px;
   }
 }
+
 .slider-navigation {
   position: absolute;
   bottom: 0;
-  height: 60px;
-  width: calc($slider-width - 60px);
+  height: $slider-padding;
+  width: calc($slider-width - $slider-padding);
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -105,6 +114,6 @@
 }
 .slides:hover {
   img {
-    cursor: url('../img/Plus.svg'), auto;
+    cursor: url('../img/PlusBold.svg'), auto;
   }
 }

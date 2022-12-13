@@ -8,7 +8,7 @@ import Contact from './components/contact/Contact';
 import {
   BrowserRouter as Router,
   Routes,
-  Route,
+  Route
 } from 'react-router-dom';
 
 export default function App() {

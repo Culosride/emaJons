@@ -49,14 +49,14 @@ export default function AllPosts() {
 
   // create tag elements
   const tagElements = cleanedTags.map((tag, i) => (
-    <a href="#"><li key={i} onClick={handleClick} data-value={tag}>{tag}</li></a>
+    <a key={i} href="#"><li onClick={handleClick} data-value={tag}>{tag}</li></a>
   ))
 
   // helper function to show posts
   const displayPosts = (posts) => {
-    return posts.map((post) => (
+    return posts.map((post, i) => (
       <Link reloadDocument to={`/posts/${params.category}/${post._id}`} id={post._id} key={post._id} >
-        {post.images.length ? <img src={post.images[0].imageUrl}/> : <p>{post.title}</p>}
+        {post.images.length ? <img key={i} src={post.images[0].imageUrl}/> : <p key={i}>{post.title}</p>}
       </Link>
     ))
   }
@@ -65,8 +65,8 @@ export default function AllPosts() {
     postElements = <p>Loading...</p>
   } else if (status === 'succeeded') {
     postElements = filteredPosts.message && filteredPosts.message ||
-    filteredPosts.length && displayPosts(filteredPosts) ||
-    displayPosts(posts)
+                   filteredPosts.length && displayPosts(filteredPosts) ||
+                   displayPosts(posts)
   } else if (status === 'failed') {
     postElements = <div>{error}</div>
   }
@@ -80,7 +80,7 @@ export default function AllPosts() {
           </ul>
         </div>
           <div className="posts-grid">
-            {postElements && postElements || <p>No posts yet</p>}
+            {postElements.length && postElements || <p>No posts yet</p>}
           </div>
         {/* {status === 'succeeded' && displayPosts(posts)} */}
       </div>
