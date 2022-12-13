@@ -40,6 +40,7 @@ postRouter.get('/api/posts/:category/:postId', async (req, res) => {
   }
 });
 
+
 postRouter.post('/posts', multerUpload, async (req, res) => {
     if (req.isAuthenticated()) {
     const post = new Post(req.body);

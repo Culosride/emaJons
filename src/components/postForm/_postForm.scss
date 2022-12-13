@@ -1,8 +1,8 @@
 input, textarea, label, select {
   width: 100%;
   display: block;
-  // outline: none;
-  // border-style: hidden;
+  outline: none;
+  border-style: hidden;
 
 }
 
@@ -18,13 +18,12 @@ input, textarea, select {
 
 .post-form{
   display: grid;
-  // grid-template-columns: 8fr 4fr;
-  // grid-column-gap: 20px;
-  // grid-row-gap: 20px;
+  grid-template-columns: 8fr 4fr;
+  grid-column-gap: 20px;
+  grid-row-gap: 20px;
   justify-items: stretch;
   align-items: stretch;
-  width: 60%;
-  margin: 0 auto;
+  width: 40%;
     .form-post-imgs {
       justify-content:flex-end;
     }
@@ -40,3 +39,7 @@ input, textarea, select {
 //   padding: 30px 0;
 //   margin: 0 30px;
 // }
+
+
+.form-post-title {
+}
