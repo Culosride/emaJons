@@ -13,15 +13,38 @@ categoryRouter.get('/api/categories/:category', async (req, res) => {
   }
 })
 
-categoryRouter.patch("/categories", noDups, async (req, res) => {
-  const [tag, category] = req.body
+categoryRouter.get("/api/categories/", async (req, res) => {
   try {
-    const selectedCategory = await Category.findOneAndUpdate(
-      { name: _.capitalize(category) },
-      { $push: { categoryTags: tag } },
-      {new: true}
+    const category = await Category.findOne({name: "dummy"});
+    res.status(200).json(category.allTags);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+})
+
+categoryRouter.patch("/api/categories/tags", noDups, async (req, res) => {
+  const { newTag } = req.body
+  try {
+    await Category.findOneAndUpdate(
+      {name: "dummy"},
+      { $push: { allTags: newTag } }
       );
-      res.status(200).json(selectedCategory);
+    res.status(200).json(newTag);
+    } catch (err) {
+      res.status(400).send(err);
+    }
+})
+
+categoryRouter.patch("/api/categories/deleteTag", async (req, res) => {
+  const { tagToDelete } = req.body
+  // console.log(tagToDelete)
+  try {
+    const category = await Category.findOneAndUpdate(
+      { name: "dummy" },
+      { $pull: { allTags: tagToDelete } }
+      );
+    res.status(200).json({deletedTag: tagToDelete, message: "Tag deleted"});
+    // console.log("category", category, category.allTags, tagToDelete)
     } catch (err) {
       res.status(400).send(err);
     }
