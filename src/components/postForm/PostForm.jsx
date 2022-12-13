@@ -141,7 +141,7 @@ export default function PostForm () {
             {tagElements}
           </div>
           <input type="text" onKeyDown={handleKeyDown} value={tag} placeholder="New tag" name="tag" onChange={handleTag} className="" />
-          <button type="button" onClick={createNewTag}>Create new tag</button>
+          {/* <button type="button" onClick={createNewTag}>Create new tag</button> */}
           {/* {error && <p>{error}</p>} */}
         </div>
 
