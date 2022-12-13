@@ -40,11 +40,15 @@ export default function PostForm () {
     dispatch(deleteTag(tagName))
   }
 
-  function toggleTag(tagName) {
-    console.log(tagName);
-    setPostData(prev => ({ ...prev, postTags: [...prev.postTags, tagName] }));
+  function toggleTag(tagName, selected) {
+    if(selected){
+      setPostData(prev => ({ ...prev, postTags: [...prev.postTags, tagName] }))
+    } else {
+      const filteredTags = availableTags.filter(tag => tag!== tagName)
+      setPostData(prev => ({ ...prev, postTags: [...filteredTags]}))
+    }
   }
-  console.log(postData)
+  console.log(postData,availableTags)
 
   function handleChange(e) {
     const { name, value, files } = e.target;
@@ -52,7 +56,7 @@ export default function PostForm () {
       if (name === "images") {
         return ({ ...prev, images: [...prev.images, ...files] })
       } else if (name === "postTags") {
-        return ({ ...prev, postTags: [...prev.postTags, value]  })
+        return ({ ...prev, postTags: [...prev.postTags, value] })
       } else {
         return ({ ...prev, [name]: value })
       }
@@ -91,7 +95,7 @@ export default function PostForm () {
 
   const tagElements = availableTags.map((t, i) => {
     if(t.startsWith(tag)) {
-      return <Tag toggleTag={toggleTag} handleTagDelete={handleTagDelete} name={t} id={`${t}-${i}`} key={`${t}-${i}`}/>
+      return <Tag toggleTag={toggleTag} selected="false" handleTagDelete={handleTagDelete} name={t} id={`${t}-${i}`} key={`${t}-${i}`}/>
     }
   })
 
