@@ -19,23 +19,18 @@ export default function Header () {
   ))
 
   return (
-    <>
+    <ul className={match ? "header-post" : "header-global"}>
+      <li><Link reloadDocument to="/" className="logo">EmaJons</Link></li>
+      <span className="dash"></span>
       {match &&
-        <ul className="header-post">
-          <li><Link reloadDocument to="/" className="logo">EmaJons</Link></li>
-          <span className="dash"></span>
-          <button onClick={() => navigate(-1)}><i className="close-icon"></i></button>
-        </ul> ||
-
-        <ul className="header-global">
-          <li><Link reloadDocument to="/" className="logo">EmaJons</Link></li>
-          <span className="dash"></span>
+        <button onClick={() => navigate(-1)}><i className="close-icon"></i></button> ||
+        <span className="navigation">
           {postElements}
           {aboutElements}
           <li><Link to="/admin/dashboard">Dashboard</Link></li>
           <button><i className="close-icon"></i></button>
-        </ul>
+        </span>
       }
-    </>
+    </ul>
   )
 }
