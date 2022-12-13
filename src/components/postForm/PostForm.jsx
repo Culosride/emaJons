@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import { addPost } from "../../features/posts/postsSlice"
-import { deleteTag, fetchAllTags, addNewTag } from "../../features/categories/categorySlice"
+import { deleteTag, fetchAllTags, addNewTag, toggleTag } from "../../features/categories/categorySlice"
 import { useSelector, useDispatch } from "react-redux";
 import Tag from "../tag/Tag";
 const _ = require("lodash")
@@ -9,10 +9,10 @@ const _ = require("lodash")
 export default function PostForm () {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const availableTags = useSelector(state => state.categories.allTags);
+  const availableTags = useSelector(state => state.categories.availableTags);
+  const selectedTags = useSelector(state => state.categories.selectedTags);
   const error = useSelector(state => state.categories.error);
   const status = useSelector(state => state.categories.status);
-  const [selectedTags, setSelectedTags] = useState([])
   const [tag, setTag] = useState("");
   const [emptyCategory, setEmptyCategory] = useState(false);
   const [postData, setPostData] = useState({
@@ -25,10 +25,10 @@ export default function PostForm () {
   });
 
   useEffect(() => {
-  if (status === 'idle') {
-    dispatch(fetchAllTags())
-      // setTags(tagsByCategory)
+    if (status === 'idle') {
+      dispatch(fetchAllTags())
     }
+    // setAvailableTags(allTags)
   }, [dispatch, status])
 
   function createNewTag() {
@@ -44,19 +44,12 @@ export default function PostForm () {
   }
 
   function handleTagDelete(tagName) {
-    // console.log(tagName)
     dispatch(deleteTag(tagName))
   }
 
-  function toggleTag(tagName, selected) {
-    if(selected){
-      setPostData(prev => ({ ...prev, postTags: [...prev.postTags, tagName] }))
-    } else {
-      const filteredTags = availableTags.filter(tag => tag!== tagName)
-      setPostData(prev => ({ ...prev, postTags: [...filteredTags]}))
-    }
+  function handleTagToggle(tagName) {
+    dispatch(toggleTag(tagName))
   }
-  console.log(postData,availableTags)
 
   function handleChange(e) {
     const { name, value, files } = e.target;
@@ -104,12 +97,12 @@ export default function PostForm () {
 
   const tagElements = availableTags.map((t, i) => {
     if(t.startsWith(_.capitalize(tag))) {
-      return <Tag toggleTag={toggleTag} selected="false" handleTagDelete={handleTagDelete} name={t} id={`${t}-${i}`} key={`${t}-${i}`}/>
+      return <Tag handleTagToggle={handleTagToggle} selected="false" handleTagDelete={handleTagDelete} name={t} id={`${t}-${i}`} key={`${t}-${i}`}/>
     }
   })
 
-  const selectedTagElements = postData.postTags.map((t, i) => {
-    return <Tag toggleTag={toggleTag} handleTagDelete={handleTagDelete} name={t} id={`${t}-${i}`} key={`${t}-${i}`}/>
+  const selectedTagElements = selectedTags.map((t, i) => {
+    return <Tag handleTagToggle={handleTagToggle} handleTagDelete={handleTagDelete} name={t} id={`${t}-${i}`} key={`${t}-${i}`}/>
   })
 
   return (
@@ -134,13 +127,14 @@ export default function PostForm () {
           <option value="Sculpture">Sculpture</option>
         </select>
         {emptyCategory && <p>Devi pigliarne una</p>}
-        {selectedTagElements}
+        <div className="selected-tags-wrapper">
+          {selectedTagElements}
+        </div>
         <div className="tags-container">
           <div className="available-tags-wrapper">
             {tagElements}
           </div>
           <input type="text" onKeyDown={handleKeyDown} value={tag} placeholder="New tag" name="tag" onChange={handleTag} className="" />
-          {/* <button type="button" onClick={createNewTag}>Create new tag</button> */}
           {/* {error && <p>{error}</p>} */}
         </div>
 

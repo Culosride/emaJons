@@ -60,10 +60,15 @@ input, textarea, select {
 .tags-container {
   display: flex;
   justify-content: space-between;
+  margin-top: 20px;
 }
 .tags-container .available-tags-wrapper {
   width: 70%;
   min-height: 150px;
+}
+
+.selected-tags-wrapper {
+  display: flex;
 }
 
 .post-form {

@@ -15,11 +15,16 @@ input, textarea, select {
   // width: 50%;
   display: flex;
   justify-content: space-between;
+  margin-top: 20px;
 
   .available-tags-wrapper{
     width: 70%;
     min-height: 150px;
   }
+}
+
+.selected-tags-wrapper{
+  display: flex;
 }
 
 .post-form{
