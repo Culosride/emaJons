@@ -4,6 +4,7 @@ import { addPost } from "../../features/posts/postsSlice"
 import { deleteTag, fetchAllTags, addNewTag } from "../../features/categories/categorySlice"
 import { useSelector, useDispatch } from "react-redux";
 import Tag from "../tag/Tag";
+const _ = require("lodash")
 
 export default function PostForm () {
   const dispatch = useDispatch();
@@ -33,6 +34,13 @@ export default function PostForm () {
   function createNewTag() {
     dispatch(addNewTag(tag)) &&
     setTag("")
+  }
+
+  function handleKeyDown(e) {
+    if(e.keyCode === 9) {
+      e.preventDefault();
+      createNewTag()
+    }
   }
 
   function handleTagDelete(tagName) {
@@ -66,6 +74,7 @@ export default function PostForm () {
 
   function handleTag(e) {
     const { name, value } = e.target;
+
     if(name === "tag") {setTag(() => {
       return value
     })}
@@ -94,7 +103,7 @@ export default function PostForm () {
   }
 
   const tagElements = availableTags.map((t, i) => {
-    if(t.startsWith(tag)) {
+    if(t.startsWith(_.capitalize(tag))) {
       return <Tag toggleTag={toggleTag} selected="false" handleTagDelete={handleTagDelete} name={t} id={`${t}-${i}`} key={`${t}-${i}`}/>
     }
   })
@@ -131,7 +140,7 @@ export default function PostForm () {
             <label htmlFor="postTags" multiple>Add tags:</label>
             {tagElements}
           </div>
-          <input type="text" value={tag} placeholder="New tag" name="tag" onChange={handleTag} className="" />
+          <input type="text" onKeyDown={handleKeyDown} value={tag} placeholder="New tag" name="tag" onChange={handleTag} className="" />
           <button type="button" onClick={createNewTag}>Create new tag</button>
           {/* {error && <p>{error}</p>} */}
         </div>

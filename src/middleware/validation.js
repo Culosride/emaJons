@@ -1,5 +1,4 @@
 const Category = require('../models/category');
-const _ = require('lodash');
 
 module.exports = async function noDups(req, res, next) {
   const { newTag } = req.body
