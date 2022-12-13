@@ -97,12 +97,12 @@ export default function PostForm () {
 
   const tagElements = availableTags.map((t, i) => {
     if(t.startsWith(_.capitalize(tag))) {
-      return <Tag handleTagToggle={handleTagToggle} selected="false" handleTagDelete={handleTagDelete} name={t} id={`${t}-${i}`} key={`${t}-${i}`}/>
+      return <Tag handleTagToggle={handleTagToggle} selected={false} handleTagDelete={handleTagDelete} name={t} id={`${t}-${i}`} key={`${t}-${i}`}/>
     }
   })
 
   const selectedTagElements = selectedTags.map((t, i) => {
-    return <Tag handleTagToggle={handleTagToggle} handleTagDelete={handleTagDelete} name={t} id={`${t}-${i}`} key={`${t}-${i}`}/>
+    return <Tag handleTagToggle={handleTagToggle} selected={true} handleTagDelete={handleTagDelete} name={t} id={`${t}-${i}`} key={`${t}-${i}`}/>
   })
 
   return (
@@ -112,7 +112,7 @@ export default function PostForm () {
         <input className="form-post-title" type="text" placeholder= "UNTITLED" value={postData.title} name="title" onChange={handleChange} />
 
         {/* <label className="form-post-subtitle">Subtitle</label> */}
-        <input type="text" className="form-post-subtitle" placeholder= "Subtitle" value={postData.subtitle} name="Subtitle" onChange={handleChange}/>
+        <input type="text" className="form-post-subtitle" placeholder="subtitle" value={postData.subtitle} name="subtitle" onChange={handleChange}/>
 
         {/* <label>Content</label> */}
         <textarea className="form-post-content" placeholder= "Add content here....." value={postData.content} name="content" onChange={handleChange}/>

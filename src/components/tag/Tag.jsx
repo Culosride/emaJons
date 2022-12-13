@@ -11,7 +11,7 @@ export default function Tag(props) {
   return (
     <div className='tag-wrapper'>
       <p onClick={handleClick} className="tag">{props.name}</p>
-      <div onClick={() => props.handleTagDelete(props.name)} className='delete-tag'>X</div>
+      {!props.selected && <div onClick={() => props.handleTagDelete(props.name)} className='delete-tag'>X</div>}
     </div>
   )
 }
