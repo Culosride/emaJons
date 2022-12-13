@@ -103,13 +103,13 @@ export default function PostForm () {
     <div className="form-wrapper">
       <form className="post-form" onSubmit={handleSubmit}>
         {/* <label className="">TITLE</label> */}
-        <input className="form-post-title" type="text" placeholder= "UNTITLED" value={postData.title} name="title" onChange={handleChange} />
+        <input className="form-post-title" type="text" placeholder="UNTITLED" value={postData.title} name="title" onChange={handleChange} />
 
         {/* <label className="form-post-subtitle">Subtitle</label> */}
-        <input type="text" className="form-post-subtitle" placeholder= "Subtitle" value={postData.subtitle} name="Subtitle" onChange={handleChange}/>
+        <input type="text" className="form-post-subtitle" placeholder="subtitle" value={postData.subtitle} name="subtitle" onChange={handleChange}/>
 
         {/* <label>Content</label> */}
-        <textarea className="form-post-content" placeholder= "Add content here....." value={postData.content} name="content" onChange={handleChange}/>
+        <textarea className="form-post-content" placeholder="Add content here....." value={postData.content} name="content" onChange={handleChange}/>
 
         <label htmlFor="categories">Category:</label>
         <select name="category" id="categories" onChange={handleChange}>
