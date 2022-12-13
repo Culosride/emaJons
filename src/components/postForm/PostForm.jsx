@@ -16,8 +16,8 @@ export default function PostForm () {
   const [emptyCategory, setEmptyCategory] = useState(false);
   const [postData, setPostData] = useState({
     title: "",
-    subtitle:"",
-    content:"",
+    subtitle: "",
+    content: "",
     images: [],
     category: "",
     postTags: []
@@ -84,9 +84,9 @@ export default function PostForm () {
         return formData.append(key, postData[key]);
       }
     });
-
+    console.log(formData)
     dispatch(addPost(formData))
-      .then((res) => navigate(`/${postData.category}/${res.payload._id}`))
+      .then((res) => navigate(`/posts/${postData.category}/${res.payload._id}`))
   }
 
   const tagElements = availableTags.map((t, i) => {
