@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 
 export default function Tag(props) {
   // const [selected, setSelected] = useState(false)
-
+  
   function handleClick() {
     // setSelected(!selected);
     props.handleTagToggle(props.name)

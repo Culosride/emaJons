@@ -13,10 +13,9 @@ export default function AllPosts() {
   const posts = useSelector(state => state.posts.posts)
   const status = useSelector(state => state.posts.status)
   const error = useSelector(state => state.posts.error)
+  const categoryTags = useSelector(state => state.posts.posts.flatMap(post => post.postTags.map(tag => tag)))
 
   let postElements = []
-
-  const [categoryTags, setCategoryTags] = useState([])
   const [filteredPosts, setFilteredPosts] = useState([])
 
   useEffect(() => {
@@ -25,16 +24,7 @@ export default function AllPosts() {
     }
   }, [status, dispatch])
 
-  // collects all tags from posts
-  useEffect(() => {
-    posts.forEach(post => {
-      post.postTags.forEach(tag => {
-        setCategoryTags((prev) => [...prev, tag])
-      })
-    })
-  }, [posts])
-
-  // filter posts on tag click
+   // filter posts on tag click
   const handleClick = (e) => {
     e.preventDefault();
     const filter = e.target.getAttribute('data-value');
