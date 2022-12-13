@@ -23,13 +23,15 @@ categoryRouter.get("/api/categories/", async (req, res) => {
 })
 
 categoryRouter.patch("/api/categories/tags", noDups, async (req, res) => {
-  const { newTag } = req.body
+  const { newTag } = (req.body)
+  const capitalizedTag = _.capitalize(newTag)
+
   try {
     await Category.findOneAndUpdate(
       {name: "dummy"},
-      { $push: { allTags: newTag } }
+      { $push: { allTags: capitalizedTag } }
       );
-    res.status(200).json(newTag);
+    res.status(200).json(capitalizedTag);
     } catch (err) {
       res.status(400).send(err);
     }
