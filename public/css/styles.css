@@ -54,16 +54,24 @@ input, textarea, label, select {
 }
 
 input, textarea, select {
-  margin-bottom: 20px;
+  margin: 20px 0;
 }
 
 .tags-container {
   display: flex;
   justify-content: space-between;
 }
+.tags-container .available-tags-wrapper {
+  width: 70%;
+  min-height: 150px;
+}
 
 .post-form {
   width: 40%;
+}
+
+.form-wrapper {
+  padding: 30px;
 }
 
 .post-container {

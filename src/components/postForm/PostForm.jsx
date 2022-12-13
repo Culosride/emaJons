@@ -136,8 +136,7 @@ export default function PostForm () {
         {emptyCategory && <p>Devi pigliarne una</p>}
         {selectedTagElements}
         <div className="tags-container">
-          <div>
-            <label htmlFor="postTags" multiple>Add tags:</label>
+          <div className="available-tags-wrapper">
             {tagElements}
           </div>
           <input type="text" onKeyDown={handleKeyDown} value={tag} placeholder="New tag" name="tag" onChange={handleTag} className="" />
