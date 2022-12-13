@@ -29,7 +29,7 @@ export default function PostForm () {
       dispatch(fetchCategoryTags(postData.category))
       // setTags(tagsByCategory)
     }
-  }, [postData.category])
+    }, [postData.category])
 
   function createNewTag() {
     dispatch(addCategoryTag([tag, postData.category])) &&
@@ -74,10 +74,9 @@ export default function PostForm () {
         return formData.append(key, postData[key]);
       }
     });
-    // const res = await Axios.post("/posts", formData, { headers: {'Content-Type': 'multipart/form-data'}})
-    // navigate(`/posts/${postData.category}/${res.data.lastId}`)
+
     dispatch(addPost(formData))
-      .then((res) => navigate(`/posts/${postData.category}/${res.payload._id}`))
+      .then((res) => navigate(`/${postData.category}/${res.payload._id}`))
   }
 
   const tagOptions = tagsByCategory.map((tag, i) => {
@@ -87,13 +86,13 @@ export default function PostForm () {
   return (
     <div className="form-wrapper">
       <form className="post-form" onSubmit={handleSubmit}>
-        <label className="">Title</label>
-        <input className="form-post-title" type="text" placeholder="UNTITLED" value={postData.title} name="title" onChange={handleChange} />
+        {/* <label className="">TITLE</label> */}
+        <input classNmae="form-post-title" type="text" placeholder= "UNTITLED" value={postData.title} name="title" onChange={handleChange} className="" />
 
-        <label className="form-post-subtitle">Subtitle</label>
-        <input type="text" className="form-post-subtitle" placeholder="Subtitle" value={postData.subtitle} name="subtitle" onChange={handleChange}/>
+        {/* <label className="form-post-subtitle">Subtitle</label> */}
+        <input type="text" className="form-post-subtitle" placeholder= "Subtitle" value={postData.subtitle} name="Subtitle" onChange={handleChange}/>
 
-        <label>Content</label>
+        {/* <label>Content</label> */}
         <textarea className="form-post-content" placeholder= "Add content here....." value={postData.content} name="content" onChange={handleChange}/>
 
         <label htmlFor="categories">Category:</label>

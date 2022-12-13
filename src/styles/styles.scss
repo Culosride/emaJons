@@ -1,15 +1,11 @@
 // import evereything here
 @import 'basic/fonts.scss';
-@import 'basic/variables.scss';
 // @import '../components/category/category.scss';
 @import '../components/navbar/navbar.scss';
 @import '../components/header/header.scss';
 @import '../components/allPosts/all-posts.scss';
 @import '../components/postForm/postForm.scss';
 @import '../components/post/post.scss';
-@import '../components/carousel/carousel.scss';
-@import "~slick-carousel/slick/slick.css";
-@import "~slick-carousel/slick/slick-theme.css";
 
 body {
   margin: 0;

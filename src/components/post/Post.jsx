@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 // import Axios from 'axios';
 import { useParams } from 'react-router-dom';
-import Carousel from '../carousel/Carousel';
 import { useSelector, useDispatch } from 'react-redux'; // hook to select data from state (in redux store)
 import { fetchPostById } from '../../features/posts/postsSlice';
 
@@ -35,22 +34,6 @@ export default function Post() {
 
   return (
       <div className="post-container">
-        {post.images &&
-          <Carousel className="images-container" images={post.images}>
-          </Carousel>
-        }
-        <div className={post.content ? 'text-container text-container-content' : 'text-container'}>
-          <div>
-            <div className="headline">
-              <div>
-                <h1 className="title">{post.title}</h1>
-                {post.subtitle && <p className="subtitle">{post.subtitle}</p>}
-              </div>
-            </div>
-            {post.content && <p className="content">{post.content}</p>}
-
-  {/* return (
-      <div className="post-container">
         <div>
           <div className="images-container">
             {post && imageElements}
@@ -58,7 +41,7 @@ export default function Post() {
           <div className="text-container">
             <h1 className="title">{post && post.title}</h1>
             <p className="subtitle">{post && post.subtitle}</p>
-            <p className="content">{post && post.content}</p> */}
+            <p className="content">{post && post.content}</p>
           </div>
         </div>
       </div>
