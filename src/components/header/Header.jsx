@@ -20,7 +20,6 @@ export default function Header () {
   ))
 
   return (
-    // <ul className={match ? "header-post" : "header-global"}>
     <ul className={post ? "header-post" : "header-global"}>
       <li><Link reloadDocument to="/" className="logo">EmaJons</Link></li>
       <span className="dash"></span>
