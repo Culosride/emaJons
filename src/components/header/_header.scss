@@ -65,3 +65,6 @@
     content: url('../img/CloseIcon.svg')
   }
 }
+.header-post-50 {
+  width: calc($description-width-50 - $slider-padding);
+}

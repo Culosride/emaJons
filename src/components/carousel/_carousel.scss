@@ -34,6 +34,9 @@
     object-fit: contain;
   }
 }
+.inner-slider-div-50 {
+  width: $slider-width-50;
+}
 
 .selected-slide {
   opacity: 1;
@@ -85,6 +88,9 @@
     height: 10px;
   }
 }
+.slick-dots-50 {
+  width: calc($slider-width-50 - $slider-padding);
+}
 
 .slider-navigation {
   position: absolute;
@@ -112,6 +118,10 @@
     background-image: url('../img/ArrowIcon.svg')
   }
 }
+.slider-navigation-50 {
+  width: calc($slider-width-50 - $slider-padding);
+}
+
 .slides:hover {
   img {
     cursor: url('../img/PlusBold.svg'), auto;

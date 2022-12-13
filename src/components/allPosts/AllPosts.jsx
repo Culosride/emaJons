@@ -1,11 +1,9 @@
 
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux'; // hook to select data from redux store
-import { selectAllPosts, fetchPosts, fetchPostsByCategory } from "../../features/posts/postsSlice";
-const _ = require('lodash');
-
-import Axios from 'axios';
+import { fetchPostsByCategory } from "../../features/posts/postsSlice";
 import { Link, useParams } from 'react-router-dom';
+const _ = require('lodash');
 
 export default function AllPosts() {
   const params = useParams();
@@ -13,26 +11,18 @@ export default function AllPosts() {
   const posts = useSelector(state => state.posts.posts)
   const status = useSelector(state => state.posts.status)
   const error = useSelector(state => state.posts.error)
+  const allTags = useSelector(state => state.posts.posts.flatMap(post => post.postTags.map(tag => tag)))
+  const cleanedTags = [...new Set(allTags.sort((a, b) => b.localeCompare(a)))];
+
+  const [filteredPosts, setFilteredPosts] = useState([])
 
   let postElements = []
-
-  const [categoryTags, setCategoryTags] = useState([])
-  const [filteredPosts, setFilteredPosts] = useState([])
 
   useEffect(() => {
     if (status === 'idle') {
       dispatch(fetchPostsByCategory(params.category))
     }
   }, [status, dispatch])
-
-  // collects all tags from posts
-  useEffect(() => {
-    posts.forEach(post => {
-      post.postTags.forEach(tag => {
-        setCategoryTags((prev) => [...prev, tag])
-      })
-    })
-  }, [posts])
 
   // filter posts on tag click
   const handleClick = (e) => {
@@ -41,11 +31,8 @@ export default function AllPosts() {
     const filteredPosts = posts.filter((post) => {
       return post.postTags.includes(filter);
     })
-    filteredPosts.length ? setFilteredPosts(filteredPosts) : setFilteredPosts({message: 'Sorry, no posts'});
+    filteredPosts.length && setFilteredPosts(filteredPosts);
   }
-
-  // remove duplicate tags
-  const cleanedTags = [...new Set(categoryTags.sort((a, b) => b.localeCompare(a)))];
 
   // create tag elements
   const tagElements = cleanedTags.map((tag, i) => (
@@ -82,7 +69,6 @@ export default function AllPosts() {
           <div className="posts-grid">
             {postElements.length && postElements || <p>No posts yet</p>}
           </div>
-        {/* {status === 'succeeded' && displayPosts(posts)} */}
       </div>
     </div>
   )

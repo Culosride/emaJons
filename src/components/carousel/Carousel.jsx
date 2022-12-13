@@ -43,7 +43,6 @@ export default function Carousel({ images }) {
     slider.current.slickPrev();
   }
 
-
   return (
     <div style={{height: '100vh'}}>
       <Slider {...settings} ref={slider}>

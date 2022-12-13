@@ -34,12 +34,12 @@ export default function Post() {
   }
 
   return (
-      <div className="post-container">
+      <div className={post.content ? "post-container post-container-50" : "post-container"}>
         {post.images &&
           <Carousel className="images-container" images={post.images}>
           </Carousel>
         }
-        <div className={post.content ? 'text-container text-container-content' : 'text-container'}>
+        <div className={post.content ? 'text-container text-container-50' : 'text-container'}>
           <div>
             <div className="headline">
               <div>
@@ -48,17 +48,6 @@ export default function Post() {
               </div>
             </div>
             {post.content && <p className="content">{post.content}</p>}
-
-  {/* return (
-      <div className="post-container">
-        <div>
-          <div className="images-container">
-            {post && imageElements}
-          </div>
-          <div className="text-container">
-            <h1 className="title">{post && post.title}</h1>
-            <p className="subtitle">{post && post.subtitle}</p>
-            <p className="content">{post && post.content}</p> */}
           </div>
         </div>
       </div>

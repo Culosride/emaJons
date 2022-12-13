@@ -7,6 +7,9 @@
   width: 100vw;
   box-sizing: border-box;
 }
+.post-container-50 {
+  grid-template-columns: $slider-width-50 $description-width-50;
+}
 
 .images-container {
   display: flex;
@@ -30,8 +33,8 @@
   height: 100vh;
   border-left: 1px solid black;
 }
-
-.text-container-content {
+.text-container-50 {
+  width: $description-width-50;
   display: flex;
   padding-top: 70vh;
   align-items: flex-start;
