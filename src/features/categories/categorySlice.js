@@ -2,7 +2,8 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import * as api from "../../API/index"
 
 const initialState = {
-  allTags: [],
+  availableTags: [],
+  selectedTags: [],
   status: 'idle' || 'loading' || 'succeeded' || 'failed',
   error: "" || null
 }
@@ -36,7 +37,27 @@ export const fetchAllTags = createAsyncThunk("/api/categories/", async () => {
 const categorySlice = createSlice({
   name: 'categories',
   initialState,
-  reducers: {},
+  reducers: {
+    toggleTag: (state, action) => {
+      if(state.selectedTags.includes(action.payload)) {
+        const filteredTags = state.selectedTags.filter(tag => tag !== action.payload)
+          return state = {
+            ...state,
+            selectedTags: [...filteredTags],
+            availableTags: state.availableTags.concat(action.payload),
+            status: 'succeeded',
+          }
+      } else {
+        const filteredTags = state.availableTags.filter(tag => tag !== action.payload)
+          return state = {
+            ...state,
+            availableTags: [...filteredTags],
+            selectedTags: state.selectedTags.concat(action.payload),
+            status: 'succeeded',
+          }
+      }
+    }
+  },
   extraReducers(builder) {
     builder
       .addCase(fetchAllTags.pending, (state) => {
@@ -45,7 +66,7 @@ const categorySlice = createSlice({
       .addCase(fetchAllTags.fulfilled, (state, action) => {
         return state = {
           ...state,
-          allTags: [...action.payload],
+          availableTags: [...action.payload],
           status: 'succeeded',
         }
       })
@@ -57,7 +78,7 @@ const categorySlice = createSlice({
       })
       .addCase(addNewTag.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.allTags = state.allTags.concat(action.payload)
+        state.availableTags = state.availableTags.concat(action.payload)
       })
       .addCase(addNewTag.rejected, (state, action) => {
         state.status = "failed";
@@ -68,10 +89,10 @@ const categorySlice = createSlice({
         state.status = 'loading'
       })
       .addCase(deleteTag.fulfilled, (state, {payload}) => {
-        const filteredTags = state.allTags.filter(tag => tag !== payload.deletedTag)
+        const filteredTags = state.availableTags.filter(tag => tag !== payload.deletedTag)
         return state = {
           ...state,
-          allTags: [...filteredTags],
+          availableTags: [...filteredTags],
           status: 'succeeded',
         }
       })
@@ -83,7 +104,7 @@ const categorySlice = createSlice({
   }
 })
 
-// export const { } = categorySlice.actions
+export const { toggleTag } = categorySlice.actions
 
 
 export default categorySlice.reducer

@@ -5,7 +5,7 @@ import _ from 'lodash'
 export default function Header () {
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const admin = matchPath("/admin/*", pathname)
+  const admin = matchPath("/admin/*", pathname);
   const post = admin ? false : matchPath("/:categories/:postId", pathname)
 
   const categories = ['walls', 'paintings', 'sketchbooks', 'video', 'sculpture']

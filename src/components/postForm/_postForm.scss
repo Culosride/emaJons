@@ -8,13 +8,23 @@ input, textarea, label, select {
 }
 
 input, textarea, select {
-  margin-bottom: 20px;
+  margin: 20px 0;
 }
 
 .tags-container {
   // width: 50%;
   display: flex;
   justify-content: space-between;
+  margin-top: 20px;
+
+  .available-tags-wrapper{
+    width: 70%;
+    min-height: 150px;
+  }
+}
+
+.selected-tags-wrapper{
+  display: flex;
 }
 
 .post-form{
@@ -33,13 +43,13 @@ input, textarea, select {
   // }
 }
 
-// .form-wrapper {
-//   display: flex;
-//   flex-direction: column;
-//   align-items: end;
-//   padding: 30px 0;
-//   margin: 0 30px;
-// }
+.form-wrapper {
+  // display: flex;
+  // flex-direction: column;
+  // align-items: end;
+  padding: 30px;
+  // margin: 0 30px;
+}
 
 
 .form-post-title {

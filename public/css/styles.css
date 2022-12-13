@@ -140,16 +140,29 @@ input, textarea, label, select {
 }
 
 input, textarea, select {
-  margin-bottom: 20px;
+  margin: 20px 0;
 }
 
 .tags-container {
   display: flex;
   justify-content: space-between;
+  margin-top: 20px;
+}
+.tags-container .available-tags-wrapper {
+  width: 70%;
+  min-height: 150px;
+}
+
+.selected-tags-wrapper {
+  display: flex;
 }
 
 .post-form {
   width: 40%;
+}
+
+.form-wrapper {
+  padding: 30px;
 }
 
 .post-container {
@@ -328,15 +341,16 @@ input, textarea, select {
   background-color: rgb(58, 58, 58);
   border-radius: 20px;
   text-align: center;
-  margin: 8px 4px;
+  margin: 4px;
   justify-content: space-between;
   align-items: center;
+  width: fit-content;
 }
 .tag-wrapper .tag {
   color: white;
   font-size: 12px;
   font-weight: 700;
-  margin: 0 5px 0 20px;
+  margin: 0 5px 0 12px;
 }
 .tag-wrapper .delete-tag {
   border-radius: 50%;
