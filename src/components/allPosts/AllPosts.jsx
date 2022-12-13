@@ -55,7 +55,7 @@ export default function AllPosts() {
   // helper function to show posts
   const displayPosts = (posts) => {
     return posts.map((post, i) => (
-      <Link reloadDocument to={`/posts/${params.category}/${post._id}`} id={post._id} key={post._id} >
+      <Link reloadDocument to={`/${params.category}/${post._id}`} id={post._id} key={post._id} >
         {post.images.length ? <img key={i} src={post.images[0].imageUrl}/> : <p key={i}>{post.title}</p>}
       </Link>
     ))
