@@ -1,7 +1,67 @@
-.header {
+.header-global, .header-post {
   display: flex;
+  height: 74px;
+  align-items: center;
+  margin: 0;
+  padding: 0 30px;
+  box-sizing: border-box;
   li {
+    font-size: 18px;
     display: inline-block;
-    margin-right: 20px;
+    margin-right: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+  a {
+    text-decoration: none;
+    color: black;
+  }
+  a:hover {
+    text-decoration: underline;
+  }
+  .logo {
+    font-size: 20px;
+  }
+  button {
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    font-size: 24px;
+    cursor: pointer
+  }
+}
+.header-global {
+  border-bottom: 1px solid black;
+  margin-bottom: 30px;
+  .dash {
+    height: 20px;
+    width: 1px;
+    display: inline-block;
+    transform: rotate(20deg);
+    margin-right: 16px;
+    background-color: black;
+  }
+  .close-icon:after {
+    content: url('../img/PlusLight.svg');
+    display: inline-block;
+    transform: rotate(45deg)
+  }
+  .navigation {
+    display: flex;
+    align-items: center;
+  }
+}
+.header-post {
+  justify-content: space-between;
+  position: fixed;
+  width: calc($description-width - 60px);
+  margin: 0 30px;
+  padding: 0;
+  top: 0;
+  right: 0;
+  z-index: 1;
+  background-color: white;
+  .close-icon:after {
+    content: url('../img/CloseIcon.svg')
   }
 }

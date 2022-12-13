@@ -11,13 +11,13 @@ export default function PostForm () {
   const availableTags = useSelector(state => state.categories.allTags);
   const error = useSelector(state => state.categories.error);
   const status = useSelector(state => state.categories.status);
-  const [selectedTags, setSelectedTags] = useState([])
+  // const [selectedTags, setSelectedTags] = useState([])
   const [tag, setTag] = useState("");
   const [emptyCategory, setEmptyCategory] = useState(false);
   const [postData, setPostData] = useState({
     title: "",
-    subtitle:"",
-    content:"",
+    subtitle: "",
+    content: "",
     images: [],
     category: "",
     postTags: []
@@ -44,7 +44,6 @@ export default function PostForm () {
     console.log(tagName);
     setPostData(prev => ({ ...prev, postTags: [...prev.postTags, tagName] }));
   }
-  console.log(postData)
 
   function handleChange(e) {
     const { name, value, files } = e.target;
@@ -58,7 +57,7 @@ export default function PostForm () {
       }
     });
   }
-
+  console.log(postData)
 
   function handleTag(e) {
     const { name, value } = e.target;
@@ -84,9 +83,10 @@ export default function PostForm () {
         return formData.append(key, postData[key]);
       }
     });
-
     dispatch(addPost(formData))
-      .then((res) => navigate(`/${postData.category}/${res.payload._id}`))
+      .then((res) => {
+        console.log(res)
+        navigate(`/posts/${postData.category}/${res.payload._id}`)})
   }
 
   const tagElements = availableTags.map((t, i) => {
@@ -103,22 +103,22 @@ export default function PostForm () {
     <div className="form-wrapper">
       <form className="post-form" onSubmit={handleSubmit}>
         {/* <label className="">TITLE</label> */}
-        <input className="form-post-title" type="text" placeholder= "UNTITLED" value={postData.title} name="title" onChange={handleChange} />
+        <input className="form-post-title" type="text" placeholder="UNTITLED" value={postData.title} name="title" onChange={handleChange} />
 
         {/* <label className="form-post-subtitle">Subtitle</label> */}
-        <input type="text" className="form-post-subtitle" placeholder= "Subtitle" value={postData.subtitle} name="Subtitle" onChange={handleChange}/>
+        <input type="text" className="form-post-subtitle" placeholder="subtitle" value={postData.subtitle} name="subtitle" onChange={handleChange}/>
 
         {/* <label>Content</label> */}
-        <textarea className="form-post-content" placeholder= "Add content here....." value={postData.content} name="content" onChange={handleChange}/>
+        <textarea className="form-post-content" placeholder="Add content here....." value={postData.content} name="content" onChange={handleChange}/>
 
         <label htmlFor="categories">Category:</label>
         <select name="category" id="categories" onChange={handleChange}>
           <option value="">-- Please choose a category --</option>
-          <option value="Walls">Walls</option>
-          <option value="Paintings">Paintings</option>
-          <option value="Sketchbooks">Skethbooks</option>
-          <option value="Video">Video</option>
-          <option value="Sculpture">Sculpture</option>
+          <option value="walls">Walls</option>
+          <option value="paintings">Paintings</option>
+          <option value="sketchbooks">Skethbooks</option>
+          <option value="video">Video</option>
+          <option value="sculpture">Sculpture</option>
         </select>
         {emptyCategory && <p>Devi pigliarne una</p>}
         {selectedTagElements}

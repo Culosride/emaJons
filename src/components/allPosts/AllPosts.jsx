@@ -1,7 +1,6 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux'; // hook to select data from redux store
-import Post from "../post/Post"
 import { selectAllPosts, fetchPosts, fetchPostsByCategory } from "../../features/posts/postsSlice";
 const _ = require('lodash');
 
@@ -17,24 +16,57 @@ export default function AllPosts() {
 
   let postElements = []
 
+  const [categoryTags, setCategoryTags] = useState([])
+  const [filteredPosts, setFilteredPosts] = useState([])
+
   useEffect(() => {
     if (status === 'idle') {
       dispatch(fetchPostsByCategory(params.category))
     }
   }, [status, dispatch])
 
-  const displayPosts = (posts) => {
-    return posts.map((post) => {
-      return <Link reloadDocument to={`/${params.category}/${post._id}`} id={post._id} key={post._id} >
-        {post.images.length && <img src={post.images[0].imageUrl}/>}
-      </Link>
+  // collects all tags from posts
+  useEffect(() => {
+    posts.forEach(post => {
+      post.postTags.forEach(tag => {
+        setCategoryTags((prev) => [...prev, tag])
+      })
     })
+  }, [posts])
+
+  // filter posts on tag click
+  const handleClick = (e) => {
+    e.preventDefault();
+    const filter = e.target.getAttribute('data-value');
+    const filteredPosts = posts.filter((post) => {
+      return post.postTags.includes(filter);
+    })
+    filteredPosts.length ? setFilteredPosts(filteredPosts) : setFilteredPosts({message: 'Sorry, no posts'});
+  }
+
+  // remove duplicate tags
+  const cleanedTags = [...new Set(categoryTags.sort((a, b) => b.localeCompare(a)))];
+
+  // create tag elements
+  const tagElements = cleanedTags.map((tag, i) => (
+    <a key={i} href="#"><li onClick={handleClick} data-value={tag}>{tag}</li></a>
+  ))
+
+  // helper function to show posts
+  const displayPosts = (posts) => {
+    return posts.map((post, i) => (
+      <Link reloadDocument to={`/${params.category}/${post._id}`} id={post._id} key={post._id} >
+        {post.images.length ? <img key={i} src={post.images[0].imageUrl}/> : <p key={i}>{post.title}</p>}
+      </Link>
+    ))
   }
 
   if (status === 'loading') {
     postElements = <p>Loading...</p>
   } else if (status === 'succeeded') {
-    postElements = displayPosts(posts)
+    postElements = filteredPosts.message && filteredPosts.message ||
+                   filteredPosts.length && displayPosts(filteredPosts) ||
+                   displayPosts(posts)
   } else if (status === 'failed') {
     postElements = <div>{error}</div>
   }
@@ -44,20 +76,13 @@ export default function AllPosts() {
       <div className="category-container">
         <div className="tags-container">
           <ul>
-            {postElements}
+            {tagElements}
           </ul>
         </div>
-        {/* {status === 'succeeded' && displayPosts(posts)} */}
-        {/* {(posts.length !== 0) &&
           <div className="posts-grid">
-            {
-              filteredPosts.message && filteredPosts.message ||
-              filteredPosts.length && displayPosts(filteredPosts) ||
-              displayPosts(posts)
-            }
-          </div> ||
-          <p>No posts yet</p>
-        } */}
+            {postElements.length && postElements || <p>No posts yet</p>}
+          </div>
+        {/* {status === 'succeeded' && displayPosts(posts)} */}
       </div>
     </div>
   )
