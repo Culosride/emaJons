@@ -2,18 +2,33 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import * as api from "../../API/index"
 
 const initialState = {
-  categoryTags: [],
+  allTags: [],
   status: 'idle' || 'loading' || 'succeeded' || 'failed',
   error: "" || null
 }
 
-export const addCategoryTag = createAsyncThunk("/categories", async (data) => {
-    const response = await api.addCategoryTag(data)
+export const addNewTag = createAsyncThunk("api/categories/tags", async (tag, { rejectWithValue }) => {
+  try {
+    const response = await api.addNewTag(tag)
     return response.data
+  } catch (error) {
+    return rejectWithValue(error.response.data.message)
+  }
 })
 
-export const fetchCategoryTags = createAsyncThunk("/api/categories/fetchCategoryTags", async (category) => {
-  const response = await api.fetchCategoryTags(category)
+export const deleteTag = createAsyncThunk("api/categories/deleteTag", async (tagToDelete, { rejectWithValue }) => {
+  try {
+    const response = await api.deleteTag(tagToDelete)
+    // console.log("at slicer",tagToDelete)
+    console.log("data", response.data)
+    return response.data
+  } catch (error) {
+    return rejectWithValue(error.response.data.message)
+  }
+})
+
+export const fetchAllTags = createAsyncThunk("/api/categories/", async () => {
+  const response = await api.fetchAllTags()
   return response.data
 })
 
@@ -24,30 +39,46 @@ const categorySlice = createSlice({
   reducers: {},
   extraReducers(builder) {
     builder
-      .addCase(fetchCategoryTags.pending, (state, action) => {
+      .addCase(fetchAllTags.pending, (state) => {
         state.status = 'loading'
       })
-      .addCase(fetchCategoryTags.fulfilled, (state, action) => {
-        const [ {categoryTags} ] = action.payload
+      .addCase(fetchAllTags.fulfilled, (state, action) => {
         return state = {
           ...state,
-          categoryTags: categoryTags,
+          allTags: [...action.payload],
           status: 'succeeded',
         }
       })
-      .addCase(fetchCategoryTags.rejected, (state) => {
+      .addCase(fetchAllTags.rejected, (state) => {
         state.status = "failed";
       })
-      .addCase(addCategoryTag.pending, (state, action) => {
+      .addCase(addNewTag.pending, (state) => {
         state.status = 'loading'
       })
-      .addCase(addCategoryTag.fulfilled, (state, action) => {
+      .addCase(addNewTag.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.categoryTags = state.categoryTags.concat(action.payload.categoryTags);
+        state.allTags = state.allTags.concat(action.payload)
       })
-      .addCase(addCategoryTag.rejected, (state) => {
+      .addCase(addNewTag.rejected, (state, action) => {
         state.status = "failed";
-        state.error = "Tag already exists for this category"
+        console.log()
+        state.error = action.payload
+      })
+      .addCase(deleteTag.pending, (state) => {
+        state.status = 'loading'
+      })
+      .addCase(deleteTag.fulfilled, (state, {payload}) => {
+        const filteredTags = state.allTags.filter(tag => tag !== payload.deletedTag)
+        return state = {
+          ...state,
+          allTags: [...filteredTags],
+          status: 'succeeded',
+        }
+      })
+      .addCase(deleteTag.rejected, (state, action) => {
+        state.status = "failed";
+        console.log()
+        state.error = action.payload.message
       })
   }
 })

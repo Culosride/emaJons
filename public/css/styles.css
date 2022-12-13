@@ -50,8 +50,7 @@
 input, textarea, label, select {
   width: 100%;
   display: block;
-  outline: none;
-  border-style: hidden;
+  height: fit-content;
 }
 
 input, textarea, select {
@@ -59,22 +58,12 @@ input, textarea, select {
 }
 
 .tags-container {
-  width: 50%;
   display: flex;
   justify-content: space-between;
 }
 
 .post-form {
-  display: grid;
-  grid-template-columns: 8fr 4fr;
-  grid-column-gap: 20px;
-  grid-row-gap: 20px;
-  justify-items: stretch;
-  align-items: stretch;
   width: 40%;
-}
-.post-form .form-post-imgs {
-  justify-content: flex-end;
 }
 
 .post-container {
@@ -101,6 +90,30 @@ input, textarea, select {
   margin: 50px auto 0;
   max-width: 750px;
   text-align: center;
+}
+
+.tag-wrapper {
+  display: flex;
+  padding: 0;
+  background-color: rgb(58, 58, 58);
+  border-radius: 20px;
+  text-align: center;
+  margin: 8px 4px;
+  justify-content: space-between;
+  align-items: center;
+}
+.tag-wrapper .tag {
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+  margin: 0 5px 0 20px;
+}
+.tag-wrapper .delete-tag {
+  border-radius: 50%;
+  background-color: lightgray;
+  margin: 0;
+  padding: 6px;
+  width: 18px;
 }
 
 body {

@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import { addPost } from "../../features/posts/postsSlice"
-import { fetchCategoryTags, addCategoryTag } from "../../features/categories/categorySlice"
+import { deleteTag, fetchAllTags, addNewTag } from "../../features/categories/categorySlice"
 import { useSelector, useDispatch } from "react-redux";
-
+import Tag from "../tag/Tag";
 
 export default function PostForm () {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const tagsByCategory = useSelector(state => state.categories.categoryTags);
+  const availableTags = useSelector(state => state.categories.allTags);
   const error = useSelector(state => state.categories.error);
   const status = useSelector(state => state.categories.status);
-  const [tags, setTags] = useState(tagsByCategory)
+  const [selectedTags, setSelectedTags] = useState([])
   const [tag, setTag] = useState("");
   const [emptyCategory, setEmptyCategory] = useState(false);
   const [postData, setPostData] = useState({
@@ -22,19 +22,29 @@ export default function PostForm () {
     category: "",
     postTags: []
   });
-  // console.log(postData)
 
   useEffect(() => {
-    if(postData.category){
-      dispatch(fetchCategoryTags(postData.category))
+  if (status === 'idle') {
+    dispatch(fetchAllTags())
       // setTags(tagsByCategory)
     }
-    }, [postData.category])
+  }, [dispatch, status])
 
   function createNewTag() {
-    dispatch(addCategoryTag([tag, postData.category])) &&
+    dispatch(addNewTag(tag)) &&
     setTag("")
   }
+
+  function handleTagDelete(tagName) {
+    // console.log(tagName)
+    dispatch(deleteTag(tagName))
+  }
+
+  function toggleTag(tagName) {
+    console.log(tagName);
+    setPostData(prev => ({ ...prev, postTags: [...prev.postTags, tagName] }));
+  }
+  console.log(postData)
 
   function handleChange(e) {
     const { name, value, files } = e.target;
@@ -42,13 +52,13 @@ export default function PostForm () {
       if (name === "images") {
         return ({ ...prev, images: [...prev.images, ...files] })
       } else if (name === "postTags") {
-        // setTags((prev => prev.filter(singleTag => singleTag !== value)));
         return ({ ...prev, postTags: [...prev.postTags, value]  })
       } else {
         return ({ ...prev, [name]: value })
       }
     });
   }
+
 
   function handleTag(e) {
     const { name, value } = e.target;
@@ -79,15 +89,21 @@ export default function PostForm () {
       .then((res) => navigate(`/${postData.category}/${res.payload._id}`))
   }
 
-  const tagOptions = tagsByCategory.map((tag, i) => {
-    return <option name="postTags" value={tag} key={`${tag}-${i}`}>{tag}</option>
+  const tagElements = availableTags.map((t, i) => {
+    if(t.startsWith(tag)) {
+      return <Tag toggleTag={toggleTag} handleTagDelete={handleTagDelete} name={t} id={`${t}-${i}`} key={`${t}-${i}`}/>
+    }
+  })
+
+  const selectedTagElements = postData.postTags.map((t, i) => {
+    return <Tag toggleTag={toggleTag} handleTagDelete={handleTagDelete} name={t} id={`${t}-${i}`} key={`${t}-${i}`}/>
   })
 
   return (
     <div className="form-wrapper">
       <form className="post-form" onSubmit={handleSubmit}>
         {/* <label className="">TITLE</label> */}
-        <input classNmae="form-post-title" type="text" placeholder= "UNTITLED" value={postData.title} name="title" onChange={handleChange} className="" />
+        <input className="form-post-title" type="text" placeholder= "UNTITLED" value={postData.title} name="title" onChange={handleChange} />
 
         {/* <label className="form-post-subtitle">Subtitle</label> */}
         <input type="text" className="form-post-subtitle" placeholder= "Subtitle" value={postData.subtitle} name="Subtitle" onChange={handleChange}/>
@@ -105,20 +121,16 @@ export default function PostForm () {
           <option value="Sculpture">Sculpture</option>
         </select>
         {emptyCategory && <p>Devi pigliarne una</p>}
-
-        {postData.category && <div className="tags-container">
+        {selectedTagElements}
+        <div className="tags-container">
           <div>
             <label htmlFor="postTags" multiple>Add tags:</label>
-            <select name="postTags" id="postTags" onChange={handleChange} disabled={!tagsByCategory.length}>
-              <option value="">-- Please choose a tag --</option>
-              {tagOptions}
-            </select>
+            {tagElements}
           </div>
-          <label>Or create a new one</label>
           <input type="text" value={tag} placeholder="New tag" name="tag" onChange={handleTag} className="" />
           <button type="button" onClick={createNewTag}>Create new tag</button>
-          {error && <p>{error}</p>}
-        </div>}
+          {/* {error && <p>{error}</p>} */}
+        </div>
 
         <input className="form-post-imgs" type="file" onChange={handleChange} name="images" multiple />
 
