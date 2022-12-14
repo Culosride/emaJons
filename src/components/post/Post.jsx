@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 // import Axios from 'axios';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import Carousel from '../carousel/Carousel';
@@ -12,6 +12,13 @@ export default function Post() {
   const params = useParams()
   const status = useSelector(state => state.posts.status)
   const error = useSelector(state => state.posts.error)
+
+  const textContainer = useRef(null)
+  const [initialPosition, setInitialPosition] = useState(0)
+
+  useEffect(() => {
+    setInitialPosition(textContainer.current.clientHeight * .6);
+  }, [])
 
   let imageElements = []
   useEffect(() => {
@@ -34,6 +41,12 @@ export default function Post() {
     })
   }
 
+  const handleScroll = (e) => {
+    const headline = e.target.lastElementChild.firstElementChild;
+    const scrollTop = headline.offsetTop;
+    scrollTop > initialPosition ? headline.classList.add('headline-sticky') : headline.classList.remove('headline-sticky')
+  }
+
   const content = post.content && post.content.length > 100
 
   return (
@@ -41,13 +54,13 @@ export default function Post() {
         {post.images &&
           <Carousel content={content} images={post.images}></Carousel>
         }
-        <div className={content ? 'text-container text-container-50' : 'text-container'}>
+        <div  ref={textContainer} className={content ? 'text-container text-container-50' : 'text-container'} onScroll={handleScroll}>
           <div className={content ? "header-post header-post-50" : "header-post"}>
             <Link reloadDocument to="/" className="logo">EmaJons</Link>
-            <button onClick={() => navigate(-1)}><i className="close-icon"></i></button>
           </div>
-          <div>
-            <div className="headline">
+          <button onClick={() => navigate(-1)}><i className="close-icon"></i></button>
+          <div className={content ? "description-container-50 description-container" : "description-container" } >
+            <div className={content ? "headline headline-50" : "headline"}>
               <div>
                 <h1 className="title">{post.title}</h1>
                 {post.subtitle && <p className="subtitle">{post.subtitle}</p>}
