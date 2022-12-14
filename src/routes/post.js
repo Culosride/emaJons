@@ -64,24 +64,17 @@ postRouter.post('/posts', multerUpload, async (req, res) => {
     }
 });
 
-// router.delete('/image/:id', async (req, res) => {
-//   try {
-//     const user = await User.findOne({ _id: req.params.id });
-//     const publicId = user.publicId;
-//     await removeFromCloudinary(publicId);
-//     const deleteImg = await User.updateOne(
-//       { _id: req.params.id },
-//       {
-//         $set: {
-//           imageUrl: '',
-//           publicId: '',
-//         },
-//       }
-//     );
-//     res.status(200).send('post image deleted successfully!');
-//   } catch (err) {
-//     res.status(400).send(err);
-//   }
-// });
+postRouter.delete('/:category/:postId', async (req, res) => {
+  try {
+    const post = await Post.findOne({_id: req.params.postId});
+    const images = post.images;
+    const publicIds = images.map(img => img.publicId)
+    if(publicIds.length) {await removeFromCloudinary(publicIds)};
+    await post.deleteOne();
+    res.status(200).json({message: 'post deleted successfully'});
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
 
 module.exports = postRouter;

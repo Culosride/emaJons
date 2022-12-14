@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from 'react';
 // import Axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Carousel from '../carousel/Carousel';
 import { useSelector, useDispatch } from 'react-redux'; // hook to select data from state (in redux store)
-import { fetchPostById } from '../../features/posts/postsSlice';
+import { fetchPostsByCategory, deletePost, fetchPostById } from '../../features/posts/postsSlice';
 
 export default function Post() {
+  const navigate = useNavigate();
   const dispatch = useDispatch()
   const post = useSelector(state => state.posts.selectedPost)
   const params = useParams()
   const status = useSelector(state => state.posts.status)
   const error = useSelector(state => state.posts.error)
-
+  const category = params.category
   let imageElements = []
   useEffect(() => {
     if (status === 'idle') {
@@ -32,6 +33,11 @@ export default function Post() {
       return <img src={image.imageUrl} key={image.publicId}/>
     })
   }
+  function handleDelete() {
+    dispatch(deletePost([post._id, category]))
+      .then(() => navigate(`/${params.category}`))
+      .then(() => dispatch(fetchPostsByCategory(params.category)))
+  }
 
   return (
       <div className="post-container">
@@ -44,21 +50,11 @@ export default function Post() {
             <div className="headline">
               <div>
                 <h1 className="title">{post.title}</h1>
+                <button onClick={handleDelete}>DELETE POST</button>
                 {post.subtitle && <p className="subtitle">{post.subtitle}</p>}
               </div>
             </div>
             {post.content && <p className="content">{post.content}</p>}
-
-  {/* return (
-      <div className="post-container">
-        <div>
-          <div className="images-container">
-            {post && imageElements}
-          </div>
-          <div className="text-container">
-            <h1 className="title">{post && post.title}</h1>
-            <p className="subtitle">{post && post.subtitle}</p>
-            <p className="content">{post && post.content}</p> */}
           </div>
         </div>
       </div>
