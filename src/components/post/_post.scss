@@ -82,16 +82,16 @@
     padding: 30px 30px 10px;
   }
   .headline-sticky {
-    transition: all ease-in-out .1s;
+    transition: all ease-in .1s;
     padding: 20px 30px 15px;
     display: flex;
     justify-content: space-between;
     .title {
-      transition: all ease-in-out .1s;
+      transition: all ease-in .1s;
       font-size: 1.375rem;
     }
     .subtitle {
-      transition: all ease-in-out .1s;
+      transition: all ease-in .1s;
       font-size: 0.75rem;
       margin-top: 0;
     }

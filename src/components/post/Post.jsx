@@ -41,10 +41,11 @@ export default function Post() {
     })
   }
 
+
   const handleScroll = (e) => {
     const headline = e.target.lastElementChild.firstElementChild;
     const scrollTop = headline.offsetTop;
-    scrollTop > initialPosition ? headline.classList.add('headline-sticky') : headline.classList.remove('headline-sticky')
+    (scrollTop > initialPosition) ? headline.classList.add('headline-sticky') : headline.classList.remove('headline-sticky')
   }
 
   const content = post.content && post.content.length > 100
@@ -59,7 +60,7 @@ export default function Post() {
             <Link reloadDocument to="/" className="logo">EmaJons</Link>
           </div>
           <button onClick={() => navigate(-1)}><i className="close-icon"></i></button>
-          <div className={content ? "description-container-50 description-container" : "description-container" } >
+          <div className={content ? "description-container-50 description-container" : "description-container"} >
             <div className={content ? "headline headline-50" : "headline"}>
               <div>
                 <h1 className="title">{post.title}</h1>
