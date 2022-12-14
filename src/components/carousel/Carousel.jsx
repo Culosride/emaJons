@@ -2,14 +2,14 @@ import React, { useEffect, useRef, useState } from "react";
 import Slider from "react-slick";
 import Item from '../item/Item';
 
-export default function Carousel({ images }) {
+export default function Carousel({ images, content }) {
   const slider = useRef();
 
   const [activeSlide, setActiveSlide] = useState(0)
   const [nextSlide, setNextSlide] = useState(1)
 
   const settings = {
-    className: "slider variable-width inner-slider-div",
+    className: "inner-slider-div",
     dots: true,
     infinite: true,
     fade: true,
@@ -44,7 +44,7 @@ export default function Carousel({ images }) {
   }
 
   return (
-    <div style={{height: '100vh'}}>
+    <div style={{height: '100vh'}} className={content ? "images-container carousel-50" : "images-container"}>
       <Slider {...settings} ref={slider}>
         {imageElements}
       </Slider>

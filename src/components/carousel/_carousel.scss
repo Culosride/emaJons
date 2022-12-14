@@ -1,23 +1,4 @@
-
-.indicators {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 20px;
-}
-.indicator {
-  background-color: #D9D9D9;
-  height: 2px;
-  width: 16px;
-  margin: 2px;
-}
-
-.slick-active {
-  .indicator {
-    background-color: black;
-  }
-}
-
+// slider
 .inner-slider-div {
   height: 100vh;
   width: $slider-width;
@@ -34,15 +15,19 @@
     object-fit: contain;
   }
 }
-.inner-slider-div-50 {
-  width: $slider-width-50;
-}
 
+// selected slide
 .selected-slide {
   opacity: 1;
   cursor: pointer;
 }
+.slides:hover {
+  img {
+    cursor: url('../img/PlusBold.svg'), auto;
+  }
+}
 
+// slider handles
 .slick-next, .slick-prev {
   height: 100%;
   width: 20vw;
@@ -55,43 +40,27 @@
 .slick-prev {
   left: 0;
 }
-
-.slick-arrow.slick-next:before {
+.slick-next:before {
   content: '';
 }
 .slick-next:hover {
   cursor: url('../img/ArrowIcon.svg'), auto;
 }
-
-.slick-arrow.slick-prev:before {
+.slick-prev:before {
   content: '';
 }
 .slick-prev:hover {
   cursor: url('../img/ArrowBack.svg'), auto;
 }
 
-.slick-next.slick-disabled:before, .slick-prev.slick-disabled:before {
-  opacity: 0;
-}
+// .slick-next.slick-disabled:before, .slick-prev.slick-disabled:before {
+//   opacity: 0;
+// }
+// .slick-next.slick-disabled:hover, .slick-prev.slick-disabled:hover {
+//   cursor: auto;
+// }
 
-.slick-next.slick-disabled:hover, .slick-prev.slick-disabled:hover {
-  cursor: auto;
-}
-
-.slick-dots {
-  width: calc($slider-width - $slider-padding);
-  bottom: 0;
-  height: 40px;
-  z-index: 2;
-  li {
-    width: 10px;
-    height: 10px;
-  }
-}
-.slick-dots-50 {
-  width: calc($slider-width-50 - $slider-padding);
-}
-
+// slider indicator and navigation
 .slider-navigation {
   position: absolute;
   bottom: 0;
@@ -118,12 +87,46 @@
     background-image: url('../img/ArrowIcon.svg')
   }
 }
-.slider-navigation-50 {
-  width: calc($slider-width-50 - $slider-padding);
+
+
+// slider indicators
+.indicators {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+.indicator {
+  background-color: #D9D9D9;
+  height: 2px;
+  width: 16px;
+  margin: 2px;
+}
+.slick-active {
+  .indicator {
+    background-color: black;
+  }
+}
+.slick-dots {
+  width: calc($slider-width - $slider-padding);
+  bottom: 0;
+  height: 40px;
+  z-index: 2;
+  li {
+    width: 10px;
+    height: 10px;
+  }
 }
 
-.slides:hover {
-  img {
-    cursor: url('../img/PlusBold.svg'), auto;
+// 50 50 layout
+.carousel-50 {
+  .inner-slider-div {
+    width: $slider-width-50;
+  }
+  .slider-navigation {
+    width: calc($slider-width-50 - $slider-padding);
+  }
+  .slick-dots {
+    width: calc($slider-width-50 - $slider-padding);
   }
 }

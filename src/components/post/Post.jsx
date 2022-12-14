@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 // import Axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import Carousel from '../carousel/Carousel';
 import { useSelector, useDispatch } from 'react-redux'; // hook to select data from state (in redux store)
 import { fetchPostById } from '../../features/posts/postsSlice';
 
 export default function Post() {
+  const navigate = useNavigate();
   const dispatch = useDispatch()
   const post = useSelector(state => state.posts.selectedPost)
   const params = useParams()
@@ -33,13 +34,18 @@ export default function Post() {
     })
   }
 
+  const content = post.content && post.content.length > 100
+
   return (
-      <div className={post.content ? "post-container post-container-50" : "post-container"}>
+      <div className={content ? "post-container layout-50" : "post-container"}>
         {post.images &&
-          <Carousel className="images-container" images={post.images}>
-          </Carousel>
+          <Carousel content={content} images={post.images}></Carousel>
         }
-        <div className={post.content ? 'text-container text-container-50' : 'text-container'}>
+        <div className={content ? 'text-container text-container-50' : 'text-container'}>
+          <div className={content ? "header-post header-post-50" : "header-post"}>
+            <Link reloadDocument to="/" className="logo">EmaJons</Link>
+            <button onClick={() => navigate(-1)}><i className="close-icon"></i></button>
+          </div>
           <div>
             <div className="headline">
               <div>

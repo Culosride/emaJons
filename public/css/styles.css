@@ -56,6 +56,8 @@
 }
 .header-global .logo, .header-post .logo {
   font-size: 20px;
+  font-weight: bold;
+  text-transform: uppercase;
 }
 .header-global button, .header-post button {
   background-color: transparent;
@@ -186,10 +188,6 @@ input, textarea, select {
   box-sizing: border-box;
 }
 
-.post-container-50 {
-  grid-template-columns: 50vw 50vw;
-}
-
 .images-container {
   display: flex;
   justify-content: center;
@@ -213,40 +211,27 @@ input, textarea, select {
   border-left: 1px solid black;
 }
 
-.text-container-50 {
-  width: 50vw;
-  display: flex;
-  padding-top: 70vh;
-  align-items: flex-start;
-  overflow: scroll;
-  -webkit-mask-image: linear-gradient(to bottom, black 90%, transparent 100%);
-  mask-image: linear-gradient(to bottom, black 90%, transparent 100%);
-  overflow-y: scroll;
-}
-
 .headline {
-  position: relative;
+  position: sticky;
+  top: 0;
+  z-index: 4;
   background-color: white;
   display: flex;
   align-items: center;
 }
 
-.indicators {
+.layout-50 {
+  grid-template-columns: 50vw 50vw;
+}
+.layout-50 .text-container-50 {
+  width: 50vw;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 20px;
-}
-
-.indicator {
-  background-color: #D9D9D9;
-  height: 2px;
-  width: 16px;
-  margin: 2px;
-}
-
-.slick-active .indicator {
-  background-color: black;
+  padding-top: 60vh;
+  align-items: flex-start;
+  overflow: scroll;
+  -webkit-mask-image: linear-gradient(to bottom, black 90%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 90%, transparent 100%);
+  overflow-y: scroll;
 }
 
 .inner-slider-div {
@@ -266,13 +251,13 @@ input, textarea, select {
   object-fit: contain;
 }
 
-.inner-slider-div-50 {
-  width: 50vw;
-}
-
 .selected-slide {
   opacity: 1;
   cursor: pointer;
+}
+
+.slides:hover img {
+  cursor: url("../img/PlusBold.svg"), auto;
 }
 
 .slick-next, .slick-prev {
@@ -289,7 +274,7 @@ input, textarea, select {
   left: 0;
 }
 
-.slick-arrow.slick-next:before {
+.slick-next:before {
   content: "";
 }
 
@@ -297,35 +282,12 @@ input, textarea, select {
   cursor: url("../img/ArrowIcon.svg"), auto;
 }
 
-.slick-arrow.slick-prev:before {
+.slick-prev:before {
   content: "";
 }
 
 .slick-prev:hover {
   cursor: url("../img/ArrowBack.svg"), auto;
-}
-
-.slick-next.slick-disabled:before, .slick-prev.slick-disabled:before {
-  opacity: 0;
-}
-
-.slick-next.slick-disabled:hover, .slick-prev.slick-disabled:hover {
-  cursor: auto;
-}
-
-.slick-dots {
-  width: calc(74vw - 60px);
-  bottom: 0;
-  height: 40px;
-  z-index: 2;
-}
-.slick-dots li {
-  width: 10px;
-  height: 10px;
-}
-
-.slick-dots-50 {
-  width: calc(50vw - 60px);
 }
 
 .slider-navigation {
@@ -355,12 +317,43 @@ input, textarea, select {
   background-image: url("../img/ArrowIcon.svg");
 }
 
-.slider-navigation-50 {
-  width: calc(50vw - 60px);
+.indicators {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
 }
 
-.slides:hover img {
-  cursor: url("../img/PlusBold.svg"), auto;
+.indicator {
+  background-color: #D9D9D9;
+  height: 2px;
+  width: 16px;
+  margin: 2px;
+}
+
+.slick-active .indicator {
+  background-color: black;
+}
+
+.slick-dots {
+  width: calc(74vw - 60px);
+  bottom: 0;
+  height: 40px;
+  z-index: 2;
+}
+.slick-dots li {
+  width: 10px;
+  height: 10px;
+}
+
+.carousel-50 .inner-slider-div {
+  width: 50vw;
+}
+.carousel-50 .slider-navigation {
+  width: calc(50vw - 60px);
+}
+.carousel-50 .slick-dots {
+  width: calc(50vw - 60px);
 }
 
 .tag-wrapper {
