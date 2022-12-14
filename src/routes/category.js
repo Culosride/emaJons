@@ -41,12 +41,11 @@ categoryRouter.patch("/api/categories/deleteTag", async (req, res) => {
   const { tagToDelete } = req.body
   // console.log(tagToDelete)
   try {
-    const category = await Category.findOneAndUpdate(
+    await Category.findOneAndUpdate(
       { name: "dummy" },
       { $pull: { allTags: tagToDelete } }
       );
     res.status(200).json({deletedTag: tagToDelete, message: "Tag deleted"});
-    // console.log("category", category, category.allTags, tagToDelete)
     } catch (err) {
       res.status(400).send(err);
     }

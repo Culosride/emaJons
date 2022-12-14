@@ -85,7 +85,7 @@ export default function PostForm () {
       if (key === "images") {
         return postData.images.map(img => formData.append("images", img))
       } else if (key === "postTags") {
-        return postData.postTags.map(postTag => formData.append("postTags", postTag))
+        return selectedTags.map(postTag => formData.append("postTags", postTag))
       } else {
         return formData.append(key, postData[key]);
       }
