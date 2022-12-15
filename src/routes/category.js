@@ -39,7 +39,6 @@ categoryRouter.patch("/api/categories/tags", tagValidation, async (req, res) => 
 
 categoryRouter.patch("/api/categories/deleteTag", async (req, res) => {
   const { tagToDelete } = req.body
-  // console.log(tagToDelete)
   try {
     await Category.findOneAndUpdate(
       { name: "dummy" },

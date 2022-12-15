@@ -1,5 +1,4 @@
 const bcrypt = require("bcrypt");
-const { userExists } = require("../middleware/tagValidation");
 const User = require("../models/user");
 const jwt = require("jsonwebtoken");
 
@@ -8,30 +7,70 @@ const handleLogin = async (req, res) => {
   if (!username || !password) return res.status(400).json({ message: "Username and password required." })
   const user = await User.findOne({ username: username }).exec();
   if(!user) res.sendStatus(401);      // unauthorized if user doesn't exist
-
-  const matchPsw = bcrypt.compare(password, user.password)
+  (password, user.password)
+  const matchPsw = await bcrypt.compare(password, user.password)
   if (matchPsw) {
     const accessToken = jwt.sign(
       { username: user.username },
       process.env.ACCESS_TOKEN_SECRET,
       { expiresIn: "15m" }
       );
-    const refreshToken = jwt.sign(
-      { username: user.username },
-      process.env.REFRESH_TOKEN_SECRET,
-      { expiresIn: "1d" }
+      const refreshToken = jwt.sign(
+        { username: user.username },
+        process.env.REFRESH_TOKEN_SECRET,
+        { expiresIn: "1d" }
+        );
+        user.refreshToken = refreshToken
+        await user.save()
+
+        // Generates secure cookie for authentication with refresh token
+        res.cookie("jwt", refreshToken, { httpOnly: true, maxAge: 24*60*60*1000 });
+
+        // sends accessToken to frontend for clientside authentication
+        res.json({ accessToken });
+      } else {
+        res.sendStatus(401);
+      }
+    }
+
+const handleRefreshToken = async (req, res) => {
+  // look for cookies and if thez have jwt property with optional chain oparator
+  const cookies = req.cookies
+  if (!cookies?.jwt) return res.sendStatus(401)
+  const refreshToken = cookies.jwt;
+  const user = await User.findOne({ refreshToken: refreshToken}).exec()
+  if(!user) return res.sendStatus(403) // Forbidden
+  jwt.verify(
+    refreshToken,
+    process.env.REFRESH_TOKEN_SECRET,
+    (err, decoded) => {
+      if(err || user.username !== decoded.username) return res.sendStatus(403);
+      const accessToken = jwt.sign(
+        { username: decoded.username },
+        process.env.ACCESS_TOKEN_SECRET,
+        { expiresIn: "15m" }
       );
-    user.refreshToken = refreshToken
-    await user.save()
+      res.json({ accessToken })
+    }
+  );
+}
 
-    // Generates secure cookie for authentication with refresh token
-    res.cookie("jwt", refreshToken, { httpOnly: true, maxAge: 24*60*60*1000 });
+const handleLogout = async (req, res) => {
+  // delete accessToken also client-side
 
-    // sends accessToken to frontend for clientside authentication
-    res.json({ accessToken });
-  } else {
-    res.sendStatus(401);
-  }
+  const cookies = req.cookies;
+  if (!cookies?.jwt) return res.sendStatus(204) // successfull req no content sent
+  const refreshToken = cookies.jwt;
+
+  const user = await User.findOne({ refreshToken: refreshToken}).exec();
+  if(!user) {
+    res.clearCookie("jwt", { httpOnly: true, maxAge: 24*60*60*1000});
+    return res.sendStatus(204);
+  };
+  user.refreshToken = "";
+  await user.save();
+  res.clearCookie("jwt", { httpOnly: true, maxAge: 24*60*60*1000 }); // set also secure option for production (https), in dev we use http
+  res.sendStatus(204);
 }
 
 // for future endevours
@@ -53,4 +92,4 @@ const handleNewUser = async (req, res) => {
   }
 }
 
-module.exports = { handleLogin, handleNewUser };
+module.exports = { handleLogin, handleNewUser, handleRefreshToken, handleLogout };

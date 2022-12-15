@@ -20,8 +20,8 @@ export const addNewTag = createAsyncThunk("api/categories/tags", async (tag, { r
 export const deleteTag = createAsyncThunk("api/categories/deleteTag", async (tagToDelete, { rejectWithValue }) => {
   try {
     const response = await api.deleteTag(tagToDelete)
-    // console.log("at slicer",tagToDelete)
-    console.log("data", response.data)
+    // ("at slicer",tagToDelete)
+    ("data", response.data)
     return response.data
   } catch (error) {
     return rejectWithValue(error.response.data.message)
@@ -82,7 +82,6 @@ const categorySlice = createSlice({
       })
       .addCase(addNewTag.rejected, (state, action) => {
         state.status = "failed";
-        console.log()
         state.error = action.payload
       })
       .addCase(deleteTag.pending, (state) => {
@@ -98,7 +97,6 @@ const categorySlice = createSlice({
       })
       .addCase(deleteTag.rejected, (state, action) => {
         state.status = "failed";
-        console.log()
         state.error = action.payload.message
       })
   }
