@@ -56,8 +56,8 @@
 
 .header-post {
   justify-content: flex-start;
-  position: fixed;
-  width: calc($description-width - $slider-padding);
+  position: relative;
+  width: 100%;
   margin: 0 30px;
   padding: 0;
   top: 0;

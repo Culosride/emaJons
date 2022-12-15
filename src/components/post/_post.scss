@@ -12,9 +12,8 @@
   display: flex;
   justify-content: center;
   height: 100vh;
-  max-width: 100vw;
+  width: 100%;
   img {
-    margin: 0 10px;
     height: 100%;
   }
 }
@@ -22,10 +21,13 @@
 .text-container {
   box-sizing: border-box;
   text-align: left;
-  width: $description-width;
+  width: 100%;
   margin: 0 auto;
   height: 100vh;
   border-left: 1px solid black;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   button {
     background-color: transparent;
     border: none;
@@ -40,9 +42,6 @@
   .close-icon:after {
     content: url('../img/CloseIcon.svg')
   }
-}
-.text-container:after {
-  content: ""
 }
 .text-container:hover {
   cursor: url('../img/CloseIcon.svg'), auto;
@@ -72,7 +71,7 @@
 .layout-50 {
   grid-template-columns: $slider-width-50 $description-width-50;
   .text-container-50 {
-    width: $description-width-50;
+    // width: $description-width-50;
     -webkit-mask-image: linear-gradient(to bottom, black 95%, transparent 100%);
     mask-image: linear-gradient(to bottom, black 95%, transparent 100%);
     overflow-y: scroll;
@@ -106,25 +105,38 @@
       margin-top: 0;
     }
   }
+  .carousel-50 {
+    .inner-slider-div {
+      width: 100%;
+    }
+    .slider-navigation {
+      width: calc($slider-width-50 - $slider-padding);
+    }
+  }
 }
 
 // full screen
 .layout-100 {
-  transition: all ease-in-out .3s;
   grid-template-columns: 100vw 0;
-  .text-container-50 {
-    transition: all ease-in-out .3s;
-    opacity: 0;
-    width: 0;
+  transition: grid-template-columns ease-out .6s;
+  // .post-header, .description-container {
+  //   transition: opacity ease-in-out 3s;
+  //   opacity: 0;
+  // }
+  .description-container {
+    display: none;
   }
-  .carousel-50 {
-    .slider-navigation, .slick-dots {
-      width: calc(100vw - $slider-padding);
-    }
+  .text-container {
+    transition: opacity ease-in-out .2s;
+    opacity: 0;
   }
   .slides:hover {
     img {
       cursor: url('../img/CloseIcon.svg'), auto;
     }
+  }
+  .slick-slide {
+    transition: all ease-in-out .3s;
+    width: 100%;
   }
 }

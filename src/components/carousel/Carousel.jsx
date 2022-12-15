@@ -2,10 +2,9 @@ import React, { useEffect, useRef, useState } from "react";
 import Slider from "react-slick";
 import Item from '../item/Item';
 
-export default function Carousel({ images, content, toggleFullScreen }) {
-  const slider = useRef();
-
-  const [activeSlide, setActiveSlide] = useState(0)
+export default function Carousel({ images, toggleFullScreen }) {
+  const slider = useRef()
+  // const [activeSlide, setActiveSlide] = useState(0)
 
   const settings = {
     className: "inner-slider-div",
@@ -16,7 +15,7 @@ export default function Carousel({ images, content, toggleFullScreen }) {
     slidesToShow: 1,
     slidesToScroll: 1,
     dotsClass: "slick-dots",
-    customPaging: function(i) {
+    customPaging: (i) => {
       return (
         <a>
           <div className='indicator'></div>
@@ -31,23 +30,19 @@ export default function Carousel({ images, content, toggleFullScreen }) {
       key={image.publicId}
       id={i}
       toggleFullScreen={toggleFullScreen}
-      className={
-        (activeSlide === i) ? 'selected-slide' : `slides`
-      } />
+      className="slides"
+      />
   })
 
-  function next() {
+  const next = () => {
     slider.current.slickNext();
   }
-  function previous() {
+  const previous = () => {
     slider.current.slickPrev();
   }
 
   return (
-    <div
-      style={{height: '100vh'}}
-      className={content ? "images-container carousel-50" : "images-container"}
-    >
+    <div className="images-container carousel-50">
       <Slider {...settings} ref={slider}>
         {imageElements}
       </Slider>
