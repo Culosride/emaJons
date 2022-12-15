@@ -1,8 +1,7 @@
 const mongoose = require("mongoose")
 const User = require("./src/models/user")
-const Category = require("./src/models/category")
-const dotenv = require("dotenv")
-dotenv.config()
+const Category = require("./src/models/category");
+require("dotenv").config()
 const passport = require("passport");
 
 const main = async () => {

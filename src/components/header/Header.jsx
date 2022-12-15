@@ -29,7 +29,7 @@ export default function Header () {
           <span className="navigation">
             {navElements}
             {/* {aboutElements} */}
-            <li><Link to="/admin/dashboard">Dashboard</Link></li>
+            <li><Link to="/posts/new">Dashboard</Link></li>
             <button><i className="close-icon"></i></button>
           </span>
         </ul>

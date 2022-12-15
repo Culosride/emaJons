@@ -21,7 +21,7 @@ export default function App() {
           <Route path="/:category/:postId" element={<Post />} />
           <Route exact path='/bio' element={<Bio />}></Route>
           <Route exact path='/contact' element={<Contact />}></Route>
-          <Route exact path='/admin/dashboard' element={<PostForm />}></Route>
+          <Route exact path='/posts/new' element={<PostForm />}></Route>
         </Routes>
       </div>
     </Router>

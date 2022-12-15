@@ -11,7 +11,8 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: [true, "Please provide a password"]
-  }
+  },
+  refreshToken: String
 }, {timestamps: true})
 
 userSchema.plugin(passportLocalMongoose);

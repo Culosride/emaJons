@@ -1,5 +1,6 @@
 const express = require('express');
 const upload = require('../middleware/upload');
+const validateJWT = require("../middleware/JWTValidation")
 const Post = require('../models/post');
 const { Image } = require('../models/image');
 const { uploadToCloudinary, removeFromCloudinary } = require('../services/cloudinary.config');
@@ -9,8 +10,8 @@ const postRouter = new express.Router();
 const multer = require('multer');
 const multerUpload = upload.array('images', 20);
 
-postRouter.get("/", async (req, res) => {
-  res.redirect("/admin/dashboard")
+postRouter.get("/posts/new", validateJWT, async (req, res) => {
+
 })
 
 postRouter.get('/posts', async (req, res) => {
@@ -66,7 +67,7 @@ postRouter.post('/posts', multerUpload, async (req, res) => {
 
 postRouter.delete('/:category/:postId', async (req, res) => {
   try {
-    const post = await Post.findOne({_id: req.params.postId});
+    const post = await Post.findOne({_id: req.params.postId}).exec();
     const images = post.images;
     const publicIds = images.map(img => img.publicId)
     if(publicIds.length) {await removeFromCloudinary(publicIds)};
