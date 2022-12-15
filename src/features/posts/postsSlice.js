@@ -20,7 +20,6 @@ export const addPost = createAsyncThunk("/posts", async (data) => {
 })
 
 export const deletePost = createAsyncThunk("api/posts/:postId", async ([postId, category]) => {
-  console.log(postId, category)
   const response = await api.deletePost([postId, category])
   return response.data
 })

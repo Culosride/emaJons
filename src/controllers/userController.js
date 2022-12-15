@@ -9,9 +9,15 @@ const handleLogin = async (req, res) => {
   if(!user) res.sendStatus(401);      // unauthorized if user doesn't exist
   (password, user.password)
   const matchPsw = await bcrypt.compare(password, user.password)
+  const roles = Object.values(user.roles)
   if (matchPsw) {
     const accessToken = jwt.sign(
-      { username: user.username },
+      {
+        UserInfo: {
+        username: user.username,
+        roles: roles
+        }
+      },
       process.env.ACCESS_TOKEN_SECRET,
       { expiresIn: "15m" }
       );
@@ -45,8 +51,14 @@ const handleRefreshToken = async (req, res) => {
     process.env.REFRESH_TOKEN_SECRET,
     (err, decoded) => {
       if(err || user.username !== decoded.username) return res.sendStatus(403);
+      const roles = Object.values(user.roles)
       const accessToken = jwt.sign(
-        { username: decoded.username },
+        {
+          UserInfo: {
+            username: decoded.username,
+            roles: roles
+          }
+        },
         process.env.ACCESS_TOKEN_SECRET,
         { expiresIn: "15m" }
       );
@@ -83,6 +95,7 @@ const handleNewUser = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new User({
       username: username,
+      roles: { BasicUser: 1909 },
       password: hashedPassword
     });
     await newUser.save();

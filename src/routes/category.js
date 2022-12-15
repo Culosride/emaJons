@@ -3,6 +3,12 @@ const Category = require('../models/category');
 const categoryRouter = new express.Router();
 const _ = require('lodash');
 const tagValidation = require("../middleware/tagValidation")
+const verifyRoles = require("../middleware/verifyRoles")
+require("dotenv").config()
+
+const adminCode = process.env.ADMIN_CODE*1    // need number
+
+// routes for BasicUsers
 
 categoryRouter.get('/api/categories/:category', async (req, res) => {
   try {
@@ -22,7 +28,10 @@ categoryRouter.get("/api/categories/", async (req, res) => {
   }
 })
 
-categoryRouter.patch("/api/categories/tags", tagValidation, async (req, res) => {
+
+// routes requiring authorization
+
+categoryRouter.patch("/api/categories/tags", tagValidation, verifyRoles(adminCode), async (req, res) => {
   const { newTag } = (req.body)
   const capitalizedTag = _.capitalize(newTag)
 
@@ -37,7 +46,7 @@ categoryRouter.patch("/api/categories/tags", tagValidation, async (req, res) => 
     }
 })
 
-categoryRouter.patch("/api/categories/deleteTag", async (req, res) => {
+categoryRouter.patch("/api/categories/deleteTag", verifyRoles(adminCode), async (req, res) => {
   const { tagToDelete } = req.body
   try {
     await Category.findOneAndUpdate(
