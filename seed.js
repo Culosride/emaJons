@@ -23,7 +23,7 @@ const main = async () => {
       console.log(err);
     } else {
       passport.authenticate("local");
-        mongoose.connection.close()
+      mongoose.connection.close()
     }
   });
 }
