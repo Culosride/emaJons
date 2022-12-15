@@ -1,11 +1,9 @@
 
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux'; // hook to select data from redux store
-import { selectAllPosts, fetchPosts, fetchPostsByCategory } from "../../features/posts/postsSlice";
-const _ = require('lodash');
-
-import Axios from 'axios';
+import { fetchPostsByCategory } from "../../features/posts/postsSlice";
 import { Link, useParams } from 'react-router-dom';
+const _ = require('lodash');
 
 export default function AllPosts() {
   const params = useParams();
@@ -13,10 +11,12 @@ export default function AllPosts() {
   const posts = useSelector(state => state.posts.posts)
   const status = useSelector(state => state.posts.status)
   const error = useSelector(state => state.posts.error)
-  const categoryTags = useSelector(state => state.posts.posts.flatMap(post => post.postTags.map(tag => tag)))
+  const allTags = useSelector(state => state.posts.posts.flatMap(post => post.postTags.map(tag => tag)))
+  const cleanedTags = [...new Set(allTags.sort((a, b) => b.localeCompare(a)))];
+
+  const [filteredPosts, setFilteredPosts] = useState([])
 
   let postElements = []
-  const [filteredPosts, setFilteredPosts] = useState([])
 
   useEffect(() => {
     if (status === 'idle') {
@@ -24,18 +24,15 @@ export default function AllPosts() {
     }
   }, [status, dispatch])
 
-   // filter posts on tag click
+  // filter posts on tag click
   const handleClick = (e) => {
     e.preventDefault();
     const filter = e.target.getAttribute('data-value');
     const filteredPosts = posts.filter((post) => {
       return post.postTags.includes(filter);
     })
-    filteredPosts.length ? setFilteredPosts(filteredPosts) : setFilteredPosts({message: 'Sorry, no posts'});
+    filteredPosts.length && setFilteredPosts(filteredPosts);
   }
-
-  // remove duplicate tags
-  const cleanedTags = [...new Set(categoryTags.sort((a, b) => b.localeCompare(a)))];
 
   // create tag elements
   const tagElements = cleanedTags.map((tag, i) => (
@@ -72,7 +69,6 @@ export default function AllPosts() {
           <div className="posts-grid">
             {postElements.length && postElements || <p>No posts yet</p>}
           </div>
-        {/* {status === 'succeeded' && displayPosts(posts)} */}
       </div>
     </div>
   )
