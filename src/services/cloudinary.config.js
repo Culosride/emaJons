@@ -19,8 +19,8 @@ const uploadToCloudinary = (path, folder) => {
   })
 }
 
-const removeFromCloudinary = async (public_id) => {
-  await cloudinary.v2.uploader.destroy(public_id, (err, res) => {
+const removeFromCloudinary = async (public_ids) => {
+  await cloudinary.v2.api.delete_resources((public_ids), (err, res) => {
     console.log(err, res)
   })
 }

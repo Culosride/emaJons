@@ -19,6 +19,12 @@ export const addPost = createAsyncThunk("/posts", async (data) => {
   return response.data
 })
 
+export const deletePost = createAsyncThunk("api/posts/:postId", async ([postId, category]) => {
+  console.log(postId, category)
+  const response = await api.deletePost([postId, category])
+  return response.data
+})
+
 export const fetchPostsByCategory = createAsyncThunk("/api/posts/fetchPostsByCategory", async (params) => {
   const response = await api.fetchPostsByCategory(params)
   return response.data
@@ -50,12 +56,24 @@ const postsSlice = createSlice({
         state.status = 'failed'
         state.error = action.error.message
       })
+      .addCase(deletePost.pending, (state, action) => {
+        state.status = 'loading'
+      })
+      // .addCase(deletePost.fulfilled, (state, action) => {
+      //   state.status = 'succeeded'
+      //   console.log(action.payload.message)
+      //   // need  to get the posts again
+      //   return state
+      // })
+      .addCase(deletePost.rejected, (state, action) => {
+        state.status = 'failed'
+        state.error = action.error.message
+      })
       .addCase(fetchPostsByCategory.pending, (state, action) => {
         state.status = 'loading'
       })
       .addCase(fetchPostsByCategory.fulfilled, (state, action) => {
         state.status = 'succeeded'
-        // Add any fetched posts to the array
         state.posts = state.posts.concat(action.payload)
       })
       .addCase(fetchPostsByCategory.rejected, (state, action) => {
