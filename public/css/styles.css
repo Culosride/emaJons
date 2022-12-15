@@ -100,10 +100,6 @@
   z-index: 0;
 }
 
-.header-post-50 {
-  width: calc(50vw - 60px);
-}
-
 .category-container {
   display: grid;
   grid-template-columns: 1fr 5fr;
@@ -218,6 +214,14 @@ input, textarea, select {
   content: url("../img/CloseIcon.svg");
 }
 
+.text-container:after {
+  content: "";
+}
+
+.text-container:hover {
+  cursor: url("../img/CloseIcon.svg"), auto;
+}
+
 .description-container {
   display: flex;
   height: 100vh;
@@ -247,6 +251,9 @@ input, textarea, select {
   mask-image: linear-gradient(to bottom, black 95%, transparent 100%);
   overflow-y: scroll;
 }
+.layout-50 .header-post-50 {
+  width: calc(50vw - 60px);
+}
 .layout-50 .description-container-50 {
   display: flex;
   padding-top: 60vh;
@@ -272,6 +279,22 @@ input, textarea, select {
   transition: all ease-in 0.1s;
   font-size: 0.75rem;
   margin-top: 0;
+}
+
+.layout-100 {
+  transition: all ease-in-out 0.3s;
+  grid-template-columns: 100vw 0;
+}
+.layout-100 .text-container-50 {
+  transition: all ease-in-out 0.3s;
+  opacity: 0;
+  width: 0;
+}
+.layout-100 .carousel-50 .slider-navigation, .layout-100 .carousel-50 .slick-dots {
+  width: calc(100vw - 60px);
+}
+.layout-100 .slides:hover img {
+  cursor: url("../img/CloseIcon.svg"), auto;
 }
 
 .inner-slider-div {
@@ -303,7 +326,7 @@ input, textarea, select {
 .slick-next, .slick-prev {
   height: 100%;
   width: 20vw;
-  z-index: 1;
+  z-index: 10;
 }
 
 .slick-next {
@@ -360,7 +383,7 @@ input, textarea, select {
 }
 
 .carousel-50 .inner-slider-div {
-  width: 50vw;
+  width: 100%;
 }
 .carousel-50 .slider-navigation {
   width: calc(50vw - 60px);

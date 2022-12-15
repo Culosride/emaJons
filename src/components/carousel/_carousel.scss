@@ -31,7 +31,7 @@
 .slick-next, .slick-prev {
   height: 100%;
   width: 20vw;
-  z-index: 1;
+  z-index: 10;
 }
 
 .slick-next {
@@ -120,7 +120,7 @@
 // 50 50 layout
 .carousel-50 {
   .inner-slider-div {
-    width: $slider-width-50;
+    width: 100%;
   }
   .slider-navigation {
     width: calc($slider-width-50 - $slider-padding);

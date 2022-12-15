@@ -57,13 +57,10 @@
 .header-post {
   justify-content: flex-start;
   position: fixed;
-  width: calc($description-width - 60px);
+  width: calc($description-width - $slider-padding);
   margin: 0 30px;
   padding: 0;
   top: 0;
   right: 0;
   z-index: 0;
-}
-.header-post-50 {
-  width: calc($description-width-50 - 60px);
 }

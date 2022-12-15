@@ -2,11 +2,10 @@ import React, { useEffect, useRef, useState } from "react";
 import Slider from "react-slick";
 import Item from '../item/Item';
 
-export default function Carousel({ images, content }) {
+export default function Carousel({ images, content, toggleFullScreen }) {
   const slider = useRef();
 
   const [activeSlide, setActiveSlide] = useState(0)
-  const [nextSlide, setNextSlide] = useState(1)
 
   const settings = {
     className: "inner-slider-div",
@@ -31,6 +30,7 @@ export default function Carousel({ images, content }) {
       imageUrl={image.imageUrl}
       key={image.publicId}
       id={i}
+      toggleFullScreen={toggleFullScreen}
       className={
         (activeSlide === i) ? 'selected-slide' : `slides`
       } />
@@ -44,7 +44,10 @@ export default function Carousel({ images, content }) {
   }
 
   return (
-    <div style={{height: '100vh'}} className={content ? "images-container carousel-50" : "images-container"}>
+    <div
+      style={{height: '100vh'}}
+      className={content ? "images-container carousel-50" : "images-container"}
+    >
       <Slider {...settings} ref={slider}>
         {imageElements}
       </Slider>
