@@ -1,6 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-// import Axios from 'axios';
-import { useNavigate, useParams } from 'react-router-dom';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import Carousel from '../carousel/Carousel';
 import { useSelector, useDispatch } from 'react-redux'; // hook to select data from state (in redux store)
