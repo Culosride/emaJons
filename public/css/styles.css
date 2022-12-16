@@ -328,6 +328,13 @@ input, textarea, select {
   width: 100%;
 }
 
+button.delete-post {
+  position: relative;
+  top: 0;
+  right: 0;
+  font-size: 20px;
+}
+
 .inner-slider-div {
   height: 100vh;
   width: 100%;

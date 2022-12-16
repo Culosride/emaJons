@@ -12,6 +12,7 @@ export default function Post() {
   const params = useParams()
   const status = useSelector(state => state.posts.status)
   const error = useSelector(state => state.posts.error)
+  const category = params.category
 
   // load data
   let imageElements = []
@@ -61,20 +62,16 @@ export default function Post() {
             toggleFullScreen={toggleFullScreen}
           ></Carousel>
         }
-        <div
-          className="text-container"
-          onScroll={handleScroll}
-          onClick={toggleFullScreen}
-        >
+        <div className="text-container" onScroll={handleScroll} onClick={toggleFullScreen}>
           <div className="header-post">
             <Link reloadDocument to="/" className="logo">EmaJons</Link>
+            <button className="delete-post" onClick={handleDelete}>DELETE POST</button>
           </div>
           {!fullScreen && <button onClick={() => navigate(-1)}><i className="close-icon"></i></button>}
           <div className="description-container">
             <div className="headline">
               <div>
                 <h1 className="title">{post.title}</h1>
-                <button onClick={handleDelete}>DELETE POST</button>
                 {post.subtitle && <p className="subtitle">{post.subtitle}</p>}
               </div>
             </div>
