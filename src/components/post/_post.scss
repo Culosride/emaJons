@@ -20,7 +20,7 @@
 }
 
 .text-container {
-  animation: slideIn .5s ease-in, fadeIn .5s ease-in;
+  animation: fadeIn .5s ease-in;
   box-sizing: border-box;
   text-align: left;
   width: 100%;
@@ -33,12 +33,12 @@
   button {
     background-color: transparent;
     border: none;
-    padding: 0;
+    padding: 10px;
     font-size: 24px;
     cursor: pointer;
     position: fixed;
-    right: 30px;
-    top: 24px;
+    right: 20px;
+    top: 14px;
     z-index: 6;
   }
   .close-icon:after {
@@ -114,17 +114,18 @@
 // full screen
 .layout-100 {
   grid-template-columns: 100vw 0;
-  transition: all ease-out .5s;
+  transition: all ease-out .3s;
   transition-delay: .1s;
   .text-container {
-    transition: all ease-out .2s;
+    transition: all ease-out .3s;
     transition-delay: .1s;
     opacity: 0;
     width: calc($description-width-50 - $slider-padding);;
   }
   .header-post {
-    transition: right ease-out .5s;
+    transition: all ease-out .15s;
     transition-delay: .1s;
+    opacity: 0;
     right: calc(($description-width-50 - $slider-padding) * (-1));
   }
   .slides:hover {

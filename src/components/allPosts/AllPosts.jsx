@@ -71,7 +71,7 @@ export default function AllPosts() {
           </ul>
         </div>
           <div className="posts-grid">
-            {postElements.length && postElements || <p>No posts yet</p>}
+            {postElements.length && postElements}
           </div>
       </div>
     </div>

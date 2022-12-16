@@ -1,12 +1,12 @@
 .category-container {
-  animation: fadeIn .5s ease-in;
+  // animation: fadeIn .5s ease-in;
   display: grid;
   grid-template-columns: 1fr 5fr;
   margin: 0 30px;
 }
 
 .posts-grid {
-  animation: slideIn .5s ease-in, fadeIn .5s ease-in;
+  animation: slideIn .5s ease-in;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   column-gap: 30px;
@@ -32,6 +32,7 @@
     margin: 0;
   }
   li {
+    animation: fadeIn .5s ease-in;
     text-transform: uppercase;
     padding-bottom: 10px;
   }

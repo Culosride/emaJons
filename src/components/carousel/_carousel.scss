@@ -124,3 +124,6 @@
     }
   }
 }
+.full-screen {
+  transition: left 200ms ease, width 200ms ease !important;
+}
