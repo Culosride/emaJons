@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import Slider from "react-slick";
 import Item from '../item/Item';
 
-export default function Carousel({ images, toggleFullScreen }) {
+export default function Carousel({ images, toggleFullScreen, scrollPosition, scrollStep }) {
   const slider = useRef()
   // const [activeSlide, setActiveSlide] = useState(0)
 
@@ -40,6 +40,16 @@ export default function Carousel({ images, toggleFullScreen }) {
   const previous = () => {
     slider.current.slickPrev();
   }
+
+  // const steps = new Array(images.length).fill(false)
+
+  // images.forEach((_, i) => {
+  //   if (scrollPosition < scrollStep * (i * -1)) {
+  //     console.log('Next')
+  //     !steps[i] && next()
+  //     steps[i] = true
+  //   }
+  // })
 
   return (
     <div className="images-container carousel">

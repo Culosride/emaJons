@@ -9,7 +9,7 @@ export default function AllPosts() {
   const params = useParams();
   const dispatch = useDispatch()
   const posts = useSelector(state => state.posts.posts)
-  const status = useSelector(state => state.posts.status)
+  let status = useSelector(state => state.posts.status)
   const error = useSelector(state => state.posts.error)
   const allTags = useSelector(state => state.posts.posts.flatMap(post => post.postTags.map(tag => tag)))
   const cleanedTags = [...new Set(allTags.sort((a, b) => b.localeCompare(a)))];
@@ -18,9 +18,9 @@ export default function AllPosts() {
 
   let postElements = []
 
-  // useEffect(() => {
-  //   status = 'idle'
-  // }, [params])
+  useEffect(() => {
+    status = 'idle'
+  }, [params])
 
   useEffect(() => {
     if (status === 'idle') {
@@ -61,9 +61,6 @@ export default function AllPosts() {
   } else if (status === 'failed') {
     postElements = <div>{error}</div>
   }
-
-  console.log(params)
-  console.log(posts)
 
   return (
     <div>

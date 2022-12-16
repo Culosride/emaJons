@@ -12,7 +12,7 @@ export default function Header () {
 
   const navElements = categories.map((category, i) => (
     <li key={i}>
-      <Link reloadDocument to={`/${category}`}>{_.capitalize(category)}</Link>
+      <Link to={`/${category}`}>{_.capitalize(category)}</Link>
     </li>
   ))
 

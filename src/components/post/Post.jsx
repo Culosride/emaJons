@@ -36,14 +36,20 @@ export default function Post() {
     })
   }
 
-
   // interaction
   const [fullScreen, setFullScreen] = useState(false)
   const toggleFullScreen = () => setFullScreen((prev) => !prev)
 
+  // const [scrollStep, setScrollStep] = useState(0)
+  // const [scrollPosition, setScrollPosition] = useState(0)
+
   const handleScroll = (e) => {
     const headline = e.target.lastElementChild.firstElementChild;
+    const text = e.target.lastElementChild.lastElementChild.getBoundingClientRect();
     (headline.getBoundingClientRect().top === 0) ? headline.classList.add('headline-sticky') : headline.classList.remove('headline-sticky')
+    // const height = text.height
+    // if (scrollStep === 0) setScrollStep(Math.round((height + scrollPosition) / imageElements.length))
+    // setScrollPosition(Math.round(text.top))
   }
 
   const content = post.content && post.content.length > 100
@@ -55,6 +61,8 @@ export default function Post() {
             content={content}
             images={post.images}
             toggleFullScreen={toggleFullScreen}
+            // scrollPosition={scrollPosition}
+            // scrollStep={scrollStep}
           ></Carousel>
         }
         <div
