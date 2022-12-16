@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import Carousel from '../carousel/Carousel';
 import { useSelector, useDispatch } from 'react-redux'; // hook to select data from state (in redux store)
-import { fetchPostById } from '../../features/posts/postsSlice';
+import { fetchPostsByCategory, deletePost, fetchPostById } from '../../features/posts/postsSlice';
 
 export default function Post() {
   const navigate = useNavigate()
@@ -34,6 +34,11 @@ export default function Post() {
     imageElements = post.images.map((image) => {
       return <img src={image.imageUrl} key={image.publicId}/>
     })
+  }
+  function handleDelete() {
+    dispatch(deletePost([post._id, category]))
+      .then(() => navigate(`/${params.category}`))
+      .then(() => dispatch(fetchPostsByCategory(params.category)))
   }
 
   // interaction
@@ -69,6 +74,7 @@ export default function Post() {
             <div className="headline">
               <div>
                 <h1 className="title">{post.title}</h1>
+                <button onClick={handleDelete}>DELETE POST</button>
                 {post.subtitle && <p className="subtitle">{post.subtitle}</p>}
               </div>
             </div>
