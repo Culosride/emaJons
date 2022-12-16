@@ -1,5 +1,6 @@
 import React from 'react';
 import Header from './components/header/Header';
+import Login from './components/login/Login';
 import AllPosts from './components/allPosts/AllPosts';
 import PostForm from './components/postForm/PostForm';
 import Post from './components/post/Post';
@@ -17,6 +18,7 @@ export default function App() {
       <div className="App">
         <Header />
         <Routes>
+          <Route path="login" element={<Login />} />
           <Route exact path='/:category' element={<AllPosts />} />
           <Route path="/:category/:postId" element={<Post />} />
           <Route exact path='/bio' element={<Bio />}></Route>

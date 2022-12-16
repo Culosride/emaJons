@@ -30,9 +30,7 @@ const main = async () => {
     const admin = new User({
     username: process.env.SUPERUSER,
     password: hashedPassword,
-    roles: {
-      Admin: process.env.ADMIN_CODE
-    }
+    roles: ["Admin"]
   })
   await admin.save()
   console.log("Admin seeded")

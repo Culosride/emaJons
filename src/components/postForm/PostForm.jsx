@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
+
 import { useNavigate } from 'react-router-dom';
 import { addPost } from "../../features/posts/postsSlice"
 import { deleteTag, fetchAllTags, addNewTag, toggleTag } from "../../features/categories/categorySlice"
+import { logout } from "../../features/auth/authSlice"
 import { useSelector, useDispatch } from "react-redux";
 import Tag from "../tag/Tag";
 const _ = require("lodash")
@@ -10,6 +12,7 @@ export default function PostForm () {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const availableTags = useSelector(state => state.categories.availableTags);
+  const token = useSelector((state) => state.auth.token)
   const selectedTags = useSelector(state => state.categories.selectedTags);
   const error = useSelector(state => state.categories.error);
   const status = useSelector(state => state.categories.status);
@@ -64,7 +67,6 @@ export default function PostForm () {
     });
   }
 
-
   function handleTag(e) {
     const { name, value } = e.target;
 
@@ -90,8 +92,8 @@ export default function PostForm () {
         return formData.append(key, postData[key]);
       }
     });
-
-    dispatch(addPost(formData))
+    // dispatch(addPost([formData, token]))
+    dispatch(addPost({formData, token}))
       .then((res) => navigate(`/${postData.category}/${res.payload._id}`))
   }
 
@@ -104,6 +106,18 @@ export default function PostForm () {
   const selectedTagElements = selectedTags.map((t, i) => {
     return <Tag handleTagToggle={handleTagToggle} selected={true} handleTagDelete={handleTagDelete} name={t} id={`${t}-${i}`} key={`${t}-${i}`}/>
   })
+
+  async function handleLogout() {
+    dispatch(logout(token))
+  }
+  const logoutButton = (
+    <button
+        className="ilogoutbtncon-button"
+        title="Logout"
+        onClick={handleLogout}
+    >Logout
+    </button>
+  )
 
   return (
     <div className="form-wrapper">
@@ -142,6 +156,7 @@ export default function PostForm () {
 
         <input type="submit" value="Submit post!" />
       </form>
+      {logoutButton}
     </div>
   )
 }

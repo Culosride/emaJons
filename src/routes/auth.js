@@ -1,14 +1,10 @@
 const express = require("express")
 const authRouter = new express.Router();
-const userController = require("../controllers/userController");
-const validateJWT = require("../middleware/verifyJWT")
+const authController = require("../controllers/authController");
 
-authRouter.get("/login", (req, res) => {
-  res.render("login");
-});
-
-authRouter.post("/login", userController.handleLogin);
-authRouter.get("/refresh", userController.handleRefreshToken)
-authRouter.get("/logout", userController.handleLogout)
+// authRouter.get("/auth", (req, res) => {res.render("login")});
+authRouter.post("/auth", authController.handleLogin);
+authRouter.get("/auth/refresh", authController.handleRefreshToken)
+authRouter.post("/auth/logout", authController.handleLogout)
 
 module.exports = authRouter
