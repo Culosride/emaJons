@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 // import Axios from 'axios';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import Carousel from '../carousel/Carousel';
@@ -8,7 +8,6 @@ import { fetchPostById } from '../../features/posts/postsSlice';
 export default function Post() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const contentHeight = useRef(null)
   const post = useSelector(state => state.posts.selectedPost)
   const params = useParams()
   const status = useSelector(state => state.posts.status)
@@ -41,16 +40,9 @@ export default function Post() {
   const [fullScreen, setFullScreen] = useState(false)
   const toggleFullScreen = () => setFullScreen((prev) => !prev)
 
-  // const [scrollStep, setScrollStep] = useState(0)
-  // const [scrollPosition, setScrollPosition] = useState(0)
-
   const handleScroll = (e) => {
     const headline = e.target.lastElementChild.firstElementChild;
     (headline.getBoundingClientRect().top === 0) ? headline.classList.add('headline-sticky') : headline.classList.remove('headline-sticky')
-    // const text = e.target.lastElementChild.lastElementChild.getBoundingClientRect();
-    // setScrollHeight(text.height)
-    // if (scrollStep === 0) setScrollStep(Math.round(height / imageElements.length))
-    // setScrollPosition(text)
   }
 
   const content = post.content && post.content.length > 100

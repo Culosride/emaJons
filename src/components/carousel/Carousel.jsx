@@ -4,7 +4,6 @@ import Item from '../item/Item';
 
 export default function Carousel({ images, toggleFullScreen }) {
   const slider = useRef()
-  // const [activeSlide, setActiveSlide] = useState(0)
 
   useEffect(() => {
     images.forEach((_, i) => {
