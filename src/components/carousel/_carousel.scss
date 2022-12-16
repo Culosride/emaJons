@@ -1,26 +1,21 @@
 // slider
 .inner-slider-div {
   height: 100vh;
-  width: $slider-width;
+  width: 100%;
   margin: 0 auto;
   margin-bottom: 20px;
   box-sizing: border-box;
   position: relative;
   top: 0;
   left: 0;
-  padding: 40px 30px;
+  padding: 30px;
   img {
     width: 100%;
-    height: calc(100vh - 100px);
+    height: calc(100vh - 90px);
     object-fit: contain;
   }
 }
 
-// selected slide
-.selected-slide {
-  opacity: 1;
-  cursor: pointer;
-}
 .slides:hover {
   img {
     cursor: url('../img/PlusBold.svg'), auto;
@@ -31,7 +26,7 @@
 .slick-next, .slick-prev {
   height: 100%;
   width: 20vw;
-  z-index: 1;
+  z-index: 10;
 }
 
 .slick-next {
@@ -107,9 +102,10 @@
   }
 }
 .slick-dots {
-  width: calc($slider-width - $slider-padding);
+  position: relative;
+  width: 100%;
   bottom: 0;
-  height: 40px;
+  margin-top: 20px;
   z-index: 2;
   li {
     width: 10px;
@@ -117,15 +113,17 @@
   }
 }
 
-// 50 50 layout
-.carousel-50 {
+.layout-100 {
   .inner-slider-div {
-    width: $slider-width-50;
+    transition: all ease-in .3s;
+    img {
+      transition: all ease-in .3s;
+      width: 100%;
+      height: calc(100vh - 90px);
+      object-fit: contain;
+    }
   }
-  .slider-navigation {
-    width: calc($slider-width-50 - $slider-padding);
-  }
-  .slick-dots {
-    width: calc($slider-width-50 - $slider-padding);
-  }
+}
+.full-screen {
+  transition: left 200ms ease, width 200ms ease !important;
 }
