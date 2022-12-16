@@ -20,6 +20,7 @@ export default function AllPosts() {
 
   useEffect(() => {
     status = 'idle'
+    setFilteredPosts([])
   }, [params])
 
   useEffect(() => {
