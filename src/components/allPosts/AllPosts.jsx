@@ -18,11 +18,15 @@ export default function AllPosts() {
 
   let postElements = []
 
+  // useEffect(() => {
+  //   status = 'idle'
+  // }, [params])
+
   useEffect(() => {
     if (status === 'idle') {
       dispatch(fetchPostsByCategory(params.category))
     }
-  }, [status, dispatch])
+  }, [status, dispatch, params])
 
   // filter posts on tag click
   const handleClick = (e) => {
@@ -57,6 +61,9 @@ export default function AllPosts() {
   } else if (status === 'failed') {
     postElements = <div>{error}</div>
   }
+
+  console.log(params)
+  console.log(posts)
 
   return (
     <div>

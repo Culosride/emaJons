@@ -41,17 +41,9 @@ export default function Post() {
   const [fullScreen, setFullScreen] = useState(false)
   const toggleFullScreen = () => setFullScreen((prev) => !prev)
 
-  const [initialPosition, setInitialPosition] = useState(0)
-  useEffect(() => {
-    setInitialPosition(textContainer.current.clientHeight * .6);
-  }, [])
-
-  const textContainer = useRef(null)
-
   const handleScroll = (e) => {
     const headline = e.target.lastElementChild.firstElementChild;
-    const scrollTop = headline.offsetTop;
-    (scrollTop > initialPosition) ? headline.classList.add('headline-sticky') : headline.classList.remove('headline-sticky')
+    (headline.getBoundingClientRect().top === 0) ? headline.classList.add('headline-sticky') : headline.classList.remove('headline-sticky')
   }
 
   const content = post.content && post.content.length > 100
@@ -66,17 +58,16 @@ export default function Post() {
           ></Carousel>
         }
         <div
-          ref={textContainer}
-          className="text-container text-container-50"
+          className="text-container"
           onScroll={handleScroll}
           onClick={toggleFullScreen}
         >
-          <div className="header-post header-post-50">
+          <div className="header-post">
             <Link reloadDocument to="/" className="logo">EmaJons</Link>
           </div>
           {!fullScreen && <button onClick={() => navigate(-1)}><i className="close-icon"></i></button>}
-          <div className="description-container description-container-50">
-            <div className="headline headline-50">
+          <div className="description-container">
+            <div className="headline">
               <div>
                 <h1 className="title">{post.title}</h1>
                 {post.subtitle && <p className="subtitle">{post.subtitle}</p>}

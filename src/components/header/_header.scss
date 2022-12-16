@@ -55,12 +55,13 @@
 }
 
 .header-post {
+  position: fixed;
   justify-content: flex-start;
-  position: relative;
   width: 100%;
   margin: 0 30px;
   padding: 0;
   top: 0;
   right: 0;
   z-index: 0;
+  width: calc($description-width - $slider-padding);
 }

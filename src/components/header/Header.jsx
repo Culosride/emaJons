@@ -24,11 +24,10 @@ export default function Header () {
     <>
       {!post &&
         <ul className="header-global">
-          <li><Link reloadDocument to="/" className="logo">EmaJons</Link></li>
+          <li><Link to="/" className="logo">EmaJons</Link></li>
           <span className="dash"></span>
           <span className="navigation">
             {navElements}
-            {/* {aboutElements} */}
             <li><Link to="/admin/dashboard">Dashboard</Link></li>
             <button><i className="close-icon"></i></button>
           </span>

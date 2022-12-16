@@ -42,7 +42,7 @@ export default function Carousel({ images, toggleFullScreen }) {
   }
 
   return (
-    <div className="images-container carousel-50">
+    <div className="images-container carousel">
       <Slider {...settings} ref={slider}>
         {imageElements}
       </Slider>

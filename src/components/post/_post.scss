@@ -1,4 +1,5 @@
 .post-container {
+  animation: fadeIn .5s ease-in;
   text-align: center;
   display: grid;
   grid-template-columns: $slider-width $description-width;
@@ -19,6 +20,7 @@
 }
 
 .text-container {
+  animation: slideIn .5s ease-in, fadeIn .5s ease-in;
   box-sizing: border-box;
   text-align: left;
   width: 100%;
@@ -70,16 +72,15 @@
 // 50 50 layout
 .layout-50 {
   grid-template-columns: $slider-width-50 $description-width-50;
-  .text-container-50 {
-    // width: $description-width-50;
+  .text-container {
     -webkit-mask-image: linear-gradient(to bottom, black 95%, transparent 100%);
     mask-image: linear-gradient(to bottom, black 95%, transparent 100%);
     overflow-y: scroll;
   }
-  .header-post-50 {
+  .header-post {
     width: calc($description-width-50 - $slider-padding);
   }
-  .description-container-50 {
+  .description-container {
     display: flex;
     padding-top: 60vh;
     height: auto;
@@ -87,14 +88,12 @@
     flex-direction: column;
     align-items: flex-start;
   }
-  .headline-50 {
+  .headline {
     padding: 30px 30px 10px;
   }
   .headline-sticky {
     transition: all ease-in .1s;
     padding: 20px 30px 15px;
-    display: flex;
-    justify-content: space-between;
     .title {
       transition: all ease-in .1s;
       font-size: 1.375rem;
@@ -105,12 +104,9 @@
       margin-top: 0;
     }
   }
-  .carousel-50 {
+  .carousel {
     .inner-slider-div {
       width: 100%;
-    }
-    .slider-navigation {
-      width: calc($slider-width-50 - $slider-padding);
     }
   }
 }
@@ -118,17 +114,18 @@
 // full screen
 .layout-100 {
   grid-template-columns: 100vw 0;
-  transition: grid-template-columns ease-out .6s;
-  // .post-header, .description-container {
-  //   transition: opacity ease-in-out 3s;
-  //   opacity: 0;
-  // }
-  .description-container {
-    display: none;
-  }
+  transition: all ease-out .5s;
+  transition-delay: .1s;
   .text-container {
-    transition: opacity ease-in-out .2s;
+    transition: all ease-out .2s;
+    transition-delay: .1s;
     opacity: 0;
+    width: calc($description-width-50 - $slider-padding);;
+  }
+  .header-post {
+    transition: right ease-out .5s;
+    transition-delay: .1s;
+    right: calc(($description-width-50 - $slider-padding) * (-1));
   }
   .slides:hover {
     img {
@@ -136,7 +133,8 @@
     }
   }
   .slick-slide {
-    transition: all ease-in-out .3s;
+    transition: all ease-out .5s;
+    transition-delay: .1s;
     width: 100%;
   }
 }
