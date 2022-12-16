@@ -74,13 +74,15 @@ const handleLogout = async (req, res) => {
   if (!cookies?.jwt) return res.sendStatus(204) // successfull req no content sent
   const refreshToken = cookies.jwt;
 
-  const user = await User.findOne({ refreshToken: refreshToken}).exec();
+  const user = await User.findOne({ refreshToken }).exec();
   if(!user) {
     res.clearCookie("jwt", { httpOnly: true, maxAge: 24*60*60*1000});
     return res.sendStatus(204);
   };
+
   user.refreshToken = "";
   await user.save();
+
   res.clearCookie("jwt", { httpOnly: true, maxAge: 24*60*60*1000 }); // set also secure option for production (https), in dev we use http
   res.sendStatus(204);
 }

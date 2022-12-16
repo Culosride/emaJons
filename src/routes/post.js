@@ -15,6 +15,15 @@ const adminCode = process.env.ADMIN_CODE*1    // need number
 
 // routes for BasicUsers
 
+postRouter.get('/posts', async (req, res) => {
+  try {
+    const allPosts = await Post.find();
+    res.status(200).json(allPosts);
+  } catch (err) {
+    res.status(404).send(err);
+  }
+});
+
 postRouter.get('/api/posts/:category', async (req, res) => {
   try {
     const allPosts = await Post.find({category: _.capitalize(req.params.category)});
@@ -58,8 +67,8 @@ postRouter.post('/posts', validateJWT, verifyRoles(adminCode), multerUpload, asy
 postRouter.delete('/:category/:postId', validateJWT, verifyRoles(adminCode), async (req, res) => {
   try {
     const post = await Post.findOne({_id: req.params.postId}).exec();
-    const images = post.images;
-    const publicIds = images.map(img => img.publicId)
+    if(!post) return res.status(204).json({ message: "No post found with this id."})
+    const publicIds = post.images.map(img => img.publicId)
     if(publicIds.length) {await removeFromCloudinary(publicIds)};
     await post.deleteOne();
     res.status(200).json({message: 'post deleted successfully'});
@@ -72,13 +81,5 @@ postRouter.get("/posts/new", validateJWT, verifyRoles(adminCode), async (req, re
 
 })
 
-postRouter.get('/posts', async (req, res) => {
-  try {
-    const allPosts = await Post.find();
-    res.status(200).json(allPosts);
-  } catch (err) {
-    res.status(404).send(err);
-  }
-});
 
 module.exports = postRouter;
