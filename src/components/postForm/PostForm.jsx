@@ -31,7 +31,6 @@ export default function PostForm () {
     if (status === 'idle') {
       dispatch(fetchAllTags())
     }
-    // setAvailableTags(allTags)
   }, [dispatch, status])
 
   function createNewTag() {
@@ -109,6 +108,7 @@ export default function PostForm () {
 
   async function handleLogout() {
     dispatch(logout(token))
+      .then(res => navigate("/"))
   }
   const logoutButton = (
     <button

@@ -1,12 +1,5 @@
 import axios from 'axios';
 
-const axiosInstance = axios.create({
-  withCredentials: true,
-  headers: {
-    "Content-Type": "application/json"
-  }
-})
-
 const url = "http://localhost:3000/posts"
 
 // posts requests
@@ -22,7 +15,6 @@ export const addNewTag = (tag) => axios.patch("/api/categories/tags", { newTag: 
 export const deleteTag = (tagToDelete) => axios.patch("/api/categories/deleteTag", { tagToDelete: tagToDelete })
 
 // auth requests
-// export const login = (userInfo) => axios.post("/auth", (userInfo), { withCredentials: true })
-export const login = (userInfo) => axiosInstance.post('/auth', userInfo)
+export const login = (userInfo) => axios.post("/auth", userInfo)
 export const logout = (token) => axios.post("/auth/logout", {cookies: token})
 export const refresh = () => axios.get("/auth/refresh")

@@ -52,7 +52,7 @@ const authSlice = createSlice({
       })
       .addCase(logout.fulfilled, (state, action) => {
         state.token = null
-        state.status = action.payload.statusText || "succeeded"
+        state.status = action.payload.message
       })
       .addCase(logout.rejected, (state, action) => {
         state.status = "failed";
