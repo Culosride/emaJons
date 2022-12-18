@@ -68,9 +68,9 @@ postRouter.delete('/:category/:postId', validateJWT, verifyRoles(adminCode), asy
   }
 });
 
-postRouter.get("/posts/new", validateJWT, verifyRoles(adminCode), async (req, res) => {
+// postRouter.get("/posts/new", validateJWT, verifyRoles(adminCode), async (req, res) => {
 
-})
+// })
 
 postRouter.get('/posts', async (req, res) => {
   try {
