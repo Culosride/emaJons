@@ -2,14 +2,20 @@ import React, { useEffect, useRef, useState } from "react";
 import Slider from "react-slick";
 import Item from '../item/Item';
 
-export default function Carousel({ images, content }) {
-  const slider = useRef();
+export default function Carousel({ images, toggleFullScreen }) {
+  const slider = useRef()
 
-  const [activeSlide, setActiveSlide] = useState(0)
-  const [nextSlide, setNextSlide] = useState(1)
+  useEffect(() => {
+    images.forEach((_, i) => {
+      const slide = document.querySelector(`[data-index="${i}"]`)
+      slide.parentElement.classList.add('center-mobile')
+      slide.style.transition = 'left 200ms ease, width 200ms ease, opacity 600ms ease 0s, visibility 600ms ease 0s'
+    })
+  }, [])
 
   const settings = {
     className: "inner-slider-div",
+    accessibility: true,
     dots: true,
     infinite: true,
     fade: true,
@@ -17,13 +23,22 @@ export default function Carousel({ images, content }) {
     slidesToShow: 1,
     slidesToScroll: 1,
     dotsClass: "slick-dots",
-    customPaging: function(i) {
+    customPaging: (i) => {
       return (
         <a>
           <div className='indicator'></div>
         </a>
       );
     },
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          fade: false,
+          swipe: true
+        }
+      }
+    ]
   };
 
   const imageElements = images.map((image, i) => {
@@ -31,20 +46,20 @@ export default function Carousel({ images, content }) {
       imageUrl={image.imageUrl}
       key={image.publicId}
       id={i}
-      className={
-        (activeSlide === i) ? 'selected-slide' : `slides`
-      } />
+      toggleFullScreen={toggleFullScreen}
+      className="slides"
+      />
   })
 
-  function next() {
+  const next = () => {
     slider.current.slickNext();
   }
-  function previous() {
+  const previous = () => {
     slider.current.slickPrev();
   }
 
   return (
-    <div style={{height: '100vh'}} className={content ? "images-container carousel-50" : "images-container"}>
+    <div className="images-container carousel">
       <Slider {...settings} ref={slider}>
         {imageElements}
       </Slider>

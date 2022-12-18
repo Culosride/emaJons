@@ -36,6 +36,10 @@
     "react-material-ui-carousel": "^3.4.2",
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.4.4",
+<<<<<<< HEAD
+=======
+    "react-scroll-trigger": "^0.6.14",
+>>>>>>> ebc1ec015cacf4b0bb34062848a851c9af3a00d8
     "react-slick": "^0.29.0",
     "redux": "^4.2.0",
     "redux-thunk": "^2.4.2",

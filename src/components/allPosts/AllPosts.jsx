@@ -9,7 +9,7 @@ export default function AllPosts() {
   const params = useParams();
   const dispatch = useDispatch()
   const posts = useSelector(state => state.posts.posts)
-  const status = useSelector(state => state.posts.status)
+  let status = useSelector(state => state.posts.status)
   const error = useSelector(state => state.posts.error)
   const allTags = useSelector(state => state.posts.posts.flatMap(post => post.postTags.map(tag => tag)))
   const cleanedTags = [...new Set(allTags.sort((a, b) => b.localeCompare(a)))];
@@ -19,10 +19,15 @@ export default function AllPosts() {
   let postElements = []
 
   useEffect(() => {
+    status = 'idle'
+    setFilteredPosts([])
+  }, [params])
+
+  useEffect(() => {
     if (status === 'idle') {
       dispatch(fetchPostsByCategory(params.category))
     }
-  }, [status, dispatch])
+  }, [status, dispatch, params])
 
   // filter posts on tag click
   const handleClick = (e) => {
@@ -61,13 +66,13 @@ export default function AllPosts() {
   return (
     <div>
       <div className="category-container">
-        <div className="tags-container">
+        <div className="select-tags-container">
           <ul>
             {tagElements}
           </ul>
         </div>
           <div className="posts-grid">
-            {postElements.length && postElements || <p>No posts yet</p>}
+            {postElements.length && postElements}
           </div>
       </div>
     </div>
