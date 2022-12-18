@@ -26,8 +26,11 @@ postInstance.interceptors.request.use(async req => {
   const isExpired = decoded.exp < Date.now()/1000
   console.log(isExpired)
 
-  if(!isExpired) return req
-
+  if(!isExpired) {
+    req.headers.Authorization = `Bearer ${token}`
+    return req
+  }
+  
   const response = await axios.get(`${baseURL}/auth/refresh/`);
   req.headers.Authorization = `Bearer ${response.data.accessToken}`
   return req

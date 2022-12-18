@@ -91,7 +91,9 @@ export default function PostForm () {
     });
     // dispatch(addPost({formData, token}))
     dispatch(addPost(formData))
-      .then((res) => navigate(`/${postData.category}/${res.payload._id}`))
+      .then((res) => { if(!res.error) {
+        navigate(`/${postData.category}/${res.payload._id}`)
+    }})
   }
 
   const tagElements = availableTags.map((t, i) => {
