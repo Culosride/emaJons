@@ -127,3 +127,30 @@
 .full-screen {
   transition: left 200ms ease, width 200ms ease !important;
 }
+
+@media screen and (max-width: 1024px) {
+  .inner-slider-div {
+    height: fit-content;
+    margin-bottom: 0;
+    padding: 0 10px 0;
+    img {
+      height: auto;
+      max-height: 65vh;
+    }
+  }
+  .layout-100 {
+    .inner-slider-div img {
+      max-height: 100vh;
+    }
+    .images-container {
+      margin-top: 0;
+    }
+  }
+  .center-mobile {
+    display: flex;
+    align-items: center;
+  }
+  .slides {
+    margin: 0 10px;
+  }
+}

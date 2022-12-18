@@ -8,12 +8,14 @@ export default function Carousel({ images, toggleFullScreen }) {
   useEffect(() => {
     images.forEach((_, i) => {
       const slide = document.querySelector(`[data-index="${i}"]`)
+      slide.parentElement.classList.add('center-mobile')
       slide.style.transition = 'left 200ms ease, width 200ms ease, opacity 600ms ease 0s, visibility 600ms ease 0s'
     })
   }, [])
 
   const settings = {
     className: "inner-slider-div",
+    accessibility: true,
     dots: true,
     infinite: true,
     fade: true,
@@ -28,6 +30,15 @@ export default function Carousel({ images, toggleFullScreen }) {
         </a>
       );
     },
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          fade: false,
+          swipe: true
+        }
+      }
+    ]
   };
 
   const imageElements = images.map((image, i) => {

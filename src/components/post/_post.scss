@@ -30,23 +30,23 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  button {
-    background-color: transparent;
-    border: none;
-    padding: 10px;
-    font-size: 24px;
-    cursor: pointer;
-    position: fixed;
-    right: 20px;
-    top: 14px;
-    z-index: 6;
-  }
-  .close-icon:after {
-    content: url('../img/CloseIcon.svg')
-  }
 }
 .text-container:hover {
   cursor: url('../img/CloseIcon.svg'), auto;
+}
+button {
+  background-color: transparent;
+  border: none;
+  padding: 10px;
+  font-size: 24px;
+  cursor: pointer;
+  position: fixed;
+  right: 30px;
+  top: 24px;
+  z-index: 6;
+  .close-icon:after {
+    content: url('../img/CloseIcon.svg')
+  }
 }
 
 .description-container {
@@ -60,7 +60,7 @@
   position: sticky;
   top: 0;
   align-self: flex-start;
-  z-index: 1;
+  z-index: 10;
   background-color: white;
   display: flex;
   align-items: center;
@@ -94,6 +94,7 @@
   .headline-sticky {
     transition: all ease-in .1s;
     padding: 20px 30px 15px;
+    top: 0;
     .title {
       transition: all ease-in .1s;
       font-size: 1.375rem;
@@ -117,10 +118,10 @@
   transition: all ease-out .3s;
   transition-delay: .1s;
   .text-container {
-    transition: all ease-out .3s;
-    transition-delay: .1s;
-    opacity: 0;
-    width: calc($description-width-50 - $slider-padding);;
+    // transition: all ease-out .3s;
+    // transition-delay: .1s;
+    // width: calc($description-width-50 - $slider-padding);
+    display: none;
   }
   .header-post {
     transition: all ease-out .15s;
@@ -144,4 +145,47 @@ button.delete-post {
   top: 0;
   right: 0;
   font-size: 20px;
+}
+
+@media screen and (max-width: 1024px) {
+  .post-container {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    min-height: 100vh;
+    height: fit-content;
+  }
+  .images-container, .text-container, .description-container {
+    width: 100vw;
+    height: fit-content;
+    border: none;
+    text-align: center;
+  }
+  .headline {
+    justify-content: center;
+    z-index: 0;
+  }
+  .layout-50 {
+    .description-container {
+      padding-top: 0;
+    }
+    .text-container {
+      -webkit-mask-image: none;
+      mask-image: none;
+    }
+  }
+  .layout-100 {
+    .header-post {
+      right: 0;
+      top: -74px;
+    }
+  }
+  .images-container {
+    margin-top: 74px;
+  }
+  .header-post, .layout-50 .header-post {
+    width: calc(100vw - $slider-padding-mobile);
+    background-color: white;
+    margin: 0 20px;
+  }
 }

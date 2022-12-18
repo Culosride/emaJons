@@ -56,6 +56,7 @@
 }
 
 .header-post {
+  transition: top ease .4s;
   position: fixed;
   justify-content: flex-start;
   width: 100%;
@@ -63,6 +64,17 @@
   padding: 0;
   top: 0;
   right: 0;
-  z-index: 0;
+  z-index: 6;
   width: calc($description-width - $slider-padding);
+}
+
+.fade-top {
+  top: -74px;
+  transition: top ease .4s
+}
+
+@media screen and (max-width: 1024px) {
+  .header-global {
+    margin-bottom: 20px;
+  }
 }
