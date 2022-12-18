@@ -20,15 +20,13 @@ export const addNewTag = createAsyncThunk("api/categories/tags", async (tag, { r
 export const deleteTag = createAsyncThunk("api/categories/deleteTag", async (tagToDelete, { rejectWithValue }) => {
   try {
     const response = await api.deleteTag(tagToDelete)
-    // ("at slicer",tagToDelete)
-    ("data", response.data)
     return response.data
   } catch (error) {
     return rejectWithValue(error.response.data.message)
   }
 })
 
-export const fetchAllTags = createAsyncThunk("/api/categories/", async () => {
+export const fetchAllTags = createAsyncThunk("/api/categories", async () => {
   const response = await api.fetchAllTags()
   return response.data
 })

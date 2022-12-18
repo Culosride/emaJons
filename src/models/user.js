@@ -10,14 +10,14 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, "Please provide a password"]
   },
-  roles: {
-    Admin: Number,
-    BasicUser: {
-      type: Number,
-      default: 1909
-    },
-  },
-  refreshToken: String
+  roles: [{
+    type: String,
+    default: "BasicUser"
+}],
+  active: {
+    type: Boolean,
+    default: true
+  }
 }, {timestamps: true})
 
 const User = mongoose.model('User', userSchema);

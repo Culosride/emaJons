@@ -9,23 +9,31 @@ const initialState = {
   error: "" || null
 }
 
-export const fetchPosts = createAsyncThunk("/posts/fetchPosts", async () => {
-  const response = await api.fetchPosts()
+export const fetchPosts = createAsyncThunk("/posts/fetchPosts", async (token) => {
+  const response = await api.fetchPosts(token)
+  console.log(response)
   return response.data
 })
 
-export const addPost = createAsyncThunk("/posts", async (data) => {
-  const response = await api.addPost(data)
+export const addPost = createAsyncThunk("/posts", async (formData) => {
+  const response = await api.addPost(formData)
+  return response.data
+})
+// export const addPost = createAsyncThunk("/posts", async (data) => {
+//   const { formData, token } = data
+//   // console.log("slice", formData, token)
+//   const response = await api.addPost(formData, token)
+//   // console.log("response", response.data)
+//   return response.data
+// })
+
+export const deletePost = createAsyncThunk("api/posts/:postId", async ([postId, category, token]) => {
+  const response = await api.deletePost([postId, category, token])
   return response.data
 })
 
-export const deletePost = createAsyncThunk("api/posts/:postId", async ([postId, category]) => {
-  const response = await api.deletePost([postId, category])
-  return response.data
-})
-
-export const fetchPostsByCategory = createAsyncThunk("/api/posts/fetchPostsByCategory", async (params) => {
-  const response = await api.fetchPostsByCategory(params)
+export const fetchPostsByCategory = createAsyncThunk("/api/posts/fetchPostsByCategory", async (category) => {
+  const response = await api.fetchPostsByCategory(category)
   return response.data
 })
 
@@ -53,6 +61,7 @@ const postsSlice = createSlice({
       })
       .addCase(addPost.rejected, (state, action) => {
         state.status = 'failed'
+        console.log(action)
         state.error = action.error.message
       })
       .addCase(deletePost.pending, (state, action) => {
@@ -94,13 +103,8 @@ const postsSlice = createSlice({
         state.error = action.error.message
       })
     }
-    // postDeleted(state, action) {
-    //   const todo = state.find(todo => todo.id === action.payload)
-    //   todo.completed = !todo.completed
-    // }
 })
 
 // export const { addPost } = postsSlice.actions
-
 
 export default postsSlice.reducer
