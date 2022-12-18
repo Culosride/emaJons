@@ -66,7 +66,7 @@ export default function AllPosts() {
   return (
     <div>
       <div className="category-container">
-        <div className="tags-container">
+        <div className="select-tags-container">
           <ul>
             {tagElements}
           </ul>

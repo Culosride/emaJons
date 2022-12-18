@@ -107,6 +107,7 @@
 }
 
 .header-post {
+  transition: top ease 0.4s;
   position: fixed;
   justify-content: flex-start;
   width: 100%;
@@ -114,10 +115,20 @@
   padding: 0;
   top: 0;
   right: 0;
-  z-index: 0;
+  z-index: 6;
   width: calc(26vw - 60px);
 }
 
+.fade-top {
+  top: -74px;
+  transition: top ease 0.4s;
+}
+
+@media screen and (max-width: 1024px) {
+  .header-global {
+    margin-bottom: 20px;
+  }
+}
 .category-container {
   display: grid;
   grid-template-columns: 1fr 5fr;
@@ -137,6 +148,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  min-height: 200px;
 }
 .posts-grid img {
   width: 100%;
@@ -144,21 +156,38 @@
   object-fit: cover;
 }
 
-.tags-container ul {
+.select-tags-container ul {
   list-style-type: none;
   padding-left: 0;
-  margin: 0;
 }
-.tags-container li {
+.select-tags-container li {
   animation: fadeIn 0.5s ease-in;
   text-transform: uppercase;
   padding-bottom: 10px;
 }
-.tags-container a {
+.select-tags-container a {
   text-decoration: none;
   color: black;
 }
 
+@media screen and (max-width: 1024px) {
+  .category-container {
+    grid-template-columns: 1fr;
+  }
+  .posts-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: 200px;
+  }
+  .select-tags-container ul {
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 0;
+  }
+  .select-tags-container li {
+    margin-right: 20px;
+    padding: 10px 0;
+  }
+}
 input, textarea, label, select {
   width: 100%;
   display: block;
@@ -224,23 +253,24 @@ input, textarea, select {
   flex-direction: column;
   justify-content: space-between;
 }
-.text-container button {
+
+.text-container:hover {
+  cursor: url("../img/CloseIcon.svg"), auto;
+}
+
+button {
   background-color: transparent;
   border: none;
   padding: 10px;
   font-size: 24px;
   cursor: pointer;
   position: fixed;
-  right: 20px;
-  top: 14px;
+  right: 30px;
+  top: 24px;
   z-index: 6;
 }
-.text-container .close-icon:after {
+button .close-icon:after {
   content: url("../img/CloseIcon.svg");
-}
-
-.text-container:hover {
-  cursor: url("../img/CloseIcon.svg"), auto;
 }
 
 .description-container {
@@ -254,7 +284,7 @@ input, textarea, select {
   position: sticky;
   top: 0;
   align-self: flex-start;
-  z-index: 1;
+  z-index: 10;
   background-color: white;
   display: flex;
   align-items: center;
@@ -288,6 +318,7 @@ input, textarea, select {
 .layout-50 .headline-sticky {
   transition: all ease-in 0.1s;
   padding: 20px 30px 15px;
+  top: 0;
 }
 .layout-50 .headline-sticky .title {
   transition: all ease-in 0.1s;
@@ -308,10 +339,7 @@ input, textarea, select {
   transition-delay: 0.1s;
 }
 .layout-100 .text-container {
-  transition: all ease-out 0.3s;
-  transition-delay: 0.1s;
-  opacity: 0;
-  width: calc(50vw - 60px);
+  display: none;
 }
 .layout-100 .header-post {
   transition: all ease-out 0.15s;
@@ -335,6 +363,44 @@ button.delete-post {
   font-size: 20px;
 }
 
+@media screen and (max-width: 1024px) {
+  .post-container {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    min-height: 100vh;
+    height: fit-content;
+  }
+  .images-container, .text-container, .description-container {
+    width: 100vw;
+    height: fit-content;
+    border: none;
+    text-align: center;
+  }
+  .headline {
+    justify-content: center;
+    z-index: 0;
+  }
+  .layout-50 .description-container {
+    padding-top: 0;
+  }
+  .layout-50 .text-container {
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+  .layout-100 .header-post {
+    right: 0;
+    top: -74px;
+  }
+  .images-container {
+    margin-top: 74px;
+  }
+  .header-post, .layout-50 .header-post {
+    width: calc(100vw - 40px);
+    background-color: white;
+    margin: 0 20px;
+  }
+}
 .inner-slider-div {
   height: 100vh;
   width: 100%;
@@ -430,6 +496,30 @@ button.delete-post {
   transition: left 200ms ease, width 200ms ease !important;
 }
 
+@media screen and (max-width: 1024px) {
+  .inner-slider-div {
+    height: fit-content;
+    margin-bottom: 0;
+    padding: 0 10px 0;
+  }
+  .inner-slider-div img {
+    height: auto;
+    max-height: 65vh;
+  }
+  .layout-100 .inner-slider-div img {
+    max-height: 100vh;
+  }
+  .layout-100 .images-container {
+    margin-top: 0;
+  }
+  .center-mobile {
+    display: flex;
+    align-items: center;
+  }
+  .slides {
+    margin: 0 10px;
+  }
+}
 .tag-wrapper {
   display: flex;
   padding: 0;
