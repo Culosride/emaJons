@@ -3,7 +3,7 @@ const User = require("../models/user");
 const jwt = require("jsonwebtoken");
 
 const cookieOptions = {
-  httpOnly: true,         // only accessible by web server
+  // httpOnly: true,         // only accessible by web server
   secure: true,           // only for https, activate for deployment
   sameSite: "None",       // cross-site cookie
   maxAge: 24*60*60*1000   // cookie expiration time matches refreshToken's
@@ -15,10 +15,10 @@ const handleLogin = async (req, res) => {
   if (!username || !password) return res.status(400).json({ message: "Username and password required." })
 
   const user = await User.findOne({ username: username }).exec();
-  if(!user) res.status(401).json({message: "Unauthorized."});      // unauthorized if user doesn't exist
+  if(!user) return res.status(401).json({message: "Unauthorized."});      // unauthorized if user doesn't exist
 
   const matchPsw = await bcrypt.compare(password, user.password)
-  if(!matchPsw) res.status(401).json({message: "Unauthorized."});      // unauthorized if pws doesn't match
+  if(!matchPsw) return res.status(401).json({message: "Unauthorized."});      // unauthorized if pws doesn't match
 
   const accessToken = jwt.sign(
     {
@@ -28,12 +28,12 @@ const handleLogin = async (req, res) => {
       }
     },
     process.env.ACCESS_TOKEN_SECRET,
-    { expiresIn: "30s" }
+    { expiresIn: "10s" }
   );
   const refreshToken = jwt.sign(
     { username: user.username },
     process.env.REFRESH_TOKEN_SECRET,
-    { expiresIn: "1d" }
+    { expiresIn: "20s" }
   );
 
   // Generates secure cookie for authentication with refresh token
@@ -43,7 +43,7 @@ const handleLogin = async (req, res) => {
 }
 
 const handleRefreshToken = async (req, res) => {
-  // look for cookies and if thez have jwt property with  optional chain oparator
+  // look for cookies and if they have jwt property with  optional chain oparator
   const cookies = req.cookies
   if (!cookies?.jwt) return res.status(401).json({message: "Unauthorized."});
 
@@ -66,8 +66,9 @@ const handleRefreshToken = async (req, res) => {
           }
         },
         process.env.ACCESS_TOKEN_SECRET,
-        { expiresIn: "30s" }
+        { expiresIn: "10s" }
       );
+      // console.log("acc token", accessToken)
       res.json({ accessToken })
     }
   );
@@ -75,7 +76,6 @@ const handleRefreshToken = async (req, res) => {
 
 const handleLogout = async (req, res) => {
   // delete accessToken also client-side
-  console.log(req.cookies, "ciao")
   const cookies = req.cookies;
   if (!cookies?.jwt) return res.status(204).json({message: "204 No Content"}) // successfull req no content sent
   res.clearCookie("jwt", cookieOptions); // set also secure option for production (https), in dev we use http

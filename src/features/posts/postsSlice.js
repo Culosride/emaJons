@@ -9,21 +9,26 @@ const initialState = {
   error: "" || null
 }
 
-export const fetchPosts = createAsyncThunk("/posts/fetchPosts", async () => {
-  const response = await api.fetchPosts()
+export const fetchPosts = createAsyncThunk("/posts/fetchPosts", async (token) => {
+  const response = await api.fetchPosts(token)
+  console.log(response)
   return response.data
 })
 
-export const addPost = createAsyncThunk("/posts", async (data) => {
-  const { formData, token } = data
-  console.log("slice", formData, token)
-  const response = await api.addPost(formData, token)
-  console.log("response", response.data)
+export const addPost = createAsyncThunk("/posts", async (formData) => {
+  const response = await api.addPost(formData)
   return response.data
 })
+// export const addPost = createAsyncThunk("/posts", async (data) => {
+//   const { formData, token } = data
+//   // console.log("slice", formData, token)
+//   const response = await api.addPost(formData, token)
+//   // console.log("response", response.data)
+//   return response.data
+// })
 
-export const deletePost = createAsyncThunk("api/posts/:postId", async ([postId, category]) => {
-  const response = await api.deletePost([postId, category])
+export const deletePost = createAsyncThunk("api/posts/:postId", async ([postId, category, token]) => {
+  const response = await api.deletePost([postId, category, token])
   return response.data
 })
 
@@ -56,8 +61,8 @@ const postsSlice = createSlice({
       })
       .addCase(addPost.rejected, (state, action) => {
         state.status = 'failed'
+        console.log(action)
         state.error = action.error.message
-        console.log(action.error)
       })
       .addCase(deletePost.pending, (state, action) => {
         state.status = 'loading'

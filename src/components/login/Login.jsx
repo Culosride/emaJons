@@ -1,12 +1,11 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { login, refresh } from '../../features/auth/authSlice';
-
+import { setCredentials, selectCurrentToken, login, refresh } from '../../features/auth/authSlice';
 
 function Login() {
   const status = useSelector(state => state.auth.status)
-  const token = useSelector(state => state.auth.token)
+  const error = useSelector(state => state.auth.error)
   const userRef = useRef()
   const errRef = useRef()
   const [ userInfo, setUserInfo ] = useState({ username: "", password: "" })
@@ -30,32 +29,33 @@ function Login() {
 
   async function handleSubmit(e) {
     e.preventDefault()
-    try {
-      dispatch(login(userInfo))
-      setUserInfo({
-        username: "",
-        password: ""
-      })
+
+    dispatch(login(userInfo))
+    .then(res => { if(!res.error) {
+      dispatch(setCredentials(res.payload.accessToken));
       navigate("/posts/new")
-    } catch (err) {
-      if (!err.status) {
-          setErrMsg('No Server Response');
-      } else if (err.status === 400) {
-          setErrMsg('Missing Username or Password');
-      } else if (err.status === 401) {
-          setErrMsg('Unauthorized');
-      } else {
-          setErrMsg(err.data?.message);
-      }
-      errRef.current.focus();
+      resetInfo()
+    } else {
+      setErrMsg(error);
     }
-  }
+  })
+
+  errRef.current.focus();
+
+}
+
+function resetInfo() {
+  setUserInfo({
+    username: "",
+    password: ""
+  });
+}
 
   const errClass = errMsg ? "error-msg" : "offscreen"     // defines styles when error
 
   const content = (
     <section>
-      <p ref={errRef} className={errClass} aria-live="assertive">{userInfo.errMsg}</p>
+      <p ref={errRef} className={errClass} aria-live="assertive">{errMsg}</p>
       <form className="form" onSubmit={handleSubmit}>
         <label htmlFor="username">Username:</label>
         <input

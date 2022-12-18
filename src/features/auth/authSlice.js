@@ -7,45 +7,40 @@ const initialState = {
   error: "" || null
 }
 
-export const login = createAsyncThunk("/auth", async (userData, { rejectWithValue }) => {
-  try {
-    const response = await api.login(userData)
-    return response.data
-  } catch (error) {
-    return rejectWithValue(error.response.data.message)
-  }
+export const login = createAsyncThunk("/auth", async (userData) => {
+  const response = await api.login(userData)
+  console.log("res", response)
+  return response.data
 })
 
 export const logout = createAsyncThunk("/auth/logout", async (token) => {
-    const response = await api.logout(token)
-    return response.data
-})
-
-export const refresh = createAsyncThunk("/auth/refresh", async ({ rejectWithValue }) => {
-  try {
-    const response = await api.refresh()
-    return response.data
-  } catch (error) {
-    return rejectWithValue(error.response.data.message)
-  }
+  const response = await api.logout(token)
+  return response.data
 })
 
 const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {},
+  reducers: {
+    setCredentials: (state, action) => {
+      console.log("setting credentials")
+      state.token = action.payload
+    },
+  },
   extraReducers(builder) {
     builder
       .addCase(login.pending, (state) => {
         state.status = 'loading'
+        state.error = ""
       })
       .addCase(login.fulfilled, (state, action) => {
-        const { accessToken } = action.payload
-        state.token = accessToken
         state.status = 'succeeded'
       })
-      .addCase(login.rejected, (state) => {
+      .addCase(login.rejected, (state, action) => {
+        console.log("error at login.rejected",action)
         state.status = "failed";
+        console.log(action)
+        state.error = "401 Wrong username or password"
       })
       .addCase(logout.pending, (state) => {
         state.status = 'loading'
@@ -61,8 +56,9 @@ const authSlice = createSlice({
   }
 })
 
-// export const { setCredentials, logout } = authSlice.actions
+export const { setCredentials } = authSlice.actions
 
 export default authSlice.reducer
 
 export const selectCurrentToken = (state) => state.auth.token
+export const selectAuthStatus = (state) => state.auth.status
