@@ -24,6 +24,7 @@
     font-size: 20px;
     font-weight: bold;
     text-transform: uppercase;
+    background-color: #fff;
   }
   button {
     background-color: transparent;
@@ -47,12 +48,32 @@
   .close-icon:after {
     content: url('../img/PlusLight.svg');
     display: inline-block;
-    transform: rotate(45deg)
   }
   .navigation {
+    position: absolute;
     display: flex;
     align-items: center;
+    transition: all 1s ease-out;
+    * {
+      transition: all 1s ease-out;
+    }
   }
+}
+
+.logo-wrapper {
+  display: flex;
+  z-index: 2;
+}
+
+.rectangle {
+  background-color: white;
+  // width: 240px;
+  height: 72px;
+  margin: 0;
+  z-index: 1;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .header-post {

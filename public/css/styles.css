@@ -76,6 +76,7 @@
   font-size: 20px;
   font-weight: bold;
   text-transform: uppercase;
+  background-color: #fff;
 }
 .header-global button, .header-post button {
   background-color: transparent;
@@ -100,11 +101,30 @@
 .header-global .close-icon:after {
   content: url("../img/PlusLight.svg");
   display: inline-block;
-  transform: rotate(45deg);
 }
 .header-global .navigation {
+  position: absolute;
   display: flex;
   align-items: center;
+  transition: all 1s ease-out;
+}
+.header-global .navigation * {
+  transition: all 1s ease-out;
+}
+
+.logo-wrapper {
+  display: flex;
+  z-index: 2;
+}
+
+.rectangle {
+  background-color: white;
+  height: 72px;
+  margin: 0;
+  z-index: 1;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .header-post {
@@ -265,7 +285,6 @@ button {
   padding: 10px;
   font-size: 24px;
   cursor: pointer;
-  position: fixed;
   right: 30px;
   top: 24px;
   z-index: 6;
