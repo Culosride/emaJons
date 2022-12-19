@@ -65,17 +65,4 @@ postRouter.post('/posts', verifyJWT, multerUpload, async (req, res) => {
     }
   });
 
-postRouter.get("/posts/new", validateJWT, verifyRoles(adminCode), async (req, res) => {
-
-})
-
-// postRouter.get('/posts', async (req, res) => {
-//   try {
-//     const allPosts = await Post.find();
-//     res.status(200).json(allPosts);
-//   } catch (err) {
-//     res.status(404).send(err);
-//   }
-// });
-
 module.exports = postRouter

@@ -15,12 +15,12 @@ export default function Post() {
   const status = useSelector(state => state.posts.status)
   const error = useSelector(state => state.posts.error)
   const category = params.category
-  const textContainer = useRef(null)
+  // const textContainer = useRef(null)
   const [initialPosition, setInitialPosition] = useState(0)
 
-  useEffect(() => {
-    setInitialPosition(textContainer.current.clientHeight * .6);
-  }, [])
+  // useEffect(() => {
+  //   setInitialPosition(textContainer.current.clientHeight * .6);
+  // }, [])
 
   let imageElements = []
 
@@ -57,6 +57,7 @@ export default function Post() {
 
   const handleScroll = (e) => {
     const headline = e.target.lastElementChild.firstElementChild;
+    console.log(headline.getBoundingClientRect())
     if (headline.getBoundingClientRect().top < 60) {
       headline.classList.add('headline-sticky')
       headerRef.current.classList.add('fade-top')
@@ -72,7 +73,7 @@ export default function Post() {
       <div className={`post-container ${content ? "layout-50" : ""} ${fullScreen ? "layout-100" : ""}`}>
         <div ref={headerRef} className="header-post">
           <Link reloadDocument to="/" className="logo">EmaJons</Link>
-          <button className="delete-post" onClick={handleDelete}>DELETE POST</button>
+          {/* <button className="delete-post" onClick={handleDelete}>DELETE POST</button> */}
           {!fullScreen && <button onClick={() => navigate(-1)}><i className="close-icon"></i></button>}
         </div>
         {post.images &&
