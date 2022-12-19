@@ -13,9 +13,9 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 # Compiled data
 server-compiled.js
 server-compiled.js.LICENSE.txt
-public/css/styles.css
-public/css/styles.css.map
-public/main.js
+styles.css
+styles.css.map
+main.js
 
 # Runtime data
 pids

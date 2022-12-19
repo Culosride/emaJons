@@ -1,31 +1,45 @@
 const mongoose = require("mongoose")
 const User = require("./src/models/user")
-const Category = require("./src/models/category")
-const dotenv = require("dotenv")
-dotenv.config()
-const passport = require("passport");
+const Category = require("./src/models/category");
+const bcrypt = require("bcrypt")
+
+require("dotenv").config()
 
 const main = async () => {
   await mongoose.connect("mongodb://localhost:27017/emaJonsDB")
   const categories = [
-    { name: "dummy", allTags: []},
+    { name: "dummy", allTags: ["India", "Messico", "Palermo", "2020", "2016"]},
     { name: 'Walls'},
     { name: 'Video'},
     { name: 'Sketchbooks'},
     { name: 'Paintings'},
     { name: 'Sculptures'},
   ];
-  Category.insertMany(categories);
-  console.log("Categories seeded")
-    // mongoose.connection.close()
-  User.register({username: process.env.SUPERUSER}, process.env.SUPERPW, (err, user) => {
-    if (err) {
-      console.log(err);
-    } else {
-      passport.authenticate("local");
-        mongoose.connection.close()
+  try {
+    const existingCat = await Category.find({})
+    if(!existingCat.length) {
+      await Category.insertMany(categories);
+      console.log("Categories seeded")
     }
-  });
+  } catch (error) {
+    console.log(error)
+  };
+
+  try {
+    const hashedPassword = await bcrypt.hash(process.env.SUPERPW, 10);
+    const admin = new User({
+    username: process.env.SUPERUSER,
+    password: hashedPassword,
+    roles: ["Admin"]
+  })
+  await admin.save()
+  console.log("Admin seeded")
+  mongoose.connection.close()
+
+  } catch (error) {
+    console.log(error)
+  }
+
 }
 
 main()
