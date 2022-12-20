@@ -34,6 +34,10 @@
     cursor: pointer
   }
 }
+.header-post{
+  left: 50vw;
+  right: auto
+}
 .header-global {
   border-bottom: 1px solid black;
   margin-bottom: 30px;
@@ -44,6 +48,9 @@
     transform: rotate(20deg);
     margin-right: 16px;
     background-color: black;
+  }
+  .dashboard-link {
+    align-self: flex-end;
   }
   .close-icon:after {
     content: url('../img/PlusLight.svg');
@@ -59,6 +66,8 @@
     }
   }
 }
+
+
 
 .logo-wrapper {
   display: flex;

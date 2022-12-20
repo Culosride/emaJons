@@ -4,6 +4,7 @@ import * as api from "../../API/index"
 const initialState = {
   posts: [],
   lastId: "",
+  fullscreen: false,
   selectedPost: "",
   status: 'idle' || 'loading' || 'succeeded' || 'failed',
   error: "" || null
@@ -45,7 +46,11 @@ export const fetchPostById = createAsyncThunk("/api/posts/fetchPostById", async 
 const postsSlice = createSlice({
   name: 'posts',
   initialState,
-  reducers: {},
+  reducers: {
+    toggleFullscreen(state) {
+      state.fullscreen = !state.fullscreen
+    }
+  },
   extraReducers(builder) {
     builder
       .addCase(addPost.pending, (state, action) => {
@@ -105,6 +110,6 @@ const postsSlice = createSlice({
     }
 })
 
-// export const { addPost } = postsSlice.actions
+export const { toggleFullscreen } = postsSlice.actions
 
 export default postsSlice.reducer
