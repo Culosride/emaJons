@@ -17,7 +17,7 @@ export default function Header () {
 
   // workaround to offset navWidth dimension loss
   function prepareNavWidth() {
-    setNavWidth(navRef.current.clientWidth-19)
+    setNavWidth(navRef.current.clientWidth-18)
   }
 
   useEffect(() => {
