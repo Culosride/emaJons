@@ -24,6 +24,7 @@
     font-size: 20px;
     font-weight: bold;
     text-transform: uppercase;
+    background-color: #fff;
   }
   button {
     background-color: transparent;
@@ -32,6 +33,10 @@
     font-size: 24px;
     cursor: pointer
   }
+}
+.header-post{
+  left: 50vw;
+  right: auto
 }
 .header-global {
   border-bottom: 1px solid black;
@@ -44,15 +49,40 @@
     margin-right: 16px;
     background-color: black;
   }
+  .dashboard-link {
+    align-self: flex-end;
+  }
   .close-icon:after {
     content: url('../img/PlusLight.svg');
     display: inline-block;
-    transform: rotate(45deg)
   }
   .navigation {
+    position: absolute;
     display: flex;
     align-items: center;
+    transition: all 1s ease-out;
+    * {
+      transition: all 1s ease-out;
+    }
   }
+}
+
+
+
+.logo-wrapper {
+  display: flex;
+  z-index: 2;
+}
+
+.rectangle {
+  background-color: white;
+  // width: 240px;
+  height: 72px;
+  margin: 0;
+  z-index: 1;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .header-post {

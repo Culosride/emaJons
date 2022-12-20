@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import Carousel from '../carousel/Carousel';
 import { useSelector, useDispatch } from 'react-redux'; // hook to select data from state (in redux store)
-import { fetchPostsByCategory, deletePost, fetchPostById } from '../../features/posts/postsSlice';
+import { fetchPostsByCategory, toggleFullscreen, deletePost, fetchPostById } from '../../features/posts/postsSlice';
 import { selectCurrentToken } from '../../features/auth/authSlice';
 
 export default function Post() {
@@ -51,31 +51,38 @@ export default function Post() {
 
   // interaction
   const [fullScreen, setFullScreen] = useState(false)
-  const toggleFullScreen = () => setFullScreen((prev) => !prev)
+  const toggleFullScreen = () => {
+    dispatch(toggleFullscreen())
+    setFullScreen(!fullScreen)
+  }
 
-  const headerRef = useRef(null)
+  // const headerRef = useRef(null)
 
   const handleScroll = (e) => {
     const headline = e.target.lastElementChild.firstElementChild;
+
+    const headerRef = document.querySelector(".header-post")
     console.log(headline.getBoundingClientRect())
     if (headline.getBoundingClientRect().top < 60) {
       headline.classList.add('headline-sticky')
-      headerRef.current.classList.add('fade-top')
+      headerRef.classList.add('fade-top')
     } else if (headline.getBoundingClientRect().top > 70) {
-      headerRef.current.classList.remove('fade-top')
+      console.log("asdasd",headerRef)
+      headerRef.classList.remove('fade-top')
       headline.classList.remove('headline-sticky')
     }
   }
 
   const content = post.content && post.content.length > 100
 
+  // <div ref={headerRef} className="header-post">
+//    <Link reloadDocument to="/" className="logo">EmaJons</Link>
+//    {/* <button className="delete-post" onClick={handleDelete}>DELETE POST</button> */}
+//    {!fullScreen && <button onClick={() => navigate(-1)}><i className="close-icon"></i></button>}
+//   </div>
+
   return (
       <div className={`post-container ${content ? "layout-50" : ""} ${fullScreen ? "layout-100" : ""}`}>
-        <div ref={headerRef} className="header-post">
-          <Link reloadDocument to="/" className="logo">EmaJons</Link>
-          {/* <button className="delete-post" onClick={handleDelete}>DELETE POST</button> */}
-          {!fullScreen && <button onClick={() => navigate(-1)}><i className="close-icon"></i></button>}
-        </div>
         {post.images &&
           <Carousel
             content={content}
