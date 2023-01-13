@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux'; // hook to select data from redux store
 import { fetchPostsByCategory } from "../../features/posts/postsSlice";
+import { setCurrentCategory } from "../../features/categories/categorySlice";
 import { Link, useParams } from 'react-router-dom';
 const _ = require('lodash');
 
@@ -26,6 +27,7 @@ export default function AllPosts() {
   useEffect(() => {
     if (status === 'idle') {
       dispatch(fetchPostsByCategory(params.category))
+      dispatch(setCurrentCategory(params.category))
     }
   }, [status, dispatch, params])
 

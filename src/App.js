@@ -18,10 +18,10 @@ export default function App() {
   return (
     <Router>
       <div className="App">
-        <Header />
+          <Header />
         <Routes>
           <Route path="login" element={<Login />} />
-          <Route path="/" element={<Navigate replace to="/login" />} />
+          <Route path="/" element={<Navigate replace to="/walls" />} />
           <Route exact path='/:category' element={<AllPosts />} />
           <Route path="/:category/:postId" element={<Post />} />
           <Route exact path='/bio' element={<Bio />}></Route>

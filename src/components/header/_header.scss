@@ -7,7 +7,7 @@
   padding: 0 30px;
   box-sizing: border-box;
   li {
-    font-size: 18px;
+    font-size: 20px;
     display: inline-block;
     margin-right: 16px;
     font-weight: bold;
@@ -15,7 +15,7 @@
   }
   a {
     text-decoration: none;
-    color: black;
+    color: #8f8f8f;
   }
   a:hover {
     text-decoration: underline;
@@ -38,17 +38,17 @@
   left: 50vw;
   right: auto
 }
+.dash {
+  height: 20px;
+  width: 1px;
+  display: inline-block;
+  transform: rotate(20deg);
+  margin-right: 16px;
+  background-color: black;
+}
 .header-global {
   border-bottom: 1px solid black;
   margin-bottom: 30px;
-  .dash {
-    height: 20px;
-    width: 1px;
-    display: inline-block;
-    transform: rotate(20deg);
-    margin-right: 16px;
-    background-color: black;
-  }
   .dashboard-link {
     align-self: flex-end;
   }
@@ -57,17 +57,17 @@
     display: inline-block;
   }
   .navigation {
-    position: absolute;
+    padding-left: 0;
+    // position: absolute;
+    // left: -223px;
     display: flex;
     align-items: center;
-    transition: all 1s ease-out;
-    * {
-      transition: all 1s ease-out;
-    }
+    // transition: all 0.5s ease-out;
+    // * {
+    //   transition: all 0.5s ease-out;
+    // }
   }
 }
-
-
 
 .logo-wrapper {
   display: flex;

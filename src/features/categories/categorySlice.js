@@ -2,8 +2,10 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import * as api from "../../API/index"
 
 const initialState = {
+  currentCategory: "",
   availableTags: [],
   selectedTags: [],
+  // isExpanded: false,
   status: 'idle' || 'loading' || 'succeeded' || 'failed',
   error: "" || null
 }
@@ -36,6 +38,12 @@ const categorySlice = createSlice({
   name: 'categories',
   initialState,
   reducers: {
+    setCurrentCategory: (state, action) => {
+      state.currentCategory = action.payload
+    },
+    toggleNavbar: (state) => {
+      state.isExpanded = !state.isExpanded
+    },
     toggleTag: (state, action) => {
       if(state.selectedTags.includes(action.payload)) {
         const filteredTags = state.selectedTags.filter(tag => tag !== action.payload)
@@ -100,7 +108,7 @@ const categorySlice = createSlice({
   }
 })
 
-export const { toggleTag } = categorySlice.actions
+export const { toggleTag, toggleNavbar, setCurrentCategory } = categorySlice.actions
 
 
 export default categorySlice.reducer

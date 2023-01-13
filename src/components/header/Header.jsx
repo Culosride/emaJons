@@ -1,51 +1,71 @@
 import React, {useState, useRef, useEffect} from "react"
 import { Link, useLocation, matchPath, useParams, useNavigate } from 'react-router-dom'
 import _ from 'lodash'
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleNavbar } from "../../features/categories/categorySlice.js";
 
 export default function Header () {
+  const dispatch = useDispatch()
+
+  // const isExpanded = useSelector(state => state.categories.isExpanded)
+  const currentCategory = useSelector(state => state.categories.currentCategory)
+  const isFullscreen = useSelector(state => state.posts.fullscreen)
+
+
   const { pathname } = useLocation();
   const navigate = useNavigate()
+  // const currentCategory = pathname.split("/")[1]
+
   const admin = matchPath("/posts/*", pathname);
   const post = admin ? false : matchPath("/:categories/:postId", pathname)
-  const isFullscreen = useSelector(state => state.posts.fullscreen)
   const [isExpanded, setIsExpanded] = useState(false)
   const [rectangleWidth, setRectangleWidth] = useState(0)
   const [navWidth, setNavWidth] = useState(0)
+  const [on, setOn] = useState(false)
 
-  const categories = ['walls', 'paintings', 'sketchbooks', 'video', 'sculpture', 'bio', 'contact', 'portfolio', "newPost"]
-  const currentCategory = pathname.split("/")[1]
+  const categories = ['walls', 'paintings', 'sketchbooks', 'video', 'sculpture']
 
   const logoAndCategoryRef = useRef()
   const navRef = useRef()
-  // workaround to offset navWidth dimension loss
-
-  function prepareNavWidth(e) {
-    setNavWidth(navRef.current.clientWidth-18)
-  }
 
   useEffect(() => {
+    setRectangleWidth(logoAndCategoryRef.current.clientWidth)
     setNavWidth(navRef.current.clientWidth)
-    setRectangleWidth(logoAndCategoryRef.current.clientWidth);
   }, [currentCategory])
 
   const handleNewCategory = () => {
-    setIsExpanded(false)
-  }
-
-  const toggleMenu = () => {
+    // dispatch(toggleNavbar())
     setIsExpanded(!isExpanded)
   }
 
-  const navStyles = {
-    left: isExpanded ? rectangleWidth + 30 : rectangleWidth + 30 -navWidth,
+  const handleHover = () => {
+    setHover(!hover)
+  }
+
+  const toggleMenu = () => {
+    // dispatch(toggleNavbar())
+    setIsExpanded(!isExpanded)
+    setOn(true)
+  }
+  const menuOff = () => {
+    // dispatch(toggleNavbar())
+    setIsExpanded(false)
+    // setNavWidth(navRef.current.clientWidth)
+    // setOn(false)
   }
 
   const toggleNavBtn = {
-    transform: isExpanded ? "rotate(45deg)" : ""
+    transform: isExpanded ? "translateX(0px) rotate(45deg)" : `translateX(${-navWidth + "px"}) rotate(0)`,
+    transition: on ? "all 0.5s ease-out" : ""
   }
+
+  const navStyles = {
+    transform: isExpanded ? "translateX(0px)" : `translateX(${-navWidth + "px"})`,
+    transition: on ? "all 0.5s ease-out" : ""
+  }
+
   const rectangleStyles = {
-    width: rectangleWidth + 30
+    width: rectangleWidth + 30 + "px"
   }
 
   const navElements = categories.map((category, i) => {
@@ -58,7 +78,7 @@ export default function Header () {
     } else if(category !== currentCategory) {
       return (
         <li key={i}>
-          <Link style={{color: "#8F8F8F"}} onClick={handleNewCategory} to={`/${category}`}>{_.capitalize(category)}</Link>
+          <Link onClick={handleNewCategory} to={`/${category}`}>{_.capitalize(category)}</Link>
         </li>
       )
     }
@@ -69,30 +89,32 @@ export default function Header () {
       {!post &&
         <ul className="header-global">
           <div ref={logoAndCategoryRef} className="logo-wrapper">
-            <li><Link to="/" className="logo">EmaJons</Link></li>
+            <li onClick={menuOff}><Link to="/" className="logo">EmaJons</Link></li>
             <span className="dash"></span>
             <li className="logo">{currentCategory}</li>
           </div>
           <div className="rectangle" style={rectangleStyles}></div>
-          <span style={navStyles} ref={navRef} onMouseEnter={prepareNavWidth} className="navigation">
+           <ul style={navStyles} ref={navRef} className="navigation">
               {navElements}
-              <button onClick={toggleMenu} style={toggleNavBtn}><i className="close-icon"></i></button>
-          </span>
+            </ul>
+          <button onClick={toggleMenu} style={toggleNavBtn}><i className="close-icon"></i></button>
           {/* <li className="dashboard-link" ><Link onClick={handleNewCategory} to="/posts/new">Dashboard</Link></li> */}
         </ul>
       ||
       post && !isFullscreen &&
-        <ul className={`header-post`}>
+      <ul className={`header-post`}>
           <div ref={logoAndCategoryRef} className="logo-wrapper">
-            <li><Link to="/" className="logo">EmaJons</Link></li>
+            <li onClick={menuOff}><Link to="/" className="logo">EmaJons</Link></li>
             <span className="dash"></span>
-            <li className="logo">{currentCategory}</li>
+            <li className="">{currentCategory}</li>
           </div>
           <div className="rectangle" style={rectangleStyles}></div>
-          <span style={navStyles} ref={navRef} onMouseEnter={prepareNavWidth} className="navigation">
+          <ul style={navStyles} ref={navRef} className="navigation">
+            {navElements}
+          </ul>
+          <button onClick={toggleMenu} style={toggleNavBtn}><i className="close-icon"></i></button>
               {/* <li><Link onClick={handleNewCategory} to="/posts/new">Dashboard</Link></li> */}
-              {<button onClick={() => navigate(-1)}><i className="close-icon"></i></button>}
-          </span>
+          {/* {<button onClick={() => navigate(-1)}><i className="close-icon"></i></button>} */}
         </ul>
       }
     </>
