@@ -84,7 +84,7 @@ export default function Post() {
 //   </div>
 
   return (
-      <div className={`post-container ${content ? "layout-50" : ""} ${fullScreen ? "layout-100" : ""}`}>
+    <div className={`post-container ${content ? "layout-50" : ""} ${fullScreen ? "layout-100" : ""}`}>
         {post.images &&
           <Carousel
             content={content}

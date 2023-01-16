@@ -4,6 +4,7 @@ const upload = require('../middleware/upload');
 const multerUpload = upload.array('images', 20);
 const verifyJWT = require("../middleware/verifyJWT")
 const Post = require('../models/post');
+const Category = require('../models/category');
 const { Image } = require('../models/image');
 const { uploadToCloudinary, removeFromCloudinary } = require('../services/cloudinary.config');
 const _ = require('lodash');
@@ -14,6 +15,9 @@ require("dotenv").config()
 
 postRouter.get('/api/posts/:category', async (req, res) => {
   try {
+    const catExist = await Category.findOne({name: _.capitalize(req.params.category)})
+    if(!catExist) return res.status(404).json({message: "category doesn't exist"});
+
     const allPosts = await Post.find({category: _.capitalize(req.params.category)});
     res.status(200).json(allPosts);
   } catch (err) {
@@ -32,6 +36,24 @@ postRouter.get('/api/posts/:category/:postId', async (req, res) => {
 
 
 // routes requiring authorization
+
+// postRouter.get('/api/posts/:postId/edit', verifyJWT, multerUpload, async (req, res) => {
+//   const posToUpdate = n;
+//   const images = req.files;
+//   await Promise.all(images.map(async (image) => {
+//     const data = await uploadToCloudinary(image.path, 'emaJons_dev');
+//     const newImage = new Image({
+//       publicId: data.public_id,
+//       imageUrl: data.url,
+//     });
+//     await Post.updateOne(
+//       { _id: savedPost._id },
+//       { $addToSet: { images: [newImage]}}
+//       )
+//     }))
+//     const updatedPost = await Post.findById(post._id)
+//     res.status(200).json(updatedPost);
+//   });
 
 postRouter.post('/posts', verifyJWT, multerUpload, async (req, res) => {
   const post = new Post(req.body);
