@@ -5,7 +5,6 @@ import Carousel from '../carousel/Carousel';
 import { useSelector, useDispatch } from 'react-redux'; // hook to select data from state (in redux store)
 import { fetchPostsByCategory, toggleFullscreen, deletePost, fetchPostById } from '../../features/posts/postsSlice';
 import { selectCurrentToken } from '../../features/auth/authSlice';
-import { setCurrentCategory } from '../../features/categories/categorySlice';
 
 export default function Post() {
   const navigate = useNavigate()
@@ -28,14 +27,13 @@ export default function Post() {
   useEffect(() => {
     if (status === 'idle') {
       dispatch(fetchPostById(params))
-      dispatch(setCurrentCategory(category))
     }
   }, [status, dispatch])
 
   if (status === 'loading') {
     imageElements = <p>Loading...</p>
   } else if (status === 'succeeded') {
-      post && displayImgs(post)
+    post && displayImgs(post)
   } else if (status === 'failed') {
     imageElements = <div>{error}</div>
   }

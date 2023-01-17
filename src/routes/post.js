@@ -3,6 +3,7 @@ const postRouter = new express.Router();
 const upload = require('../middleware/upload');
 const multerUpload = upload.array('images', 20);
 const verifyJWT = require("../middleware/verifyJWT")
+// const validatePath = require("../middleware/pathValidation")
 const Post = require('../models/post');
 const Category = require('../models/category');
 const { Image } = require('../models/image');
@@ -11,13 +12,8 @@ const _ = require('lodash');
 require("dotenv").config()
 
 // routes for BasicUsers
-
-
 postRouter.get('/api/posts/:category', async (req, res) => {
   try {
-    const catExist = await Category.findOne({name: _.capitalize(req.params.category)})
-    if(!catExist) return res.status(404).json({message: "category doesn't exist"});
-
     const allPosts = await Post.find({category: _.capitalize(req.params.category)});
     res.status(200).json(allPosts);
   } catch (err) {

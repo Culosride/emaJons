@@ -8,7 +8,7 @@ export default function Header () {
   const dispatch = useDispatch()
 
   // const isExpanded = useSelector(state => state.categories.isExpanded)
-  const currentCategory = useSelector(state => state.categories.currentCategory)
+  const currentCategory = useSelector(state => state.posts.currentCategory)
   const isFullscreen = useSelector(state => state.posts.fullscreen)
 
 
@@ -23,15 +23,17 @@ export default function Header () {
   const [navWidth, setNavWidth] = useState(0)
   const [on, setOn] = useState(false)
 
-  const categories = ['walls', 'paintings', 'sketchbooks', 'video', 'sculpture']
+  const categories = ['walls', 'paintings', 'sketchbooks', 'video', 'sculptures']
 
   const logoAndCategoryRef = useRef()
   const navRef = useRef()
 
   useEffect(() => {
-    setRectangleWidth(logoAndCategoryRef.current.clientWidth)
-    setNavWidth(navRef.current.clientWidth)
-  }, [currentCategory])
+    if(matchPath(":category", pathname)) {
+      setRectangleWidth(logoAndCategoryRef.current.clientWidth)
+      setNavWidth(navRef.current.clientWidth)
+    }
+  }, [currentCategory, pathname])
 
   const handleNewCategory = () => {
     // dispatch(toggleNavbar())
@@ -109,12 +111,12 @@ export default function Header () {
             <li className="">{currentCategory}</li>
           </div>
           <div className="rectangle" style={rectangleStyles}></div>
-          <ul style={navStyles} ref={navRef} className="navigation">
+          {/* <ul style={navStyles} ref={navRef} className="navigation">
             {navElements}
-          </ul>
-          <button onClick={toggleMenu} style={toggleNavBtn}><i className="close-icon"></i></button>
+          </ul> */}
+          {/* <button onClick={toggleMenu} style={toggleNavBtn}><i className="close-icon"></i></button> */}
               {/* <li><Link onClick={handleNewCategory} to="/posts/new">Dashboard</Link></li> */}
-          {/* {<button onClick={() => navigate(-1)}><i className="close-icon"></i></button>} */}
+          {<button onClick={() => navigate(-1)}><i className="close-icon"></i></button>}
         </ul>
       }
     </>

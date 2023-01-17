@@ -4,6 +4,8 @@ import * as api from "../../API/index"
 const initialState = {
   posts: [],
   lastId: "",
+  currentCategory: "",
+  isValidLocation: null,
   fullscreen: false,
   selectedPost: "",
   status: 'idle' || 'loading' || 'succeeded' || 'failed',
@@ -87,10 +89,12 @@ const postsSlice = createSlice({
       })
       .addCase(fetchPostsByCategory.fulfilled, (state, action) => {
         state.status = 'succeeded'
+        state.currentCategory = action.meta.arg
         state.posts = [...action.payload]
       })
       .addCase(fetchPostsByCategory.rejected, (state, action) => {
         state.status = 'failed'
+        state.isValidLocation = "false"
         state.error = action.error.message
       })
       .addCase(fetchPostById.pending, (state, action) => {
@@ -105,6 +109,7 @@ const postsSlice = createSlice({
       })
       .addCase(fetchPostById.rejected, (state, action) => {
         state.status = 'failed'
+        state.isValidLocation = "false"
         state.error = action.error.message
       })
     }
