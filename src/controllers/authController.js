@@ -1,6 +1,9 @@
 const bcrypt = require("bcrypt");
 const User = require("../models/user");
 const jwt = require("jsonwebtoken");
+const Category = require('../models/category');
+const Post = require('../models/post');
+const _ = require('lodash');
 
 const cookieOptions = {
   // httpOnly: true,         // only accessible by web server
@@ -82,6 +85,33 @@ const handleLogout = async (req, res) => {
   res.status(200).json({ "message": "Cookie cleared" });
 }
 
+const validatePath = async (req, res) => {
+  // console.log(req.params)
+  const { category, postId } = req.params
+  console.log("checking")
+  const catExists = await Category.findOne({name: _.capitalize(category)})
+  if(!catExists) {
+    console.log("cat does not exist")
+    return res.status(404).json({message: "This resource doesn't exist"})
+  };
+
+  if(postId) {
+    // mongoose only accepts 12 or 24 chars, without this the app just breaks
+    if(postId.length !==24 && postId.length !==12) {
+      console.log("wrong ID format")
+      return res.status(404).json({message: "This resource doesn't exist"});
+    }
+    const postExists = await Post.findById(postId)
+    if(!postExists) {
+      console.log("post does not exist")
+      return res.status(404).json({message: "This resource doesn't exist"});
+    }
+  }
+
+  console.log("cat exists")
+  return res.status(200).json({message: "Path is valid"})
+}
+
 const handleNewUser = async (req, res) => {
   const { username, password } = req.body;
   if (!username || !password) return res.status(400).json({ message: "Username and password required." })
@@ -101,4 +131,4 @@ const handleNewUser = async (req, res) => {
   }
 }
 
-module.exports = { handleLogin, handleNewUser, handleRefreshToken, handleLogout };
+module.exports = { handleLogin, handleNewUser, handleRefreshToken, handleLogout, validatePath };

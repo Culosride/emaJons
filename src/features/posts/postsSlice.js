@@ -4,6 +4,8 @@ import * as api from "../../API/index"
 const initialState = {
   posts: [],
   lastId: "",
+  currentCategory: "",
+  isValidLocation: null,
   fullscreen: false,
   selectedPost: "",
   status: 'idle' || 'loading' || 'succeeded' || 'failed',
@@ -49,6 +51,10 @@ const postsSlice = createSlice({
   reducers: {
     toggleFullscreen(state) {
       state.fullscreen = !state.fullscreen
+    },
+    resetStatus(state){
+      state.status = "idle"
+      
     }
   },
   extraReducers(builder) {
@@ -87,10 +93,12 @@ const postsSlice = createSlice({
       })
       .addCase(fetchPostsByCategory.fulfilled, (state, action) => {
         state.status = 'succeeded'
+        state.currentCategory = action.meta.arg
         state.posts = [...action.payload]
       })
       .addCase(fetchPostsByCategory.rejected, (state, action) => {
         state.status = 'failed'
+        state.isValidLocation = "false"
         state.error = action.error.message
       })
       .addCase(fetchPostById.pending, (state, action) => {
@@ -105,11 +113,12 @@ const postsSlice = createSlice({
       })
       .addCase(fetchPostById.rejected, (state, action) => {
         state.status = 'failed'
+        state.isValidLocation = "false"
         state.error = action.error.message
       })
     }
 })
 
-export const { toggleFullscreen } = postsSlice.actions
+export const { toggleFullscreen,resetStatus } = postsSlice.actions
 
 export default postsSlice.reducer

@@ -4,6 +4,7 @@ import * as api from "../../API/index"
 const initialState = {
   availableTags: [],
   selectedTags: [],
+  // isExpanded: false,
   status: 'idle' || 'loading' || 'succeeded' || 'failed',
   error: "" || null
 }
@@ -36,6 +37,9 @@ const categorySlice = createSlice({
   name: 'categories',
   initialState,
   reducers: {
+    toggleNavbar: (state) => {
+      state.isExpanded = !state.isExpanded
+    },
     toggleTag: (state, action) => {
       if(state.selectedTags.includes(action.payload)) {
         const filteredTags = state.selectedTags.filter(tag => tag !== action.payload)
@@ -100,7 +104,7 @@ const categorySlice = createSlice({
   }
 })
 
-export const { toggleTag } = categorySlice.actions
+export const { toggleTag, toggleNavbar } = categorySlice.actions
 
 
 export default categorySlice.reducer

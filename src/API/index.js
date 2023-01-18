@@ -30,7 +30,7 @@ postInstance.interceptors.request.use(async req => {
     req.headers.Authorization = `Bearer ${token}`
     return req
   }
-  
+
   const response = await axios.get(`${baseURL}/auth/refresh/`);
   req.headers.Authorization = `Bearer ${response.data.accessToken}`
   return req
@@ -46,6 +46,8 @@ export const deleteTag = (tagToDelete) => axios.patch("/api/categories/deleteTag
 export const login = (userInfo) => axios.post("/auth", userInfo)
 export const logout = () => axios.post("/auth/logout")
 export const refresh = () => axios.get("/auth/refresh")
+export const checkPath = (path) => axios.get(`/auth/validatePath${path}`)
+
 
 // auth axios instance
 const authInstance = axios.create({

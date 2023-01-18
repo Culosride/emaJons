@@ -33,7 +33,7 @@ export default function Post() {
   if (status === 'loading') {
     imageElements = <p>Loading...</p>
   } else if (status === 'succeeded') {
-      post && displayImgs(post)
+    post && displayImgs(post)
   } else if (status === 'failed') {
     imageElements = <div>{error}</div>
   }
@@ -82,7 +82,7 @@ export default function Post() {
 //   </div>
 
   return (
-      <div className={`post-container ${content ? "layout-50" : ""} ${fullScreen ? "layout-100" : ""}`}>
+    <div className={`post-container ${content ? "layout-50" : ""} ${fullScreen ? "layout-100" : ""}`}>
         {post.images &&
           <Carousel
             content={content}
