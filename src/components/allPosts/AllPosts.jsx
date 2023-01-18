@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux'; // hook to select data from redux store
-import { fetchPostsByCategory } from "../../features/posts/postsSlice";
+import { fetchPostsByCategory, resetStatus } from "../../features/posts/postsSlice";
 import { Link, Outlet, useParams } from 'react-router-dom';
 import NotFound from '../404/NotFound';
 const _ = require('lodash');
@@ -12,6 +12,7 @@ export default function AllPosts() {
   const dispatch = useDispatch()
   const posts = useSelector(state => state.posts.posts)
   let status = useSelector(state => state.posts.status)
+  let authStatus = useSelector(state => state.auth.status)
   const error = useSelector(state => state.posts.error)
   const allTags = useSelector(state => state.posts.posts.flatMap(post => post.postTags.map(tag => tag)))
   const cleanedTags = [...new Set(allTags.sort((a, b) => b.localeCompare(a)))];
@@ -20,7 +21,12 @@ export default function AllPosts() {
   let postElements = [];
 
   useEffect(() => {
-    dispatch(fetchPostsByCategory(params.category))
+    if (authStatus === "succeeded" && status === 'idle') {
+      dispatch(fetchPostsByCategory(params.category))
+        .then(res => {
+          dispatch(resetStatus())
+        })
+    }
     setFilteredPosts([])
   }, [params])
 
@@ -33,13 +39,11 @@ export default function AllPosts() {
     ))
   }
 
-  if (status === 'idle') {
-    dispatch(fetchPostsByCategory(params.category))
-  } else if(status === "failed") {
+  if(status === "failed") {
     postElements = <Outlet />
   } else if (status === "loading") {
     postElements = <p>Loading..</p>
-  } else if (status === "succeeded") {
+  } else if (status === "succeeded" || status === "idle") {
     postElements =
       filteredPosts.message && filteredPosts.message ||
       filteredPosts.length && displayPosts(filteredPosts) ||

@@ -51,6 +51,10 @@ const postsSlice = createSlice({
   reducers: {
     toggleFullscreen(state) {
       state.fullscreen = !state.fullscreen
+    },
+    resetStatus(state){
+      state.status = "idle"
+      
     }
   },
   extraReducers(builder) {
@@ -115,6 +119,6 @@ const postsSlice = createSlice({
     }
 })
 
-export const { toggleFullscreen } = postsSlice.actions
+export const { toggleFullscreen,resetStatus } = postsSlice.actions
 
 export default postsSlice.reducer

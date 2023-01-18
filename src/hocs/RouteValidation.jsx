@@ -12,6 +12,8 @@ export default function withRouteValidation (Component) {
     const location = useLocation()
     const params = useParams()
     const dispatch = useDispatch()
+    console.log(status)
+    console.log("validating for", Component)
 
     useEffect(() => {
       dispatch(checkPath(location.pathname))
@@ -19,8 +21,8 @@ export default function withRouteValidation (Component) {
 
     if (status === "failed") {
       return <NotFound />
+    } else if (status === "succeeded") {
+      return <Component {...props} />
     }
-
-    return <Component {...props} />
   }
 }
