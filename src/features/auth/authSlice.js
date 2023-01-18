@@ -9,7 +9,6 @@ const initialState = {
 
 export const login = createAsyncThunk("/auth", async (userData) => {
   const response = await api.login(userData)
-  console.log("res", response)
   return response.data
 })
 
