@@ -80,6 +80,21 @@ export default function Header () {
       .then(res => navigate("/"))
   }
 
+  const adminMenu = () => {
+    if(isAdmin) {
+      return (
+        <ul className="adminMenu">
+          <Link className="newPostBtn" to={"/posts/new"}>New Post</Link>
+          {logoutButton}
+        </ul>
+      )
+    } else {
+      return (
+        <ul className="adminMenu">
+          <Link className="loginBtn" to={"/login"}>Login</Link>
+        </ul>)
+    }
+  }
   const logoutButton = (
     <button
         className="logoutBtn"
@@ -120,11 +135,7 @@ export default function Header () {
               {navElements}
             </ul>
           <button onClick={toggleMenu} style={toggleNavBtn}><i className="close-icon"></i></button>
-          {/* <li className="dashboard-link" ><Link onClick={handleNewCategory} to="/posts/new">Dashboard</Link></li> */}
-          {isAdmin && <ul className="adminMenu">
-            <Link className="newPostBtn" to={"posts/new"}>New Post</Link>
-            {logoutButton}
-          </ul>}
+            {adminMenu()}
         </ul>
       ||
       post && !isFullscreen &&
