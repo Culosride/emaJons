@@ -3,6 +3,9 @@ import { Link, useLocation, matchPath, useParams, useNavigate } from 'react-rout
 import _ from 'lodash'
 import { useDispatch, useSelector } from "react-redux";
 import { toggleNavbar } from "../../features/categories/categorySlice.js";
+import useAuth from "../../hooks/useAuth.jsx";
+import { logout, selectCurrentToken } from "../../features/auth/authSlice"
+
 
 export default function Header () {
   const dispatch = useDispatch()
@@ -10,7 +13,6 @@ export default function Header () {
   // const isExpanded = useSelector(state => state.categories.isExpanded)
   const currentCategory = useSelector(state => state.posts.currentCategory)
   const isFullscreen = useSelector(state => state.posts.fullscreen)
-
 
   const { pathname } = useLocation();
   const navigate = useNavigate()
@@ -22,6 +24,9 @@ export default function Header () {
   const [rectangleWidth, setRectangleWidth] = useState(0)
   const [navWidth, setNavWidth] = useState(0)
   const [on, setOn] = useState(false)
+  const authorization = useAuth(false)
+  const isAdmin = authorization.isAdmin
+  const token = useSelector(selectCurrentToken)
 
   const categories = ['walls', 'paintings', 'sketchbooks', 'video', 'sculptures']
 
@@ -70,6 +75,36 @@ export default function Header () {
     width: rectangleWidth + 30 + "px"
   }
 
+  async function handleLogout() {
+    dispatch(logout(token))
+      .then(res => navigate("/"))
+  }
+
+  const adminMenu = () => {
+    if(isAdmin) {
+      return (
+        <ul className="adminMenu">
+          <Link className="newPostBtn" to={"/posts/new"}>New Post</Link>
+          {logoutButton}
+        </ul>
+      )
+    } else {
+      return (
+        <ul className="adminMenu">
+          <Link className="loginBtn" to={"/login"}>Login</Link>
+        </ul>)
+    }
+  }
+  const logoutButton = (
+    <button
+        className="logoutBtn"
+        title="Logout"
+        onClick={handleLogout}
+    >Logout
+    </button>
+  )
+
+
   const navElements = categories.map((category, i) => {
     if(category === "newPost") {
       return (
@@ -100,7 +135,7 @@ export default function Header () {
               {navElements}
             </ul>
           <button onClick={toggleMenu} style={toggleNavBtn}><i className="close-icon"></i></button>
-          {/* <li className="dashboard-link" ><Link onClick={handleNewCategory} to="/posts/new">Dashboard</Link></li> */}
+            {adminMenu()}
         </ul>
       ||
       post && !isFullscreen &&
