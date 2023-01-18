@@ -62,12 +62,11 @@ export default function Post() {
     const headline = e.target.lastElementChild.firstElementChild;
 
     const headerRef = document.querySelector(".header-post")
-    console.log(headline.getBoundingClientRect())
+    // console.log(headline.getBoundingClientRect())
     if (headline.getBoundingClientRect().top < 60) {
       headline.classList.add('headline-sticky')
       headerRef.classList.add('fade-top')
     } else if (headline.getBoundingClientRect().top > 70) {
-      console.log("asdasd",headerRef)
       headerRef.classList.remove('fade-top')
       headline.classList.remove('headline-sticky')
     }
