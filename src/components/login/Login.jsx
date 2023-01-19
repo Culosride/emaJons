@@ -33,7 +33,7 @@ function Login() {
     dispatch(login(userInfo))
     .then(res => { if(!res.error) {
       dispatch(setCredentials(res.payload.accessToken));
-      navigate("/posts/new")
+      navigate(-1)
       resetInfo()
     } else {
       setErrMsg(error);

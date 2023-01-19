@@ -1,8 +1,8 @@
 
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux'; // hook to select data from redux store
-import { fetchPostsByCategory, resetStatus } from "../../features/posts/postsSlice";
-import { Link, Outlet, useParams } from 'react-router-dom';
+import { fetchPostsByCategory } from "../../features/posts/postsSlice";
+import { Link, useParams } from 'react-router-dom';
 import NotFound from '../404/NotFound';
 const _ = require('lodash');
 
@@ -23,9 +23,6 @@ export default function AllPosts() {
   useEffect(() => {
     if (authStatus === "succeeded" && status === 'idle') {
       dispatch(fetchPostsByCategory(params.category))
-        .then(res => {
-          dispatch(resetStatus())
-        })
     }
     setFilteredPosts([])
   }, [params])
@@ -40,7 +37,7 @@ export default function AllPosts() {
   }
 
   if(status === "failed") {
-    postElements = <Outlet />
+    postElements = <p>{error}</p>
   } else if (status === "loading") {
     postElements = <p>Loading..</p>
   } else if (status === "succeeded" || status === "idle") {

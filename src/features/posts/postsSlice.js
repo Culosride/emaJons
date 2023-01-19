@@ -46,7 +46,6 @@ const postsSlice = createSlice({
     },
     resetStatus(state){
       state.status = "idle"
-
     }
   },
   extraReducers(builder) {
@@ -64,7 +63,6 @@ const postsSlice = createSlice({
       })
       .addCase(addPost.rejected, (state, action) => {
         state.status = 'failed'
-        console.log(action)
         state.error = action.error.message
       })
       .addCase(deletePost.pending, (state, action) => {
@@ -100,6 +98,7 @@ const postsSlice = createSlice({
         return state = {
           ...state,
           status: 'succeeded',
+          currentCategory: action.payload.category,
           selectedPost: action.payload
        }
       })

@@ -6,17 +6,17 @@ import { toggleNavbar } from "../../features/categories/categorySlice.js";
 import useAuth from "../../hooks/useAuth.jsx";
 import { logout, selectCurrentToken } from "../../features/auth/authSlice"
 
-
 export default function Header () {
   const dispatch = useDispatch()
 
   // const isExpanded = useSelector(state => state.categories.isExpanded)
-  const currentCategory = useSelector(state => state.posts.currentCategory)
+  let currentCategory = useSelector(state => state.posts.currentCategory)
   const isFullscreen = useSelector(state => state.posts.fullscreen)
 
+
+  const categories = ['walls', 'paintings', 'sketchbooks', 'video', 'sculptures']
   const { pathname } = useLocation();
   const navigate = useNavigate()
-  // const currentCategory = pathname.split("/")[1]
 
   const admin = matchPath("/posts/*", pathname);
   const post = admin ? false : matchPath("/:categories/:postId", pathname)
@@ -27,21 +27,25 @@ export default function Header () {
   const authorization = useAuth(false)
   const isAdmin = authorization.isAdmin
   const token = useSelector(selectCurrentToken)
-
-  const categories = ['walls', 'paintings', 'sketchbooks', 'video', 'sculptures']
+  const authStatus = useSelector(state => state.auth.status)
+  const path = pathname.split("/")[1]
 
   const logoAndCategoryRef = useRef()
   const navRef = useRef()
 
+
+  if (!categories.includes(path)) {
+    currentCategory = path === "posts" ? "new post" : path
+  }
+
   useEffect(() => {
-    if(matchPath(":category", pathname)) {
+    if(matchPath(":category", pathname) || matchPath("/posts/*", pathname)) {
       setRectangleWidth(logoAndCategoryRef.current.clientWidth)
       setNavWidth(navRef.current.clientWidth)
     }
   }, [currentCategory, pathname])
 
   const handleNewCategory = () => {
-    // dispatch(toggleNavbar())
     setIsExpanded(!isExpanded)
   }
 
@@ -55,10 +59,7 @@ export default function Header () {
     setOn(true)
   }
   const menuOff = () => {
-    // dispatch(toggleNavbar())
     setIsExpanded(false)
-    // setNavWidth(navRef.current.clientWidth)
-    // setOn(false)
   }
 
   const toggleNavBtn = {
@@ -76,22 +77,24 @@ export default function Header () {
   }
 
   async function handleLogout() {
+    menuOff()
     dispatch(logout(token))
       .then(res => navigate("/"))
+    setOn(false)
   }
 
   const adminMenu = () => {
     if(isAdmin) {
       return (
         <ul className="adminMenu">
-          <Link className="newPostBtn" to={"/posts/new"}>New Post</Link>
+          <Link onClick={menuOff} className="newPostBtn" to={"/posts/new"}>New Post</Link>
           {logoutButton}
         </ul>
       )
     } else {
       return (
         <ul className="adminMenu">
-          <Link className="loginBtn" to={"/login"}>Login</Link>
+          <Link onClick={menuOff} className="loginBtn" to={"/login"}>Login</Link>
         </ul>)
     }
   }
@@ -141,7 +144,7 @@ export default function Header () {
       post && !isFullscreen &&
       <ul className={`header-post`}>
           <div ref={logoAndCategoryRef} className="logo-wrapper">
-            <li onClick={menuOff}><Link to="/" className="logo">EmaJons</Link></li>
+            <li><Link onClick={menuOff} to="/" className="logo">EmaJons</Link></li>
             <span className="dash"></span>
             <li className="">{currentCategory}</li>
           </div>

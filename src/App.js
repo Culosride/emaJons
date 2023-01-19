@@ -18,11 +18,11 @@ import {
 } from 'react-router-dom';
 import { ROLES } from './config/roles'
 
-
 const AllPostsWrapped = withRouteValidation(AllPosts)
 const PostWrapped = withRouteValidation(Post)
 
 export default function App() {
+
   return (
     <Router>
       <div className="App">
@@ -31,10 +31,10 @@ export default function App() {
           {/* public */}
           <Route path="/" element={<Navigate replace to="/walls" />} />
           <Route path="/login" element={<Login />} />
-          <Route path='/:category' element={<AllPostsWrapped />} />
-          <Route path="/:category/:postId" element={<PostWrapped />} />
           <Route path='/contact' element={<Contact />}/>
           <Route path='/bio' element={<Bio />}/>
+          <Route path='/:category' element={<AllPostsWrapped />} />
+          <Route path="/:category/:postId" element={<PostWrapped />} />
           {/* protected */}
           <Route element={<RequireAuth allowedRoles={[ROLES.Admin]} />}>
             <Route path='/posts/new' element={<PostForm />}/>

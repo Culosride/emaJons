@@ -88,7 +88,6 @@ export default function PostForm () {
         return formData.append(key, postData[key]);
       }
     });
-    // dispatch(addPost({formData, token}))
     dispatch(addPost(formData))
       .then((res) => { if(!res.error) {
         navigate(`/${postData.category}/${res.payload._id}`)
@@ -138,7 +137,7 @@ export default function PostForm () {
           <option value="Paintings">Paintings</option>
           <option value="Sketchbooks">Skethbooks</option>
           <option value="Video">Video</option>
-          <option value="Sculpture">Sculpture</option>
+          <option value="Sculptures">Sculptures</option>
         </select>
         {emptyCategory && <p>Devi pigliarne una</p>}
         <div className="selected-tags-wrapper">

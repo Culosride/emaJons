@@ -88,7 +88,6 @@ const handleLogout = async (req, res) => {
 const validatePath = async (req, res) => {
   // console.log(req.params)
   const { category, postId } = req.params
-  console.log("checking")
   const catExists = await Category.findOne({name: _.capitalize(category)})
   if(!catExists) {
     console.log("cat does not exist")
@@ -108,7 +107,6 @@ const validatePath = async (req, res) => {
     }
   }
 
-  console.log("cat exists")
   return res.status(200).json({message: "Path is valid"})
 }
 

@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { useLocation, useParams } from "react-router-dom"
 import { checkPath } from "../features/auth/authSlice"
 import NotFound from '../components/404/NotFound';
+import { resetStatus } from "../features/posts/postsSlice";
 
 
 export default function withRouteValidation (Component) {
@@ -14,7 +15,7 @@ export default function withRouteValidation (Component) {
     const dispatch = useDispatch()
 
     useEffect(() => {
-      dispatch(checkPath(location.pathname))
+      dispatch(checkPath(location.pathname)) && dispatch(resetStatus() )
     }, [location.pathname, params, dispatch])
 
     if (status === "failed") {
