@@ -71,6 +71,7 @@ postRouter.post('/posts', verifyJWT, multerUpload, async (req, res) => {
   });
 
   postRouter.delete('/:category/:postId', verifyJWT, async (req, res) => {
+    console.log("at delete")
     try {
       const post = await Post.findOne({_id: req.params.postId}).exec();
       if(!post) return res.status(204).json({ message: "No post found with this id."})

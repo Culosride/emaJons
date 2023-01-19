@@ -1,15 +1,14 @@
 import axios from 'axios';
-const baseURL = "http://localhost:3000" // use exact spelling of baseURL, axios default to prepend URLs
 import { store } from '../app/store';
 import jwt_decode from "jwt-decode";
+const baseURL = "http://localhost:3000" // use exact spelling of "baseURL", axios default to prepend URLs
 
 // posts requests
-export const fetchPosts = (token) => postInstance(token).get();
 export const fetchPostsByCategory = (category) => axios.get(`/api/posts/${category}`);
 export const fetchPostById = ({category, postId}) => axios.get(`/api/posts/${category}/${postId}`)
 
 export const addPost = (formData) => postInstance.post("/posts", formData)
-export const deletePost = ([postId, category, token]) => postInstance(token).delete(`/${category}/${postId}`)
+export const deletePost = ([postId, category]) => postInstance.delete(`/${category}/${postId}`)
 
 const postInstance = axios.create({
   baseURL, // use exact spelling of baseURL, axios default to prepend URLs
@@ -21,12 +20,13 @@ const postInstance = axios.create({
 
 postInstance.interceptors.request.use(async req => {
   const token = store.getState().auth.token
-  console.log(token)
+  // console.log("token is",token)
   const decoded = jwt_decode(token)
   const isExpired = decoded.exp < Date.now()/1000
-  console.log(isExpired)
+  // console.log("token expired", isExpired)
 
   if(!isExpired) {
+    // console.log("token valid", isExpired)
     req.headers.Authorization = `Bearer ${token}`
     return req
   }
