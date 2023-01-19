@@ -12,27 +12,22 @@ const initialState = {
   error: "" || null
 }
 
-export const fetchPosts = createAsyncThunk("/posts/fetchPosts", async (token) => {
-  const response = await api.fetchPosts(token)
-  return response.data
-})
-
-export const addPost = createAsyncThunk("/posts", async (formData) => {
+export const addPost = createAsyncThunk("api/posts/new", async (formData) => {
   const response = await api.addPost(formData)
   return response.data
 })
 
-export const deletePost = createAsyncThunk("api/posts/:postId", async ([postId, category, token]) => {
+export const deletePost = createAsyncThunk("api/posts/delete", async ([postId, category, token]) => {
   const response = await api.deletePost([postId, category, token])
   return response.data
 })
 
-export const fetchPostsByCategory = createAsyncThunk("/api/posts/fetchPostsByCategory", async (category) => {
+export const fetchPostsByCategory = createAsyncThunk("/api/posts/get", async (category) => {
   const response = await api.fetchPostsByCategory(category)
   return response.data
 })
 
-export const fetchPostById = createAsyncThunk("/api/posts/fetchPostById", async (params) => {
+export const fetchPostById = createAsyncThunk("/api/posts/post", async (params) => {
   const response = await api.fetchPostById(params)
   return response.data
 })
@@ -68,12 +63,10 @@ const postsSlice = createSlice({
       .addCase(deletePost.pending, (state, action) => {
         state.status = 'loading'
       })
-      // .addCase(deletePost.fulfilled, (state, action) => {
-      //   state.status = 'succeeded'
-      //   console.log(action.payload.message)
-      //   // need  to get the posts again
-      //   return state
-      // })
+      .addCase(deletePost.fulfilled, (state, action) => {
+        state.status = 'succeeded'
+        return state
+      })
       .addCase(deletePost.rejected, (state, action) => {
         state.status = 'failed'
         state.error = action.error.message
@@ -110,6 +103,6 @@ const postsSlice = createSlice({
     }
 })
 
-export const { toggleFullscreen,resetStatus } = postsSlice.actions
+export const { toggleFullscreen, resetStatus } = postsSlice.actions
 
 export default postsSlice.reducer

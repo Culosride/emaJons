@@ -86,16 +86,26 @@
 }
 
 .header-post {
-  transition: top ease .4s;
+  transition: top ease 0.4s;
   position: fixed;
-  justify-content: flex-start;
-  width: 100%;
+  justify-content: space-between;
+  /* width: 100%; */
   margin: 0 30px;
   padding: 0;
   top: 0;
   right: 0;
   z-index: 6;
-  width: calc($description-width - $slider-padding);
+  /* width: calc(26vw - 60px); */
+  // transition: top ease .4s;
+  // position: fixed;
+  // justify-content: flex-start;
+  // width: 100%;
+  // margin: 0 30px;
+  // padding: 0;
+  // top: 0;
+  // right: 0;
+  // z-index: 6;
+  // width: calc($description-width - $slider-padding);
 }
 .adminMenu{
   * {

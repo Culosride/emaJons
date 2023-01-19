@@ -3,6 +3,7 @@ import { Link, useLocation, matchPath, useParams, useNavigate } from 'react-rout
 import _ from 'lodash'
 import { useDispatch, useSelector } from "react-redux";
 import { toggleNavbar } from "../../features/categories/categorySlice.js";
+import { deletePost, editPost } from '../../features/posts/postsSlice';
 import useAuth from "../../hooks/useAuth.jsx";
 import { logout, selectCurrentToken } from "../../features/auth/authSlice"
 
@@ -12,7 +13,7 @@ export default function Header () {
   // const isExpanded = useSelector(state => state.categories.isExpanded)
   let currentCategory = useSelector(state => state.posts.currentCategory)
   const isFullscreen = useSelector(state => state.posts.fullscreen)
-
+  const currentPostId = useSelector(state => state.posts.selectedPost._id)
 
   const categories = ['walls', 'paintings', 'sketchbooks', 'video', 'sculptures']
   const { pathname } = useLocation();
@@ -83,12 +84,27 @@ export default function Header () {
     setOn(false)
   }
 
+  function handleEdit() {
+    dispatch(deletePost([post._id, currentCategory, token]))
+      .then(() => navigate(`/${params.category}`))
+      .then(() => dispatch(fetchPostsByCategory(params.category)))
+  }
+
+  function handleDelete() {
+    dispatch(deletePost([currentPostId, currentCategory, token]))
+      .then(() => navigate(`/${currentCategory}`))
+      // .then(() => dispatch(fetchPostsByCategory(currentCategory)))
+  }
+
+   <button className="delete-post" onClick={handleDelete}>DELETE POST</button>
+
+
   const adminMenu = () => {
     if(isAdmin) {
       return (
         <ul className="adminMenu">
           <Link onClick={menuOff} className="newPostBtn" to={"/posts/new"}>New Post</Link>
-          {logoutButton}
+          <button className="logoutBtn" title="Logout" onClick={handleLogout}>Logout</button>
         </ul>
       )
     } else {
@@ -98,15 +114,16 @@ export default function Header () {
         </ul>)
     }
   }
-  const logoutButton = (
-    <button
-        className="logoutBtn"
-        title="Logout"
-        onClick={handleLogout}
-    >Logout
-    </button>
-  )
 
+  const postMenu = () => {
+    return (
+      <ul className="adminMenu">
+        <button className="deleteBtn" onClick={handleDelete}>Delete Post</button>
+        <button className="editBtn" onClick={handleEdit}>Edit Post</button>
+      </ul>
+    )
+
+  }
 
   const navElements = categories.map((category, i) => {
     if(category === "newPost") {
@@ -154,6 +171,7 @@ export default function Header () {
           </ul> */}
           {/* <button onClick={toggleMenu} style={toggleNavBtn}><i className="close-icon"></i></button> */}
               {/* <li><Link onClick={handleNewCategory} to="/posts/new">Dashboard</Link></li> */}
+          {isAdmin && postMenu()}
           {<button onClick={() => navigate(-1)}><i className="close-icon"></i></button>}
         </ul>
       }
