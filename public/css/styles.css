@@ -247,6 +247,7 @@ input, textarea, select {
 }
 
 .post-form {
+  margin: 0 auto;
   width: 40%;
 }
 

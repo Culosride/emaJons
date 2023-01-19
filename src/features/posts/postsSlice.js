@@ -5,7 +5,6 @@ const initialState = {
   posts: [],
   lastId: "",
   currentCategory: "",
-  isValidLocation: null,
   fullscreen: false,
   selectedPost: "",
   status: 'idle' || 'loading' || 'succeeded' || 'failed',
@@ -41,6 +40,9 @@ const postsSlice = createSlice({
     },
     resetStatus(state){
       state.status = "idle"
+    },
+    clearState() {
+
     }
   },
   extraReducers(builder) {
@@ -81,7 +83,6 @@ const postsSlice = createSlice({
       })
       .addCase(fetchPostsByCategory.rejected, (state, action) => {
         state.status = 'failed'
-        state.isValidLocation = "false"
         state.error = action.error.message
       })
       .addCase(fetchPostById.pending, (state, action) => {
@@ -97,12 +98,11 @@ const postsSlice = createSlice({
       })
       .addCase(fetchPostById.rejected, (state, action) => {
         state.status = 'failed'
-        state.isValidLocation = "false"
         state.error = action.error.message
       })
     }
 })
 
-export const { toggleFullscreen, resetStatus } = postsSlice.actions
+export const { toggleFullscreen, resetStatus, clearResults } = postsSlice.actions
 
 export default postsSlice.reducer

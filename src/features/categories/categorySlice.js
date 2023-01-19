@@ -9,7 +9,7 @@ const initialState = {
   error: "" || null
 }
 
-export const addNewTag = createAsyncThunk("api/categories/tags", async (tag, { rejectWithValue }) => {
+export const addNewTag = createAsyncThunk("api/tags/new", async (tag, { rejectWithValue }) => {
   try {
     const response = await api.addNewTag(tag)
     return response.data
@@ -18,7 +18,7 @@ export const addNewTag = createAsyncThunk("api/categories/tags", async (tag, { r
   }
 })
 
-export const deleteTag = createAsyncThunk("api/categories/deleteTag", async (tagToDelete, { rejectWithValue }) => {
+export const deleteTag = createAsyncThunk("api/tags/delete", async (tagToDelete, { rejectWithValue }) => {
   try {
     const response = await api.deleteTag(tagToDelete)
     return response.data
@@ -27,7 +27,7 @@ export const deleteTag = createAsyncThunk("api/categories/deleteTag", async (tag
   }
 })
 
-export const fetchAllTags = createAsyncThunk("/api/categories", async () => {
+export const fetchAllTags = createAsyncThunk("/api/tags/get", async () => {
   const response = await api.fetchAllTags()
   return response.data
 })

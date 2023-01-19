@@ -17,7 +17,7 @@ export default function Post() {
   const category = params.category
   // const textContainer = useRef(null)
   const [initialPosition, setInitialPosition] = useState(0)
-
+  const isFullscreen = useSelector(state => state.posts.fullscreen)
   // useEffect(() => {
   //   setInitialPosition(textContainer.current.clientHeight * .6);
   // }, [])
@@ -45,10 +45,9 @@ export default function Post() {
   }
 
   // interaction
-  const [fullScreen, setFullScreen] = useState(false)
-  const toggleFullScreen = () => {
+  const handleFullscreen = () => {
     dispatch(toggleFullscreen())
-    setFullScreen(!fullScreen)
+    // setFullScreen(!fullScreen)
   }
 
   // const headerRef = useRef(null)
@@ -70,15 +69,15 @@ export default function Post() {
   const content = post.content && post.content.length > 100
 
   return (
-    <div className={`post-container ${content ? "layout-50" : ""} ${fullScreen ? "layout-100" : ""}`}>
+    <div className={`post-container ${content ? "layout-50" : ""} ${isFullscreen ? "layout-100" : ""}`}>
         {post.images &&
           <Carousel
             content={content}
             images={post.images}
-            toggleFullScreen={toggleFullScreen}
+            toggleFullScreen={handleFullscreen}
           ></Carousel>
         }
-        <div className="text-container" onScroll={handleScroll} onClick={toggleFullScreen}>
+        <div className="text-container" onScroll={handleScroll} onClick={handleFullscreen}>
           <div className="description-container">
             <div className="headline">
               <div>

@@ -8,35 +8,40 @@ import useAuth from "../../hooks/useAuth.jsx";
 import { logout, selectCurrentToken } from "../../features/auth/authSlice"
 
 export default function Header () {
+  const authorization = useAuth(false)
   const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const { pathname } = useLocation();
+
+  const path = pathname.split("/")[pathname.split("/").length-1]
+  const isAdmin = authorization.isAdmin
+  console.log(path)
+  const token = useSelector(selectCurrentToken)
+  const authStatus = useSelector(state => state.auth.status)
 
   // const isExpanded = useSelector(state => state.categories.isExpanded)
   let currentCategory = useSelector(state => state.posts.currentCategory)
   const isFullscreen = useSelector(state => state.posts.fullscreen)
   const currentPostId = useSelector(state => state.posts.selectedPost._id)
 
-  const categories = ['walls', 'paintings', 'sketchbooks', 'video', 'sculptures']
-  const { pathname } = useLocation();
-  const navigate = useNavigate()
 
+  // to rename ?
   const admin = matchPath("/posts/*", pathname);
   const post = admin ? false : matchPath("/:categories/:postId", pathname)
+
+  // front-end state
   const [isExpanded, setIsExpanded] = useState(false)
   const [rectangleWidth, setRectangleWidth] = useState(0)
   const [navWidth, setNavWidth] = useState(0)
   const [on, setOn] = useState(false)
-  const authorization = useAuth(false)
-  const isAdmin = authorization.isAdmin
-  const token = useSelector(selectCurrentToken)
-  const authStatus = useSelector(state => state.auth.status)
-  const path = pathname.split("/")[1]
-
   const logoAndCategoryRef = useRef()
   const navRef = useRef()
 
+  const categories = ['walls', 'paintings', 'sketchbooks', 'video', 'sculptures']
 
-  if (!categories.includes(path)) {
-    currentCategory = path === "posts" ? "new post" : path
+  // missing cases, write for each condition
+  if (!categories.includes(pathname.split("/")[1])) {
+    currentCategory = path
   }
 
   useEffect(() => {
@@ -48,10 +53,6 @@ export default function Header () {
 
   const handleNewCategory = () => {
     setIsExpanded(!isExpanded)
-  }
-
-  const handleHover = () => {
-    setHover(!hover)
   }
 
   const toggleMenu = () => {
@@ -84,20 +85,17 @@ export default function Header () {
     setOn(false)
   }
 
-  function handleEdit() {
-    dispatch(deletePost([post._id, currentCategory, token]))
-      .then(() => navigate(`/${params.category}`))
-      .then(() => dispatch(fetchPostsByCategory(params.category)))
-  }
+  // function handleEdit() {
+  //   dispatch(deletePost([post._id, currentCategory, token]))
+  //     .then(() => navigate(`/${params.category}`))
+  //     .then(() => dispatch(fetchPostsByCategory(params.category)))
+  // }
 
   function handleDelete() {
     dispatch(deletePost([currentPostId, currentCategory, token]))
       .then(() => navigate(`/${currentCategory}`))
       // .then(() => dispatch(fetchPostsByCategory(currentCategory)))
   }
-
-   <button className="delete-post" onClick={handleDelete}>DELETE POST</button>
-
 
   const adminMenu = () => {
     if(isAdmin) {
@@ -119,26 +117,18 @@ export default function Header () {
     return (
       <ul className="adminMenu">
         <button className="deleteBtn" onClick={handleDelete}>Delete Post</button>
-        <button className="editBtn" onClick={handleEdit}>Edit Post</button>
+        <Link onClick={menuOff} className="editBtn" to={`/posts/${currentPostId}/edit`}>Edit Post</Link>
       </ul>
     )
 
   }
 
   const navElements = categories.map((category, i) => {
-    if(category === "newPost") {
-      return (
-        <li key={i}>
-          <Link onClick={handleNewCategory} to="/posts/new">{_.capitalize(category)}</Link>
-        </li>
-      )
-    } else if(category !== currentCategory) {
       return (
         <li key={i}>
           <Link onClick={handleNewCategory} to={`/${category}`}>{_.capitalize(category)}</Link>
         </li>
       )
-    }
   })
 
   return (

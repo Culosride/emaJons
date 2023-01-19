@@ -7,9 +7,10 @@ import { useSelector, useDispatch } from "react-redux";
 import Tag from "../tag/Tag";
 const _ = require("lodash")
 
-export default function PostForm () {
+export default function PostForm (props) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const currentPost = useSelector(state => state.posts.selectedPost)
   const availableTags = useSelector(state => state.categories.availableTags);
   const selectedTags = useSelector(state => state.categories.selectedTags);
   const error = useSelector(state => state.categories.error);
@@ -17,17 +18,21 @@ export default function PostForm () {
   const [tag, setTag] = useState("");
   const [emptyCategory, setEmptyCategory] = useState(false);
   const [postData, setPostData] = useState({
-    title: "",
-    subtitle:"",
-    content:"",
+    title: currentPost.title,
+    subtitle: currentPost.subtitle,
+    content: currentPost.content,
     images: [],
-    category: "",
+    category: currentPost.category,
     postTags: []
   });
 
   useEffect(() => {
     if (status === 'idle') {
       dispatch(fetchAllTags())
+    }
+    if(currentPost) {
+      currentPost.postTags.forEach(tag => {
+      dispatch(toggleTag(tag))})
     }
   }, [dispatch, status])
 
@@ -104,20 +109,6 @@ export default function PostForm () {
     return <Tag handleTagToggle={handleTagToggle} selected={true} handleTagDelete={handleTagDelete} name={t} id={`${t}-${i}`} key={`${t}-${i}`}/>
   })
 
-  // async function handleLogout() {
-  //   dispatch(logout(token))
-  //     .then(res => navigate("/"))
-  // }
-
-  // const logoutButton = (
-  //   <button
-  //       className="ilogoutbtncon-button"
-  //       title="Logout"
-  //       onClick={handleLogout}
-  //   >Logout
-  //   </button>
-  // )
-
   return (
     <div className="form-wrapper">
       <form className="post-form" onSubmit={handleSubmit}>
@@ -128,7 +119,7 @@ export default function PostForm () {
         <input type="text" className="form-post-subtitle" placeholder="subtitle" value={postData.subtitle} name="subtitle" onChange={handleChange}/>
 
         {/* <label>Content</label> */}
-        <textarea className="form-post-content" placeholder= "Add content here....." value={postData.content} name="content" onChange={handleChange}/>
+        <textarea className="form-post-content" rows="8" placeholder="Add content here....." value={postData.content} name="content" onChange={handleChange}/>
 
         <label htmlFor="categories">Category:</label>
         <select name="category" id="categories" onChange={handleChange}>
