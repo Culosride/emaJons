@@ -151,11 +151,6 @@
 }
 .adminMenu * {
   margin: 0 5px;
-  background-color: transparent;
-  border: none;
-  padding: 0;
-  font-size: 24px;
-  cursor: pointer;
 }
 
 .fade-top {
