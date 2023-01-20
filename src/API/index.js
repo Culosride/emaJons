@@ -7,7 +7,8 @@ const baseURL = "http://localhost:3000" // use exact spelling of "baseURL", axio
 export const fetchPostsByCategory = (category) => axios.get(`/api/posts/${category}`);
 export const fetchPostById = ({category, postId}) => axios.get(`/api/posts/${category}/${postId}`)
 
-export const addPost = (formData) => postInstance.post("/posts", formData)
+export const createPost = (formData) => postInstance.post("/posts", formData)
+export const editPost = (formData, postId) => postInstance.patch(`/posts/${postId}/edit`, formData)
 export const deletePost = ([postId, category]) => postInstance.delete(`/${category}/${postId}`)
 
 const postInstance = axios.create({

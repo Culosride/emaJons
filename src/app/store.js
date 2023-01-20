@@ -12,12 +12,11 @@ import {
   PURGE,
   REGISTER,
 } from 'redux-persist'
-// import {saveAuthToken} from "../middleware/saveAuthToken"
 
 const persistConfig = {
   key: 'root',
   storage,
-  blacklist: ["categories"]
+  blacklist: ["posts","categories"]
 }
 
 const rootReducer = combineReducers({

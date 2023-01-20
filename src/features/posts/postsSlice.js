@@ -11,22 +11,29 @@ const initialState = {
   error: "" || null
 }
 
-export const addPost = createAsyncThunk("api/posts/new", async (formData) => {
-  const response = await api.addPost(formData)
+export const createPost = createAsyncThunk("createPost", async (formData) => {
+  const response = await api.createPost(formData)
   return response.data
 })
 
-export const deletePost = createAsyncThunk("api/posts/delete", async ([postId, category, token]) => {
+export const editPost = createAsyncThunk("updatePost", async (payload) => {
+  const { formData, postId } = payload
+  console.log("at index, formdata",formData, "id",postId)
+  const response = await api.editPost(formData, postId)
+  return response.data
+})
+
+export const deletePost = createAsyncThunk("deletePost", async ([postId, category, token]) => {
   const response = await api.deletePost([postId, category, token])
   return response.data
 })
 
-export const fetchPostsByCategory = createAsyncThunk("/api/posts/get", async (category) => {
+export const fetchPostsByCategory = createAsyncThunk("getPosts", async (category) => {
   const response = await api.fetchPostsByCategory(category)
   return response.data
 })
 
-export const fetchPostById = createAsyncThunk("/api/posts/post", async (params) => {
+export const fetchPostById = createAsyncThunk("getPost", async (params) => {
   const response = await api.fetchPostById(params)
   return response.data
 })
@@ -43,22 +50,45 @@ const postsSlice = createSlice({
     },
     clearState() {
 
+    },
+    setCurrentPost(state, action) {
+      state.selectedPost = action.payload
+    },
+    setCurrentCategory(state, action) {
+      state.currentCategory = action.payload
     }
   },
   extraReducers(builder) {
     builder
-      .addCase(addPost.pending, (state, action) => {
+      .addCase(createPost.pending, (state, action) => {
         state.status = 'loading'
       })
-      .addCase(addPost.fulfilled, (state, action) => {
+      .addCase(createPost.fulfilled, (state, action) => {
         return state = {
           ...state,
           lastId: action.payload._id,
           status: 'succeeded',
-          selectedPost: action.payload
+          selectedPost: action.payload,
+          error: ""
         }
       })
-      .addCase(addPost.rejected, (state, action) => {
+      .addCase(createPost.rejected, (state, action) => {
+        state.status = 'failed'
+        state.error = action.error.message
+      })
+      .addCase(editPost.pending, (state, action) => {
+        state.status = 'loading'
+      })
+      .addCase(editPost.fulfilled, (state, action) => {
+        return state = {
+          ...state,
+          lastId: action.payload._id,
+          status: 'succeeded',
+          selectedPost: action.payload,
+          error: ""
+        }
+      })
+      .addCase(editPost.rejected, (state, action) => {
         state.status = 'failed'
         state.error = action.error.message
       })
@@ -67,6 +97,7 @@ const postsSlice = createSlice({
       })
       .addCase(deletePost.fulfilled, (state, action) => {
         state.status = 'succeeded'
+        state.error= ""
         return state
       })
       .addCase(deletePost.rejected, (state, action) => {
@@ -78,8 +109,11 @@ const postsSlice = createSlice({
       })
       .addCase(fetchPostsByCategory.fulfilled, (state, action) => {
         state.status = 'succeeded'
+        console.log(action.payload)
+        const filteredPosts = action.payload.filter(post => state.posts._id !== post._id )
+        state.status = 'succeeded'
         state.currentCategory = action.meta.arg
-        state.posts = [...action.payload]
+        state.posts = [...filteredPosts]
       })
       .addCase(fetchPostsByCategory.rejected, (state, action) => {
         state.status = 'failed'
@@ -103,6 +137,6 @@ const postsSlice = createSlice({
     }
 })
 
-export const { toggleFullscreen, resetStatus, clearResults } = postsSlice.actions
+export const { toggleFullscreen, resetStatus, clearResults, setCurrentPost, setCurrentCategory } = postsSlice.actions
 
 export default postsSlice.reducer

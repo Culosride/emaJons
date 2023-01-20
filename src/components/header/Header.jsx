@@ -15,7 +15,6 @@ export default function Header () {
 
   const path = pathname.split("/")[pathname.split("/").length-1]
   const isAdmin = authorization.isAdmin
-  console.log(path)
   const token = useSelector(selectCurrentToken)
   const authStatus = useSelector(state => state.auth.status)
 
@@ -23,7 +22,6 @@ export default function Header () {
   let currentCategory = useSelector(state => state.posts.currentCategory)
   const isFullscreen = useSelector(state => state.posts.fullscreen)
   const currentPostId = useSelector(state => state.posts.selectedPost._id)
-
 
   // to rename ?
   const admin = matchPath("/posts/*", pathname);
@@ -84,12 +82,6 @@ export default function Header () {
       .then(res => navigate("/"))
     setOn(false)
   }
-
-  // function handleEdit() {
-  //   dispatch(deletePost([post._id, currentCategory, token]))
-  //     .then(() => navigate(`/${params.category}`))
-  //     .then(() => dispatch(fetchPostsByCategory(params.category)))
-  // }
 
   function handleDelete() {
     dispatch(deletePost([currentPostId, currentCategory, token]))

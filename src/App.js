@@ -34,7 +34,7 @@ export default function App() {
           <Route path='/contact' element={<Contact />}/>
           <Route path='/bio' element={<Bio />}/>
           <Route path='/:category' element={<AllPostsWrapped />} />
-          <Route path="/:category/:postId" element={<PostWrapped />} />
+          <Route path="/:category/:postId" element={<PostWrapped />} /> 
           {/* protected */}
           <Route element={<RequireAuth allowedRoles={[ROLES.Admin]} />}>
             <Route path='/posts/new' element={<PostForm />}/>

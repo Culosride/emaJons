@@ -3,32 +3,29 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import Carousel from '../carousel/Carousel';
 import { useSelector, useDispatch } from 'react-redux'; // hook to select data from state (in redux store)
-import { fetchPostsByCategory, toggleFullscreen, fetchPostById } from '../../features/posts/postsSlice';
+import { fetchPostsByCategory, toggleFullscreen, fetchPostById, setCurrentPost } from '../../features/posts/postsSlice';
 import { selectCurrentToken } from '../../features/auth/authSlice';
 
 export default function Post() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const token = useSelector(selectCurrentToken)
-  const post = useSelector(state => state.posts.selectedPost)
   const params = useParams()
+  const token = useSelector(selectCurrentToken)
+  const currentId = params.postId
+  const post = useSelector(state => state.posts.posts.find(post => post._id === currentId))
   const status = useSelector(state => state.posts.status)
   const error = useSelector(state => state.posts.error)
   const category = params.category
-  // const textContainer = useRef(null)
+
   const [initialPosition, setInitialPosition] = useState(0)
   const isFullscreen = useSelector(state => state.posts.fullscreen)
-  // useEffect(() => {
-  //   setInitialPosition(textContainer.current.clientHeight * .6);
-  // }, [])
-
   let imageElements = []
 
   useEffect(() => {
     if (status === 'idle') {
-      dispatch(fetchPostById(params))
+    dispatch(setCurrentPost(post))
     }
-  }, [status, dispatch])
+    }, [status, dispatch])
 
   if (status === 'loading') {
     imageElements = <p>Loading...</p>

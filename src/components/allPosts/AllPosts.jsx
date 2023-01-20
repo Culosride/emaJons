@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux'; // hook to select data from redux store
-import { fetchPostsByCategory } from "../../features/posts/postsSlice";
+import { fetchPostsByCategory, setCurrentCategory } from "../../features/posts/postsSlice";
 import { Link, useParams } from 'react-router-dom';
 import NotFound from '../404/NotFound';
 const _ = require('lodash');
@@ -22,18 +22,30 @@ export default function AllPosts() {
 
   useEffect(() => {
     if (authStatus === "succeeded" && status === 'idle') {
-      dispatch(fetchPostsByCategory(params.category))
+        dispatch(fetchPostsByCategory(params.category))
+      // dispatch(setCurrentCategory(params.category))
     }
     setFilteredPosts([])
-  }, [params])
+  }, [params, status])
 
   // helper function to show posts
+  // const displayPosts = (posts) => {
+  //   return posts.map((post, i) => (
+  //     <Link reloadDocument to={`/${params.category}/${post._id}`} id={post._id} key={post._id} >
+  //       {post.images.length ? <img key={i} src={post.images[0].imageUrl}/> : <p key={i}>{post.title}</p>}
+  //     </Link>
+  //   ))
+  // }
   const displayPosts = (posts) => {
-    return posts.map((post, i) => (
-      <Link reloadDocument to={`/${params.category}/${post._id}`} id={post._id} key={post._id} >
-        {post.images.length ? <img key={i} src={post.images[0].imageUrl}/> : <p key={i}>{post.title}</p>}
-      </Link>
-    ))
+    return posts.map((post, i) => {
+      if(post.category === _.capitalize(params.category)) {
+        return (
+          <Link reloadDocument to={`/${params.category}/${post._id}`} id={post._id} key={post._id} >
+            {post.images.length ? <img key={i} src={post.images[0].imageUrl}/> : <p key={i}>{post.title}</p>}
+          </Link>
+        )
+      }
+    })
   }
 
   if(status === "failed") {
