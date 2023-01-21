@@ -23,17 +23,22 @@ export const editPost = createAsyncThunk("updatePost", async (payload) => {
   return response.data
 })
 
-export const deletePost = createAsyncThunk("deletePost", async ([postId, category, token]) => {
-  const response = await api.deletePost([postId, category, token])
+export const deletePost = createAsyncThunk("deletePost", async ([postId, category]) => {
+  console.log(postId, category)
+  const response = await api.deletePost([postId, category])
   return response.data
 })
 
-export const fetchPostsByCategory = createAsyncThunk("getPosts", async (category) => {
+export const fetchPosts = createAsyncThunk("getPosts", async () => {
+  const response = await api.fetchPosts()
+  return response.data
+})
+export const fetchPostsByCategory = createAsyncThunk("getPostsByCategory", async (category) => {
   const response = await api.fetchPostsByCategory(category)
   return response.data
 })
 
-export const fetchPostById = createAsyncThunk("getPost", async (params) => {
+export const fetchPostById = createAsyncThunk("getPostById", async (params) => {
   const response = await api.fetchPostById(params)
   return response.data
 })
@@ -53,6 +58,7 @@ const postsSlice = createSlice({
     },
     setCurrentPost(state, action) {
       state.selectedPost = action.payload
+      state.status = "succeeded"
     },
     setCurrentCategory(state, action) {
       state.currentCategory = action.payload
@@ -101,6 +107,19 @@ const postsSlice = createSlice({
         return state
       })
       .addCase(deletePost.rejected, (state, action) => {
+        state.status = 'failed'
+        state.error = action.error.message
+      })
+      .addCase(fetchPosts.pending, (state, action) => {
+        state.status = 'loading'
+      })
+      .addCase(fetchPosts.fulfilled, (state, action) => {
+        state.status = 'succeeded'
+        console.log(action)
+        state.currentCategory = action.meta.arg
+        state.posts = [...action.payload]
+      })
+      .addCase(fetchPosts.rejected, (state, action) => {
         state.status = 'failed'
         state.error = action.error.message
       })

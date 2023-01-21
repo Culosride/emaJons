@@ -20,22 +20,6 @@ export default function AllPosts() {
 
   let postElements = [];
 
-  useEffect(() => {
-    if (authStatus === "succeeded" && status === 'idle') {
-        dispatch(fetchPostsByCategory(params.category))
-      // dispatch(setCurrentCategory(params.category))
-    }
-    setFilteredPosts([])
-  }, [params, status])
-
-  // helper function to show posts
-  // const displayPosts = (posts) => {
-  //   return posts.map((post, i) => (
-  //     <Link reloadDocument to={`/${params.category}/${post._id}`} id={post._id} key={post._id} >
-  //       {post.images.length ? <img key={i} src={post.images[0].imageUrl}/> : <p key={i}>{post.title}</p>}
-  //     </Link>
-  //   ))
-  // }
   const displayPosts = (posts) => {
     return posts.map((post, i) => {
       if(post.category === _.capitalize(params.category)) {
@@ -48,15 +32,16 @@ export default function AllPosts() {
     })
   }
 
+  // if(status === "idle") dispatch(setCurrentCategory(params.category))
   if(status === "failed") {
     postElements = <p>{error}</p>
   } else if (status === "loading") {
     postElements = <p>Loading..</p>
-  } else if (status === "succeeded" || status === "idle") {
+  } else if (status === "succeeded") {
     postElements =
-      filteredPosts.message && filteredPosts.message ||
-      filteredPosts.length && displayPosts(filteredPosts) ||
-      displayPosts(posts)
+    filteredPosts.message && filteredPosts.message ||
+    filteredPosts.length && displayPosts(filteredPosts) ||
+    displayPosts(posts)
   }
 
   // filter posts on tag click

@@ -4,6 +4,7 @@ import jwt_decode from "jwt-decode";
 const baseURL = "http://localhost:3000" // use exact spelling of "baseURL", axios default to prepend URLs
 
 // posts requests
+export const fetchPosts = () => axios.get("/api/posts");
 export const fetchPostsByCategory = (category) => axios.get(`/api/posts/${category}`);
 export const fetchPostById = ({category, postId}) => axios.get(`/api/posts/${category}/${postId}`)
 

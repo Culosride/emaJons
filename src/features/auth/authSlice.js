@@ -7,7 +7,7 @@ const initialState = {
   error: "" || null
 }
 
-export const login = createAsyncThunk("/auth", async (userData) => {
+export const login = createAsyncThunk("/auth/login", async (userData) => {
   const response = await api.login(userData)
   return response.data
 })

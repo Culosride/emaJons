@@ -3,7 +3,7 @@ import { Link, useLocation, matchPath, useParams, useNavigate } from 'react-rout
 import _ from 'lodash'
 import { useDispatch, useSelector } from "react-redux";
 import { toggleNavbar } from "../../features/categories/categorySlice.js";
-import { deletePost, editPost } from '../../features/posts/postsSlice';
+import { deletePost, editPost, setCurrentCategory } from '../../features/posts/postsSlice';
 import useAuth from "../../hooks/useAuth.jsx";
 import { logout, selectCurrentToken } from "../../features/auth/authSlice"
 
@@ -49,8 +49,9 @@ export default function Header () {
     }
   }, [currentCategory, pathname])
 
-  const handleNewCategory = () => {
+  const handleNewCategory = (category) => {
     setIsExpanded(!isExpanded)
+    dispatch(setCurrentCategory(category))
   }
 
   const toggleMenu = () => {
@@ -118,7 +119,7 @@ export default function Header () {
   const navElements = categories.map((category, i) => {
       return (
         <li key={i}>
-          <Link onClick={handleNewCategory} to={`/${category}`}>{_.capitalize(category)}</Link>
+          <Link onClick={() => handleNewCategory(category)} to={`/${category}`}>{_.capitalize(category)}</Link>
         </li>
       )
   })

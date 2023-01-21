@@ -12,6 +12,15 @@ const _ = require('lodash');
 require("dotenv").config()
 
 // routes for BasicUsers
+postRouter.get('/api/posts', async (req, res) => {
+  try {
+    const allPosts = await Post.find({});
+    res.status(200).json(allPosts);
+  } catch (err) {
+    res.status(404).send(err);
+  }
+});
+
 postRouter.get('/api/posts/:category', async (req, res) => {
   try {
     const allPosts = await Post.find({category: _.capitalize(req.params.category)});
@@ -53,10 +62,11 @@ postRouter.post('/posts', verifyJWT, multerUpload, async (req, res) => {
   });
 
   postRouter.delete('/:category/:postId', verifyJWT, async (req, res) => {
-    console.log("at delete")
+    const { postId } = req.params
+    console.log("at delete", req.params)
     try {
       const post = await Post.findOne({_id: req.params.postId}).exec();
-
+      console.log(post)
       if(!post) return res.status(204).json({ message: "No post found with this id."})
       const publicIds = post.images.map(img => img.publicId)
 
