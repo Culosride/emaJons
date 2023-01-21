@@ -6,6 +6,11 @@
   margin: 0;
   padding: 0 30px;
   box-sizing: border-box;
+  font-size: 20px;
+  // margin-right: 16px;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: black;
   li {
     font-size: 20px;
     display: inline-block;
@@ -15,7 +20,7 @@
   }
   a {
     text-decoration: none;
-    color: #8f8f8f;
+    color: black;
   }
   a:hover {
     text-decoration: underline;
@@ -26,6 +31,7 @@
     text-transform: uppercase;
     background-color: #fff;
     color: black;
+    margin-right: 16px;
   }
   button {
     background-color: transparent;
@@ -33,6 +39,10 @@
     padding: 0;
     font-size: 24px;
     cursor: pointer
+  }
+  .flex {
+    display: flex;
+    align-items: center;
   }
 }
 .header-50{
@@ -50,6 +60,7 @@
 .header-100 {
   border-bottom: 1px solid black;
   margin-bottom: 30px;
+  justify-content: space-between;
   .dashboard-link {
     align-self: flex-end;
   }
@@ -67,12 +78,16 @@
     // * {
     //   transition: all 0.5s ease-out;
     // }
+    a {
+      color: #8f8f8f;
+    }
   }
 }
 
 .logo-wrapper {
   display: flex;
   z-index: 2;
+  align-items: center;
 }
 
 .rectangle {
@@ -95,6 +110,14 @@
   top: 0;
   right: 0;
   z-index: 6;
+  .admin-menu {
+    margin-right: 40px;
+  }
+  .close-button {
+    position: fixed;
+    right: 30px;
+    top: 24px;
+  }
 }
 
 .header-30 {
@@ -102,10 +125,10 @@
   width: calc($description-width - $slider-padding);
   align-items: center;
   flex-wrap: wrap;
-  .flex {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
+  .admin-menu {
+    position: absolute;
+    left: 0;
+    bottom: -5px;
   }
 }
 
@@ -113,8 +136,13 @@
   a, button {
     font-size: 18px;
     color: #8f8f8f;
+    margin-right: 10px;
+    font-weight: normal;
+    text-transform: none;
   }
-  z-index: 10;
+  a:last-child, button:last-child {
+    margin-right: 0;
+  }
 }
 
 .fade-top {

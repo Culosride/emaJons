@@ -57,6 +57,10 @@
   margin: 0;
   padding: 0 30px;
   box-sizing: border-box;
+  font-size: 20px;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: black;
 }
 .header-100 li, .header-50 li {
   font-size: 20px;
@@ -67,7 +71,7 @@
 }
 .header-100 a, .header-50 a {
   text-decoration: none;
-  color: #8f8f8f;
+  color: black;
 }
 .header-100 a:hover, .header-50 a:hover {
   text-decoration: underline;
@@ -78,6 +82,7 @@
   text-transform: uppercase;
   background-color: #fff;
   color: black;
+  margin-right: 16px;
 }
 .header-100 button, .header-50 button {
   background-color: transparent;
@@ -85,6 +90,10 @@
   padding: 0;
   font-size: 24px;
   cursor: pointer;
+}
+.header-100 .flex, .header-50 .flex {
+  display: flex;
+  align-items: center;
 }
 
 .header-50 {
@@ -104,6 +113,7 @@
 .header-100 {
   border-bottom: 1px solid black;
   margin-bottom: 30px;
+  justify-content: space-between;
 }
 .header-100 .dashboard-link {
   align-self: flex-end;
@@ -117,10 +127,14 @@
   display: flex;
   align-items: center;
 }
+.header-100 .navigation a {
+  color: #8f8f8f;
+}
 
 .logo-wrapper {
   display: flex;
   z-index: 2;
+  align-items: center;
 }
 
 .rectangle {
@@ -143,6 +157,14 @@
   right: 0;
   z-index: 6;
 }
+.header-50 .admin-menu, .header-30 .admin-menu {
+  margin-right: 40px;
+}
+.header-50 .close-button, .header-30 .close-button {
+  position: fixed;
+  right: 30px;
+  top: 24px;
+}
 
 .header-30 {
   left: auto;
@@ -150,18 +172,21 @@
   align-items: center;
   flex-wrap: wrap;
 }
-.header-30 .flex {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
+.header-30 .admin-menu {
+  position: absolute;
+  left: 0;
+  bottom: -5px;
 }
 
-.admin-menu {
-  z-index: 10;
-}
 .admin-menu a, .admin-menu button {
   font-size: 18px;
   color: #8f8f8f;
+  margin-right: 10px;
+  font-weight: normal;
+  text-transform: none;
+}
+.admin-menu a:last-child, .admin-menu button:last-child {
+  margin-right: 0;
 }
 
 .fade-top {
@@ -345,7 +370,7 @@ button .close-icon:after {
   mask-image: linear-gradient(to bottom, black 95%, transparent 100%);
   overflow-y: scroll;
 }
-.layout-50 .header-part-screen {
+.layout-50 .header-50 {
   width: calc(50vw - 60px);
 }
 .layout-50 .description-container {
@@ -383,9 +408,11 @@ button .close-icon:after {
   transition-delay: 0.1s;
 }
 .layout-100 .text-container {
-  display: none;
+  transition: all ease-out 0.3s;
+  transition-delay: 0.1s;
+  width: calc(50vw - 60px);
 }
-.layout-100 .header-part-screen {
+.layout-100 .header-50 {
   transition: all ease-out 0.15s;
   transition-delay: 0.1s;
   opacity: 0;
@@ -432,17 +459,19 @@ button.delete-post {
     -webkit-mask-image: none;
     mask-image: none;
   }
-  .layout-100 .header-part-screen {
+  .layout-100 .header-50 {
     right: 0;
     top: -74px;
   }
   .images-container {
     margin-top: 74px;
   }
-  .header-part-screen, .layout-50 .header-part-screen {
+  .header-50, .layout-50 .header-50 {
     width: calc(100vw - 40px);
     background-color: white;
     margin: 0 20px;
+    left: 0;
+    right: auto;
   }
 }
 .error-msg {

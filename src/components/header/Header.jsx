@@ -98,9 +98,6 @@ export default function Header () {
       // .then(() => dispatch(fetchPostsByCategory(currentCategory)))
   }
 
-  // <button className="delete-post" onClick={handleDelete}>DELETE POST</button>
-
-
   const adminMenu = () => {
     if(isAdmin) {
       return (
@@ -120,8 +117,8 @@ export default function Header () {
   const postMenu = () => {
     return (
       <div className="admin-menu">
-        <button className="deleteBtn" onClick={handleDelete}>Delete Post</button>
-        <button className="editBtn" onClick={handleEdit}>Edit Post</button>
+        <button className="deleteBtn" onClick={handleDelete}>Delete</button>
+        <button className="editBtn" onClick={handleEdit}>Edit</button>
       </div>
     )
 
@@ -146,38 +143,42 @@ export default function Header () {
   return (
     <>
       {!post &&
-        <ul className="header-100">
-          <div ref={logoAndCategoryRef} className="logo-wrapper">
-            <li onClick={menuOff}><Link to="/" className="logo">EmaJons</Link></li>
-            <span className="dash"></span>
-            <li className="logo">{currentCategory}</li>
-          </div>
-          <div className="rectangle" style={rectangleStyles}></div>
-           <ul style={navStyles} ref={navRef} className="navigation">
+        <div className="header-100">
+          <div className="flex">
+            <div ref={logoAndCategoryRef} className="logo-wrapper">
+              <div onClick={menuOff}><Link to="/" className="logo">EmaJons</Link></div>
+              <span className="dash"></span>
+              <div className="logo">{currentCategory}</div>
+            </div>
+            <div className="rectangle" style={rectangleStyles}></div>
+            <ul style={navStyles} ref={navRef} className="navigation">
               {navElements}
             </ul>
-          <button onClick={toggleMenu} style={toggleNavBtn}><i className="close-icon"></i></button>
-            {adminMenu()}
-        </ul>
+            <button className='close-button' onClick={toggleMenu} style={toggleNavBtn}><i className="close-icon"></i></button>
+          </div>
+          {adminMenu()}
+        </div>
       ||
       post && !isFullscreen &&
-      <ul className={`${hasContent ? 'header-50' : 'header-30 header-50'}`}>
-          <div className='flex'>
-            <div ref={logoAndCategoryRef} className="logo-wrapper">
-              <li><Link onClick={menuOff} to="/" className="logo">EmaJons</Link></li>
-              <span className="dash"></span>
-              <li className="">{currentCategory}</li>
-            </div>
-            {<button onClick={() => navigate(-1)}><i className="close-icon"></i></button>}
+      <div className={`${hasContent ? 'header-50' : 'header-30 header-50'}`}>
+          <div ref={logoAndCategoryRef} className="logo-wrapper">
+            <Link onClick={menuOff} to="/" className="logo">EmaJons</Link>
+            <span className="dash"></span>
+            <Link to={`/${currentCategory}`}>{currentCategory}</Link>
           </div>
-          {isAdmin && postMenu()}
+          <div>
+            {isAdmin && postMenu()}
+            <button className='close-button' onClick={() => navigate(-1)}>
+              <i className="close-icon"></i>
+            </button>
+          </div>
           {/* <div className="rectangle" style={rectangleStyles}></div> */}
           {/* <ul style={navStyles} ref={navRef} className="navigation">
             {navElements}
           </ul> */}
           {/* <button onClick={toggleMenu} style={toggleNavBtn}><i className="close-icon"></i></button> */}
-              {/* <li><Link onClick={handleNewCategory} to="/posts/new">Dashboard</Link></li> */}
-        </ul>
+          {/* <li><Link onClick={handleNewCategory} to="/posts/new">Dashboard</Link></li> */}
+      </div>
       }
     </>
   )
