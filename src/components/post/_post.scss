@@ -79,7 +79,7 @@ button {
     mask-image: linear-gradient(to bottom, black 95%, transparent 100%);
     overflow-y: scroll;
   }
-  .header-post {
+  .header-part-screen {
     width: calc($description-width-50 - $slider-padding);
   }
   .description-container {
@@ -125,7 +125,7 @@ button {
     // width: calc($description-width-50 - $slider-padding);
     display: none;
   }
-  .header-post {
+  .header-part-screen {
     transition: all ease-out .15s;
     transition-delay: .1s;
     opacity: 0;
@@ -177,7 +177,7 @@ button.delete-post {
     }
   }
   .layout-100 {
-    .header-post {
+    .header-part-screen {
       right: 0;
       top: -74px;
     }
@@ -185,7 +185,7 @@ button.delete-post {
   .images-container {
     margin-top: 74px;
   }
-  .header-post, .layout-50 .header-post {
+  .header-part-screen, .layout-50 .header-part-screen {
     width: calc(100vw - $slider-padding-mobile);
     background-color: white;
     margin: 0 20px;

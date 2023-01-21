@@ -56,7 +56,7 @@ export default function Post() {
   const handleScroll = (e) => {
     const headline = e.target.lastElementChild.firstElementChild;
 
-    const headerRef = document.querySelector(".header-post")
+    const headerRef = document.querySelector(".header-part-screen")
     // console.log(headline.getBoundingClientRect())
     if (headline.getBoundingClientRect().top < 60) {
       headline.classList.add('headline-sticky')

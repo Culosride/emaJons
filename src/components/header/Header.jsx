@@ -6,6 +6,7 @@ import { toggleNavbar } from "../../features/categories/categorySlice.js";
 import { deletePost, editPost } from '../../features/posts/postsSlice';
 import useAuth from "../../hooks/useAuth.jsx";
 import { logout, selectCurrentToken } from "../../features/auth/authSlice"
+import { current } from "@reduxjs/toolkit";
 
 export default function Header () {
   const dispatch = useDispatch()
@@ -14,6 +15,7 @@ export default function Header () {
   let currentCategory = useSelector(state => state.posts.currentCategory)
   const isFullscreen = useSelector(state => state.posts.fullscreen)
   const currentPostId = useSelector(state => state.posts.selectedPost._id)
+  const hasContent = useSelector(state => state.posts.selectedPost.content?.length > 800)
 
   const categories = ['walls', 'paintings', 'sketchbooks', 'video', 'sculptures']
   const { pathname } = useLocation();
@@ -96,31 +98,31 @@ export default function Header () {
       // .then(() => dispatch(fetchPostsByCategory(currentCategory)))
   }
 
-   <button className="delete-post" onClick={handleDelete}>DELETE POST</button>
+  // <button className="delete-post" onClick={handleDelete}>DELETE POST</button>
 
 
   const adminMenu = () => {
     if(isAdmin) {
       return (
-        <ul className="adminMenu">
+        <div className="admin-menu">
           <Link onClick={menuOff} className="newPostBtn" to={"/posts/new"}>New Post</Link>
           <button className="logoutBtn" title="Logout" onClick={handleLogout}>Logout</button>
-        </ul>
+        </div>
       )
     } else {
       return (
-        <ul className="adminMenu">
+        <div className="admin-menu">
           <Link onClick={menuOff} className="loginBtn" to={"/login"}>Login</Link>
-        </ul>)
+        </div>)
     }
   }
 
   const postMenu = () => {
     return (
-      <ul className="adminMenu">
+      <div className="admin-menu">
         <button className="deleteBtn" onClick={handleDelete}>Delete Post</button>
         <button className="editBtn" onClick={handleEdit}>Edit Post</button>
-      </ul>
+      </div>
     )
 
   }
@@ -144,7 +146,7 @@ export default function Header () {
   return (
     <>
       {!post &&
-        <ul className="header-global">
+        <ul className="header-100">
           <div ref={logoAndCategoryRef} className="logo-wrapper">
             <li onClick={menuOff}><Link to="/" className="logo">EmaJons</Link></li>
             <span className="dash"></span>
@@ -159,20 +161,22 @@ export default function Header () {
         </ul>
       ||
       post && !isFullscreen &&
-      <ul className={`header-post`}>
-          <div ref={logoAndCategoryRef} className="logo-wrapper">
-            <li><Link onClick={menuOff} to="/" className="logo">EmaJons</Link></li>
-            <span className="dash"></span>
-            <li className="">{currentCategory}</li>
+      <ul className={`${hasContent ? 'header-50' : 'header-30 header-50'}`}>
+          <div className='flex'>
+            <div ref={logoAndCategoryRef} className="logo-wrapper">
+              <li><Link onClick={menuOff} to="/" className="logo">EmaJons</Link></li>
+              <span className="dash"></span>
+              <li className="">{currentCategory}</li>
+            </div>
+            {<button onClick={() => navigate(-1)}><i className="close-icon"></i></button>}
           </div>
-          <div className="rectangle" style={rectangleStyles}></div>
+          {isAdmin && postMenu()}
+          {/* <div className="rectangle" style={rectangleStyles}></div> */}
           {/* <ul style={navStyles} ref={navRef} className="navigation">
             {navElements}
           </ul> */}
           {/* <button onClick={toggleMenu} style={toggleNavBtn}><i className="close-icon"></i></button> */}
               {/* <li><Link onClick={handleNewCategory} to="/posts/new">Dashboard</Link></li> */}
-          {isAdmin && postMenu()}
-          {<button onClick={() => navigate(-1)}><i className="close-icon"></i></button>}
         </ul>
       }
     </>

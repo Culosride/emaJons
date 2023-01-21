@@ -1,4 +1,4 @@
-.header-global, .header-post {
+.header-100, .header-50 {
   animation: fadeIn .5s;
   display: flex;
   height: 74px;
@@ -25,6 +25,7 @@
     font-weight: bold;
     text-transform: uppercase;
     background-color: #fff;
+    color: black;
   }
   button {
     background-color: transparent;
@@ -34,7 +35,7 @@
     cursor: pointer
   }
 }
-.header-post{
+.header-50{
   left: 50vw;
   right: auto
 }
@@ -46,7 +47,7 @@
   margin-right: 16px;
   background-color: black;
 }
-.header-global {
+.header-100 {
   border-bottom: 1px solid black;
   margin-bottom: 30px;
   .dashboard-link {
@@ -85,34 +86,35 @@
   left: 0;
 }
 
-.header-post {
-  transition: top ease 0.4s;
+.header-50, .header-30 {
+  transition: top ease .4s;
   position: fixed;
   justify-content: space-between;
-  /* width: 100%; */
   margin: 0 30px;
   padding: 0;
   top: 0;
   right: 0;
   z-index: 6;
-  /* width: calc(26vw - 60px); */
-  // transition: top ease .4s;
-  // position: fixed;
-  // justify-content: flex-start;
-  // width: 100%;
-  // margin: 0 30px;
-  // padding: 0;
-  // top: 0;
-  // right: 0;
-  // z-index: 6;
-  // width: calc($description-width - $slider-padding);
 }
-.adminMenu{
-  * {
-    margin: 0 5px;
+
+.header-30 {
+  left: auto;
+  width: calc($description-width - $slider-padding);
+  align-items: center;
+  flex-wrap: wrap;
+  .flex {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
   }
-  position: absolute;
-  right: 50px;
+}
+
+.admin-menu{
+  a, button {
+    font-size: 18px;
+    color: #8f8f8f;
+  }
+  z-index: 10;
 }
 
 .fade-top {
@@ -121,7 +123,7 @@
 }
 
 @media screen and (max-width: 1024px) {
-  .header-global {
+  .header-full-screen {
     margin-bottom: 20px;
   }
 }
