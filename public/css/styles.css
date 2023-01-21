@@ -3,7 +3,7 @@
 .title {
   font-family: Helvetica, Arial, sans-serif;
   font-weight: bold;
-  font-size: 2rem;
+  font-size: 1.875rem;
   text-transform: uppercase;
   margin: 0;
 }
@@ -72,9 +72,10 @@
 .header-100 a, .header-50 a {
   text-decoration: none;
   color: black;
+  position: relative;
 }
 .header-100 a:hover, .header-50 a:hover {
-  text-decoration: underline;
+  color: black;
 }
 .header-100 .logo, .header-50 .logo {
   font-size: 20px;
@@ -129,6 +130,10 @@
 }
 .header-100 .navigation a {
   color: #8f8f8f;
+}
+.header-100 .navigation a:hover {
+  transition: color ease-in-out 0.25s;
+  color: black;
 }
 
 .logo-wrapper {

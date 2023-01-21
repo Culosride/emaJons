@@ -66,7 +66,7 @@ export default function Header () {
   }
 
   const toggleNavBtn = {
-    transform: isExpanded ? "translateX(0px) rotate(45deg)" : `translateX(${-navWidth + "px"}) rotate(0)`,
+    transform: isExpanded ? "translateX(0px) rotate(45deg) " : `translateX(${-navWidth + "px"}) rotate(0)`,
     transition: on ? "all 0.5s ease-out" : ""
   }
 
@@ -102,14 +102,14 @@ export default function Header () {
     if(isAdmin) {
       return (
         <div className="admin-menu">
-          <Link onClick={menuOff} className="newPostBtn" to={"/posts/new"}>New Post</Link>
-          <button className="logoutBtn" title="Logout" onClick={handleLogout}>Logout</button>
+          <Link onClick={menuOff} className="new-post-btn" to={"/posts/new"}>New Post</Link>
+          <button className="logout-btn" title="Logout" onClick={handleLogout}>Logout</button>
         </div>
       )
     } else {
       return (
         <div className="admin-menu">
-          <Link onClick={menuOff} className="loginBtn" to={"/login"}>Login</Link>
+          <Link onClick={menuOff} className="login-btn" to={"/login"}>Login</Link>
         </div>)
     }
   }
@@ -117,11 +117,10 @@ export default function Header () {
   const postMenu = () => {
     return (
       <div className="admin-menu">
-        <button className="deleteBtn" onClick={handleDelete}>Delete</button>
-        <button className="editBtn" onClick={handleEdit}>Edit</button>
+        <button className="delete-btn" onClick={handleDelete}>Delete</button>
+        <button className="edit-btn" onClick={handleEdit}>Edit</button>
       </div>
     )
-
   }
 
   const navElements = categories.map((category, i) => {

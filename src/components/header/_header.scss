@@ -21,9 +21,10 @@
   a {
     text-decoration: none;
     color: black;
+    position: relative;
   }
   a:hover {
-    text-decoration: underline;
+    color: black;
   }
   .logo {
     font-size: 20px;
@@ -80,6 +81,10 @@
     // }
     a {
       color: #8f8f8f;
+    }
+    a:hover {
+      transition: color ease-in-out .25s;
+      color: black;
     }
   }
 }
