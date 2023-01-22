@@ -6,6 +6,7 @@ import { toggleNavbar } from "../../features/categories/categorySlice.js";
 import { deletePost, editPost } from '../../features/posts/postsSlice';
 import useAuth from "../../hooks/useAuth.jsx";
 import { logout, selectCurrentToken } from "../../features/auth/authSlice"
+import { current } from "@reduxjs/toolkit";
 
 export default function Header () {
   const dispatch = useDispatch()
@@ -14,6 +15,7 @@ export default function Header () {
   let currentCategory = useSelector(state => state.posts.currentCategory)
   const isFullscreen = useSelector(state => state.posts.fullscreen)
   const currentPostId = useSelector(state => state.posts.selectedPost._id)
+  const hasContent = useSelector(state => state.posts.selectedPost.content?.length > 800)
 
   const categories = ['walls', 'paintings', 'sketchbooks', 'video', 'sculptures']
   const { pathname } = useLocation();
@@ -64,7 +66,7 @@ export default function Header () {
   }
 
   const toggleNavBtn = {
-    transform: isExpanded ? "translateX(0px) rotate(45deg)" : `translateX(${-navWidth + "px"}) rotate(0)`,
+    transform: isExpanded ? "translateX(0px) rotate(45deg) " : `translateX(${-navWidth + "px"}) rotate(0)`,
     transition: on ? "all 0.5s ease-out" : ""
   }
 
@@ -96,33 +98,29 @@ export default function Header () {
       // .then(() => dispatch(fetchPostsByCategory(currentCategory)))
   }
 
-   <button className="delete-post" onClick={handleDelete}>DELETE POST</button>
-
-
   const adminMenu = () => {
     if(isAdmin) {
       return (
-        <ul className="adminMenu">
-          <Link onClick={menuOff} className="newPostBtn" to={"/posts/new"}>New Post</Link>
-          <button className="logoutBtn" title="Logout" onClick={handleLogout}>Logout</button>
-        </ul>
+        <div className="admin-menu">
+          <Link onClick={menuOff} className="new-post-btn" to={"/posts/new"}>New Post</Link>
+          <button className="logout-btn" title="Logout" onClick={handleLogout}>Logout</button>
+        </div>
       )
     } else {
       return (
-        <ul className="adminMenu">
-          <Link onClick={menuOff} className="loginBtn" to={"/login"}>Login</Link>
-        </ul>)
+        <div className="admin-menu">
+          <Link onClick={menuOff} className="login-btn" to={"/login"}>Login</Link>
+        </div>)
     }
   }
 
   const postMenu = () => {
     return (
-      <ul className="adminMenu">
-        <button className="deleteBtn" onClick={handleDelete}>Delete Post</button>
-        <button className="editBtn" onClick={handleEdit}>Edit Post</button>
-      </ul>
+      <div className="admin-menu">
+        <button className="delete-btn" onClick={handleDelete}>Delete</button>
+        <button className="edit-btn" onClick={handleEdit}>Edit</button>
+      </div>
     )
-
   }
 
   const navElements = categories.map((category, i) => {
@@ -144,36 +142,42 @@ export default function Header () {
   return (
     <>
       {!post &&
-        <ul className="header-global">
-          <div ref={logoAndCategoryRef} className="logo-wrapper">
-            <li onClick={menuOff}><Link to="/" className="logo">EmaJons</Link></li>
-            <span className="dash"></span>
-            <li className="logo">{currentCategory}</li>
-          </div>
-          <div className="rectangle" style={rectangleStyles}></div>
-           <ul style={navStyles} ref={navRef} className="navigation">
+        <div className="header-100">
+          <div className="flex">
+            <div ref={logoAndCategoryRef} className="logo-wrapper">
+              <div onClick={menuOff}><Link to="/" className="logo">EmaJons</Link></div>
+              <span className="dash"></span>
+              <div className="logo">{currentCategory}</div>
+            </div>
+            <div className="rectangle" style={rectangleStyles}></div>
+            <ul style={navStyles} ref={navRef} className="navigation">
               {navElements}
             </ul>
-          <button onClick={toggleMenu} style={toggleNavBtn}><i className="close-icon"></i></button>
-            {adminMenu()}
-        </ul>
+            <button className='close-button' onClick={toggleMenu} style={toggleNavBtn}><i className="close-icon"></i></button>
+          </div>
+          {adminMenu()}
+        </div>
       ||
       post && !isFullscreen &&
-      <ul className={`header-post`}>
+      <div className={`${hasContent ? 'header-50' : 'header-30 header-50'}`}>
           <div ref={logoAndCategoryRef} className="logo-wrapper">
-            <li><Link onClick={menuOff} to="/" className="logo">EmaJons</Link></li>
+            <Link onClick={menuOff} to="/" className="logo">EmaJons</Link>
             <span className="dash"></span>
-            <li className="">{currentCategory}</li>
+            <Link to={`/${currentCategory}`}>{currentCategory}</Link>
           </div>
-          <div className="rectangle" style={rectangleStyles}></div>
+          <div>
+            {isAdmin && postMenu()}
+            <button className='close-button' onClick={() => navigate(-1)}>
+              <i className="close-icon"></i>
+            </button>
+          </div>
+          {/* <div className="rectangle" style={rectangleStyles}></div> */}
           {/* <ul style={navStyles} ref={navRef} className="navigation">
             {navElements}
           </ul> */}
           {/* <button onClick={toggleMenu} style={toggleNavBtn}><i className="close-icon"></i></button> */}
-              {/* <li><Link onClick={handleNewCategory} to="/posts/new">Dashboard</Link></li> */}
-          {isAdmin && postMenu()}
-          {<button onClick={() => navigate(-1)}><i className="close-icon"></i></button>}
-        </ul>
+          {/* <li><Link onClick={handleNewCategory} to="/posts/new">Dashboard</Link></li> */}
+      </div>
       }
     </>
   )

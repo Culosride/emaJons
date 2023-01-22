@@ -3,7 +3,7 @@
 .title {
   font-family: Helvetica, Arial, sans-serif;
   font-weight: bold;
-  font-size: 2rem;
+  font-size: 1.875rem;
   text-transform: uppercase;
   margin: 0;
 }
@@ -49,7 +49,7 @@
   display: flex;
 }
 
-.header-global, .header-post {
+.header-100, .header-50 {
   animation: fadeIn 0.5s;
   display: flex;
   height: 74px;
@@ -57,36 +57,47 @@
   margin: 0;
   padding: 0 30px;
   box-sizing: border-box;
+  font-size: 20px;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: black;
 }
-.header-global li, .header-post li {
+.header-100 li, .header-50 li {
   font-size: 20px;
   display: inline-block;
   margin-right: 16px;
   font-weight: bold;
   text-transform: uppercase;
 }
-.header-global a, .header-post a {
+.header-100 a, .header-50 a {
   text-decoration: none;
-  color: #8f8f8f;
+  color: black;
+  position: relative;
 }
-.header-global a:hover, .header-post a:hover {
-  text-decoration: underline;
+.header-100 a:hover, .header-50 a:hover {
+  color: black;
 }
-.header-global .logo, .header-post .logo {
+.header-100 .logo, .header-50 .logo {
   font-size: 20px;
   font-weight: bold;
   text-transform: uppercase;
   background-color: #fff;
+  color: black;
+  margin-right: 16px;
 }
-.header-global button, .header-post button {
+.header-100 button, .header-50 button {
   background-color: transparent;
   border: none;
   padding: 0;
   font-size: 24px;
   cursor: pointer;
 }
+.header-100 .flex, .header-50 .flex {
+  display: flex;
+  align-items: center;
+}
 
-.header-post {
+.header-50 {
   left: 50vw;
   right: auto;
 }
@@ -100,26 +111,35 @@
   background-color: black;
 }
 
-.header-global {
+.header-100 {
   border-bottom: 1px solid black;
   margin-bottom: 30px;
+  justify-content: space-between;
 }
-.header-global .dashboard-link {
+.header-100 .dashboard-link {
   align-self: flex-end;
 }
-.header-global .close-icon:after {
+.header-100 .close-icon:after {
   content: url("../img/PlusLight.svg");
   display: inline-block;
 }
-.header-global .navigation {
+.header-100 .navigation {
   padding-left: 0;
   display: flex;
   align-items: center;
+}
+.header-100 .navigation a {
+  color: #8f8f8f;
+}
+.header-100 .navigation a:hover {
+  transition: color ease-in-out 0.25s;
+  color: black;
 }
 
 .logo-wrapper {
   display: flex;
   z-index: 2;
+  align-items: center;
 }
 
 .rectangle {
@@ -132,25 +152,46 @@
   left: 0;
 }
 
-.header-post {
+.header-50, .header-30 {
   transition: top ease 0.4s;
   position: fixed;
   justify-content: space-between;
-  /* width: 100%; */
   margin: 0 30px;
   padding: 0;
   top: 0;
   right: 0;
   z-index: 6;
-  /* width: calc(26vw - 60px); */
+}
+.header-50 .admin-menu, .header-30 .admin-menu {
+  margin-right: 40px;
+}
+.header-50 .close-button, .header-30 .close-button {
+  position: fixed;
+  right: 30px;
+  top: 24px;
 }
 
-.adminMenu {
-  position: absolute;
-  right: 50px;
+.header-30 {
+  left: auto;
+  width: calc(26vw - 60px);
+  align-items: center;
+  flex-wrap: wrap;
 }
-.adminMenu * {
-  margin: 0 5px;
+.header-30 .admin-menu {
+  position: absolute;
+  left: 0;
+  bottom: -5px;
+}
+
+.admin-menu a, .admin-menu button {
+  font-size: 18px;
+  color: #8f8f8f;
+  margin-right: 10px;
+  font-weight: normal;
+  text-transform: none;
+}
+.admin-menu a:last-child, .admin-menu button:last-child {
+  margin-right: 0;
 }
 
 .fade-top {
@@ -159,7 +200,7 @@
 }
 
 @media screen and (max-width: 1024px) {
-  .header-global {
+  .header-full-screen {
     margin-bottom: 20px;
   }
 }
@@ -334,7 +375,7 @@ button .close-icon:after {
   mask-image: linear-gradient(to bottom, black 95%, transparent 100%);
   overflow-y: scroll;
 }
-.layout-50 .header-post {
+.layout-50 .header-50 {
   width: calc(50vw - 60px);
 }
 .layout-50 .description-container {
@@ -372,9 +413,11 @@ button .close-icon:after {
   transition-delay: 0.1s;
 }
 .layout-100 .text-container {
-  display: none;
+  transition: all ease-out 0.3s;
+  transition-delay: 0.1s;
+  width: calc(50vw - 60px);
 }
-.layout-100 .header-post {
+.layout-100 .header-50 {
   transition: all ease-out 0.15s;
   transition-delay: 0.1s;
   opacity: 0;
@@ -421,17 +464,19 @@ button.delete-post {
     -webkit-mask-image: none;
     mask-image: none;
   }
-  .layout-100 .header-post {
+  .layout-100 .header-50 {
     right: 0;
     top: -74px;
   }
   .images-container {
     margin-top: 74px;
   }
-  .header-post, .layout-50 .header-post {
+  .header-50, .layout-50 .header-50 {
     width: calc(100vw - 40px);
     background-color: white;
     margin: 0 20px;
+    left: 0;
+    right: auto;
   }
 }
 .error-msg {
