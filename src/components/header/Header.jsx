@@ -3,7 +3,7 @@ import { Link, useLocation, matchPath, useParams, useNavigate } from 'react-rout
 import _ from 'lodash'
 import { useDispatch, useSelector } from "react-redux";
 import { toggleNavbar } from "../../features/categories/categorySlice.js";
-import { deletePost, editPost, setCurrentCategory } from '../../features/posts/postsSlice';
+import { deletePost, editPost, setCurrentCategory, fetchPosts, setCurrentPost } from '../../features/posts/postsSlice';
 import useAuth from "../../hooks/useAuth.jsx";
 import { logout, selectCurrentToken } from "../../features/auth/authSlice"
 
@@ -13,10 +13,8 @@ export default function Header () {
   const navigate = useNavigate()
   const { pathname } = useLocation();
 
-  const path = pathname.split("/")[pathname.split("/").length-1]
   const isAdmin = authorization.isAdmin
   const token = useSelector(selectCurrentToken)
-  const authStatus = useSelector(state => state.auth.status)
 
   // const isExpanded = useSelector(state => state.categories.isExpanded)
   let currentCategory = useSelector(state => state.posts.currentCategory)
@@ -35,11 +33,12 @@ export default function Header () {
   const logoAndCategoryRef = useRef()
   const navRef = useRef()
 
-  const categories = ['walls', 'paintings', 'sketchbooks', 'video', 'sculptures']
+  const categories = ['Walls', 'Paintings', 'Sketchbooks', 'Video', 'Sculptures']
 
-  // missing cases, write for each condition
-  if (!categories.includes(pathname.split("/")[1])) {
-    currentCategory = path
+  if(pathname.includes("new")) {
+    currentCategory = "New Post"
+  } else if(pathname.includes("edit")) {
+    currentCategory = "edit"
   }
 
   useEffect(() => {
@@ -61,6 +60,7 @@ export default function Header () {
   }
   const menuOff = () => {
     setIsExpanded(false)
+    // dispatch(setCurrentPost(""))
   }
 
   const toggleNavBtn = {
@@ -80,14 +80,13 @@ export default function Header () {
   async function handleLogout() {
     menuOff()
     dispatch(logout(token))
-      .then(res => navigate("/"))
+      .then(() => navigate("/"))
     setOn(false)
   }
 
   function handleDelete() {
     dispatch(deletePost([currentPostId, currentCategory, token]))
-      .then(() => navigate(`/${currentCategory}`))
-      // .then(() => dispatch(fetchPostsByCategory(currentCategory)))
+    .then(() => dispatch(fetchPosts()) && navigate(`/${currentCategory}`))
   }
 
   const adminMenu = () => {
@@ -144,7 +143,7 @@ export default function Header () {
       post && !isFullscreen &&
       <ul className={`header-post`}>
           <div ref={logoAndCategoryRef} className="logo-wrapper">
-            <li><Link onClick={menuOff} to="/" className="logo">EmaJons</Link></li>
+            <li onClick={menuOff}><Link to="/" className="logo">EmaJons</Link></li>
             <span className="dash"></span>
             <li className="">{currentCategory}</li>
           </div>

@@ -40,6 +40,9 @@ const categorySlice = createSlice({
     toggleNavbar: (state) => {
       state.isExpanded = !state.isExpanded
     },
+    resetTags: (state) => {
+      state.selectedTags = []
+    },
     toggleTag: (state, action) => {
       if(state.selectedTags.includes(action.payload)) {
         const filteredTags = state.selectedTags.filter(tag => tag !== action.payload)
@@ -47,7 +50,6 @@ const categorySlice = createSlice({
             ...state,
             selectedTags: [...filteredTags],
             availableTags: state.availableTags.concat(action.payload),
-            status: 'succeeded',
           }
       } else {
         const filteredTags = state.availableTags.filter(tag => tag !== action.payload)
@@ -55,7 +57,6 @@ const categorySlice = createSlice({
             ...state,
             availableTags: [...filteredTags],
             selectedTags: state.selectedTags.concat(action.payload),
-            status: 'succeeded',
           }
       }
     }
@@ -104,7 +105,7 @@ const categorySlice = createSlice({
   }
 })
 
-export const { toggleTag, toggleNavbar } = categorySlice.actions
+export const { toggleTag, toggleNavbar, resetTags } = categorySlice.actions
 
 
 export default categorySlice.reducer

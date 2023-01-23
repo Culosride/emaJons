@@ -11,10 +11,12 @@ export default function AllPosts() {
   const params = useParams();
   const dispatch = useDispatch()
   const posts = useSelector(state => state.posts.posts)
+  const postsByCategory = posts.filter(post => (post.category === _.capitalize(params.category)))
+
   let status = useSelector(state => state.posts.status)
   let authStatus = useSelector(state => state.auth.status)
   const error = useSelector(state => state.posts.error)
-  const allTags = useSelector(state => state.posts.posts.flatMap(post => post.postTags.map(tag => tag)))
+  const allTags = postsByCategory.flatMap(post => post.postTags.map(tag => tag))
   const cleanedTags = [...new Set(allTags.sort((a, b) => b.localeCompare(a)))];
   const [filteredPosts, setFilteredPosts] = useState([])
 
@@ -22,17 +24,17 @@ export default function AllPosts() {
 
   const displayPosts = (posts) => {
     return posts.map((post, i) => {
-      if(post.category === _.capitalize(params.category)) {
         return (
           <Link reloadDocument to={`/${params.category}/${post._id}`} id={post._id} key={post._id} >
             {post.images.length ? <img key={i} src={post.images[0].imageUrl}/> : <p key={i}>{post.title}</p>}
           </Link>
         )
-      }
     })
   }
+  useEffect(() => {
+    dispatch(setCurrentCategory(params.category))
+  }, [params])
 
-  // if(status === "idle") dispatch(setCurrentCategory(params.category))
   if(status === "failed") {
     postElements = <p>{error}</p>
   } else if (status === "loading") {
@@ -41,14 +43,14 @@ export default function AllPosts() {
     postElements =
     filteredPosts.message && filteredPosts.message ||
     filteredPosts.length && displayPosts(filteredPosts) ||
-    displayPosts(posts)
+    displayPosts(postsByCategory)
   }
 
   // filter posts on tag click
   const handleClick = (e) => {
     e.preventDefault();
     const filter = e.target.getAttribute('data-value');
-    const filtered = posts.filter((post) => {
+    const filtered = postsByCategory.filter((post) => {
       return post.postTags.includes(filter);
     })
     filtered.length && setFilteredPosts(filtered);

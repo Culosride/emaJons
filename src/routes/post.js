@@ -86,7 +86,7 @@ postRouter.post('/posts', verifyJWT, multerUpload, async (req, res) => {
     if(!post) return res.status(204).json({ message: "No post found with this id."})
 
     const images = req.files;
-
+    console.log(post)
     await Promise.all(images.map(async (image) => {
       const data = await uploadToCloudinary(image.path, 'emaJons_dev');
       const newImage = new Image({
@@ -100,6 +100,7 @@ postRouter.post('/posts', verifyJWT, multerUpload, async (req, res) => {
     }))
 
     const updatedPost = await Post.findById(post._id)
+    console.log(updatedPost)
     res.status(200).json(updatedPost);
   });
 

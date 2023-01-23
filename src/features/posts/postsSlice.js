@@ -3,9 +3,7 @@ import * as api from "../../API/index"
 
 const initialState = {
   posts: [],
-  lastId: "",
   currentCategory: "",
-  fullscreen: false,
   selectedPost: "",
   status: 'idle' || 'loading' || 'succeeded' || 'failed',
   error: "" || null
@@ -47,9 +45,6 @@ const postsSlice = createSlice({
   name: 'posts',
   initialState,
   reducers: {
-    toggleFullscreen(state) {
-      state.fullscreen = !state.fullscreen
-    },
     resetStatus(state){
       state.status = "idle"
     },
@@ -57,8 +52,11 @@ const postsSlice = createSlice({
 
     },
     setCurrentPost(state, action) {
-      state.selectedPost = action.payload
-      state.status = "succeeded"
+      return state = {
+        ...state,
+        selectedPost: action.payload,
+        currentCategory: action.payload.category
+      }
     },
     setCurrentCategory(state, action) {
       state.currentCategory = action.payload
@@ -72,9 +70,8 @@ const postsSlice = createSlice({
       .addCase(createPost.fulfilled, (state, action) => {
         return state = {
           ...state,
-          lastId: action.payload._id,
           status: 'succeeded',
-          selectedPost: action.payload,
+          posts: state.posts.concat(action.payload),
           error: ""
         }
       })
@@ -86,9 +83,10 @@ const postsSlice = createSlice({
         state.status = 'loading'
       })
       .addCase(editPost.fulfilled, (state, action) => {
+        const filteredPosts = state.posts.filter(post => post._id !== action.payload._id)
         return state = {
           ...state,
-          lastId: action.payload._id,
+          posts: [...filteredPosts, action.payload],
           status: 'succeeded',
           selectedPost: action.payload,
           error: ""
@@ -102,9 +100,9 @@ const postsSlice = createSlice({
         state.status = 'loading'
       })
       .addCase(deletePost.fulfilled, (state, action) => {
+        console.log("payload", state, action.payload)
         state.status = 'succeeded'
         state.error= ""
-        return state
       })
       .addCase(deletePost.rejected, (state, action) => {
         state.status = 'failed'
@@ -114,10 +112,15 @@ const postsSlice = createSlice({
         state.status = 'loading'
       })
       .addCase(fetchPosts.fulfilled, (state, action) => {
-        state.status = 'succeeded'
-        console.log(action)
-        state.currentCategory = action.meta.arg
-        state.posts = [...action.payload]
+        let cat = state.currentCategory
+        if(state.currentCategory === "") {cat = action.payload[0].category}
+
+        return state = {
+          ...state,
+          status: 'succeeded',
+          currentCategory: cat,
+          posts: [...action.payload]
+       }
       })
       .addCase(fetchPosts.rejected, (state, action) => {
         state.status = 'failed'
@@ -156,6 +159,6 @@ const postsSlice = createSlice({
     }
 })
 
-export const { toggleFullscreen, resetStatus, clearResults, setCurrentPost, setCurrentCategory } = postsSlice.actions
+export const { resetStatus, clearResults, setCurrentPost, setCurrentCategory } = postsSlice.actions
 
 export default postsSlice.reducer

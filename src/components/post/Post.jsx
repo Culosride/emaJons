@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import Carousel from '../carousel/Carousel';
 import { useSelector, useDispatch } from 'react-redux'; // hook to select data from state (in redux store)
-import { fetchPostsByCategory, toggleFullscreen, fetchPostById, setCurrentPost } from '../../features/posts/postsSlice';
+import { fetchPostsByCategory, fetchPostById, setCurrentPost } from '../../features/posts/postsSlice';
 import { selectCurrentToken } from '../../features/auth/authSlice';
 
 export default function Post() {
@@ -18,14 +18,15 @@ export default function Post() {
   const category = params.category
 
   const [initialPosition, setInitialPosition] = useState(0)
-  const isFullscreen = useSelector(state => state.posts.fullscreen)
+  // const fullscreen = useSelector(state => state.posts.fullscreen)
+  const [fullscreen, setFullscreen] = useState(false)
   let imageElements = []
 
   useEffect(() => {
-    if (status === 'idle') {
-    dispatch(setCurrentPost(post))
-    }
-    }, [status, dispatch])
+    // if (status === 'idle') {
+      dispatch(setCurrentPost(post))
+    // }
+  }, [])
 
   if (status === 'loading') {
     imageElements = <p>Loading...</p>
@@ -43,8 +44,7 @@ export default function Post() {
 
   // interaction
   const handleFullscreen = () => {
-    dispatch(toggleFullscreen())
-    // setFullScreen(!fullScreen)
+    setFullscreen(!fullscreen)
   }
 
   // const headerRef = useRef(null)
@@ -66,7 +66,7 @@ export default function Post() {
   const content = post.content && post.content.length > 100
 
   return (
-    <div className={`post-container ${content ? "layout-50" : ""} ${isFullscreen ? "layout-100" : ""}`}>
+    <div className={`post-container ${content ? "layout-50" : ""} ${fullscreen ? "layout-100" : ""}`}>
         {post.images &&
           <Carousel
             content={content}

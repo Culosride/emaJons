@@ -4,6 +4,7 @@ import categoryReducer from "../features/categories/categorySlice"
 import authReducer from "../features/auth/authSlice"
 import storage from 'redux-persist/lib/storage';
 import {
+  persistStore,
   persistReducer,
   FLUSH,
   REHYDRATE,
@@ -16,7 +17,7 @@ import {
 const persistConfig = {
   key: 'root',
   storage,
-  blacklist: ["categories"]
+  whitelist: ["posts", "auth"]
 }
 
 const rootReducer = combineReducers({
@@ -37,3 +38,5 @@ export const store = configureStore({
       },
     }),
 })
+
+export const persistor = persistStore(store)
