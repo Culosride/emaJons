@@ -15,7 +15,7 @@ export default function withRouteValidation (Component) {
     const dispatch = useDispatch()
 
     useEffect(() => {
-      dispatch(checkPath(location.pathname)) && dispatch(resetStatus() )
+      dispatch(checkPath(location.pathname))
     }, [location.pathname, params, dispatch])
 
     if (status === "failed") {

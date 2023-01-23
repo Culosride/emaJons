@@ -9,7 +9,7 @@ const initialState = {
   error: "" || null
 }
 
-export const addNewTag = createAsyncThunk("api/categories/tags", async (tag, { rejectWithValue }) => {
+export const addNewTag = createAsyncThunk("api/tags/new", async (tag, { rejectWithValue }) => {
   try {
     const response = await api.addNewTag(tag)
     return response.data
@@ -18,7 +18,7 @@ export const addNewTag = createAsyncThunk("api/categories/tags", async (tag, { r
   }
 })
 
-export const deleteTag = createAsyncThunk("api/categories/deleteTag", async (tagToDelete, { rejectWithValue }) => {
+export const deleteTag = createAsyncThunk("api/tags/delete", async (tagToDelete, { rejectWithValue }) => {
   try {
     const response = await api.deleteTag(tagToDelete)
     return response.data
@@ -27,7 +27,7 @@ export const deleteTag = createAsyncThunk("api/categories/deleteTag", async (tag
   }
 })
 
-export const fetchAllTags = createAsyncThunk("/api/categories", async () => {
+export const fetchAllTags = createAsyncThunk("/api/tags/get", async () => {
   const response = await api.fetchAllTags()
   return response.data
 })
@@ -40,6 +40,9 @@ const categorySlice = createSlice({
     toggleNavbar: (state) => {
       state.isExpanded = !state.isExpanded
     },
+    resetTags: (state) => {
+      state.selectedTags = []
+    },
     toggleTag: (state, action) => {
       if(state.selectedTags.includes(action.payload)) {
         const filteredTags = state.selectedTags.filter(tag => tag !== action.payload)
@@ -47,7 +50,6 @@ const categorySlice = createSlice({
             ...state,
             selectedTags: [...filteredTags],
             availableTags: state.availableTags.concat(action.payload),
-            status: 'succeeded',
           }
       } else {
         const filteredTags = state.availableTags.filter(tag => tag !== action.payload)
@@ -55,7 +57,6 @@ const categorySlice = createSlice({
             ...state,
             availableTags: [...filteredTags],
             selectedTags: state.selectedTags.concat(action.payload),
-            status: 'succeeded',
           }
       }
     }
@@ -104,7 +105,7 @@ const categorySlice = createSlice({
   }
 })
 
-export const { toggleTag, toggleNavbar } = categorySlice.actions
+export const { toggleTag, toggleNavbar, resetTags } = categorySlice.actions
 
 
 export default categorySlice.reducer
