@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import Carousel from '../carousel/Carousel';
 import { useSelector, useDispatch } from 'react-redux'; // hook to select data from state (in redux store)
-import { fetchPostsByCategory, fetchPostById, setCurrentPost } from '../../features/posts/postsSlice';
+import { fetchPostsByCategory, toggleFullscreen, fetchPostById, setCurrentPost } from '../../features/posts/postsSlice';
 import { selectCurrentToken } from '../../features/auth/authSlice';
 
 export default function Post() {
@@ -18,8 +18,7 @@ export default function Post() {
   const category = params.category
 
   const [initialPosition, setInitialPosition] = useState(0)
-  // const fullscreen = useSelector(state => state.posts.fullscreen)
-  const [fullscreen, setFullscreen] = useState(false)
+  const fullscreen = useSelector(state => state.posts.fullscreen)
   let imageElements = []
 
   useEffect(() => {
@@ -44,7 +43,7 @@ export default function Post() {
 
   // interaction
   const handleFullscreen = () => {
-    setFullscreen(!fullscreen)
+    dispatch(toggleFullscreen())
   }
 
   // const headerRef = useRef(null)

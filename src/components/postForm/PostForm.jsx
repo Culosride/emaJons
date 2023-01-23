@@ -186,7 +186,13 @@ export default function PostForm () {
         <select name="category" id="categories" onChange={handleChange}>
           {editPage && <option value="">{postData.category}</option>}
           {!editPage && <option value="">-- Please choose a category --</option>}
-          {optionElements}
+          {/* {optionElements} */}
+          <option value="">-- Please choose a category --</option>
+          <option value="Walls">Walls</option>
+          <option value="Paintings">Paintings</option>
+          <option value="Sketchbooks">Skethbooks</option>
+          <option value="Video">Video</option>
+          <option value="Sculpture">Sculpture</option>
         </select>
         {emptyCategory && <p>Devi pigliarne una</p>}
         <div className="selected-tags-wrapper">

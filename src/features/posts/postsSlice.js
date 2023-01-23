@@ -4,6 +4,7 @@ import * as api from "../../API/index"
 const initialState = {
   posts: [],
   currentCategory: "",
+  fullscreen: false,
   selectedPost: "",
   status: 'idle' || 'loading' || 'succeeded' || 'failed',
   error: "" || null
@@ -48,8 +49,8 @@ const postsSlice = createSlice({
     resetStatus(state){
       state.status = "idle"
     },
-    clearState() {
-
+    toggleFullscreen(state) {
+      state.fullscreen = !state.fullscreen
     },
     setCurrentPost(state, action) {
       return state = {
@@ -159,6 +160,6 @@ const postsSlice = createSlice({
     }
 })
 
-export const { resetStatus, clearResults, setCurrentPost, setCurrentCategory } = postsSlice.actions
+export const { resetStatus, clearResults, setCurrentPost, setCurrentCategory, toggleFullscreen } = postsSlice.actions
 
 export default postsSlice.reducer
