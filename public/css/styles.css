@@ -688,10 +688,10 @@ button.delete-post {
 
 .italic:hover {
   font-weight: light;
-  -webkit-transform: skewX(-12deg);
-  -moz-transform: skewX(-12deg);
-  -o-transform: skewX(-12deg);
-  transform: skewX(-12deg);
+  -webkit-transform: skewX(-10deg);
+  -moz-transform: skewX(-10deg);
+  -o-transform: skewX(-10deg);
+  transform: skewX(-10deg);
 }
 
 body {
