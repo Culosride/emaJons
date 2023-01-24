@@ -31,7 +31,6 @@ export default function App() {
     if(!posts.length)
     dispatch(fetchPosts());
   }, [dispatch, posts.length]);
-  posts.forEach(post => console.log(post.category))
 
   return (
     <Router>

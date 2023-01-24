@@ -58,6 +58,7 @@ postRouter.post('/posts', verifyJWT, multerUpload, async (req, res) => {
       )
     }))
     const updatedPost = await Post.findById(post._id)
+    console.log(updatedPost)
     res.status(200).json(updatedPost);
   });
 

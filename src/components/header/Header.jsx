@@ -6,7 +6,6 @@ import { toggleNavbar } from "../../features/categories/categorySlice.js";
 import { deletePost, editPost, setCurrentCategory, fetchPosts, setCurrentPost } from '../../features/posts/postsSlice';
 import useAuth from "../../hooks/useAuth.jsx";
 import { logout, selectCurrentToken } from "../../features/auth/authSlice"
-import { current } from "@reduxjs/toolkit";
 
 export default function Header () {
   const authorization = useAuth(false)
@@ -62,7 +61,6 @@ export default function Header () {
   }
   const menuOff = () => {
     setIsExpanded(false)
-    // dispatch(setCurrentPost(""))
   }
 
   const toggleNavBtn = {
@@ -87,7 +85,8 @@ export default function Header () {
   }
 
   function handleDelete() {
-    dispatch(deletePost([currentPostId, currentCategory, token]))
+    console.log(currentPostId, currentCategory)
+    dispatch(deletePost([currentPostId, currentCategory]))
     .then(() => dispatch(fetchPosts()) && navigate(`/${currentCategory}`))
   }
 
@@ -116,12 +115,14 @@ export default function Header () {
     )
   }
 
-  const navElements = categories.map((category, i) => {
+  const navElements = () => categories.map((category, i) => {
+    if((category) !== _.capitalize(currentCategory)) {
       return (
         <li key={i}>
           <Link onClick={() => handleNewCategory(category)} to={`/${category}`}>{_.capitalize(category)}</Link>
         </li>
       )
+    }
   })
 
   return (
@@ -136,7 +137,7 @@ export default function Header () {
             </div>
             <div className="rectangle" style={rectangleStyles}></div>
             <ul style={navStyles} ref={navRef} className="navigation">
-              {navElements}
+              {navElements()}
             </ul>
             <button className='close-button' onClick={toggleMenu} style={toggleNavBtn}><i className="close-icon"></i></button>
           </div>
@@ -146,7 +147,7 @@ export default function Header () {
       post && !isFullscreen &&
       <div className={`${hasContent ? 'header-50' : 'header-30 header-50'}`}>
           <div ref={logoAndCategoryRef} className="logo-wrapper">
-            <li onClick={menuOff}><Link to="/" className="logo">EmaJons</Link></li>
+            <div onClick={menuOff}><Link to="/" className="logo">EmaJons</Link></div>
             <span className="dash"></span>
             <Link to={`/${currentCategory}`}>{currentCategory}</Link>
           </div>
@@ -156,12 +157,6 @@ export default function Header () {
               <i className="close-icon"></i>
             </button>
           </div>
-          {/* <div className="rectangle" style={rectangleStyles}></div> */}
-          {/* <ul style={navStyles} ref={navRef} className="navigation">
-            {navElements}
-          </ul> */}
-          {/* <button onClick={toggleMenu} style={toggleNavBtn}><i className="close-icon"></i></button> */}
-          {/* <li><Link onClick={handleNewCategory} to="/posts/new">Dashboard</Link></li> */}
       </div>
       }
     </>

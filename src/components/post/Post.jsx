@@ -2,8 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 // import Axios from 'axios';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import Carousel from '../carousel/Carousel';
-import { useSelector, useDispatch } from 'react-redux'; // hook to select data from state (in redux store)
-import { fetchPostsByCategory, fetchPostById, setCurrentPost } from '../../features/posts/postsSlice';
+import { useSelector, useDispatch } from 'react-redux'; // hook select data from state (in redux store)
+import { toggleFullscreen, setCurrentPost } from '../../features/posts/postsSlice';
 import { selectCurrentToken } from '../../features/auth/authSlice';
 
 export default function Post() {
@@ -17,16 +17,30 @@ export default function Post() {
   const error = useSelector(state => state.posts.error)
   const category = params.category
 
-  const [initialPosition, setInitialPosition] = useState(0)
-  // const fullscreen = useSelector(state => state.posts.fullscreen)
-  const [fullscreen, setFullscreen] = useState(false)
+  const fullscreen = useSelector(state => state.posts.fullscreen)
   let imageElements = []
 
   useEffect(() => {
-    // if (status === 'idle') {
-      dispatch(setCurrentPost(post))
-    // }
+    dispatch(setCurrentPost(post))
   }, [])
+
+  useEffect(() => {
+    const escapeFullscreen = (e) => {
+      console.log(fullscreen)
+      if(e.key === "Escape" && fullscreen) {
+        navigate(`/${category}/${currentId}`)
+        dispatch(toggleFullscreen(false))
+      } else if(e.key === "Escape" && !fullscreen) {
+        navigate(`/${category}`)
+      }
+    }
+
+    window.addEventListener("keydown", escapeFullscreen)
+
+    return () => {
+      window.removeEventListener("keydown", escapeFullscreen)
+    };
+  }, [fullscreen])
 
   if (status === 'loading') {
     imageElements = <p>Loading...</p>
@@ -44,7 +58,7 @@ export default function Post() {
 
   // interaction
   const handleFullscreen = () => {
-    setFullscreen(!fullscreen)
+    dispatch(toggleFullscreen())
   }
 
   // const headerRef = useRef(null)
@@ -53,7 +67,6 @@ export default function Post() {
     const headline = e.target.lastElementChild.firstElementChild;
 
     const headerRef = document.querySelector(".header-50")
-    // console.log(headline.getBoundingClientRect())
     if (headline.getBoundingClientRect().top < 60) {
       headline.classList.add('headline-sticky')
       headerRef.classList.add('fade-top')
