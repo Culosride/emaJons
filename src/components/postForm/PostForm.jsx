@@ -153,7 +153,6 @@ export default function PostForm () {
     }})
   }
 
-
   const tagElements = availableTags.map((t, i) => {
     if(t.startsWith(_.capitalize(tag))) {
       return <Tag handleTagToggle={handleTagToggle} selected={false} handleTagDelete={handleTagDelete} name={t} id={`${t}-${i}`} key={`${t}-${i}`}/>
@@ -164,48 +163,70 @@ export default function PostForm () {
     return <Tag handleTagToggle={handleTagToggle} selected={true} handleTagDelete={handleTagDelete} name={t} id={`${t}-${i}`} key={`${t}-${i}`}/>
   })
 
-  const optionElements = categories.filter(category => category !== postData.category)
-                          .map((element, i) => { return <option key={element+i} value={element}>{element}</option> })
+  // const optionElements = categories.filter(category => category !== postData.category)
+  //                                  .map((element, i) => { return <option key={element+i} value={element}>{element}</option> })
 
   return (
     <div className="form-wrapper">
       <form className="post-form" onSubmit={editPage ? handleEdit : handleSubmit}>
-        <label className="">TITLE</label>
-        <input className="form-post-title" type="text" placeholder= "UNTITLED" value={postData.title} name="title" onChange={handleChange} />
 
-        <label className="form-post-subtitle">Subtitle</label>
-        <input type="text" className="form-post-subtitle" placeholder="subtitle" value={postData.subtitle} name="subtitle" onChange={handleChange}/>
-
-        <label>Content</label>
-        <textarea className="form-post-content" rows="8" placeholder="Add content here....." value={postData.content} name="content" onChange={handleChange}/>
-
-        <label htmlFor="categories">Category:</label>
-        <select name="category" id="categories" onChange={handleChange}>
-          {editPage && <option value="">{postData.category}</option>}
-          {!editPage && <option value="">-- Please choose a category --</option>}
-          {/* {optionElements} */}
-          <option value="">-- Please choose a category --</option>
-          <option value="Walls">Walls</option>
-          <option value="Paintings">Paintings</option>
-          <option value="Sketchbooks">Skethbooks</option>
-          <option value="Video">Video</option>
-          <option value="Sculpture">Sculpture</option>
-        </select>
-        {emptyCategory && <p>Devi pigliarne una</p>}
-        <div className="selected-tags-wrapper">
-          {selectedTagElements}
+        <div className="post-form-layout">
+          <input className="form-post-imgs" type="file" onChange={handleChange} name="images" multiple />
         </div>
-        <div className="tags-container">
-          <div className="available-tags-wrapper">
-            {tagElements}
+
+        <div className="post-form-layout">
+          <input
+            className='title'
+            type="text" placeholder="ADD A TITLE"
+            value={postData.title} name="title"
+            onChange={handleChange}
+          />
+
+          <input
+            type="text"
+            className="subtitle"
+            placeholder="Add a subtitle"
+            value={postData.subtitle}
+            name="subtitle"
+            onChange={handleChange}
+          />
+          <hr />
+          <textarea
+            className="content"
+            rows="6"
+            placeholder="Add content ..."
+            value={postData.content}
+            name="content"
+            onChange={handleChange}
+          />
+          <hr />
+          <select name="category" id="categories" onChange={handleChange}>
+            {editPage && <option value="">{postData.category}</option>}
+            {!editPage && <option value="">Please choose a category</option>}
+            {/* {optionElements} */}
+            <option value="Walls">Walls</option>
+            <option value="Paintings">Paintings</option>
+            <option value="Sketchbooks">Sketchbooks</option>
+            <option value="Video">Video</option>
+            <option value="Sculpture">Sculpture</option>
+          </select>
+          {emptyCategory && <p>Devi pigliarne una</p>}
+
+          <div className="selected-tags-wrapper">
+            {selectedTagElements}
           </div>
-          <input type="text" onKeyDown={handleKeyDown} value={tag} placeholder="New tag" name="tag" onChange={handleTag} className="" />
-          {/* {error && <p>{error}</p>} */}
+
+          <div className="tags-container">
+            <input type="text" onKeyDown={handleKeyDown} value={tag} placeholder="Search tags or add a new tag" name="tag" onChange={handleTag} className="search-tags" />
+            <div className="available-tags-wrapper">
+              {tagElements}
+            </div>
+            {/* {error && <p>{error}</p>} */}
+          </div>
+
+          <input className="btn-submit" type="submit" value={submitBtn()} />
         </div>
 
-        <input className="form-post-imgs" type="file" onChange={handleChange} name="images" multiple />
-
-        <input type="submit" value={submitBtn()} />
       </form>
       {/* {logoutButton} */}
     </div>

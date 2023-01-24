@@ -1,10 +1,10 @@
 input, textarea, label, select {
   width: 100%;
   display: block;
-  height: fit-content;
+  font-size: 14px;
+  // height: fit-content;
   // outline: none;
   // border-style: hidden;
-
 }
 
 input, textarea, select {
@@ -12,14 +12,14 @@ input, textarea, select {
 }
 
 .tags-container {
-  // width: 50%;
-  display: flex;
-  justify-content: space-between;
+// display: flex;
+// justify-content: space-between;
   margin-top: 20px;
-
   .available-tags-wrapper{
-    width: 70%;
-    min-height: 150px;
+    display: flex;
+    justify-content: flex-start;
+    width: 100%;
+    overflow: scroll;
   }
 }
 
@@ -29,25 +29,67 @@ input, textarea, select {
 
 .post-form{
   margin: 0 auto;
-
-  // display: grid;
-  // grid-template-columns: 8fr 4fr;
-  // grid-column-gap: 20px;
-  // grid-row-gap: 20px;
-  // justify-items: stretch;
-  // align-items: stretch;
-  width: 40%;
-    // .form-post-imgs {
-    //   justify-content:flex-end;
-    // }
-  // * {
-  //   margin: 0
-  // }
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  .post-form-layout {
+    border-right: 1px solid black;
+    width: 50vw;
+    height: calc(100vh - 74px);
+    padding: 40px;
+    box-sizing: border-box;
+    overflow: scroll;
+    input:focus-visible, textarea:focus-visible,
+    input:hover, textarea:hover {
+      transition: all ease-in-out .5s;
+      outline: none;
+      // border-bottom: 1px solid black;
+      background-color: rgb(240,240,240);
+    }
+    select, .search-tags {
+      margin: 20px 0;
+      border: 1px solid rgba(0,0,0,.2);
+      font-size: 14px;
+    }
+  }
+  input, textarea, select {
+    transition: all ease-in-out .5s;
+    padding: 10px 14px;
+    border: none;
+    // border-bottom: 1px solid rgba(0,0,0,0);
+    box-sizing: border-box;
+    margin: 0;
+    border-radius: 4px;
+  }
+  textarea.content {
+    font-size: 16px;
+    line-height: 24px;
+  }
+  hr {
+    margin: 16px 0;
+  }
+  .active-input {
+    transition: all ease-in-out .5s;
+    padding: 12px 0 10px;
+    border: none;
+    border-bottom: 1px solid rgba(0,0,0,.1);
+    margin-bottom: 10px;
+    border-bottom: 1px solid black;
+    background-color: rgba(0,0,0,.05);
+  }
 }
 
 .form-wrapper {
+  margin-top: -30px;
+  height: calc(100vh - 74px);
   // display: flex;
   // flex-direction: column;
   // align-items: end;
-  padding: 30px;
+  // padding: 30px;
+}
+
+.btn-submit {
+  position: absolute;
+  width: calc(50vw - 80px);
+  bottom: 20px;
+  background-color: rgb(200,200,200);
 }

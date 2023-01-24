@@ -20,8 +20,8 @@
 
 .content {
   font-family: Helvetica, Arial, sans-serif;
-  font-size: 1.25rem;
-  line-height: 1.75rem;
+  font-size: 1.125rem;
+  line-height: 1.625rem;
   text-align: left;
   margin: 10px 0 0 0;
   padding: 0 30px;
@@ -266,7 +266,7 @@
 input, textarea, label, select {
   width: 100%;
   display: block;
-  height: fit-content;
+  font-size: 14px;
 }
 
 input, textarea, select {
@@ -274,13 +274,13 @@ input, textarea, select {
 }
 
 .tags-container {
-  display: flex;
-  justify-content: space-between;
   margin-top: 20px;
 }
 .tags-container .available-tags-wrapper {
-  width: 70%;
-  min-height: 150px;
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+  overflow: scroll;
 }
 
 .selected-tags-wrapper {
@@ -289,11 +289,63 @@ input, textarea, select {
 
 .post-form {
   margin: 0 auto;
-  width: 40%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.post-form .post-form-layout {
+  border-right: 1px solid black;
+  width: 50vw;
+  height: calc(100vh - 74px);
+  padding: 40px;
+  box-sizing: border-box;
+  overflow: scroll;
+}
+.post-form .post-form-layout input:focus-visible, .post-form .post-form-layout textarea:focus-visible,
+.post-form .post-form-layout input:hover, .post-form .post-form-layout textarea:hover {
+  transition: all ease-in-out 0.5s;
+  outline: none;
+  background-color: rgb(240, 240, 240);
+}
+.post-form .post-form-layout select, .post-form .post-form-layout .search-tags {
+  margin: 20px 0;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  font-size: 14px;
+}
+.post-form input, .post-form textarea, .post-form select {
+  transition: all ease-in-out 0.5s;
+  padding: 10px 14px;
+  border: none;
+  box-sizing: border-box;
+  margin: 0;
+  border-radius: 4px;
+}
+.post-form textarea.content {
+  font-size: 16px;
+  line-height: 24px;
+}
+.post-form hr {
+  margin: 16px 0;
+}
+.post-form .active-input {
+  transition: all ease-in-out 0.5s;
+  padding: 12px 0 10px;
+  border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  margin-bottom: 10px;
+  border-bottom: 1px solid black;
+  background-color: rgba(0, 0, 0, 0.05);
 }
 
 .form-wrapper {
-  padding: 30px;
+  margin-top: -30px;
+  height: calc(100vh - 74px);
+}
+
+.btn-submit {
+  position: absolute;
+  width: calc(50vw - 80px);
+  bottom: 20px;
+  background-color: rgb(200, 200, 200);
 }
 
 .post-container {
@@ -618,28 +670,46 @@ button.delete-post {
   }
 }
 .tag-wrapper {
+  text-decoration: none;
   display: flex;
   padding: 0;
-  background-color: rgb(58, 58, 58);
   border-radius: 20px;
   text-align: center;
-  margin: 4px;
+  margin: 2px 4px 2px 0;
   justify-content: space-between;
   align-items: center;
   width: fit-content;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  height: 26px;
+  transition: all ease-in-out 0.3s;
 }
 .tag-wrapper .tag {
-  color: white;
+  color: black;
   font-size: 12px;
-  font-weight: 700;
-  margin: 0 5px 0 12px;
+  text-transform: uppercase;
+  margin: 0 8px 0 12px;
 }
-.tag-wrapper .delete-tag {
-  border-radius: 50%;
-  background-color: lightgray;
-  margin: 0;
-  padding: 6px;
-  width: 18px;
+.tag-wrapper .tag:after {
+  content: "";
+  display: inline-block;
+  height: 14px;
+  width: 14px;
+  background-size: 14px 14px;
+  background-image: url("../img/PlusLight.svg");
+  background-repeat: no-repeat;
+  margin-left: 6px;
+  vertical-align: bottom;
+}
+.tag-wrapper .tag.selected:after {
+  transform: rotate(45deg);
+}
+
+.tag-wrapper:hover {
+  border: 1px solid rgb(0, 0, 0);
+}
+
+.tag-wrapper-selected {
+  background-color: rgba(0, 0, 0, 0.125);
 }
 
 body {
