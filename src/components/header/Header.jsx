@@ -146,7 +146,7 @@ export default function Header () {
       post && !isFullscreen &&
       <div className={`${hasContent ? 'header-50' : 'header-30 header-50'}`}>
           <div ref={logoAndCategoryRef} className="logo-wrapper">
-            <li onClick={menuOff}><Link to="/" className="logo">EmaJons</Link></li>
+            <div onClick={menuOff}><Link to="/" className="logo">EmaJons</Link></div>
             <span className="dash"></span>
             <Link to={`/${currentCategory}`}>{currentCategory}</Link>
           </div>
