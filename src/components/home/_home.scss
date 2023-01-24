@@ -1,0 +1,56 @@
+.home {
+  font-family: $main-font;
+  font-size: 48px;
+  font-weight: bold;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30px 40px;
+  box-sizing: border-box;
+  text-shadow: 0 0 8px rgba(0, 0, 0, .4);
+  background-size: cover;
+  background-position: 50% 50%;
+  transition: all ease-in-out .5s;
+  .logo {
+    font-size: 36px;
+    height: calc(100vh - 60px);
+  }
+  li {
+    list-style-type: none;
+    text-align: right;
+  }
+  a {
+    padding: 10px 0;
+    line-height: 60px;
+    transition: all ease-in-out .5s;
+    color: white;
+    text-decoration: none;
+    text-transform: uppercase;
+    text-align: right;
+    position: relative;
+  }
+  // .italic:hover::after {
+  //   content: url('../img/ArrowIcon.svg');
+  //   display: inline-block;
+  //   position: absolute;
+  //   right: -40px;
+  //   top: 0;
+  // }
+}
+
+.italic {
+  -moz-transition: all 1s;
+  -webkit-transition: all 1s;
+  -o-transition: all 1s;
+  transition: all 1s;
+}
+.italic:hover {
+  font-weight: light;
+  -webkit-transform: skewX(-12deg);
+  -moz-transform: skewX(-12deg);
+  -o-transform: skewX(-12deg);
+  transform: skewX(-12deg);
+  // transform: translateX(-40px);
+}
