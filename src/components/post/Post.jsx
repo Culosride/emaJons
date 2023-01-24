@@ -21,25 +21,24 @@ export default function Post() {
   let imageElements = []
 
   useEffect(() => {
+    dispatch(setCurrentPost(post))
+  }, [])
+
+  useEffect(() => {
     const escapeFullscreen = (e) => {
       console.log(fullscreen)
-        if(e.key === "Escape" && fullscreen) {
-          navigate(`/${category}/${currentId}`)
-          dispatch(toggleFullscreen(false))
-        } else if(e.key === "Escape" && !fullscreen) {
-          navigate(`/${category}`)
-        }
+      if(e.key === "Escape" && fullscreen) {
+        navigate(`/${category}/${currentId}`)
+        dispatch(toggleFullscreen(false))
+      } else if(e.key === "Escape" && !fullscreen) {
+        navigate(`/${category}`)
+      }
     }
 
     window.addEventListener("keydown", escapeFullscreen)
 
-    // if (status === 'idle') {
-      // dispatch(setCurrentPost(post))
-    // }
-
     return () => {
       window.removeEventListener("keydown", escapeFullscreen)
-      console.log("rem")
     };
   }, [fullscreen])
 
@@ -68,7 +67,6 @@ export default function Post() {
     const headline = e.target.lastElementChild.firstElementChild;
 
     const headerRef = document.querySelector(".header-50")
-    // console.log(headline.getBoundingClientRect())
     if (headline.getBoundingClientRect().top < 60) {
       headline.classList.add('headline-sticky')
       headerRef.classList.add('fade-top')

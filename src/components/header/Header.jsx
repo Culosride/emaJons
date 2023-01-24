@@ -6,7 +6,6 @@ import { toggleNavbar } from "../../features/categories/categorySlice.js";
 import { deletePost, editPost, setCurrentCategory, fetchPosts, setCurrentPost } from '../../features/posts/postsSlice';
 import useAuth from "../../hooks/useAuth.jsx";
 import { logout, selectCurrentToken } from "../../features/auth/authSlice"
-import { current } from "@reduxjs/toolkit";
 
 export default function Header () {
   const authorization = useAuth(false)
@@ -62,7 +61,6 @@ export default function Header () {
   }
   const menuOff = () => {
     setIsExpanded(false)
-    // dispatch(setCurrentPost(""))
   }
 
   const toggleNavBtn = {
@@ -89,7 +87,7 @@ export default function Header () {
   function handleDelete() {
     console.log(currentPostId, currentCategory)
     dispatch(deletePost([currentPostId, currentCategory]))
-    // .then(() => dispatch(fetchPosts()) && navigate(`/${currentCategory}`))
+    .then(() => dispatch(fetchPosts()) && navigate(`/${currentCategory}`))
   }
 
   const adminMenu = () => {
@@ -159,12 +157,6 @@ export default function Header () {
               <i className="close-icon"></i>
             </button>
           </div>
-          {/* <div className="rectangle" style={rectangleStyles}></div> */}
-          {/* <ul style={navStyles} ref={navRef} className="navigation">
-            {navElements}
-          </ul> */}
-          {/* <button onClick={toggleMenu} style={toggleNavBtn}><i className="close-icon"></i></button> */}
-          {/* <li><Link onClick={handleNewCategory} to="/posts/new">Dashboard</Link></li> */}
       </div>
       }
     </>
