@@ -87,8 +87,9 @@ export default function Header () {
   }
 
   function handleDelete() {
-    dispatch(deletePost([currentPostId, currentCategory, token]))
-    .then(() => dispatch(fetchPosts()) && navigate(`/${currentCategory}`))
+    console.log(currentPostId, currentCategory)
+    dispatch(deletePost([currentPostId, currentCategory]))
+    // .then(() => dispatch(fetchPosts()) && navigate(`/${currentCategory}`))
   }
 
   const adminMenu = () => {

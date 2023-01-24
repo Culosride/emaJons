@@ -94,7 +94,6 @@ export default function PostForm () {
       }
     });
   }
-  console.log(postData)
 
   function handleTag(e) {
     const { name, value } = e.target;
@@ -126,14 +125,12 @@ export default function PostForm () {
         return formData.append(key, postData[key]);
       }
     });
-    console.log(formData)
     dispatch(createPost(formData))
       .then((res) => { if(!res.error) {
         navigate(`/${postData.category}/${res.payload._id}`)
       }})
   }
   function handleEdit(e) {
-    console.log(postData, selectedTags)
     e.preventDefault()
     if(!postData.category) {
       setEmptyCategory(true);
