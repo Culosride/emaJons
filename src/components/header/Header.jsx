@@ -116,12 +116,14 @@ export default function Header () {
     )
   }
 
-  const navElements = categories.map((category, i) => {
+  const navElements = () => categories.map((category, i) => {
+    if((category) !== _.capitalize(currentCategory)) {
       return (
         <li key={i}>
           <Link onClick={() => handleNewCategory(category)} to={`/${category}`}>{_.capitalize(category)}</Link>
         </li>
       )
+    }
   })
 
   return (
@@ -136,7 +138,7 @@ export default function Header () {
             </div>
             <div className="rectangle" style={rectangleStyles}></div>
             <ul style={navStyles} ref={navRef} className="navigation">
-              {navElements}
+              {navElements()}
             </ul>
             <button className='close-button' onClick={toggleMenu} style={toggleNavBtn}><i className="close-icon"></i></button>
           </div>
