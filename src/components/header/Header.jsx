@@ -154,8 +154,7 @@ export default function Header () {
           <div>
             {isAdmin && postMenu()}
             <button className='close-button' onClick={() => navigate(-1)}>
-              <p>ESC</p>
-              {/* <i className="close-icon"></i> */}
+              <i className="close-icon"></i>
             </button>
           </div>
       </div>
