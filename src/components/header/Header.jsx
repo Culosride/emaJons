@@ -108,10 +108,10 @@ export default function Header () {
 
   const postMenu = () => {
     return (
-      <ul className="admin-menu">
+      <div className="admin-menu">
         <button className="delete-btn" onClick={handleDelete}>Delete</button>
         <Link onClick={menuOff} className="edit-btn" to={`/posts/${currentPostId}/edit`}>Edit</Link>
-      </ul>
+      </div>
     )
   }
 

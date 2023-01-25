@@ -17,11 +17,11 @@ export default function PostForm () {
   const postId = currentPost._id
   const availableTags = useSelector(state => state.categories.availableTags);
   let selectedTags = useSelector(state => state.categories.selectedTags);
-  const error = useSelector(state => state.categories.error);
+  // const error = useSelector(state => state.categories.error);
   const status = useSelector(state => state.categories.status);
   const editPage = pathname.includes("edit")
   const [tag, setTag] = useState("");
-  const [emptyCategory, setEmptyCategory] = useState(false);
+  const [error, setError] = useState(null);
   const [postData, setPostData] = useState({
       title: "",
       subtitle: "",
@@ -34,33 +34,36 @@ export default function PostForm () {
   const categories = ['Walls', 'Paintings', 'Sketchbooks', 'Video', 'Sculptures']
 
   useEffect(() => {
-    if(status === 'idle') {
-      dispatch(fetchAllTags())
-    } else if(status === "succeeded" && editPage) {
-      setPostData({
-        title: currentPost.title,
-        subtitle: currentPost.subtitle,
-        content: currentPost.content,
-        images: [],
-        category: currentPost.category,
-        postTags: []
-      });
+    dispatch(resetTags())
+    dispatch(fetchAllTags())
+    if(editPage) {
       currentPost.postTags.forEach(tag => {
         dispatch(toggleTag(tag))})
-      } else if(!editPage) {
-        setPostData({
+      setPostData(
+        {
+          title: currentPost.title,
+          subtitle: currentPost.subtitle,
+          content: currentPost.content,
+          images: [],
+          category: currentPost.category,
+          postTags: []
+        }
+      )
+    } else if(!editPage){
+      dispatch(resetTags())
+      dispatch(fetchAllTags())
+      setPostData(
+        {
           title: "",
           subtitle: "",
           content: "",
           images: [],
           category: "",
           postTags: []
-        })
-        dispatch(resetTags())
-      }
-  }, [dispatch, pathname, status])
-
-
+        }
+        )
+    }
+  }, [pathname])
 
   function createNewTag() {
     dispatch(addNewTag(tag)) &&
@@ -83,6 +86,7 @@ export default function PostForm () {
   }
 
   function handleChange(e) {
+    setError("")
     const { name, value, files } = e.target;
     setPostData(prev => {
       if (name === "images") {
@@ -108,11 +112,12 @@ export default function PostForm () {
   }
 
   const handleSubmit = async (e) => {
-    // persistor.purge(["posts"])
-    console.log("submitting")
     e.preventDefault()
     if(!postData.category) {
-      setEmptyCategory(true);
+      setError("Select a category");
+      return
+    } else if (!postData.images.length) {
+      setError("A post with no pictures?");
       return
     }
     const formData = new FormData()
@@ -169,6 +174,7 @@ export default function PostForm () {
 
   return (
     <div className="form-wrapper">
+      {error && <p className="error-msg">{error}</p>}
       <form className="post-form" onSubmit={editPage ? handleEdit : handleSubmit}>
         <label className="">TITLE</label>
         <input className="form-post-title" type="text" placeholder= "UNTITLED" value={postData.title} name="title" onChange={handleChange} />
@@ -181,8 +187,8 @@ export default function PostForm () {
 
         <label htmlFor="categories">Category:</label>
         <select name="category" id="categories" onChange={handleChange}>
-          {editPage && <option value="">{postData.category}</option>}
-          {!editPage && <option value="">-- Please choose a category --</option>}
+          {/* {editPage && <option value="">{postData.category}</option>}
+          {!editPage && <option value="">-- Please choose a category --</option>} */}
           {/* {optionElements} */}
           <option value="">-- Please choose a category --</option>
           <option value="Walls">Walls</option>
@@ -191,7 +197,7 @@ export default function PostForm () {
           <option value="Video">Video</option>
           <option value="Sculpture">Sculpture</option>
         </select>
-        {emptyCategory && <p>Devi pigliarne una</p>}
+        {error && <p>Devi pigliarne una</p>}
         <div className="selected-tags-wrapper">
           {selectedTagElements}
         </div>
