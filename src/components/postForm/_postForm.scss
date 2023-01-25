@@ -7,24 +7,32 @@ input, textarea, label, select {
   // border-style: hidden;
 }
 
+label {
+  font-size: 16px;
+  font-weight: bold;
+}
+
 input, textarea, select {
   margin: 20px 0;
 }
 
 .tags-container {
-// display: flex;
 // justify-content: space-between;
-  margin-top: 20px;
+  // margin-top: 20px;
   .available-tags-wrapper{
-    display: flex;
-    justify-content: flex-start;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    // display: flex;
+    // justify-content: flex-start;
     width: 100%;
-    overflow: scroll;
+    margin-bottom: 20px;
   }
 }
 
-.selected-tags-wrapper{
-  display: flex;
+fieldset {
+  border: none;
+  margin: 0;
+  padding: 0;
 }
 
 .post-form{
@@ -46,9 +54,15 @@ input, textarea, select {
       background-color: rgb(240,240,240);
     }
     select, .search-tags {
-      margin: 20px 0;
+      margin: 10px 0;
       border: 1px solid rgba(0,0,0,.2);
       font-size: 14px;
+    }
+    .form-description {
+      font-size: 12px;
+      text-transform: uppercase;
+      margin: 6px 10px 6px 0;
+      color: rgb(130, 130, 130);
     }
   }
   input, textarea, select {
@@ -87,9 +101,36 @@ input, textarea, select {
   // padding: 30px;
 }
 
+.selected-tags-wrapper {
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  height: 44px;
+  align-items: center;
+}
+
 .btn-submit {
-  position: absolute;
-  width: calc(50vw - 80px);
-  bottom: 20px;
+  // position: absolute;
+  // width: calc(50vw - 80px);
+  // bottom: 20px;
   background-color: rgb(200,200,200);
+  cursor: pointer;
+}
+
+.image-preview-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-column-gap: 20px;
+  grid-row-gap: 20px;
+}
+
+.preview-images {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-height: 200px;
+  img {
+    max-width: 100%;
+    max-height: 100%;
+  }
 }

@@ -199,7 +199,7 @@
   transition: top ease 0.4s;
 }
 
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 1040px) {
   .header-full-screen {
     margin-bottom: 20px;
   }
@@ -250,7 +250,7 @@
     grid-template-columns: 2fr 10fr;
   }
 }
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 1040px) {
   .category-container {
     grid-template-columns: 1fr;
   }
@@ -274,22 +274,26 @@ input, textarea, label, select {
   font-size: 14px;
 }
 
+label {
+  font-size: 16px;
+  font-weight: bold;
+}
+
 input, textarea, select {
   margin: 20px 0;
 }
 
-.tags-container {
-  margin-top: 20px;
-}
 .tags-container .available-tags-wrapper {
-  display: flex;
-  justify-content: flex-start;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   width: 100%;
-  overflow: scroll;
+  margin-bottom: 20px;
 }
 
-.selected-tags-wrapper {
-  display: flex;
+fieldset {
+  border: none;
+  margin: 0;
+  padding: 0;
 }
 
 .post-form {
@@ -312,9 +316,15 @@ input, textarea, select {
   background-color: rgb(240, 240, 240);
 }
 .post-form .post-form-layout select, .post-form .post-form-layout .search-tags {
-  margin: 20px 0;
+  margin: 10px 0;
   border: 1px solid rgba(0, 0, 0, 0.2);
   font-size: 14px;
+}
+.post-form .post-form-layout .form-description {
+  font-size: 12px;
+  text-transform: uppercase;
+  margin: 6px 10px 6px 0;
+  color: rgb(130, 130, 130);
 }
 .post-form input, .post-form textarea, .post-form select {
   transition: all ease-in-out 0.5s;
@@ -346,11 +356,35 @@ input, textarea, select {
   height: calc(100vh - 74px);
 }
 
+.selected-tags-wrapper {
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  height: 44px;
+  align-items: center;
+}
+
 .btn-submit {
-  position: absolute;
-  width: calc(50vw - 80px);
-  bottom: 20px;
   background-color: rgb(200, 200, 200);
+  cursor: pointer;
+}
+
+.image-preview-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-column-gap: 20px;
+  grid-row-gap: 20px;
+}
+
+.preview-images {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-height: 200px;
+}
+.preview-images img {
+  max-width: 100%;
+  max-height: 100%;
 }
 
 .post-container {
@@ -498,7 +532,7 @@ button.delete-post {
   font-size: 20px;
 }
 
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 1040px) {
   .post-container {
     display: flex;
     justify-content: center;
@@ -650,7 +684,7 @@ button.delete-post {
   transition: left 200ms ease, width 200ms ease !important;
 }
 
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 1040px) {
   .inner-slider-div {
     height: fit-content;
     margin-bottom: 0;
@@ -674,7 +708,7 @@ button.delete-post {
     margin: 0 10px;
   }
 }
-.tag-wrapper {
+.tag-wrapper, .ghost-tag {
   text-decoration: none;
   display: flex;
   padding: 0;
@@ -688,13 +722,13 @@ button.delete-post {
   height: 26px;
   transition: all ease-in-out 0.3s;
 }
-.tag-wrapper .tag {
+.tag-wrapper .tag, .ghost-tag .tag {
   color: black;
   font-size: 12px;
   text-transform: uppercase;
   margin: 0 8px 0 12px;
 }
-.tag-wrapper .tag:after {
+.tag-wrapper .tag:after, .ghost-tag .tag:after {
   content: "";
   display: inline-block;
   height: 14px;
@@ -705,7 +739,7 @@ button.delete-post {
   margin-left: 6px;
   vertical-align: bottom;
 }
-.tag-wrapper .tag.selected:after {
+.tag-wrapper .tag.selected:after, .ghost-tag .tag.selected:after {
   transform: rotate(45deg);
 }
 
@@ -714,7 +748,13 @@ button.delete-post {
 }
 
 .tag-wrapper-selected {
-  background-color: rgba(0, 0, 0, 0.125);
+  background-color: rgba(146, 200, 146, 0.25);
+  border: 1px solid rgb(116, 162, 116);
+}
+
+.ghost-tag {
+  opacity: 0.4;
+  background-color: rgb(200, 200, 200);
 }
 
 .home {

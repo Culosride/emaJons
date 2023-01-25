@@ -20,7 +20,7 @@ export default function Header () {
   let currentCategory = useSelector(state => state.posts.currentCategory)
   const isFullscreen = useSelector(state => state.posts.fullscreen)
   const currentPostId = useSelector(state => state.posts.selectedPost._id)
-  const hasContent = useSelector(state => state.posts.selectedPost.content?.length > 800)
+  const hasContent = useSelector(state => state.posts.selectedPost.content?.length > 500)
 
   // to rename ?
   const admin = matchPath("/posts/*", pathname);
@@ -108,10 +108,10 @@ export default function Header () {
 
   const postMenu = () => {
     return (
-      <ul className="admin-menu">
+      <div className="admin-menu">
         <button className="delete-btn" onClick={handleDelete}>Delete</button>
         <Link onClick={menuOff} className="edit-btn" to={`/posts/${currentPostId}/edit`}>Edit</Link>
-      </ul>
+      </div>
     )
   }
 

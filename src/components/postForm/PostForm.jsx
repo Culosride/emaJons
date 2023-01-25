@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams, matchPath, useLocation } from 'react-router-dom';
 import { createPost, editPost } from "../../features/posts/postsSlice"
 import { deleteTag, fetchAllTags, addNewTag, toggleTag, resetTags } from "../../features/categories/categorySlice"
@@ -31,6 +31,7 @@ export default function PostForm () {
       postTags: []
     }
   );
+  const imageContainerRef = useRef();
   const categories = ['Walls', 'Paintings', 'Sketchbooks', 'Video', 'Sculptures']
 
   useEffect(() => {
@@ -95,6 +96,22 @@ export default function PostForm () {
     });
   }
 
+  function handlePreview(e) {
+    if(e.target.files.length > 0){
+      const files = e.target.files;
+      Array.from(files).map(file => {
+        const src = URL.createObjectURL(file);
+        const imageElement = `<div class="preview-images"><img src=${src} /></div>`
+        imageContainerRef.current.insertAdjacentHTML('beforeend', imageElement)
+      })
+    }
+  }
+
+  function handleChangeAndPreview(e) {
+    handleChange(e)
+    handlePreview(e)
+  }
+
   function handleTag(e) {
     const { name, value } = e.target;
 
@@ -109,7 +126,6 @@ export default function PostForm () {
 
   const handleSubmit = async (e) => {
     // persistor.purge(["posts"])
-    console.log("submitting")
     e.preventDefault()
     if(!postData.category) {
       setEmptyCategory(true);
@@ -171,58 +187,66 @@ export default function PostForm () {
       <form className="post-form" onSubmit={editPage ? handleEdit : handleSubmit}>
 
         <div className="post-form-layout">
-          <input className="form-post-imgs" type="file" onChange={handleChange} name="images" multiple />
+          <input className="form-post-imgs" type="file" onChange={handleChangeAndPreview} name="images" multiple />
+          <div className="image-preview-container" ref={imageContainerRef}>
+          </div>
         </div>
 
         <div className="post-form-layout">
-          <input
-            className='title'
-            type="text" placeholder="ADD A TITLE"
-            value={postData.title} name="title"
-            onChange={handleChange}
-          />
+          <fieldset>
+            <input
+              className='title'
+              type="text" placeholder="ADD A TITLE"
+              value={postData.title} name="title"
+              onChange={handleChange}
+            />
 
-          <input
-            type="text"
-            className="subtitle"
-            placeholder="Add a subtitle"
-            value={postData.subtitle}
-            name="subtitle"
-            onChange={handleChange}
-          />
-          <hr />
-          <textarea
-            className="content"
-            rows="6"
-            placeholder="Add content ..."
-            value={postData.content}
-            name="content"
-            onChange={handleChange}
-          />
-          <hr />
-          <select name="category" id="categories" onChange={handleChange}>
-            {editPage && <option value="">{postData.category}</option>}
-            {!editPage && <option value="">Please choose a category</option>}
-            {/* {optionElements} */}
-            <option value="Walls">Walls</option>
-            <option value="Paintings">Paintings</option>
-            <option value="Sketchbooks">Sketchbooks</option>
-            <option value="Video">Video</option>
-            <option value="Sculpture">Sculpture</option>
-          </select>
-          {emptyCategory && <p>Devi pigliarne una</p>}
+            <input
+              type="text"
+              className="subtitle"
+              placeholder="Add a subtitle"
+              value={postData.subtitle}
+              name="subtitle"
+              onChange={handleChange}
+            />
 
-          <div className="selected-tags-wrapper">
-            {selectedTagElements}
-          </div>
+            <textarea
+              className="content"
+              rows="6"
+              placeholder="Add content ..."
+              value={postData.content}
+              name="content"
+              onChange={handleChange}
+            />
+            <hr />
+            {/* <label>Category</label> */}
+            <select name="category" id="categories" onChange={handleChange}>
+              {editPage && <option value="">{postData.category}</option>}
+              {!editPage && <option value="">Please choose a category</option>}
+              {/* {optionElements} */}
+              <option value="Walls">Walls</option>
+              <option value="Paintings">Paintings</option>
+              <option value="Sketchbooks">Sketchbooks</option>
+              <option value="Video">Video</option>
+              <option value="Sculpture">Sculpture</option>
+            </select>
 
-          <div className="tags-container">
+            {emptyCategory && <p>Devi pigliarne una</p>}
+          </fieldset>
+
+          <fieldset className="tags-container">
+            {/* <label>Add some tags</label> */}
             <input type="text" onKeyDown={handleKeyDown} value={tag} placeholder="Search tags or add a new tag" name="tag" onChange={handleTag} className="search-tags" />
+            <fieldset className="selected-tags-wrapper">
+              <p className="form-description">Selected tags</p>
+              {selectedTagElements.length ? selectedTagElements : <div className="ghost-tag"><p className="tag">No tags selected</p></div>}
+            </fieldset>
+            <p className="form-description">Available tags</p>
             <div className="available-tags-wrapper">
               {tagElements}
             </div>
             {/* {error && <p>{error}</p>} */}
-          </div>
+          </fieldset>
 
           <input className="btn-submit" type="submit" value={submitBtn()} />
         </div>
