@@ -1,9 +1,10 @@
 
-import React, { useEffect, useState } from 'react';
+import React, {useRef, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux'; // hook to select data from redux store
 import { fetchPostsByCategory, setCurrentCategory } from "../../features/posts/postsSlice";
 import { Link, useParams } from 'react-router-dom';
 import NotFound from '../404/NotFound';
+import {  } from 'react';
 const _ = require('lodash');
 
 export default function AllPosts() {
@@ -19,18 +20,38 @@ export default function AllPosts() {
   const allTags = postsByCategory.flatMap(post => post.postTags.map(tag => tag))
   const cleanedTags = [...new Set(allTags.sort((a, b) => b.localeCompare(a)))];
   const [filteredPosts, setFilteredPosts] = useState([])
-
   let postElements = [];
+
+  const [hoveredPost, setHoveredPost] = useState(null)
+  const handleMouseEnter = (postId) => {
+    setHoveredPost(postId);
+  }
+  const handleMouseLeave = () => {
+    setHoveredPost(null)
+  }
 
   const displayPosts = (posts) => {
     return posts.map((post, i) => {
         return (
           <Link reloadDocument to={`/${params.category}/${post._id}`} id={post._id} key={post._id} >
-            {post.images.length ? <img key={i} src={post.images[0].imageUrl}/> : <p key={i}>{post.title}</p>}
+            {post.images.length ?
+            <>
+              <img className='allposts-img'
+              onMouseEnter={() => handleMouseEnter(post._id)}
+              onMouseLeave={handleMouseLeave}
+              key={i}
+              src={post.images[0].imageUrl}/>
+              { hoveredPost === post._id &&
+              <div className="post-info">
+                <p>{post.title.split(",").join("").toUpperCase()}</p>
+              </div>}
+            </> :
+            <p key={i}>{post.title}</p>}
           </Link>
         )
     })
   }
+
   useEffect(() => {
     dispatch(setCurrentCategory(params.category))
   }, [params])
