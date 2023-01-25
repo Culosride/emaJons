@@ -119,17 +119,6 @@ export default function Header () {
     if((category) !== _.capitalize(currentCategory)) {
       return (
         <li key={i}>
-          <Link onClick={handleNewCategory} to="/posts/new">
-            <div className="italic" >{_.capitalize(category)}</div>
-          </Link>
-        </li>
-      )
-    } else if(category !== currentCategory) {
-      return (
-        <li key={i}>
-          <Link onClick={handleNewCategory} to={`/${category}`}>
-            <div className="italic" >{_.capitalize(category)}</div>
-          </Link>
           <Link onClick={() => handleNewCategory(category)} to={`/${category}`}>{_.capitalize(category)}</Link>
         </li>
       )
