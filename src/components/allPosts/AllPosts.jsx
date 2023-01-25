@@ -79,7 +79,9 @@ export default function AllPosts() {
 
   // create tag elements
   const tagElements = cleanedTags.map((tag, i) => (
-    <a key={i} href="#"><li onClick={handleClick} data-value={tag}>{tag}</li></a>
+    <a key={i} href="#">
+      <li onClick={handleClick} data-value={tag}>{tag}</li>
+    </a>
   ))
 
   return (

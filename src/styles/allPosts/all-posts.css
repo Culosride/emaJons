@@ -61,6 +61,11 @@
   color: black;
 }
 
+@media screen and (max-width: 1400px) {
+  .category-container {
+    grid-template-columns: 2fr 10fr;
+  }
+}
 @media screen and (max-width: 1024px) {
   .category-container {
     grid-template-columns: 1fr;
