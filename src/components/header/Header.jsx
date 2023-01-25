@@ -108,10 +108,10 @@ export default function Header () {
 
   const postMenu = () => {
     return (
-      <ul className="admin-menu">
+      <div className="admin-menu">
         <button className="delete-btn" onClick={handleDelete}>Delete</button>
         <Link onClick={menuOff} className="edit-btn" to={`/posts/${currentPostId}/edit`}>Edit</Link>
-      </ul>
+      </div>
     )
   }
 
@@ -154,7 +154,8 @@ export default function Header () {
           <div>
             {isAdmin && postMenu()}
             <button className='close-button' onClick={() => navigate(-1)}>
-              <i className="close-icon"></i>
+              <p>ESC</p>
+              {/* <i className="close-icon"></i> */}
             </button>
           </div>
       </div>
