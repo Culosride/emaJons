@@ -41,10 +41,9 @@ export default function AllPosts() {
   } else if (status === "loading") {
     postElements = <p>Loading..</p>
   } else if (status === "succeeded" || status === "idle") {
-    postElements =
-      filteredPosts.message && filteredPosts.message ||
-      filteredPosts.length && displayPosts(filteredPosts) ||
-      displayPosts(posts)
+    postElements = filteredPosts.message && filteredPosts.message ||
+                   filteredPosts.length && displayPosts(filteredPosts) ||
+                   displayPosts(posts)
   }
 
   // filter posts on tag click
@@ -59,9 +58,9 @@ export default function AllPosts() {
 
   // create tag elements
   const tagElements = cleanedTags.map((tag, i) => (
-    <a key={i} href="#"><li onClick={handleClick} data-value={tag}>
-      <div className="italic">{tag}</div>
-    </li></a>
+    <a key={i} href="#">
+      <li onClick={handleClick} data-value={tag}>{tag}</li>
+    </a>
   ))
 
   return (
