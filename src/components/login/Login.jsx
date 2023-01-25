@@ -31,14 +31,14 @@ function Login() {
     e.preventDefault()
 
     dispatch(login(userInfo))
-    .then(res => { if(!res.error) {
-      dispatch(setCredentials(res.payload.accessToken));
-      navigate(-1)
-      resetInfo()
-    } else {
-      setErrMsg(error);
-    }
-  })
+      .then(res => { if(!res.error) {
+        dispatch(setCredentials(res.payload.accessToken));
+        navigate(-1)
+        resetInfo()
+      } else {
+        setErrMsg(error);
+      }
+    })
 
   errRef.current.focus();
 

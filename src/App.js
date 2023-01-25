@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import Header from './components/header/Header';
 import Layout from './components/layout/Layout';
 import Login from './components/login/Login';
@@ -11,6 +12,7 @@ import Home from './components/home/Home';
 import NotFound from './components/404/NotFound';
 import withRouteValidation from "./hocs/RouteValidation";
 import RequireAuth from './hocs/RequireAuth'
+import { fetchPosts } from './features/posts/postsSlice';
 
 import {
   Routes,
@@ -23,6 +25,13 @@ const AllPostsWrapped = withRouteValidation(AllPosts)
 const PostWrapped = withRouteValidation(Post)
 
 export default function App() {
+  const dispatch = useDispatch();
+  const posts = useSelector(state => state.posts.posts)
+
+  useEffect(() => {
+    if(!posts.length)
+    dispatch(fetchPosts());
+  }, [dispatch, posts.length]);
 
   return (
     <Routes>
