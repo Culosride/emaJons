@@ -7,16 +7,21 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET
 })
 
-const uploadToCloudinary = (path, folder) => {
+const uploadToCloudinary = (path, folder, resourceType) => {
   return cloudinary.v2.uploader
   .upload(path, {
-    folder
-  }).then((data) => {
-    return { url: data.url, public_id: data.public_id };
-  }).catch((err) => {
-    console.log(err)
+    folder,
+    resource_type: resourceType,
+    // chunk_size: default: 2000000, 20mb
   })
-}
+  .then((data) => {
+    console.log("data", data)
+    return ({ url: data.url, public_id: data.public_id });
+  })
+  .catch((err) => {
+    console.log("error is",err)
+  });
+};
 
 const removeFromCloudinary = async (public_ids) => {
   await cloudinary.v2.api.delete_resources((public_ids), (err, res) => {

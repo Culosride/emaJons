@@ -34,13 +34,13 @@ export default function AllPosts() {
     return posts.map((post, i) => {
         return (
           <Link reloadDocument to={`/${params.category}/${post._id}`} id={post._id} key={post._id} >
-            {post.images.length ?
+            {post.media.length ?
             <>
               <img className='allposts-img'
               onMouseEnter={() => handleMouseEnter(post._id)}
               onMouseLeave={handleMouseLeave}
               key={i}
-              src={post.images[0].imageUrl}/>
+              src={post.media[0].url}/>
               { hoveredPost === post._id &&
               <div className="post-info">
                 <p>{post.title.split(",").join("").toUpperCase()}</p>

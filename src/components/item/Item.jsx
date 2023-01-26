@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function Item({ imageUrl, dataValue, id, className, toggleFullScreen}) {
+export default function Item({ url, dataValue, id, className, toggleFullScreen}) {
   return (
     <div
       onClick={toggleFullScreen}
@@ -8,7 +8,7 @@ export default function Item({ imageUrl, dataValue, id, className, toggleFullScr
       id={id}
     >
       <img
-        src={imageUrl}
+        src={url}
         data-value={dataValue}
       />
     </div>

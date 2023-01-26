@@ -18,7 +18,7 @@ export default function Post() {
   const category = params.category
 
   const fullscreen = useSelector(state => state.posts.fullscreen)
-  let imageElements = []
+  let mediaElements = []
 
   useEffect(() => {
     dispatch(setCurrentPost(post))
@@ -43,16 +43,16 @@ export default function Post() {
   }, [fullscreen])
 
   if (status === 'loading') {
-    imageElements = <p>Loading...</p>
+    mediaElements = <p>Loading...</p>
   } else if (status === 'succeeded') {
-    post && displayImgs(post)
+    post && displayMedia(post)
   } else if (status === 'failed') {
-    imageElements = <div>{error}</div>
+    mediaElements = <div>{error}</div>
   }
 
-  function displayImgs(post) {
-    imageElements = post.images.map((image) => {
-      return <img src={image.imageUrl} key={image.publicId}/>
+  function displayMedia(post) {
+    mediaElements = post.media.map((med) => {
+      return <img src={med.url} key={med.publicId}/>
     })
   }
 
@@ -80,10 +80,10 @@ export default function Post() {
 
   return (
     <div className={`post-container ${content ? "layout-50" : ""} ${fullscreen ? "layout-100" : ""}`}>
-        {post.images &&
+        {post.media &&
           <Carousel
             content={content}
-            images={post.images}
+            media={post.media}
             toggleFullScreen={handleFullscreen}
           ></Carousel>
         }

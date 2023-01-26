@@ -26,7 +26,7 @@ export default function PostForm () {
       title: "",
       subtitle: "",
       content: "",
-      images: [],
+      media: [],
       category: "",
       postTags: []
     }
@@ -44,7 +44,7 @@ export default function PostForm () {
           title: currentPost.title,
           subtitle: currentPost.subtitle,
           content: currentPost.content,
-          images: [],
+          media: [],
           category: currentPost.category,
           postTags: []
         }
@@ -57,7 +57,7 @@ export default function PostForm () {
           title: "",
           subtitle: "",
           content: "",
-          images: [],
+          media: [],
           category: "",
           postTags: []
         }
@@ -89,8 +89,8 @@ export default function PostForm () {
     setError("")
     const { name, value, files } = e.target;
     setPostData(prev => {
-      if (name === "images") {
-        return ({ ...prev, images: [...prev.images, ...files] })
+      if (name === "media") {
+        return ({ ...prev, media: [...prev.media, ...files] })
       } else if (name === "postTags") {
         return ({ ...prev, postTags: [...prev.postTags, value] })
       } else {
@@ -116,14 +116,14 @@ export default function PostForm () {
     if(!postData.category) {
       setError("Select a category");
       return
-    } else if (!postData.images.length) {
+    } else if (!postData.media.length) {
       setError("A post with no pictures?");
       return
     }
     const formData = new FormData()
     Object.keys(postData).map((key) => {
-      if (key === "images") {
-        return postData.images.map(img => formData.append("images", img))
+      if (key === "media") {
+        return postData.media.map(med => formData.append("media", med))
       } else if (key === "postTags") {
         return selectedTags.map(postTag => formData.append("postTags", postTag))
       } else {
@@ -143,8 +143,8 @@ export default function PostForm () {
     }
     const formData = new FormData()
     Object.keys(postData).map((key) => {
-      if (key === "images") {
-        return postData.images.map(img => formData.append("images", img))
+      if (key === "media") {
+        return postData.media.map(img => formData.append("media", img))
       } else if (key === "postTags") {
         return selectedTags.map(postTag => formData.append("postTags", postTag))
       } else {
@@ -209,7 +209,7 @@ export default function PostForm () {
           {/* {error && <p>{error}</p>} */}
         </div>
 
-        <input className="form-post-imgs" type="file" onChange={handleChange} name="images" multiple />
+        <input className="form-post-imgs" type="file" onChange={handleChange} name="media" multiple />
 
         <input type="submit" value={submitBtn()} />
       </form>

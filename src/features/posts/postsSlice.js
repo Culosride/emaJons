@@ -62,6 +62,8 @@ const postsSlice = createSlice({
       }
     },
     setCurrentCategory(state, action) {
+      state.status = "succeeded"
+      state.error = null
       state.currentCategory = action.payload
     }
   },

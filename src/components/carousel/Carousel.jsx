@@ -2,11 +2,11 @@ import React, { useEffect, useRef, useState } from "react";
 import Slider from "react-slick";
 import Item from '../item/Item';
 
-export default function Carousel({ images, toggleFullScreen }) {
+export default function Carousel({ media, toggleFullScreen }) {
   const slider = useRef()
 
   useEffect(() => {
-    images.forEach((_, i) => {
+    media.forEach((_, i) => {
       const slide = document.querySelector(`[data-index="${i}"]`)
       slide.parentElement.classList.add('center-mobile')
       slide.style.transition = 'left 200ms ease, width 200ms ease, opacity 600ms ease 0s, visibility 600ms ease 0s'
@@ -41,10 +41,10 @@ export default function Carousel({ images, toggleFullScreen }) {
     ]
   };
 
-  const imageElements = images.map((image, i) => {
+  const mediaElements = media.map((med, i) => {
     return <Item
-      imageUrl={image.imageUrl}
-      key={image.publicId}
+      url={med.url}
+      key={med.publicId}
       id={i}
       toggleFullScreen={toggleFullScreen}
       className="slides"
@@ -61,7 +61,7 @@ export default function Carousel({ images, toggleFullScreen }) {
   return (
     <div className="images-container carousel">
       <Slider {...settings} ref={slider}>
-        {imageElements}
+        {mediaElements}
       </Slider>
       <div className="slider-navigation">
         <div className="button-prev" onClick={previous}>
