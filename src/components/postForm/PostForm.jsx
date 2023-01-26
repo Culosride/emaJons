@@ -4,7 +4,8 @@ import { createPost, editPost } from "../../features/posts/postsSlice"
 import { deleteTag, fetchAllTags, addNewTag, toggleTag, resetTags } from "../../features/categories/categorySlice"
 import { selectAuthStatus } from "../../features/auth/authSlice"
 import { useSelector, useDispatch } from "react-redux";
-import Tag from "../tag/Tag";
+// import Tag from "../tag/Tag";
+import TagsInputForm from "../tag/TagsInputForm";
 import { persistor } from "../../app/store";
 const _ = require("lodash")
 
@@ -16,11 +17,11 @@ export default function PostForm () {
   const currentPost = useSelector(state => state.posts.selectedPost)
   const postId = currentPost._id
   const availableTags = useSelector(state => state.categories.availableTags);
-  // let selectedTags = useSelector(state => state.categories.selectedTags);
+  let selectedTags = useSelector(state => state.categories.selectedTags);
   const error = useSelector(state => state.categories.error);
   const status = useSelector(state => state.categories.status);
   const editPage = pathname.includes("edit")
-  const [tag, setTag] = useState("");
+  // const [tag, setTag] = useState("");
   const [emptyCategory, setEmptyCategory] = useState(false);
   const [postData, setPostData] = useState({
       title: "",
@@ -32,7 +33,7 @@ export default function PostForm () {
     }
   );
   const [imageElements, setImageElements] = useState([]);
-  const [selectedTags, setSelectedTags] = useState(postData.postTags)
+  // const [selectedTags, setSelectedTags] = useState(postData.postTags)
   // const categories = ['Walls', 'Paintings', 'Sketchbooks', 'Video', 'Sculptures']
 
   // fetch data
@@ -60,7 +61,6 @@ export default function PostForm () {
         category: "",
         postTags: []
       })
-      dispatch(resetTags())
     }
   }, [dispatch, pathname, status])
 
@@ -89,42 +89,41 @@ export default function PostForm () {
     }))
   }
 
-  // CRUD tags
-  function createNewTag() {
-    dispatch(addNewTag(tag)) &&
-    setTag("")
-  }
-
-  function handleKeyDown(e) {
-    if(e.keyCode === 9) {
-      e.preventDefault();
-      createNewTag()
-    }
-  }
-
-  function handleTagDelete(tagName) {
-    dispatch(deleteTag(tagName))
-  }
-
-  // function handleTagToggle(tagName) {
-  //   dispatch(toggleTag(tagName))
+  // // CRUD tags
+  // function createNewTag() {
+  //   dispatch(addNewTag(tag)) &&
+  //   setTag("")
   // }
-  function handleSelectedTags(tagName) {
-    console.log(tagName)
-    setSelectedTags(prev => {
-      [...prev, tagName]
-    })
-  }
 
-  console.log(selectedTags)
+  // function handleKeyDown(e) {
+  //   if(e.keyCode === 9) {
+  //     e.preventDefault();
+  //     createNewTag()
+  //   }
+  // }
 
-  // set tag in useState
-  function handleTag(e) {
-    const { name, value } = e.target;
-    if(name === "tag") {setTag(() => {
-      return value
-    })}
-  }
+  // function handleTagDelete(tagName) {
+  //   dispatch(deleteTag(tagName))
+  // }
+
+  // // function handleTagToggle(tagName) {
+  // //   dispatch(toggleTag(tagName))
+  // // }
+
+  // function handleSelectedTags(tagName) {
+  //   console.log(tagName)
+  //   setSelectedTags(prev => {
+  //     [...prev, tagName]
+  //   })
+  // }
+
+  // // set tag in useState
+  // function handleTag(e) {
+  //   const { name, value } = e.target;
+  //   if(name === "tag") {setTag(() => {
+  //     return value
+  //   })}
+  // }
 
   // set Post Data with input values
   function handleChange(e) {
@@ -132,9 +131,11 @@ export default function PostForm () {
     setPostData(prev => {
       if (name === "images") {
         return ({ ...prev, images: [...prev.images, ...files] })
-      } else if (name === "postTags") {
+      }
+      else if (name === "postTags") {
         return ({ ...prev, postTags: [...prev.postTags, value] })
-      } else {
+      }
+      else {
         return ({ ...prev, [name]: value })
       }
     });
@@ -159,10 +160,10 @@ export default function PostForm () {
         return formData.append(key, postData[key]);
       }
     });
-    for (let pair of formData.entries()) {
-      console.log(pair[0]+ ', ' + pair[1]);
-    }
-    console.log('post data', postData)
+    // for (let pair of formData.entries()) {
+    //   console.log(pair[0]+ ', ' + pair[1]);
+    // }
+    // console.log('post data', postData)
 
     // dispatch(createPost(formData))
     //   .then((res) => { if(!res.error) {
@@ -186,6 +187,7 @@ export default function PostForm () {
       if (key === "images") {
         return postData.images.map(img => formData.append("images", img))
       } else if (key === "postTags") {
+        console.log('create selected tags in formData')
         return selectedTags.map(postTag => formData.append("postTags", postTag))
       } else {
         return formData.append(key, postData[key]);
@@ -194,7 +196,6 @@ export default function PostForm () {
     for (let pair of formData.entries()) {
       console.log(pair[0]+ ', ' + pair[1]);
     }
-    console.log('post data', postData)
 
     // dispatch(editPost({formData, postId}))
     //   .then((res) => { if(!res.error) {
@@ -202,20 +203,19 @@ export default function PostForm () {
     // }})
   }
 
-  // JSX Elements
-  const tagElements = availableTags.map((t, i) => {
-    if(t.startsWith(_.capitalize(tag))) {
-      return <Tag handleSelectedTags={handleSelectedTags} selected={() => selectTag(prev => !prev)} handleTagDelete={handleTagDelete} name={t} id={`${t}-${i}`} key={`${t}-${i}`}/>
-    }
-  })
+  // // JSX Elements
+  // const tagElements = availableTags.map((t, i) => {
+  //   if(t.startsWith(_.capitalize(tag))) {
+  //     return <Tag handleSelectedTags={handleSelectedTags} selected={() => selectTag(prev => !prev)} handleTagDelete={handleTagDelete} name={t} id={`${t}-${i}`} key={`${t}-${i}`}/>
+  //   }
+  // })
 
-  const selectedTagElements = selectedTags.map((t, i) => {
-    return <Tag handleSelectedTags={handleSelectedTags} selected={true} handleTagDelete={handleTagDelete} name={t} id={`${t}-${i}`} key={`${t}-${i}`}/>
-  })
+  // const selectedTagElements = selectedTags.map((t, i) => {
+  //   return <Tag handleSelectedTags={handleSelectedTags} selected={true} handleTagDelete={handleTagDelete} name={t} id={`${t}-${i}`} key={`${t}-${i}`}/>
+  // })
 
   // const optionElements = categories.filter(category => category !== postData.category)
   //                                  .map((element, i) => { return <option key={element+i} value={element}>{element}</option> })
-
 
   return (
     <div className="form-wrapper">
@@ -231,7 +231,8 @@ export default function PostForm () {
             <input
               className='title'
               type="text" placeholder="ADD A TITLE"
-              value={postData.title} name="title"
+              value={postData.title}
+              name="title"
               onChange={handleChange}
             />
             <input
@@ -266,28 +267,7 @@ export default function PostForm () {
             {emptyCategory && <p>Devi pigliarne una</p>}
           </fieldset>
 
-          <fieldset className="tags-container">
-            <input
-              type="text"
-              onKeyDown={handleKeyDown}
-              value={tag}
-              placeholder="Search tags or add a new tag"
-              name="tag"
-              onChange={handleTag}
-              className="search-tags"
-            />
-
-            <fieldset className="selected-tags-wrapper">
-              <p className="form-description">Selected tags</p>
-              {selectedTagElements.length ? selectedTagElements : <div className="ghost-tag"><p className="tag">No tags selected</p></div>}
-            </fieldset>
-
-            <p className="form-description">Available tags</p>
-            <fieldset className="available-tags-wrapper">
-              {tagElements}
-            </fieldset>
-            {/* {error && <p>{error}</p>} */}
-          </fieldset>
+          <TagsInputForm />
 
           <input className="btn-submit" type="submit" value={editPage ? "Save changes " : "Create new post"} />
         </div>

@@ -3,29 +3,43 @@
     color: black;
     font-size: 12px;
     text-transform: uppercase;
-    margin: 0 8px 0 12px;
+    margin: 0 10px;
   }
-  // .delete-tag{
-  //   border-radius: 50%;
-  //   margin: 0;
-  //   padding: 4px;
-  //   width: 16px;
-  //   height: 16px;
-  //   // transform: rotate(45deg);
-  // }
-  .tag:after {
+  .delete-tag {
+    border-left: 1px solid rgba(0,0,0,.2);
+  }
+  .delete-tag:after {
+    content: "";
+    display:inline-block;
+    height: 24px;
+    width: 24px;
+    background-position: 0% 50%;
+    background-size: 14px 14px;
+    background-image: url('../img/BinLight.svg');
+    background-repeat: no-repeat;
+    vertical-align: bottom;
+    margin-left: 6px;
+  }
+  .delete-tag:hover {
+    opacity: .5;
+  }
+  .tag:before {
     content: "";
     display:inline-block;
     height:14px;
-    width:14px;
-    background-size: 14px 14px;
+    width:12px;
+    background-size: 12px 12px;
+    background-position: 50%;
     background-image: url('../img/PlusLight.svg');
     background-repeat: no-repeat;
-    margin-left: 6px;
+    margin-right: 5px;
     vertical-align: bottom;
   }
-  .tag.selected:after {
+  .tag.selected:before {
     transform: rotate(45deg);
+  }
+  .tag:hover {
+    opacity: .5;
   }
   text-decoration: none;
   display: flex;
@@ -53,4 +67,20 @@
 .ghost-tag {
   opacity: .4;
   background-color: rgb(200, 200, 200);
+}
+
+.tags-input-form {
+  position: relative;
+}
+
+.add-new-tag {
+  background-color: rgb(116, 162, 116);
+  color: white;
+  position: absolute;
+  right: 4px;
+  top: 4px;
+  border-radius: 20px;
+  padding: 8px 12px;
+  font-size: 12px;
+  cursor: pointer;
 }

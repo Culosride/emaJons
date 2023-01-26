@@ -745,21 +745,43 @@ button.delete-post {
   color: black;
   font-size: 12px;
   text-transform: uppercase;
-  margin: 0 8px 0 12px;
+  margin: 0 10px;
 }
-.tag-wrapper .tag:after, .ghost-tag .tag:after {
+.tag-wrapper .delete-tag, .ghost-tag .delete-tag {
+  border-left: 1px solid rgba(0, 0, 0, 0.2);
+}
+.tag-wrapper .delete-tag:after, .ghost-tag .delete-tag:after {
+  content: "";
+  display: inline-block;
+  height: 24px;
+  width: 24px;
+  background-position: 0% 50%;
+  background-size: 14px 14px;
+  background-image: url("../img/BinLight.svg");
+  background-repeat: no-repeat;
+  vertical-align: bottom;
+  margin-left: 6px;
+}
+.tag-wrapper .delete-tag:hover, .ghost-tag .delete-tag:hover {
+  opacity: 0.5;
+}
+.tag-wrapper .tag:before, .ghost-tag .tag:before {
   content: "";
   display: inline-block;
   height: 14px;
-  width: 14px;
-  background-size: 14px 14px;
+  width: 12px;
+  background-size: 12px 12px;
+  background-position: 50%;
   background-image: url("../img/PlusLight.svg");
   background-repeat: no-repeat;
-  margin-left: 6px;
+  margin-right: 5px;
   vertical-align: bottom;
 }
-.tag-wrapper .tag.selected:after, .ghost-tag .tag.selected:after {
+.tag-wrapper .tag.selected:before, .ghost-tag .tag.selected:before {
   transform: rotate(45deg);
+}
+.tag-wrapper .tag:hover, .ghost-tag .tag:hover {
+  opacity: 0.5;
 }
 
 .tag-wrapper:hover {
@@ -774,6 +796,22 @@ button.delete-post {
 .ghost-tag {
   opacity: 0.4;
   background-color: rgb(200, 200, 200);
+}
+
+.tags-input-form {
+  position: relative;
+}
+
+.add-new-tag {
+  background-color: rgb(116, 162, 116);
+  color: white;
+  position: absolute;
+  right: 4px;
+  top: 4px;
+  border-radius: 20px;
+  padding: 8px 12px;
+  font-size: 12px;
+  cursor: pointer;
 }
 
 .home {
