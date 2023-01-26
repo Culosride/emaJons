@@ -4,18 +4,13 @@ import * as api from "../../API/index"
 const initialState = {
   availableTags: [],
   selectedTags: [],
-  // isExpanded: false,
   status: 'idle' || 'loading' || 'succeeded' || 'failed',
   error: "" || null
 }
 
-export const addNewTag = createAsyncThunk("api/tags/new", async (tag, { rejectWithValue }) => {
-  try {
+export const addNewTag = createAsyncThunk("createTag", async (tag) => {
     const response = await api.addNewTag(tag)
     return response.data
-  } catch (error) {
-    return rejectWithValue(error.response.data.message)
-  }
 })
 
 export const deleteTag = createAsyncThunk("api/tags/delete", async (tagToDelete, { rejectWithValue }) => {
@@ -27,32 +22,32 @@ export const deleteTag = createAsyncThunk("api/tags/delete", async (tagToDelete,
   }
 })
 
-export const fetchAllTags = createAsyncThunk("/api/tags/get", async () => {
+export const fetchAllTags = createAsyncThunk("fetchAllTags", async () => {
   const response = await api.fetchAllTags()
   return response.data
 })
 
-
-const categorySlice = createSlice({
-  name: 'categories',
+const tagsSlice = createSlice({
+  name: 'tags',
   initialState,
   reducers: {
     toggleNavbar: (state) => {
       state.isExpanded = !state.isExpanded
     },
     resetTags: (state) => {
+      state.availableTags = []
       state.selectedTags = []
     },
     toggleTag: (state, action) => {
-      if(state.selectedTags.includes(action.payload)) {
-        const filteredTags = state.selectedTags.filter(tag => tag !== action.payload)
+      if(state.selectedTags.some(tag => tag.name === (action.payload.name))) {
+        const filteredTags = state.selectedTags.filter(tag => tag.name !== action.payload.name)
           return state = {
             ...state,
             selectedTags: [...filteredTags],
             availableTags: state.availableTags.concat(action.payload),
           }
       } else {
-        const filteredTags = state.availableTags.filter(tag => tag !== action.payload)
+        const filteredTags = state.availableTags.filter(tag => tag.name !== action.payload.name)
           return state = {
             ...state,
             availableTags: [...filteredTags],
@@ -105,7 +100,6 @@ const categorySlice = createSlice({
   }
 })
 
-export const { toggleTag, toggleNavbar, resetTags } = categorySlice.actions
+export const { toggleTag, toggleNavbar, resetTags } = tagsSlice.actions
 
-
-export default categorySlice.reducer
+export default tagsSlice.reducer

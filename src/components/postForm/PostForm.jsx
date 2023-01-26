@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams, matchPath, useLocation } from 'react-router-dom';
 import { createPost, editPost } from "../../features/posts/postsSlice"
-import { deleteTag, fetchAllTags, addNewTag, toggleTag, resetTags } from "../../features/categories/categorySlice"
+import { deleteTag, fetchAllTags, addNewTag, toggleTag, resetTags } from "../../features/tags/tagsSlice"
 import { selectAuthStatus } from "../../features/auth/authSlice"
 import { useSelector, useDispatch } from "react-redux";
 // import Tag from "../tag/Tag";
@@ -16,10 +16,10 @@ export default function PostForm () {
   const { pathname } = useLocation()
   const currentPost = useSelector(state => state.posts.selectedPost)
   const postId = currentPost._id
-  const availableTags = useSelector(state => state.categories.availableTags);
-  let selectedTags = useSelector(state => state.categories.selectedTags);
-  const error = useSelector(state => state.categories.error);
-  const status = useSelector(state => state.categories.status);
+  const availableTags = useSelector(state => state.tags.availableTags);
+  let selectedTags = useSelector(state => state.tags.selectedTags);
+  const error = useSelector(state => state.tags.error);
+  const status = useSelector(state => state.tags.status);
   const editPage = pathname.includes("edit")
   // const [tag, setTag] = useState("");
   const [emptyCategory, setEmptyCategory] = useState(false);
@@ -264,7 +264,6 @@ export default function PostForm () {
               <option value="Sculpture">Sculpture</option>
               {/* {optionElements} */}
             </select>
-            {emptyCategory && <p>Devi pigliarne una</p>}
           </fieldset>
 
           <TagsInputForm />

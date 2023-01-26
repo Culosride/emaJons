@@ -19,7 +19,7 @@ app.set("views", "./src/views")
 app.use(express.static("public"))
 app.use(express.urlencoded({extended: true}))
 
-app.use(routers.authRouter, routers.postRouter, routers.categoryRouter, routers.registerRouter)
+app.use(routers.authRouter, routers.postRouter, routers.categoryRouter, routers.registerRouter, routers.tagRouter)
 
 app.use(errorHandler)
 app.use('/assets', express.static(path.join(__dirname, '../public')))

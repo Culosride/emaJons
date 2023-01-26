@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useLocation } from 'react-router-dom';
 import Tag from "../tag/Tag";
-import { deleteTag, fetchAllTags, addNewTag, toggleTag, resetTags } from "../../features/categories/categorySlice"
+import { deleteTag, fetchAllTags, addNewTag, toggleTag, resetTags } from "../../features/tags/tagsSlice"
 import { useSelector, useDispatch } from "react-redux";
 
 const TagsInputForm = () => {
@@ -9,14 +9,14 @@ const TagsInputForm = () => {
   const [tag, setTag] = useState("");
   const { pathname } = useLocation()
   const editPage = pathname.includes("edit")
-  let selectedTags = useSelector(state => state.categories.selectedTags);
-  const availableTags = useSelector(state => state.categories.availableTags);
+  let selectedTags = useSelector(state => state.tags.selectedTags);
+  const availableTags = useSelector(state => state.tags.availableTags);
 
   // CRUD tags
   function createNewTag(e) {
     dispatch(addNewTag(tag))
     setTag("")
-    dispatch(toggleTag(tag))
+    // dispatch(toggleTag(tag))
   }
 
   function handleKeyDown(e) {
@@ -30,8 +30,8 @@ const TagsInputForm = () => {
     dispatch(deleteTag(tagName))
   }
 
-  function handleTagToggle(tagName) {
-    dispatch(toggleTag(tagName))
+  function handleTagToggle(tag) {
+    dispatch(toggleTag(tag))
   }
 
   // set tag in useState
@@ -43,15 +43,15 @@ const TagsInputForm = () => {
   }
 
   // render Tag Elements
-  const tagElements = availableTags.map((t, i) => {
-    if(t.startsWith(_.capitalize(tag))) {
-      return <Tag handleTagToggle={handleTagToggle} selected={false} handleTagDelete={handleTagDelete} name={t} id={`${t}-${i}`} key={`${t}-${i}`}/>
+  const tagElements = availableTags.map(t => {
+    if(t.name.startsWith(_.capitalize(tag))) {
+      return <Tag handleTagToggle={handleTagToggle} selected={false} handleTagDelete={handleTagDelete} tag={t} id={t._id} key={t._id}/>
     }
   })
 
   const selectedTagElements = selectedTags.map((t, i) => {
-    if(t.startsWith(_.capitalize(tag))) {
-      return <Tag handleTagToggle={handleTagToggle} selected={true} handleTagDelete={handleTagDelete} name={t} id={`${t}-${i}`} key={`${t}-${i}`}/>
+    if(t.name.startsWith(_.capitalize(tag))) {
+      return <Tag handleTagToggle={handleTagToggle} selected={true} handleTagDelete={handleTagDelete} tag={t} id={t._id} key={t._id}/>
     }
   })
 

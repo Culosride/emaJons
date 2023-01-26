@@ -5,8 +5,7 @@ const categorySchema = new mongoose.Schema({
       type: String,
       required: true,
       unique: true,
-    },
-    allTags: [String],
+    }
   }, {timestamps: true})
 
 const Category = mongoose.model('Category', categorySchema);
