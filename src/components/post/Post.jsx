@@ -23,7 +23,7 @@ export default function Post() {
   useEffect(() => {
     dispatch(setCurrentPost(post))
   }, [])
-
+  console.log(post.media)
   useEffect(() => {
     const escapeFullscreen = (e) => {
       console.log(fullscreen)
@@ -61,8 +61,6 @@ export default function Post() {
     dispatch(toggleFullscreen())
   }
 
-  // const headerRef = useRef(null)
-
   const handleScroll = (e) => {
     const headline = e.target.lastElementChild.firstElementChild;
 
@@ -87,6 +85,7 @@ export default function Post() {
             toggleFullScreen={handleFullscreen}
           ></Carousel>
         }
+        
         <div className="text-container" onScroll={handleScroll} onClick={handleFullscreen}>
           <div className="description-container">
             <div className="headline">
