@@ -26,7 +26,6 @@ export default function Post() {
 
   useEffect(() => {
     const escapeFullscreen = (e) => {
-      console.log(fullscreen)
       if(e.key === "Escape" && fullscreen) {
         navigate(`/${category}/${currentId}`)
         dispatch(toggleFullscreen(false))
@@ -77,7 +76,6 @@ export default function Post() {
   }
 
   const content = post.content && post.content.length > 500
-  console.log(content)
 
   return (
     <div className={`post-container ${content ? "layout-50" : ""} ${fullscreen ? "layout-100" : ""}`}>

@@ -16,7 +16,7 @@ export default function PostForm () {
   const currentPost = useSelector(state => state.posts.selectedPost)
   const postId = currentPost._id
   const availableTags = useSelector(state => state.categories.availableTags);
-  let selectedTags = useSelector(state => state.categories.selectedTags);
+  // let selectedTags = useSelector(state => state.categories.selectedTags);
   const error = useSelector(state => state.categories.error);
   const status = useSelector(state => state.categories.status);
   const editPage = pathname.includes("edit")
@@ -31,38 +31,65 @@ export default function PostForm () {
       postTags: []
     }
   );
-  const imageContainerRef = useRef();
-  const categories = ['Walls', 'Paintings', 'Sketchbooks', 'Video', 'Sculptures']
+  const [imageElements, setImageElements] = useState([]);
+  const [selectedTags, setSelectedTags] = useState(postData.postTags)
+  // const categories = ['Walls', 'Paintings', 'Sketchbooks', 'Video', 'Sculptures']
 
+  // fetch data
   useEffect(() => {
-    if(status === 'idle') {
+    if (status === 'idle') {
       dispatch(fetchAllTags())
-    } else if(status === "succeeded" && editPage) {
+    } else if (status === "succeeded" && editPage) {
       setPostData({
         title: currentPost.title,
         subtitle: currentPost.subtitle,
         content: currentPost.content,
-        images: [],
+        images: currentPost.images,
         category: currentPost.category,
-        postTags: []
+        postTags: currentPost.postTags
       });
       currentPost.postTags.forEach(tag => {
-        dispatch(toggleTag(tag))})
-      } else if(!editPage) {
-        setPostData({
-          title: "",
-          subtitle: "",
-          content: "",
-          images: [],
-          category: "",
-          postTags: []
-        })
-        dispatch(resetTags())
-      }
+        dispatch(toggleTag(tag))
+      })
+    } else if (!editPage) {
+      setPostData({
+        title: "",
+        subtitle: "",
+        content: "",
+        images: [],
+        category: "",
+        postTags: []
+      })
+      dispatch(resetTags())
+    }
   }, [dispatch, pathname, status])
 
+  // create image preview
+  useEffect(() => {
+    const imageKey = editPage ? 'publicId' : 'name';
+    setImageElements(postData.images.map((file, i) => {
+      const src = editPage ? file.imageUrl : URL.createObjectURL(file);
+      return (
+        <div key={`image-${i}`} className="preview-images">
+          <img src={src} />
+          <i id={file[imageKey]} onClick={deleteImage}></i>
+        </div>
+      )
+    }))
+  }, [postData.images])
 
+  // delete images from preview
+  const deleteImage = (e) => {
+    const { id } = e.target;
+    let imageKey = editPage ? 'publicId' : 'name';
+    const updatedImages = postData.images.filter(file => file[imageKey] !== id)
+    setPostData(prev => ({
+      ...prev,
+      images: updatedImages
+    }))
+  }
 
+  // CRUD tags
   function createNewTag() {
     dispatch(addNewTag(tag)) &&
     setTag("")
@@ -79,10 +106,27 @@ export default function PostForm () {
     dispatch(deleteTag(tagName))
   }
 
-  function handleTagToggle(tagName) {
-    dispatch(toggleTag(tagName))
+  // function handleTagToggle(tagName) {
+  //   dispatch(toggleTag(tagName))
+  // }
+  function handleSelectedTags(tagName) {
+    console.log(tagName)
+    setSelectedTags(prev => {
+      [...prev, tagName]
+    })
   }
 
+  console.log(selectedTags)
+
+  // set tag in useState
+  function handleTag(e) {
+    const { name, value } = e.target;
+    if(name === "tag") {setTag(() => {
+      return value
+    })}
+  }
+
+  // set Post Data with input values
   function handleChange(e) {
     const { name, value, files } = e.target;
     setPostData(prev => {
@@ -96,33 +140,7 @@ export default function PostForm () {
     });
   }
 
-  function handlePreview(e) {
-    if(e.target.files.length > 0){
-      const files = e.target.files;
-      Array.from(files).map(file => {
-        const src = URL.createObjectURL(file);
-        const imageElement = `<div class="preview-images"><img src=${src} /></div>`
-        imageContainerRef.current.insertAdjacentHTML('beforeend', imageElement)
-      })
-    }
-  }
-
-  function handleChangeAndPreview(e) {
-    handleChange(e)
-    handlePreview(e)
-  }
-
-  function handleTag(e) {
-    const { name, value } = e.target;
-
-    if(name === "tag") {setTag(() => {
-      return value
-    })}
-  }
-
-  const submitBtn = () => {
-    return editPage ? "Save changes " : "Create new post"
-  }
+  // submit form
 
   const handleSubmit = async (e) => {
     // persistor.purge(["posts"])
@@ -141,11 +159,22 @@ export default function PostForm () {
         return formData.append(key, postData[key]);
       }
     });
-    dispatch(createPost(formData))
-      .then((res) => { if(!res.error) {
-        navigate(`/${postData.category}/${res.payload._id}`)
-      }})
+    for (let pair of formData.entries()) {
+      console.log(pair[0]+ ', ' + pair[1]);
+    }
+    console.log('post data', postData)
+
+    // dispatch(createPost(formData))
+    //   .then((res) => { if(!res.error) {
+    //     navigate(`/${postData.category}/${res.payload._id}`)
+    //   }})
   }
+
+  // const submitBtn = () => {
+  //   return editPage ? "Save changes " : "Create new post"
+  // }
+
+  // edit existing post
   function handleEdit(e) {
     e.preventDefault()
     if(!postData.category) {
@@ -162,34 +191,39 @@ export default function PostForm () {
         return formData.append(key, postData[key]);
       }
     });
+    for (let pair of formData.entries()) {
+      console.log(pair[0]+ ', ' + pair[1]);
+    }
+    console.log('post data', postData)
 
-    dispatch(editPost({formData, postId}))
-      .then((res) => { if(!res.error) {
-        navigate(`/${postData.category}/${res.payload._id}`)
-    }})
+    // dispatch(editPost({formData, postId}))
+    //   .then((res) => { if(!res.error) {
+    //     navigate(`/${postData.category}/${res.payload._id}`)
+    // }})
   }
 
+  // JSX Elements
   const tagElements = availableTags.map((t, i) => {
     if(t.startsWith(_.capitalize(tag))) {
-      return <Tag handleTagToggle={handleTagToggle} selected={false} handleTagDelete={handleTagDelete} name={t} id={`${t}-${i}`} key={`${t}-${i}`}/>
+      return <Tag handleSelectedTags={handleSelectedTags} selected={() => selectTag(prev => !prev)} handleTagDelete={handleTagDelete} name={t} id={`${t}-${i}`} key={`${t}-${i}`}/>
     }
   })
 
   const selectedTagElements = selectedTags.map((t, i) => {
-    return <Tag handleTagToggle={handleTagToggle} selected={true} handleTagDelete={handleTagDelete} name={t} id={`${t}-${i}`} key={`${t}-${i}`}/>
+    return <Tag handleSelectedTags={handleSelectedTags} selected={true} handleTagDelete={handleTagDelete} name={t} id={`${t}-${i}`} key={`${t}-${i}`}/>
   })
 
   // const optionElements = categories.filter(category => category !== postData.category)
   //                                  .map((element, i) => { return <option key={element+i} value={element}>{element}</option> })
+
 
   return (
     <div className="form-wrapper">
       <form className="post-form" onSubmit={editPage ? handleEdit : handleSubmit}>
 
         <div className="post-form-layout">
-          <input className="form-post-imgs" type="file" onChange={handleChangeAndPreview} name="images" multiple />
-          <div className="image-preview-container" ref={imageContainerRef}>
-          </div>
+          <input className="form-post-imgs" type="file" onChange={handleChange} name="images" title="upload images" multiple />
+          <div className="image-preview-container">{imageElements}</div>
         </div>
 
         <div className="post-form-layout">
@@ -200,7 +234,6 @@ export default function PostForm () {
               value={postData.title} name="title"
               onChange={handleChange}
             />
-
             <input
               type="text"
               className="subtitle"
@@ -209,7 +242,6 @@ export default function PostForm () {
               name="subtitle"
               onChange={handleChange}
             />
-
             <textarea
               className="content"
               rows="6"
@@ -218,37 +250,46 @@ export default function PostForm () {
               name="content"
               onChange={handleChange}
             />
+
             <hr />
-            {/* <label>Category</label> */}
+
             <select name="category" id="categories" onChange={handleChange}>
               {editPage && <option value="">{postData.category}</option>}
               {!editPage && <option value="">Please choose a category</option>}
-              {/* {optionElements} */}
               <option value="Walls">Walls</option>
               <option value="Paintings">Paintings</option>
               <option value="Sketchbooks">Sketchbooks</option>
               <option value="Video">Video</option>
               <option value="Sculpture">Sculpture</option>
+              {/* {optionElements} */}
             </select>
-
             {emptyCategory && <p>Devi pigliarne una</p>}
           </fieldset>
 
           <fieldset className="tags-container">
-            {/* <label>Add some tags</label> */}
-            <input type="text" onKeyDown={handleKeyDown} value={tag} placeholder="Search tags or add a new tag" name="tag" onChange={handleTag} className="search-tags" />
+            <input
+              type="text"
+              onKeyDown={handleKeyDown}
+              value={tag}
+              placeholder="Search tags or add a new tag"
+              name="tag"
+              onChange={handleTag}
+              className="search-tags"
+            />
+
             <fieldset className="selected-tags-wrapper">
               <p className="form-description">Selected tags</p>
               {selectedTagElements.length ? selectedTagElements : <div className="ghost-tag"><p className="tag">No tags selected</p></div>}
             </fieldset>
+
             <p className="form-description">Available tags</p>
-            <div className="available-tags-wrapper">
+            <fieldset className="available-tags-wrapper">
               {tagElements}
-            </div>
+            </fieldset>
             {/* {error && <p>{error}</p>} */}
           </fieldset>
 
-          <input className="btn-submit" type="submit" value={submitBtn()} />
+          <input className="btn-submit" type="submit" value={editPage ? "Save changes " : "Create new post"} />
         </div>
 
       </form>
