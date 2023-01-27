@@ -52,16 +52,17 @@ export default function PostForm () {
       currentPost.postTags.forEach(tag => {
         dispatch(toggleTag(tag))
       })
-    } else if (!editPage) {
-      setPostData({
-        title: "",
-        subtitle: "",
-        content: "",
-        images: [],
-        category: "",
-        postTags: []
-      })
     }
+    // } else if (!editPage) {
+    //   setPostData({
+    //     title: "",
+    //     subtitle: "",
+    //     content: "",
+    //     images: [],
+    //     category: "",
+    //     postTags: []
+    //   })
+    // }
   }, [dispatch, pathname, status])
 
   // create image preview
@@ -132,9 +133,9 @@ export default function PostForm () {
       if (name === "images") {
         return ({ ...prev, images: [...prev.images, ...files] })
       }
-      else if (name === "postTags") {
-        return ({ ...prev, postTags: [...prev.postTags, value] })
-      }
+      // else if (name === "postTags") {
+      //   return ({ ...prev, postTags: [...prev.postTags, value] })
+      // }
       else {
         return ({ ...prev, [name]: value })
       }
@@ -155,7 +156,7 @@ export default function PostForm () {
       if (key === "images") {
         return postData.images.map(img => formData.append("images", img))
       } else if (key === "postTags") {
-        return selectedTags.map(postTag => formData.append("postTags", postTag))
+        return selectedTags.map(postTag => formData.append("postTags", JSON.stringify(postTag)))
       } else {
         return formData.append(key, postData[key]);
       }
@@ -165,10 +166,10 @@ export default function PostForm () {
     // }
     // console.log('post data', postData)
 
-    // dispatch(createPost(formData))
-    //   .then((res) => { if(!res.error) {
-    //     navigate(`/${postData.category}/${res.payload._id}`)
-    //   }})
+    dispatch(createPost(formData))
+      .then((res) => { if(!res.error) {
+        navigate(`/${postData.category}/${res.payload._id}`)
+      }})
   }
 
   // const submitBtn = () => {

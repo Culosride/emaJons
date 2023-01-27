@@ -6,6 +6,7 @@ const verifyJWT = require("../middleware/verifyJWT")
 // const validatePath = require("../middleware/pathValidation")
 const Post = require('../models/post');
 const Category = require('../models/category');
+const { Tag } = require('../models/tag');
 const { Image } = require('../models/image');
 const { uploadToCloudinary, removeFromCloudinary } = require('../services/cloudinary.config');
 const _ = require('lodash');
@@ -43,8 +44,15 @@ postRouter.get('/api/posts/:category/:postId', async (req, res) => {
 // routes requiring authorization
 
 postRouter.post('/posts', verifyJWT, multerUpload, async (req, res) => {
+  const { postTags } = req.body;
+  // create post and populate with tags
+  const allTags = postTags.map(tag => JSON.parse(tag)._id)
   const post = new Post(req.body);
-  const savedPost = await post.save();
+  post.postTags = allTags
+  const savedPost = await post.save()
+  const populatedPost = await Post.findByIdAndUpdate(savedPost._id)
+                                  .populate({ path: 'postTags' })
+  // add images to post
   const images = req.files;
   await Promise.all(images.map(async (image) => {
     const data = await uploadToCloudinary(image.path, 'emaJons_dev');
@@ -53,12 +61,11 @@ postRouter.post('/posts', verifyJWT, multerUpload, async (req, res) => {
       imageUrl: data.url,
     });
     await Post.updateOne(
-      { _id: savedPost._id },
+      { _id: populatedPost._id },
       { $addToSet: { images: [newImage]}}
       )
     }))
-    const updatedPost = await Post.findById(post._id)
-    console.log(updatedPost)
+    const updatedPost = await Post.findById(populatedPost._id)
     res.status(200).json(updatedPost);
   });
 

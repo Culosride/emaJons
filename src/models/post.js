@@ -7,7 +7,7 @@ const postSchema = new mongoose.Schema({
   subtitle: String,
   content: String,
   images: [imageSchema],
-  postTags: [tagSchema],
+  postTags: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Tag' }],
   category: String,
 }, {timestamps: true})
 

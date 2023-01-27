@@ -11,6 +11,7 @@ const initialState = {
 }
 
 export const createPost = createAsyncThunk("createPost", async (formData) => {
+  console.log('thunk', formData)
   const response = await api.createPost(formData)
   return response.data
 })
@@ -22,7 +23,6 @@ export const editPost = createAsyncThunk("updatePost", async (payload) => {
 })
 
 export const deletePost = createAsyncThunk("deletePost", async ([postId, category]) => {
-  console.log(postId, category)
   const response = await api.deletePost([postId, category])
   return response.data
 })
@@ -71,6 +71,7 @@ const postsSlice = createSlice({
         state.status = 'loading'
       })
       .addCase(createPost.fulfilled, (state, action) => {
+        console.log('reducer', action)
         return state = {
           ...state,
           status: 'succeeded',

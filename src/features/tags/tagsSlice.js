@@ -85,6 +85,7 @@ const tagsSlice = createSlice({
         state.status = 'loading'
       })
       .addCase(deleteTag.fulfilled, (state, {payload}) => {
+        console.log('delete tag', payload)
         const filteredTags = state.availableTags.filter(tag => tag.name !== payload.deletedTag.name)
         return state = {
           ...state,

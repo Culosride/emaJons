@@ -42,13 +42,12 @@ const TagsInputForm = () => {
   // render Tag Elements
   const tagElements = availableTags.map(t => {
     // fix auto suggestion
-    // console.log(_.lowerCase(t.name).includes(_.lowerCase(tag)))
     if(t.name.startsWith(_.capitalize(tag))) {
       return <Tag handleTagToggle={handleTagToggle} selected={false} handleTagDelete={handleTagDelete} tag={t} id={t._id} key={t._id}/>
     }
   })
 
-  const selectedTagElements = selectedTags.map((t, i) => {
+  const selectedTagElements = selectedTags.map(t => {
     if(t.name.startsWith(_.capitalize(tag))) {
       return <Tag handleTagToggle={handleTagToggle} selected={true} handleTagDelete={handleTagDelete} tag={t} id={t._id} key={t._id}/>
     }
