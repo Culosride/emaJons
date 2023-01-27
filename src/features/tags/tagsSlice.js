@@ -13,7 +13,7 @@ export const addNewTag = createAsyncThunk("createTag", async (tag) => {
     return response.data
 })
 
-export const deleteTag = createAsyncThunk("api/tags/delete", async (tagToDelete, { rejectWithValue }) => {
+export const deleteTag = createAsyncThunk("deleteTag", async (tagToDelete, { rejectWithValue }) => {
   try {
     const response = await api.deleteTag(tagToDelete)
     return response.data
@@ -35,7 +35,6 @@ const tagsSlice = createSlice({
       state.isExpanded = !state.isExpanded
     },
     resetTags: (state) => {
-      state.availableTags = []
       state.selectedTags = []
     },
     toggleTag: (state, action) => {
@@ -76,7 +75,7 @@ const tagsSlice = createSlice({
       })
       .addCase(addNewTag.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.availableTags = state.availableTags.concat(action.payload)
+        state.selectedTags = state.selectedTags.concat(action.payload)
       })
       .addCase(addNewTag.rejected, (state, action) => {
         state.status = "failed";
@@ -86,7 +85,7 @@ const tagsSlice = createSlice({
         state.status = 'loading'
       })
       .addCase(deleteTag.fulfilled, (state, {payload}) => {
-        const filteredTags = state.availableTags.filter(tag => tag !== payload.deletedTag)
+        const filteredTags = state.availableTags.filter(tag => tag.name !== payload.deletedTag.name)
         return state = {
           ...state,
           availableTags: [...filteredTags],

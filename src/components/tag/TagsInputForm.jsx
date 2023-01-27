@@ -16,7 +16,6 @@ const TagsInputForm = () => {
   function createNewTag(e) {
     dispatch(addNewTag(tag))
     setTag("")
-    // dispatch(toggleTag(tag))
   }
 
   function handleKeyDown(e) {
@@ -26,8 +25,8 @@ const TagsInputForm = () => {
     }
   }
 
-  function handleTagDelete(tagName) {
-    dispatch(deleteTag(tagName))
+  function handleTagDelete(tag) {
+    dispatch(deleteTag(tag))
   }
 
   function handleTagToggle(tag) {
@@ -37,13 +36,13 @@ const TagsInputForm = () => {
   // set tag in useState
   function handleTag(e) {
     const { name, value } = e.target;
-    if(name === "postTags") {setTag(() => {
-      return value
-    })}
+    if(name === "postTags") { setTag(() => value) }
   }
 
   // render Tag Elements
   const tagElements = availableTags.map(t => {
+    // fix auto suggestion
+    // console.log(_.lowerCase(t.name).includes(_.lowerCase(tag)))
     if(t.name.startsWith(_.capitalize(tag))) {
       return <Tag handleTagToggle={handleTagToggle} selected={false} handleTagDelete={handleTagDelete} tag={t} id={t._id} key={t._id}/>
     }

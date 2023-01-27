@@ -5,4 +5,4 @@ const registerRouter = require("./register")
 const tagRouter = require("./tag")
 
 
-module.exports = { authRouter, postRouter, categoryRouter, registerRouter, tagRouter }
+module.exports = { authRouter, postRouter, tagRouter, registerRouter, categoryRouter }
