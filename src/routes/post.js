@@ -90,24 +90,23 @@ postRouter.post('/posts', verifyJWT, multerUpload, async (req, res) => {
     const tagsArray = (typeof(update.postTags) === "string") ? [update.postTags] : update.postTags
     const allTags = await Promise.all(tagsArray.map(async (tag) => await Tag.find({name: tag})))
     update.postTags = allTags.flat()
-    // update.images = update.images.map(img => JSON.parse(img))
-    console.log(update)
+    update.images = update.images.map(img => JSON.parse(img))
     const post = await Post.findOneAndUpdate({ _id: req.params.postId }, { $set: update }, { new: true }).exec();
 
     if(!post) return res.status(204).json({ message: "No post found with this id."})
 
     const images = req.files;
-    await Promise.all(images.map(async (image) => {
-      const data = await uploadToCloudinary(image.path, 'emaJons_dev');
-      const newImage = new Image({
-        publicId: data.public_id,
-        imageUrl: data.url,
-      });
-      await Post.updateOne(
-        { _id: post._id },
-        { $addToSet: { images: [newImage]}}
-        )
-    }))
+    // await Promise.all(images.map(async (image) => {
+    //   const data = await uploadToCloudinary(image.path, 'emaJons_dev');
+    //   const newImage = new Image({
+    //     publicId: data.public_id,
+    //     imageUrl: data.url,
+    //   });
+    //   await Post.updateOne(
+    //     { _id: post._id },
+    //     { $addToSet: { images: [newImage]}}
+    //     )
+    // }))
 
     const updatedPost = await Post.findById(post._id).populate({ path: 'postTags' })
     res.status(200).json(updatedPost);
