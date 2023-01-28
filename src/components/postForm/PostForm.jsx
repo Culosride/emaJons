@@ -40,6 +40,7 @@ export default function PostForm () {
     dispatch(resetTags())
     dispatch(fetchAllTags())
     if(editPage) {
+      setPostData(currentPost)
       currentPost.postTags.forEach(tag => {
         dispatch(toggleTag(tag))})
       setPostData(
@@ -53,8 +54,8 @@ export default function PostForm () {
         }
       )
     } else if(!editPage){
-      dispatch(resetTags())
-      dispatch(fetchAllTags())
+      // dispatch(resetTags())
+      // dispatch(fetchAllTags())
       setPostData(
         {
           title: "",
@@ -66,7 +67,7 @@ export default function PostForm () {
         }
         )
     }
-  }, [pathname])
+  }, [])
 
   // useEffect(() => {
   //   if (status === 'idle') {
