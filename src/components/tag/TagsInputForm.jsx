@@ -9,7 +9,7 @@ const TagsInputForm = () => {
   const [tag, setTag] = useState("");
   const { pathname } = useLocation()
   const editPage = pathname.includes("edit")
-  let selectedTags = useSelector(state => state.tags.selectedTags);
+  const selectedTags = useSelector(state => state.tags.selectedTags);
   const availableTags = useSelector(state => state.tags.availableTags);
 
   // CRUD tags

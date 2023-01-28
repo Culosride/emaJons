@@ -38,10 +38,7 @@ export default function PostForm () {
   useEffect(() => {
     dispatch(resetTags())
     dispatch(fetchAllTags())
-    console.log('use effect')
     if(editPage) {
-      console.log('in edit')
-      console.log(currentPost)
       setPostData(
         {
           title: currentPost.title,
@@ -52,8 +49,7 @@ export default function PostForm () {
           postTags: currentPost.postTags
         }
       )
-      currentPost.postTags.forEach(tag => {
-        dispatch(toggleTag(tag))})
+      currentPost.postTags.forEach(tag => dispatch(toggleTag(tag)))
     } else if(!editPage){
       dispatch(resetTags())
       dispatch(fetchAllTags())
