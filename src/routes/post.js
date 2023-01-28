@@ -69,7 +69,6 @@ postRouter.post('/posts', verifyJWT, multerUpload, async (req, res) => {
 
   postRouter.delete('/:category/:postId', verifyJWT, async (req, res) => {
     const { postId } = req.params
-    console.log("at delete", req.params)
     try {
       const post = await Post.findOne({_id: req.params.postId}).exec();
       console.log(post)
@@ -87,9 +86,9 @@ postRouter.post('/posts', verifyJWT, multerUpload, async (req, res) => {
 
   postRouter.patch('/posts/:postId/edit', verifyJWT, multerUpload, async (req, res) => {
     const update = Object.assign({}, req.body);
-    const tagsArray = (typeof(update.postTags) === "string") ? [update.postTags] : update.postTags
-    const allTags = await Promise.all(tagsArray.map(async (tag) => await Tag.find({name: tag})))
-    update.postTags = allTags.flat()
+    // const tagsArray = (typeof(update.postTags) === "string") ? [update.postTags] : update.postTags
+    // const allTags = await Promise.all(tagsArray.map(async (tag) => await Tag.find({name: tag})))
+    // update.postTags = tagsArray
     update.images = update.images.map(img => JSON.parse(img))
     const post = await Post.findOneAndUpdate({ _id: req.params.postId }, { $set: update }, { new: true }).exec();
 
@@ -108,7 +107,7 @@ postRouter.post('/posts', verifyJWT, multerUpload, async (req, res) => {
     //     )
     // }))
 
-    const updatedPost = await Post.findById(post._id).populate({ path: 'postTags' })
+    const updatedPost = await Post.findById(post._id)
     res.status(200).json(updatedPost);
   });
 
