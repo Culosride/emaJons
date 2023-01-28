@@ -21,7 +21,6 @@ export default function PostForm () {
   const error = useSelector(state => state.tags.error);
   const status = useSelector(state => state.tags.status);
   const editPage = pathname.includes("edit")
-  // const [tag, setTag] = useState("");
   const [emptyCategory, setEmptyCategory] = useState(false);
   const [postData, setPostData] = useState({
       title: "",
@@ -33,37 +32,71 @@ export default function PostForm () {
     }
   );
   const [imageElements, setImageElements] = useState([]);
-  // const [selectedTags, setSelectedTags] = useState(postData.postTags)
   // const categories = ['Walls', 'Paintings', 'Sketchbooks', 'Video', 'Sculptures']
 
   // fetch data
   useEffect(() => {
-    if (status === 'idle') {
-      dispatch(fetchAllTags())
-    } else if (status === "succeeded" && editPage) {
-      setPostData({
-        title: currentPost.title,
-        subtitle: currentPost.subtitle,
-        content: currentPost.content,
-        images: currentPost.images,
-        category: currentPost.category,
-        postTags: currentPost.postTags
-      });
+    dispatch(resetTags())
+    dispatch(fetchAllTags())
+    console.log('use effect')
+    if(editPage) {
+      console.log('in edit')
+      console.log(currentPost)
+      setPostData(
+        {
+          title: currentPost.title,
+          subtitle: currentPost.subtitle,
+          content: currentPost.content,
+          images: currentPost.images,
+          category: currentPost.category,
+          postTags: currentPost.postTags
+        }
+      )
       currentPost.postTags.forEach(tag => {
-        dispatch(toggleTag(tag))
-      })
+        dispatch(toggleTag(tag))})
+    } else if(!editPage){
+      dispatch(resetTags())
+      dispatch(fetchAllTags())
+      setPostData(
+        {
+          title: "",
+          subtitle: "",
+          content: "",
+          images: [],
+          category: "",
+          postTags: []
+        }
+      )
     }
-    // } else if (!editPage) {
-    //   setPostData({
-    //     title: "",
-    //     subtitle: "",
-    //     content: "",
-    //     images: [],
-    //     category: "",
-    //     postTags: []
-    //   })
-    // }
-  }, [dispatch, pathname, status])
+  }, [])
+
+  // useEffect(() => {
+  //   if (status === 'idle') {
+  //     dispatch(fetchAllTags())
+  //   } else if (status === "succeeded" && editPage) {
+  //     setPostData({
+  //       title: currentPost.title,
+  //       subtitle: currentPost.subtitle,
+  //       content: currentPost.content,
+  //       images: currentPost.images,
+  //       category: currentPost.category,
+  //       postTags: currentPost.postTags
+  //     });
+  //     currentPost.postTags.forEach(tag => {
+  //       dispatch(toggleTag(tag))
+  //     })
+  //   }
+  //   // } else if (!editPage) {
+  //   //   setPostData({
+  //   //     title: "",
+  //   //     subtitle: "",
+  //   //     content: "",
+  //   //     images: [],
+  //   //     category: "",
+  //   //     postTags: []
+  //   //   })
+  //   // }
+  // }, [dispatch, pathname, status])
 
   // create image preview
   useEffect(() => {
@@ -89,42 +122,6 @@ export default function PostForm () {
       images: updatedImages
     }))
   }
-
-  // // CRUD tags
-  // function createNewTag() {
-  //   dispatch(addNewTag(tag)) &&
-  //   setTag("")
-  // }
-
-  // function handleKeyDown(e) {
-  //   if(e.keyCode === 9) {
-  //     e.preventDefault();
-  //     createNewTag()
-  //   }
-  // }
-
-  // function handleTagDelete(tagName) {
-  //   dispatch(deleteTag(tagName))
-  // }
-
-  // // function handleTagToggle(tagName) {
-  // //   dispatch(toggleTag(tagName))
-  // // }
-
-  // function handleSelectedTags(tagName) {
-  //   console.log(tagName)
-  //   setSelectedTags(prev => {
-  //     [...prev, tagName]
-  //   })
-  // }
-
-  // // set tag in useState
-  // function handleTag(e) {
-  //   const { name, value } = e.target;
-  //   if(name === "tag") {setTag(() => {
-  //     return value
-  //   })}
-  // }
 
   // set Post Data with input values
   function handleChange(e) {
@@ -156,7 +153,9 @@ export default function PostForm () {
       if (key === "images") {
         return postData.images.map(img => formData.append("images", img))
       } else if (key === "postTags") {
-        return selectedTags.map(postTag => formData.append("postTags", JSON.stringify(postTag)))
+        return selectedTags.map(postTag => {
+          const strTag = JSON.stringify(postTag)
+          return formData.append("postTags", strTag)})
       } else {
         return formData.append(key, postData[key]);
       }
@@ -164,17 +163,12 @@ export default function PostForm () {
     // for (let pair of formData.entries()) {
     //   console.log(pair[0]+ ', ' + pair[1]);
     // }
-    // console.log('post data', postData)
 
     dispatch(createPost(formData))
       .then((res) => { if(!res.error) {
         navigate(`/${postData.category}/${res.payload._id}`)
       }})
   }
-
-  // const submitBtn = () => {
-  //   return editPage ? "Save changes " : "Create new post"
-  // }
 
   // edit existing post
   function handleEdit(e) {
@@ -186,34 +180,22 @@ export default function PostForm () {
     const formData = new FormData()
     Object.keys(postData).map((key) => {
       if (key === "images") {
-        return postData.images.map(img => formData.append("images", img))
+        return postData.images.map(img => formData.append("images", JSON.stringify(img)))
       } else if (key === "postTags") {
-        console.log('create selected tags in formData')
-        return selectedTags.map(postTag => formData.append("postTags", postTag))
+        return selectedTags.map(postTag => formData.append("postTags", JSON.stringify(postTag)))
       } else {
         return formData.append(key, postData[key]);
       }
     });
-    for (let pair of formData.entries()) {
-      console.log(pair[0]+ ', ' + pair[1]);
-    }
+    // for (let pair of formData.entries()) {
+    //   console.log(pair[0]+ ', ' + pair[1]);
+    // }
 
-    // dispatch(editPost({formData, postId}))
-    //   .then((res) => { if(!res.error) {
-    //     navigate(`/${postData.category}/${res.payload._id}`)
-    // }})
+    dispatch(editPost({formData, postId}))
+      .then((res) => { if(!res.error) {
+        navigate(`/${postData.category}/${res.payload._id}`)
+    }})
   }
-
-  // // JSX Elements
-  // const tagElements = availableTags.map((t, i) => {
-  //   if(t.startsWith(_.capitalize(tag))) {
-  //     return <Tag handleSelectedTags={handleSelectedTags} selected={() => selectTag(prev => !prev)} handleTagDelete={handleTagDelete} name={t} id={`${t}-${i}`} key={`${t}-${i}`}/>
-  //   }
-  // })
-
-  // const selectedTagElements = selectedTags.map((t, i) => {
-  //   return <Tag handleSelectedTags={handleSelectedTags} selected={true} handleTagDelete={handleTagDelete} name={t} id={`${t}-${i}`} key={`${t}-${i}`}/>
-  // })
 
   // const optionElements = categories.filter(category => category !== postData.category)
   //                                  .map((element, i) => { return <option key={element+i} value={element}>{element}</option> })

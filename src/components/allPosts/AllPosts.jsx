@@ -11,12 +11,13 @@ export default function AllPosts() {
   const params = useParams();
   const dispatch = useDispatch()
   const posts = useSelector(state => state.posts.posts)
+  console.log(posts)
   const postsByCategory = posts.filter(post => (post.category === _.capitalize(params.category)))
 
   let status = useSelector(state => state.posts.status)
   let authStatus = useSelector(state => state.auth.status)
   const error = useSelector(state => state.posts.error)
-  const allTags = postsByCategory.flatMap(post => post.postTags.map(tag => tag))
+  const allTags = postsByCategory.flatMap(post => post.postTags.map(tag => tag.name))
   const cleanedTags = [...new Set(allTags.sort((a, b) => b.localeCompare(a)))];
   const [filteredPosts, setFilteredPosts] = useState([])
 
@@ -51,7 +52,7 @@ export default function AllPosts() {
     e.preventDefault();
     const filter = e.target.getAttribute('data-value');
     const filtered = postsByCategory.filter((post) => {
-      return post.postTags.includes(filter);
+      return post.postTags.some(tag => tag.name === filter)
     })
     filtered.length && setFilteredPosts(filtered);
   }
