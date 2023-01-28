@@ -45,11 +45,10 @@ postRouter.get('/api/posts/:category/:postId', async (req, res) => {
 
 postRouter.post('/posts', verifyJWT, multerUpload, async (req, res) => {
   const { postTags } = req.body;
-  // const tagsArray = (typeof(postTags) === "string") ? [postTags] : postTags
-  const allTags = postTags.map(tag => Tag.find({name: tag}._id))
-  console.log(allTags)
+  const tagsArray = (typeof(postTags) === "string") ? [postTags] : postTags
+  const allTags = await Promise.all(tagsArray.map(async (tag) => await Tag.find({name: tag})))
   const post = new Post(req.body);
-  post.postTags = allTags
+  post.postTags = allTags.flat()
   const savedPost = await post.save()
 
   const images = req.files;
@@ -89,10 +88,14 @@ postRouter.post('/posts', verifyJWT, multerUpload, async (req, res) => {
   postRouter.patch('/posts/:postId/edit', verifyJWT, multerUpload, async (req, res) => {
     const update = Object.assign({}, req.body);
     const tagsArray = (typeof(update.postTags) === "string") ? [update.postTags] : update.postTags
-    update.postTags = tagsArray.map(tag => JSON.parse(tag)._id)
-    update.images = update.images.map(img => JSON.parse(img))
+    const allTags = await Promise.all(tagsArray.map(async (tag) => await Tag.find({name: tag})))
+    update.postTags = allTags.flat()
+    // update.images = update.images.map(img => JSON.parse(img))
+    console.log(update)
     const post = await Post.findOneAndUpdate({ _id: req.params.postId }, { $set: update }, { new: true }).exec();
+
     if(!post) return res.status(204).json({ message: "No post found with this id."})
+
     const images = req.files;
     await Promise.all(images.map(async (image) => {
       const data = await uploadToCloudinary(image.path, 'emaJons_dev');

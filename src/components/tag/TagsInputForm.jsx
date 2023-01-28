@@ -14,7 +14,7 @@ const TagsInputForm = () => {
 
   // CRUD tags
   function createNewTag(e) {
-    if (selectedTags.includes(tag)) {
+    if (selectedTags.includes((tag))) {
       setTag("")
     } else if (availableTags.includes(tag)) {
       dispatch(toggleTag(tag))
@@ -42,7 +42,7 @@ const TagsInputForm = () => {
   // set tag in useState
   function handleTag(e) {
     const { name, value } = e.target;
-    if(name === "postTags") { setTag(() => value) }
+    if(name === "postTags") { setTag(() => _.capitalize(value)) }
   }
 
   // render Tag Elements
