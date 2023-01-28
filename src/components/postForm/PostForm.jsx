@@ -39,11 +39,19 @@ export default function PostForm () {
   useEffect(() => {
     dispatch(resetTags())
     dispatch(fetchAllTags())
-    setPostData(currentPost)
     if(editPage) {
       currentPost.postTags.forEach(tag => {
-          dispatch(toggleTag(tag.name))
-      })
+        dispatch(toggleTag(tag))})
+      setPostData(
+        {
+          title: currentPost.title,
+          subtitle: currentPost.subtitle,
+          content: currentPost.content,
+          images: [],
+          category: currentPost.category,
+          postTags: []
+        }
+      )
     } else if(!editPage){
       dispatch(resetTags())
       dispatch(fetchAllTags())
@@ -56,7 +64,7 @@ export default function PostForm () {
           category: "",
           postTags: []
         }
-      )
+        )
     }
   }, [pathname])
 

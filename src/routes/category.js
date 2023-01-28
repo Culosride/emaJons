@@ -17,7 +17,9 @@ categoryRouter.get('/api/categories/:category', async (req, res) => {
 })
 
 categoryRouter.get("/api/categories", async (req, res) => {
+  console.log('category get all tags')
   try {
+    console.log('category get all tags')
     const category = await Category.findOne({name: "dummy"}).exec();
     res.status(200).json(category.allTags);
   } catch (err) {
