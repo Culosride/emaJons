@@ -43,16 +43,6 @@ export default function PostForm () {
       setPostData(currentPost)
       currentPost.postTags.forEach(tag => {
         dispatch(toggleTag(tag))})
-      setPostData(
-        {
-          title: currentPost.title,
-          subtitle: currentPost.subtitle,
-          content: currentPost.content,
-          images: [],
-          category: currentPost.category,
-          postTags: []
-        }
-      )
     } else if(!editPage){
       // dispatch(resetTags())
       // dispatch(fetchAllTags())
