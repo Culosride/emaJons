@@ -17,10 +17,10 @@ export default function PostForm () {
   const { pathname } = useLocation()
   const currentPost = useSelector(state => state.posts.selectedPost)
   const postId = currentPost._id
-  const availableTags = useSelector(state => state.tags.availableTags);
-  let selectedTags = useSelector(state => state.tags.selectedTags);
-  const error = useSelector(state => state.tags.error);
-  const status = useSelector(state => state.tags.status);
+  // const availableTags = useSelector(state => state.categories.availableTags);
+  let selectedTags = useSelector(state => state.categories.selectedTags);
+  const error = useSelector(state => state.categories.error);
+  const status = useSelector(state => state.categories.status);
   const editPage = pathname.includes("edit")
   const [emptyCategory, setEmptyCategory] = useState(false);
   const [postData, setPostData] = useState({
@@ -38,7 +38,6 @@ export default function PostForm () {
   // fetch data
   useEffect(() => {
     dispatch(resetTags())
-    console.log(fetchAllTags)
     dispatch(fetchAllTags())
     if(editPage) {
       currentPost.postTags.forEach(tag => {

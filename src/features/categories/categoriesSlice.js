@@ -28,6 +28,7 @@ export const deleteTag = createAsyncThunk("deleteTag", async (tagToDelete, { rej
 })
 
 export const fetchAllTags = createAsyncThunk("fetchAllTags", async () => {
+  console.log('categoriesSlice fetch all Tags')
   const response = await api.fetchAllTags()
   return response.data
 })

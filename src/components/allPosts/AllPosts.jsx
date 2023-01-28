@@ -11,7 +11,6 @@ export default function AllPosts() {
   const params = useParams();
   const dispatch = useDispatch()
   const posts = useSelector(state => state.posts.posts)
-  console.log(posts)
   const postsByCategory = posts.filter(post => (post.category === _.capitalize(params.category)))
   let status = useSelector(state => state.posts.status)
   let authStatus = useSelector(state => state.auth.status)
