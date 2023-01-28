@@ -14,12 +14,7 @@ const TagsInputForm = () => {
 
   // CRUD tags
   function createNewTag(e) {
-    const existingTag = availableTags.filter(tagObj => tagObj.name === tag)
-    if (existingTag[0]) {
-      dispatch(toggleTag(existingTag[0]))
-    } else {
-      dispatch(createNewTag(tag))
-    }
+    dispatch(addNewTag(tag))
     setTag("")
   }
 
