@@ -1,6 +1,6 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import postsReducer from "../features/posts/postsSlice"
-import categoryReducer from "../features/categories/categorySlice"
+import categoriesReducer from "../features/categories/categoriesSlice"
 import authReducer from "../features/auth/authSlice"
 import storage from 'redux-persist/lib/storage';
 import {
@@ -22,7 +22,7 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
   posts: postsReducer,
-  categories: categoryReducer,
+  categories: categoriesReducer,
   auth: authReducer,
 })
 

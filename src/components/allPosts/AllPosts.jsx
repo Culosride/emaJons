@@ -13,7 +13,6 @@ export default function AllPosts() {
   const posts = useSelector(state => state.posts.posts)
   console.log(posts)
   const postsByCategory = posts.filter(post => (post.category === _.capitalize(params.category)))
-
   let status = useSelector(state => state.posts.status)
   let authStatus = useSelector(state => state.auth.status)
   const error = useSelector(state => state.posts.error)

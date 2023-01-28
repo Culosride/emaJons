@@ -38,6 +38,7 @@ export default function PostForm () {
   // fetch data
   useEffect(() => {
     dispatch(resetTags())
+    console.log(fetchAllTags)
     dispatch(fetchAllTags())
     if(editPage) {
       currentPost.postTags.forEach(tag => {
