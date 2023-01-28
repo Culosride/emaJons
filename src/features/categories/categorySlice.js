@@ -109,4 +109,3 @@ export const { toggleTag, toggleNavbar, resetTags } = categorySlice.actions
 
 
 export default categorySlice.reducer
-
