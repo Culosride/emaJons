@@ -12,7 +12,6 @@ const TagsInputForm = () => {
   const editPage = pathname.includes("edit")
   const selectedTags = useSelector(state => state.categories.selectedTags);
   const availableTags = useSelector(state => state.categories.availableTags);
-  console.log('available tags', availableTags)
 
   // CRUD tags
   function createNewTag(e) {
