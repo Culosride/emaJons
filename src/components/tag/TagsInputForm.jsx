@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useLocation } from 'react-router-dom';
 import Tag from "../tag/Tag";
-import { deleteTag, fetchAllTags, addNewTag, toggleTag, resetTags } from "../../features/tags/tagsSlice"
+// import { deleteTag, fetchAllTags, addNewTag, toggleTag, resetTags } from "../../features/tags/tagsSlice"
+import { deleteTag, fetchAllTags, addNewTag, toggleTag, resetTags } from "../../features/categories/categoriesSlice";
 import { useSelector, useDispatch } from "react-redux";
 
 const TagsInputForm = () => {

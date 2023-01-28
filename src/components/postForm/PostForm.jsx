@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams, matchPath, useLocation } from 'react-router-dom';
 import { createPost, editPost } from "../../features/posts/postsSlice"
-import { deleteTag, fetchAllTags, addNewTag, toggleTag, resetTags } from "../../features/tags/tagsSlice"
+// import { deleteTag, fetchAllTags, addNewTag, toggleTag, resetTags } from "../../features/tags/tagsSlice"
+import { deleteTag, fetchAllTags, addNewTag, toggleTag, resetTags } from "../../features/categories/categoriesSlice";
 import { selectAuthStatus } from "../../features/auth/authSlice"
 import { useSelector, useDispatch } from "react-redux";
 // import Tag from "../tag/Tag";
@@ -38,11 +39,11 @@ export default function PostForm () {
   useEffect(() => {
     dispatch(resetTags())
     dispatch(fetchAllTags())
+    setPostData(currentPost)
     if(editPage) {
       currentPost.postTags.forEach(tag => {
           dispatch(toggleTag(tag.name))
       })
-      setPostData(currentPost)
     } else if(!editPage){
       dispatch(resetTags())
       dispatch(fetchAllTags())
