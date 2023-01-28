@@ -14,7 +14,13 @@ const TagsInputForm = () => {
 
   // CRUD tags
   function createNewTag(e) {
-    dispatch(addNewTag(tag))
+    if (selectedTags.includes(tag)) {
+      setTag("")
+    } else if (availableTags.includes(tag)) {
+      dispatch(toggleTag(tag))
+    } else {
+      dispatch(addNewTag(tag))
+    }
     setTag("")
   }
 
@@ -40,16 +46,16 @@ const TagsInputForm = () => {
   }
 
   // render Tag Elements
-  const tagElements = availableTags.map(t => {
+  const tagElements = availableTags.map((t, i) => {
     // fix auto suggestion
-    if(t.name.startsWith(_.capitalize(tag))) {
-      return <Tag handleTagToggle={handleTagToggle} selected={false} handleTagDelete={handleTagDelete} tag={t} id={t._id} key={t._id}/>
+    if(t.startsWith(_.capitalize(tag))) {
+      return <Tag handleTagToggle={handleTagToggle} selected={false} handleTagDelete={handleTagDelete} tag={t} id={`${t}-${i}`} key={`${t}-${i}`}/>
     }
   })
 
-  const selectedTagElements = selectedTags.map(t => {
-    if(t.name.startsWith(_.capitalize(tag))) {
-      return <Tag handleTagToggle={handleTagToggle} selected={true} handleTagDelete={handleTagDelete} tag={t} id={t._id} key={t._id}/>
+  const selectedTagElements = selectedTags.map((t, i) => {
+    if(t.startsWith(_.capitalize(tag))) {
+      return <Tag handleTagToggle={handleTagToggle} selected={true} handleTagDelete={handleTagDelete} tag={t} id={`${t}-${i}`} key={`${t}-${i}`}/>
     }
   })
 
@@ -77,7 +83,7 @@ const TagsInputForm = () => {
       <fieldset className="available-tags-wrapper">
         {tagElements}
       </fieldset>
-      {/* {error && <p>{error}</p>} */}
+      {/* {error && <p>{error}</p> */}
     </fieldset>
   )
 }

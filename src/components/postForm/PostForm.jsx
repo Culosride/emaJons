@@ -49,7 +49,7 @@ export default function PostForm () {
           postTags: currentPost.postTags
         }
       )
-      currentPost.postTags.forEach(tag => dispatch(toggleTag(tag)))
+      currentPost.postTags.forEach(tag => dispatch(toggleTag(tag.name)))
     } else if(!editPage){
       dispatch(resetTags())
       dispatch(fetchAllTags())
@@ -149,9 +149,7 @@ export default function PostForm () {
       if (key === "images") {
         return postData.images.map(img => formData.append("images", img))
       } else if (key === "postTags") {
-        return selectedTags.map(postTag => {
-          const strTag = JSON.stringify(postTag)
-          return formData.append("postTags", strTag)})
+        return selectedTags.map(tag => formData.append("postTags", tag))
       } else {
         return formData.append(key, postData[key]);
       }
@@ -178,7 +176,7 @@ export default function PostForm () {
       if (key === "images") {
         return postData.images.map(img => formData.append("images", JSON.stringify(img)))
       } else if (key === "postTags") {
-        return selectedTags.map(postTag => formData.append("postTags", JSON.stringify(postTag)))
+        return selectedTags.map(tag => formData.append("postTags", tag))
       } else {
         return formData.append(key, postData[key]);
       }

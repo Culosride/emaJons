@@ -9,7 +9,7 @@ const initialState = {
   status: 'idle' || 'loading' || 'succeeded' || 'failed',
   error: "" || null
 }
- 
+
 export const createPost = createAsyncThunk("createPost", async (formData) => {
   console.log('thunk', formData)
   const response = await api.createPost(formData)

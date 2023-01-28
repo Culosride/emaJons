@@ -45,8 +45,9 @@ postRouter.get('/api/posts/:category/:postId', async (req, res) => {
 
 postRouter.post('/posts', verifyJWT, multerUpload, async (req, res) => {
   const { postTags } = req.body;
-  const tagsArray = (typeof(postTags) === "string") ? [postTags] : postTags
-  const allTags = tagsArray.map(tag => JSON.parse(tag)._id)
+  // const tagsArray = (typeof(postTags) === "string") ? [postTags] : postTags
+  const allTags = postTags.map(tag => Tag.find({name: tag}._id))
+  console.log(allTags)
   const post = new Post(req.body);
   post.postTags = allTags
   const savedPost = await post.save()
@@ -87,8 +88,6 @@ postRouter.post('/posts', verifyJWT, multerUpload, async (req, res) => {
 
   postRouter.patch('/posts/:postId/edit', verifyJWT, multerUpload, async (req, res) => {
     const update = Object.assign({}, req.body);
-    console.log(req.body)
-    console.log(update)
     const tagsArray = (typeof(update.postTags) === "string") ? [update.postTags] : update.postTags
     update.postTags = tagsArray.map(tag => JSON.parse(tag)._id)
     update.images = update.images.map(img => JSON.parse(img))

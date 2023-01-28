@@ -27,8 +27,8 @@ tagRouter.get('/api/tags', async (req, res) => {
 tagRouter.patch("/api/tags/deleteTag", async (req, res) => {
   try {
     const { tagToDelete } = req.body
-    await Tag.findOneAndDelete({ name: tagToDelete.name });
-    res.status(200).json({deletedTag: tagToDelete, message: "Tag deleted"});
+    const deletedTag = await Tag.findOneAndDelete({ name: tagToDelete });
+    res.status(200).json({deletedTag: deletedTag, message: "Tag deleted"});
   } catch (err) {
     res.status(400).send(err);
   }
