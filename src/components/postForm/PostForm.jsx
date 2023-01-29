@@ -17,8 +17,8 @@ export default function PostForm () {
   const { pathname } = useLocation()
   const currentPost = useSelector(state => state.posts.selectedPost)
   const postId = currentPost._id
-  // const availableTags = useSelector(state => state.categories.availableTags);
-  let selectedTags = useSelector(state => state.categories.selectedTags);
+  const availableTags = useSelector(state => state.categories.availableTags);
+  const selectedTags = useSelector(state => state.categories.selectedTags);
   const error = useSelector(state => state.categories.error);
   const status = useSelector(state => state.categories.status);
   const editPage = pathname.includes("edit")
@@ -41,8 +41,6 @@ export default function PostForm () {
     dispatch(fetchAllTags())
     if(editPage && currentPost.postTags) {
       setPostData(currentPost)
-      currentPost.postTags.forEach(tag => {
-        dispatch(toggleTag(tag))})
     } else if(!editPage){
       dispatch(resetTags())
       dispatch(fetchAllTags())
@@ -59,39 +57,18 @@ export default function PostForm () {
     }
   }, [pathname])
 
-  // useEffect(() => {
-  //   if (status === 'idle') {
-  //     dispatch(fetchAllTags())
-  //   } else if (status === "succeeded" && editPage) {
-  //     setPostData({
-  //       title: currentPost.title,
-  //       subtitle: currentPost.subtitle,
-  //       content: currentPost.content,
-  //       images: currentPost.images,
-  //       category: currentPost.category,
-  //       postTags: currentPost.postTags
-  //     });
-  //     currentPost.postTags.forEach(tag => {
-  //       dispatch(toggleTag(tag))
-  //     })
-  //   }
-  //   // } else if (!editPage) {
-  //   //   setPostData({
-  //   //     title: "",
-  //   //     subtitle: "",
-  //   //     content: "",
-  //   //     images: [],
-  //   //     category: "",
-  //   //     postTags: []
-  //   //   })
-  //   // }
-  // }, [dispatch, pathname, status])
+  useEffect(() => {
+    if(editPage && currentPost.postTags) {
+      currentPost.postTags.forEach(tag => {
+        dispatch(toggleTag(tag))})
+    }
+  }, [status])
 
   // create image preview
   useEffect(() => {
-    const imageKey = editPage ? 'publicId' : 'name';
     setImageElements(postData.images.map((file, i) => {
-      const src = editPage ? file.imageUrl : URL.createObjectURL(file);
+      const imageKey = file.publicId ? 'publicId' : 'name';
+      const src = file.publicId ? file.imageUrl : URL.createObjectURL(file);
       return (
         <div key={`image-${i}`} className="preview-images">
           <img src={src} />
@@ -115,6 +92,7 @@ export default function PostForm () {
   // set Post Data with input values
   function handleChange(e) {
     const { name, value, files } = e.target;
+    console.log('files on change', files)
     setPostData(prev => {
       if (name === "images") {
         return ({ ...prev, images: [...prev.images, ...files] })
@@ -147,9 +125,6 @@ export default function PostForm () {
         return formData.append(key, postData[key]);
       }
     });
-    // for (let pair of formData.entries()) {
-    //   console.log(pair[0]+ ', ' + pair[1]);
-    // }
 
     dispatch(createPost(formData))
       .then((res) => { if(!res.error) {
@@ -167,16 +142,15 @@ export default function PostForm () {
     const formData = new FormData()
     Object.keys(postData).map((key) => {
       if (key === "images") {
-        return postData.images.map(img => formData.append("images", JSON.stringify(img)))
+        return postData.images.filter(img => {
+          if (img.name) { return formData.append("images", img) }
+        })
       } else if (key === "postTags") {
         return selectedTags.map(tag => formData.append("postTags", tag))
       } else {
         return formData.append(key, postData[key]);
       }
     });
-    // for (let pair of formData.entries()) {
-    //   console.log(pair[0]+ ', ' + pair[1]);
-    // }
 
     dispatch(editPost({formData, postId}))
       .then((res) => { if(!res.error) {

@@ -11,13 +11,13 @@ const initialState = {
 }
 
 export const createPost = createAsyncThunk("createPost", async (formData) => {
-  console.log('thunk', formData)
   const response = await api.createPost(formData)
   return response.data
 })
 
 export const editPost = createAsyncThunk("updatePost", async (payload) => {
   const { formData, postId } = payload
+  console.log(payload)
   const response = await api.editPost(formData, postId)
   return response.data
 })
