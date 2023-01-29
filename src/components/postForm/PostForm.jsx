@@ -39,10 +39,10 @@ export default function PostForm () {
   useEffect(() => {
     dispatch(resetTags())
     dispatch(fetchAllTags())
-    if(editPage) {
+    if(editPage && currentPost.postTags) {
+      setPostData(currentPost)
       currentPost.postTags.forEach(tag => {
         dispatch(toggleTag(tag))})
-      setPostData(currentPost)
     } else if(!editPage){
       dispatch(resetTags())
       dispatch(fetchAllTags())

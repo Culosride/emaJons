@@ -15,10 +15,8 @@ export default function AllPosts() {
   let status = useSelector(state => state.posts.status)
   let authStatus = useSelector(state => state.auth.status)
   const error = useSelector(state => state.posts.error)
-  const allTags = postsByCategory.flatMap(post => post.postTags.tag)
+  const allTags = postsByCategory.flatMap(post => post.postTags.map(tag => tag))
   const sortedTags = [...new Set(allTags.sort((a, b) => b.localeCompare(a)))];
-  console.log(postsByCategory)
-  console.log(sortedTags)
   const [filteredPosts, setFilteredPosts] = useState([])
 
   let postElements = [];
