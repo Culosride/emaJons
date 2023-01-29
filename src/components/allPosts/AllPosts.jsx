@@ -50,7 +50,7 @@ export default function AllPosts() {
     e.preventDefault();
     const filter = e.target.getAttribute('data-value');
     const filtered = postsByCategory.filter((post) => {
-      return post.postTags.some(tag => tag.name === filter)
+      return post.postTags.some(tag => tag === filter)
     })
     filtered.length && setFilteredPosts(filtered);
   }
