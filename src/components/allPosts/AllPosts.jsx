@@ -15,8 +15,10 @@ export default function AllPosts() {
   let status = useSelector(state => state.posts.status)
   let authStatus = useSelector(state => state.auth.status)
   const error = useSelector(state => state.posts.error)
-  const allTags = postsByCategory.flatMap(post => post.postTags.map(tag => tag.name))
-  const cleanedTags = [...new Set(allTags.sort((a, b) => b.localeCompare(a)))];
+  const allTags = postsByCategory.flatMap(post => post.postTags.tag)
+  const sortedTags = [...new Set(allTags.sort((a, b) => b.localeCompare(a)))];
+  console.log(postsByCategory)
+  console.log(sortedTags)
   const [filteredPosts, setFilteredPosts] = useState([])
 
   let postElements = [];
@@ -56,7 +58,7 @@ export default function AllPosts() {
   }
 
   // create tag elements
-  const tagElements = cleanedTags.map((tag, i) => (
+  const tagElements = sortedTags.map((tag, i) => (
     <a key={i} href="#">
       <li onClick={handleClick} data-value={tag}>{tag}</li>
     </a>

@@ -45,10 +45,7 @@ postRouter.get('/api/posts/:category/:postId', async (req, res) => {
 
 postRouter.post('/posts', verifyJWT, multerUpload, async (req, res) => {
   const { postTags } = req.body;
-  const tagsArray = (typeof(postTags) === "string") ? [postTags] : postTags
-  const allTags = await Promise.all(tagsArray.map(async (tag) => await Tag.find({name: tag})))
   const post = new Post(req.body);
-  post.postTags = allTags.flat()
   const savedPost = await post.save()
 
   const images = req.files;
@@ -71,7 +68,6 @@ postRouter.post('/posts', verifyJWT, multerUpload, async (req, res) => {
     const { postId } = req.params
     try {
       const post = await Post.findOne({_id: req.params.postId}).exec();
-      console.log(post)
       if(!post) return res.status(204).json({ message: "No post found with this id."})
       const publicIds = post.images.map(img => img.publicId)
 
@@ -86,9 +82,6 @@ postRouter.post('/posts', verifyJWT, multerUpload, async (req, res) => {
 
   postRouter.patch('/posts/:postId/edit', verifyJWT, multerUpload, async (req, res) => {
     const update = Object.assign({}, req.body);
-    // const tagsArray = (typeof(update.postTags) === "string") ? [update.postTags] : update.postTags
-    // const allTags = await Promise.all(tagsArray.map(async (tag) => await Tag.find({name: tag})))
-    // update.postTags = tagsArray
     update.images = update.images.map(img => JSON.parse(img))
     const post = await Post.findOneAndUpdate({ _id: req.params.postId }, { $set: update }, { new: true }).exec();
 
