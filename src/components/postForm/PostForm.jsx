@@ -19,10 +19,11 @@ export default function PostForm () {
   const postId = currentPost._id
   const availableTags = useSelector(state => state.categories.availableTags);
   const selectedTags = useSelector(state => state.categories.selectedTags);
-  const error = useSelector(state => state.categories.error);
+  // const error = useSelector(state => state.categories.error);
   const status = useSelector(state => state.categories.status);
   const editPage = pathname.includes("edit")
   const [emptyCategory, setEmptyCategory] = useState(false);
+  const [error, setError] = useState(null);
   const [postData, setPostData] = useState({
       title: "",
       subtitle: "",
