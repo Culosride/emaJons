@@ -66,6 +66,7 @@ export default function PostForm () {
 
   // create image preview
   useEffect(() => {
+    console.log(postData)
     setImageElements(postData.images.map((file, i) => {
       const imageKey = file.publicId ? 'publicId' : 'name';
       const src = file.publicId ? file.imageUrl : URL.createObjectURL(file);

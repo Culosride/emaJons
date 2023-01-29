@@ -82,8 +82,8 @@ postRouter.post('/posts', verifyJWT, multerUpload, async (req, res) => {
 
   postRouter.patch('/posts/:postId/edit', verifyJWT, multerUpload, async (req, res) => {
     const update = Object.assign({}, req.body);
-    update.images = (update.images) ? update.images.map(img => JSON.parse(img)) : []
-    console.log('update', update)
+    update.images = (typeof(update.images) === 'string') ? [update.images] : update.images
+    update.images = update.images.map(img => JSON.parse(img))
 
     // filter public id that is not in update images and save public id
     const post = await Post.findOne({ _id: req.params.postId }).exec()
