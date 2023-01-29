@@ -15,14 +15,11 @@ function Login() {
     userRef.current.focus()
   }, [])
 
-  useEffect(() => {
-      setErrMsg('');
-  }, [userInfo.username, userInfo.password])
-
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
   function handleChange(e) {
+    setErrMsg('');
     const { name, value } = e.target;
     setUserInfo((prev) => ({...prev, [name]: value}));
   }

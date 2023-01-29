@@ -94,6 +94,7 @@ export default function PostForm () {
 
   // set Post Data with input values
   function handleChange(e) {
+    setError("")
     const { name, value, files } = e.target;
     setPostData(prev => {
       if (name === "images") {
@@ -114,7 +115,10 @@ export default function PostForm () {
     // persistor.purge(["posts"])
     e.preventDefault()
     if(!postData.category) {
-      setEmptyCategory(true);
+      setError("Select a category");
+      return
+    } else if (!postData.images.length) {
+      setError("A post with no pictures?");
       return
     }
     const formData = new FormData()
@@ -165,6 +169,7 @@ export default function PostForm () {
 
   return (
     <div className="form-wrapper">
+      {error && <p className="error-msg">{error}</p>}
       <form className="post-form" onSubmit={editPage ? handleEdit : handleSubmit}>
 
         <div className="post-form-layout">
