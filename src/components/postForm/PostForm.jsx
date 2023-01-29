@@ -81,8 +81,10 @@ export default function PostForm () {
   // delete images from preview
   const deleteImage = (e) => {
     const { id } = e.target;
-    let imageKey = editPage ? 'publicId' : 'name';
-    const updatedImages = postData.images.filter(file => file[imageKey] !== id)
+    const updatedImages = postData.images.filter(file => {
+      const imageKey = file.publicId ? 'publicId' : 'name';
+      return file[imageKey] !== id
+    })
     setPostData(prev => ({
       ...prev,
       images: updatedImages
@@ -92,7 +94,6 @@ export default function PostForm () {
   // set Post Data with input values
   function handleChange(e) {
     const { name, value, files } = e.target;
-    console.log('files on change', files)
     setPostData(prev => {
       if (name === "images") {
         return ({ ...prev, images: [...prev.images, ...files] })
@@ -142,8 +143,8 @@ export default function PostForm () {
     const formData = new FormData()
     Object.keys(postData).map((key) => {
       if (key === "images") {
-        return postData.images.filter(img => {
-          if (img.name) { return formData.append("images", img) }
+        return postData.images.map(img => {
+          (img.name) ? formData.append("images", img) : formData.append("images", JSON.stringify(img))
         })
       } else if (key === "postTags") {
         return selectedTags.map(tag => formData.append("postTags", tag))

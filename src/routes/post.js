@@ -49,8 +49,6 @@ postRouter.post('/posts', verifyJWT, multerUpload, async (req, res) => {
   const savedPost = await post.save()
 
   const images = req.files;
-  console.log('req.files', req.files)
-  console.log(images)
   await Promise.all(images.map(async (image) => {
     const data = await uploadToCloudinary(image.path, 'emaJons_dev');
     const newImage = new Image({
@@ -84,9 +82,23 @@ postRouter.post('/posts', verifyJWT, multerUpload, async (req, res) => {
 
   postRouter.patch('/posts/:postId/edit', verifyJWT, multerUpload, async (req, res) => {
     const update = Object.assign({}, req.body);
-    const post = await Post.findOneAndUpdate({ _id: req.params.postId }, { $set: update }, { new: true }).exec();
+    update.images = (update.images) ? update.images.map(img => JSON.parse(img)) : []
+    console.log('update', update)
 
+    // filter public id that is not in update images and save public id
+    const post = await Post.findOne({ _id: req.params.postId }).exec()
     if(!post) return res.status(204).json({ message: "No post found with this id."})
+
+    const imagesToDelete = post.images.filter(postImg => update.images.every((newImg) => {
+      return postImg.publicId !== newImg.publicId
+    }))
+
+    // remove public id from cloudinary
+    const publicIds = imagesToDelete.map(img => img.publicId)
+    if(publicIds.length) {await removeFromCloudinary(publicIds)};
+
+    // update post
+    await post.updateOne({ $set: update }, { new: true }).exec();
 
     const images = req.files;
     await Promise.all(images.map(async (image) => {
