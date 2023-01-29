@@ -4,21 +4,16 @@ import * as api from "../../API/index"
 const initialState = {
   availableTags: [],
   selectedTags: [],
-  // isExpanded: false,
   status: 'idle' || 'loading' || 'succeeded' || 'failed',
   error: "" || null
 }
 
-export const addNewTag = createAsyncThunk("api/tags/new", async (tag, { rejectWithValue }) => {
-  try {
+export const addNewTag = createAsyncThunk("createTag", async (tag) => {
     const response = await api.addNewTag(tag)
     return response.data
-  } catch (error) {
-    return rejectWithValue(error.response.data.message)
-  }
 })
 
-export const deleteTag = createAsyncThunk("api/tags/delete", async (tagToDelete, { rejectWithValue }) => {
+export const deleteTag = createAsyncThunk("deleteTag", async (tagToDelete, { rejectWithValue }) => {
   try {
     const response = await api.deleteTag(tagToDelete)
     return response.data
@@ -27,14 +22,13 @@ export const deleteTag = createAsyncThunk("api/tags/delete", async (tagToDelete,
   }
 })
 
-export const fetchAllTags = createAsyncThunk("/api/tags/get", async () => {
+export const fetchAllTags = createAsyncThunk("fetchAllTags", async () => {
   const response = await api.fetchAllTags()
   return response.data
 })
 
-
-const categorySlice = createSlice({
-  name: 'categories',
+const tagsSlice = createSlice({
+  name: 'tags',
   initialState,
   reducers: {
     toggleNavbar: (state) => {
@@ -44,7 +38,7 @@ const categorySlice = createSlice({
       state.selectedTags = []
     },
     toggleTag: (state, action) => {
-      if(state.selectedTags.includes(action.payload)) {
+      if(state.selectedTags.some(tag => tag === (action.payload))) {
         const filteredTags = state.selectedTags.filter(tag => tag !== action.payload)
           return state = {
             ...state,
@@ -69,7 +63,7 @@ const categorySlice = createSlice({
       .addCase(fetchAllTags.fulfilled, (state, action) => {
         return state = {
           ...state,
-          availableTags: [...action.payload],
+          availableTags: [...action.payload.map(tag => tag.name)],
           status: 'succeeded',
         }
       })
@@ -81,7 +75,7 @@ const categorySlice = createSlice({
       })
       .addCase(addNewTag.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.availableTags = state.availableTags.concat(action.payload)
+        state.selectedTags = state.selectedTags.concat(action.payload.name)
       })
       .addCase(addNewTag.rejected, (state, action) => {
         state.status = "failed";
@@ -91,7 +85,7 @@ const categorySlice = createSlice({
         state.status = 'loading'
       })
       .addCase(deleteTag.fulfilled, (state, {payload}) => {
-        const filteredTags = state.availableTags.filter(tag => tag !== payload.deletedTag)
+        const filteredTags = state.availableTags.filter(tag => tag !== payload.deletedTag.name)
         return state = {
           ...state,
           availableTags: [...filteredTags],
@@ -105,7 +99,6 @@ const categorySlice = createSlice({
   }
 })
 
-export const { toggleTag, toggleNavbar, resetTags } = categorySlice.actions
+export const { toggleTag, toggleNavbar, resetTags } = tagsSlice.actions
 
-
-export default categorySlice.reducer
+export default tagsSlice.reducer

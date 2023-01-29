@@ -1,5 +1,6 @@
 const express = require('express');
 const Category = require('../models/category');
+const Post = require('../models/post');
 const categoryRouter = new express.Router();
 const _ = require('lodash');
 const tagValidation = require("../middleware/tagValidation")
@@ -25,13 +26,11 @@ categoryRouter.get("/api/categories", async (req, res) => {
   }
 })
 
-
 // routes requiring authorization
 
 categoryRouter.patch("/api/categories/tags", tagValidation, async (req, res) => {
   const { newTag } = (req.body)
   const capitalizedTag = _.capitalize(newTag)
-
   try {
     await Category.findOneAndUpdate(
       {name: "dummy"},
@@ -49,7 +48,12 @@ categoryRouter.patch("/api/categories/deleteTag", async (req, res) => {
     await Category.findOneAndUpdate(
       { name: "dummy" },
       { $pull: { allTags: tagToDelete } }
-      );
+    );
+    const post = await Post.updateMany(
+      { },
+      { $pull: { postTags: tagToDelete } }
+    );
+    console.log(post)
     res.status(200).json({deletedTag: tagToDelete, message: "Tag deleted"});
     } catch (err) {
       res.status(400).send(err);

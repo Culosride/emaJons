@@ -17,12 +17,12 @@ export const createPost = createAsyncThunk("createPost", async (formData) => {
 
 export const editPost = createAsyncThunk("updatePost", async (payload) => {
   const { formData, postId } = payload
+  console.log(payload)
   const response = await api.editPost(formData, postId)
   return response.data
 })
 
 export const deletePost = createAsyncThunk("deletePost", async ([postId, category]) => {
-  console.log(postId, category)
   const response = await api.deletePost([postId, category])
   return response.data
 })
@@ -71,6 +71,7 @@ const postsSlice = createSlice({
         state.status = 'loading'
       })
       .addCase(createPost.fulfilled, (state, action) => {
+        console.log('reducer', action)
         return state = {
           ...state,
           status: 'succeeded',

@@ -13,12 +13,11 @@ export default function AllPosts() {
   const dispatch = useDispatch()
   const posts = useSelector(state => state.posts.posts)
   const postsByCategory = posts.filter(post => (post.category === _.capitalize(params.category)))
-
   let status = useSelector(state => state.posts.status)
   let authStatus = useSelector(state => state.auth.status)
   const error = useSelector(state => state.posts.error)
   const allTags = postsByCategory.flatMap(post => post.postTags.map(tag => tag))
-  const cleanedTags = [...new Set(allTags.sort((a, b) => b.localeCompare(a)))];
+  const sortedTags = [...new Set(allTags.sort((a, b) => b.localeCompare(a)))];
   const [filteredPosts, setFilteredPosts] = useState([])
   let postElements = [];
 
@@ -72,13 +71,13 @@ export default function AllPosts() {
     e.preventDefault();
     const filter = e.target.getAttribute('data-value');
     const filtered = postsByCategory.filter((post) => {
-      return post.postTags.includes(filter);
+      return post.postTags.some(tag => tag === filter)
     })
     filtered.length && setFilteredPosts(filtered);
   }
 
   // create tag elements
-  const tagElements = cleanedTags.map((tag, i) => (
+  const tagElements = sortedTags.map((tag, i) => (
     <a key={i} href="#">
       <li onClick={handleClick} data-value={tag}>{tag}</li>
     </a>

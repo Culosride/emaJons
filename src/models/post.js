@@ -1,5 +1,6 @@
 const mongoose = require("mongoose")
 const { imageSchema } = require("./image")
+const { tagSchema } = require("./tag")
 
 const postSchema = new mongoose.Schema({
   title: String,

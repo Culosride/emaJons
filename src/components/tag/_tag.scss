@@ -1,24 +1,86 @@
-.tag-wrapper {
+.tag-wrapper, .ghost-tag {
   .tag{
-    color: white;
+    color: black;
     font-size: 12px;
-    font-weight: 700;
-    margin: 0 5px 0 12px;
+    text-transform: uppercase;
+    margin: 0 10px;
   }
-  .delete-tag{
-    border-radius: 50%;
-    background-color: lightgray;
-    margin: 0;
-    padding: 6px;
-    width: 18px;
+  .delete-tag {
+    border-left: 1px solid rgba(0,0,0,.2);
   }
+  .delete-tag:after {
+    content: "";
+    display:inline-block;
+    height: 24px;
+    width: 24px;
+    background-position: 0% 50%;
+    background-size: 14px 14px;
+    background-image: url('../img/BinLight.svg');
+    background-repeat: no-repeat;
+    vertical-align: bottom;
+    margin-left: 6px;
+  }
+  .delete-tag:hover {
+    opacity: .5;
+  }
+  .tag:before {
+    content: "";
+    display:inline-block;
+    height:14px;
+    width:12px;
+    background-size: 12px 12px;
+    background-position: 50%;
+    background-image: url('../img/PlusLight.svg');
+    background-repeat: no-repeat;
+    margin-right: 5px;
+    vertical-align: bottom;
+  }
+  .tag.selected:before {
+    transform: rotate(45deg);
+  }
+  .tag:hover {
+    opacity: .5;
+  }
+  text-decoration: none;
   display: flex;
   padding: 0;
-  background-color: rgb(58, 58, 58);
   border-radius: 20px;
   text-align: center;
-  margin: 4px;
+  margin: 2px 4px 2px 0;
   justify-content: space-between;
   align-items: center;
   width: fit-content;
+  border: 1px solid rgba(0,0,0,.2);
+  height: 26px;
+  transition: all ease-in-out .3s;
+}
+
+.tag-wrapper:hover {
+  border: 1px solid rgba(0,0,0,1);
+}
+
+.tag-wrapper-selected {
+  background-color: rgba(146, 200, 146, 0.25);
+  border: 1px solid rgb(116, 162, 116);
+}
+
+.ghost-tag {
+  opacity: .4;
+  background-color: rgb(200, 200, 200);
+}
+
+.tags-input-form {
+  position: relative;
+}
+
+.add-new-tag {
+  background-color: rgb(116, 162, 116);
+  color: white;
+  position: absolute;
+  right: 4px;
+  top: 4px;
+  border-radius: 20px;
+  padding: 8px 12px;
+  font-size: 12px;
+  cursor: pointer;
 }

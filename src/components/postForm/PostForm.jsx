@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams, matchPath, useLocation } from 'react-router-dom';
 import { createPost, editPost } from "../../features/posts/postsSlice"
-import { deleteTag, fetchAllTags, addNewTag, toggleTag, resetTags } from "../../features/categories/categorySlice"
+// import { deleteTag, fetchAllTags, addNewTag, toggleTag, resetTags } from "../../features/tags/tagsSlice"
+import { deleteTag, fetchAllTags, addNewTag, toggleTag, resetTags } from "../../features/categories/categoriesSlice";
 import { selectAuthStatus } from "../../features/auth/authSlice"
 import { useSelector, useDispatch } from "react-redux";
-import Tag from "../tag/Tag";
+// import Tag from "../tag/Tag";
+import TagsInputForm from "../tag/TagsInputForm";
 import { persistor } from "../../app/store";
 const _ = require("lodash")
 
@@ -16,11 +18,11 @@ export default function PostForm () {
   const currentPost = useSelector(state => state.posts.selectedPost)
   const postId = currentPost._id
   const availableTags = useSelector(state => state.categories.availableTags);
-  let selectedTags = useSelector(state => state.categories.selectedTags);
+  const selectedTags = useSelector(state => state.categories.selectedTags);
   // const error = useSelector(state => state.categories.error);
   const status = useSelector(state => state.categories.status);
   const editPage = pathname.includes("edit")
-  const [tag, setTag] = useState("");
+  const [emptyCategory, setEmptyCategory] = useState(false);
   const [error, setError] = useState(null);
   const [postData, setPostData] = useState({
       title: "",
@@ -31,24 +33,15 @@ export default function PostForm () {
       postTags: []
     }
   );
-  const categories = ['Walls', 'Paintings', 'Sketchbooks', 'Video', 'Sculptures']
+  const [imageElements, setImageElements] = useState([]);
+  // const categories = ['Walls', 'Paintings', 'Sketchbooks', 'Video', 'Sculptures']
 
+  // fetch data
   useEffect(() => {
     dispatch(resetTags())
     dispatch(fetchAllTags())
-    if(editPage) {
-      currentPost.postTags.forEach(tag => {
-        dispatch(toggleTag(tag))})
-      setPostData(
-        {
-          title: currentPost.title,
-          subtitle: currentPost.subtitle,
-          content: currentPost.content,
-          images: [],
-          category: currentPost.category,
-          postTags: []
-        }
-      )
+    if(editPage && currentPost.postTags) {
+      setPostData(currentPost)
     } else if(!editPage){
       dispatch(resetTags())
       dispatch(fetchAllTags())
@@ -65,53 +58,62 @@ export default function PostForm () {
     }
   }, [pathname])
 
-  function createNewTag() {
-    dispatch(addNewTag(tag)) &&
-    setTag("")
-  }
-
-  function handleKeyDown(e) {
-    if(e.keyCode === 9) {
-      e.preventDefault();
-      createNewTag()
+  useEffect(() => {
+    if(editPage && currentPost.postTags) {
+      currentPost.postTags.forEach(tag => {
+        dispatch(toggleTag(tag))})
     }
+  }, [status])
+
+  // create image preview
+  useEffect(() => {
+    console.log(postData)
+    setImageElements(postData.images.map((file, i) => {
+      const imageKey = file.publicId ? 'publicId' : 'name';
+      const src = file.publicId ? file.imageUrl : URL.createObjectURL(file);
+      return (
+        <div key={`image-${i}`} className="preview-images">
+          <img src={src} />
+          <i id={file[imageKey]} onClick={deleteImage}></i>
+        </div>
+      )
+    }))
+  }, [postData.images])
+
+  // delete images from preview
+  const deleteImage = (e) => {
+    const { id } = e.target;
+    const updatedImages = postData.images.filter(file => {
+      const imageKey = file.publicId ? 'publicId' : 'name';
+      return file[imageKey] !== id
+    })
+    setPostData(prev => ({
+      ...prev,
+      images: updatedImages
+    }))
   }
 
-  function handleTagDelete(tagName) {
-    dispatch(deleteTag(tagName))
-  }
-
-  function handleTagToggle(tagName) {
-    dispatch(toggleTag(tagName))
-  }
-
+  // set Post Data with input values
   function handleChange(e) {
     setError("")
     const { name, value, files } = e.target;
     setPostData(prev => {
       if (name === "images") {
         return ({ ...prev, images: [...prev.images, ...files] })
-      } else if (name === "postTags") {
-        return ({ ...prev, postTags: [...prev.postTags, value] })
-      } else {
+      }
+      // else if (name === "postTags") {
+      //   return ({ ...prev, postTags: [...prev.postTags, value] })
+      // }
+      else {
         return ({ ...prev, [name]: value })
       }
     });
   }
 
-  function handleTag(e) {
-    const { name, value } = e.target;
-
-    if(name === "tag") {setTag(() => {
-      return value
-    })}
-  }
-
-  const submitBtn = () => {
-    return editPage ? "Save changes " : "Create new post"
-  }
+  // submit form
 
   const handleSubmit = async (e) => {
+    // persistor.purge(["posts"])
     e.preventDefault()
     if(!postData.category) {
       setError("Select a category");
@@ -125,16 +127,19 @@ export default function PostForm () {
       if (key === "images") {
         return postData.images.map(img => formData.append("images", img))
       } else if (key === "postTags") {
-        return selectedTags.map(postTag => formData.append("postTags", postTag))
+        return selectedTags.map(tag => formData.append("postTags", tag))
       } else {
         return formData.append(key, postData[key]);
       }
     });
+
     dispatch(createPost(formData))
       .then((res) => { if(!res.error) {
         navigate(`/${postData.category}/${res.payload._id}`)
       }})
   }
+
+  // edit existing post
   function handleEdit(e) {
     e.preventDefault()
     if(!postData.category) {
@@ -144,9 +149,11 @@ export default function PostForm () {
     const formData = new FormData()
     Object.keys(postData).map((key) => {
       if (key === "images") {
-        return postData.images.map(img => formData.append("images", img))
+        return postData.images.map(img => {
+          (img.name) ? formData.append("images", img) : formData.append("images", JSON.stringify(img))
+        })
       } else if (key === "postTags") {
-        return selectedTags.map(postTag => formData.append("postTags", postTag))
+        return selectedTags.map(tag => formData.append("postTags", tag))
       } else {
         return formData.append(key, postData[key]);
       }
@@ -158,60 +165,64 @@ export default function PostForm () {
     }})
   }
 
-
-  const tagElements = availableTags.map((t, i) => {
-    if(t.startsWith(_.capitalize(tag))) {
-      return <Tag handleTagToggle={handleTagToggle} selected={false} handleTagDelete={handleTagDelete} name={t} id={`${t}-${i}`} key={`${t}-${i}`}/>
-    }
-  })
-
-  const selectedTagElements = selectedTags.map((t, i) => {
-    return <Tag handleTagToggle={handleTagToggle} selected={true} handleTagDelete={handleTagDelete} name={t} id={`${t}-${i}`} key={`${t}-${i}`}/>
-  })
-
-  const optionElements = categories.filter(category => category !== postData.category)
-                          .map((element, i) => { return <option key={element+i} value={element}>{element}</option> })
+  // const optionElements = categories.filter(category => category !== postData.category)
+  //                                  .map((element, i) => { return <option key={element+i} value={element}>{element}</option> })
 
   return (
     <div className="form-wrapper">
       {error && <p className="error-msg">{error}</p>}
       <form className="post-form" onSubmit={editPage ? handleEdit : handleSubmit}>
-        <label className="">TITLE</label>
-        <input className="form-post-title" type="text" placeholder= "UNTITLED" value={postData.title} name="title" onChange={handleChange} />
 
-        <label className="form-post-subtitle">Subtitle</label>
-        <input type="text" className="form-post-subtitle" placeholder="subtitle" value={postData.subtitle} name="subtitle" onChange={handleChange}/>
-
-        <label>Content</label>
-        <textarea className="form-post-content" rows="8" placeholder="Add content here....." value={postData.content} name="content" onChange={handleChange}/>
-
-        <label htmlFor="categories">Category:</label>
-        <select name="category" id="categories" onChange={handleChange}>
-          {/* {editPage && <option value="">{postData.category}</option>}
-          {!editPage && <option value="">-- Please choose a category --</option>} */}
-          {/* {optionElements} */}
-          <option value="">-- Please choose a category --</option>
-          <option value="Walls">Walls</option>
-          <option value="Paintings">Paintings</option>
-          <option value="Sketchbooks">Skethbooks</option>
-          <option value="Video">Video</option>
-          <option value="Sculpture">Sculpture</option>
-        </select>
-        {error && <p>Devi pigliarne una</p>}
-        <div className="selected-tags-wrapper">
-          {selectedTagElements}
-        </div>
-        <div className="tags-container">
-          <div className="available-tags-wrapper">
-            {tagElements}
-          </div>
-          <input type="text" onKeyDown={handleKeyDown} value={tag} placeholder="New tag" name="tag" onChange={handleTag} className="" />
-          {/* {error && <p>{error}</p>} */}
+        <div className="post-form-layout">
+          <input className="form-post-imgs" type="file" onChange={handleChange} name="images" title="upload images" multiple />
+          <div className="image-preview-container">{imageElements}</div>
         </div>
 
-        <input className="form-post-imgs" type="file" onChange={handleChange} name="images" multiple />
+        <div className="post-form-layout">
+          <fieldset>
+            <input
+              className='title'
+              type="text" placeholder="ADD A TITLE"
+              value={postData.title}
+              name="title"
+              onChange={handleChange}
+            />
+            <input
+              type="text"
+              className="subtitle"
+              placeholder="Add a subtitle"
+              value={postData.subtitle}
+              name="subtitle"
+              onChange={handleChange}
+            />
+            <textarea
+              className="content"
+              rows="6"
+              placeholder="Add content ..."
+              value={postData.content}
+              name="content"
+              onChange={handleChange}
+            />
 
-        <input type="submit" value={submitBtn()} />
+            <hr />
+
+            <select name="category" id="categories" onChange={handleChange}>
+              {editPage && <option value="">{postData.category}</option>}
+              {!editPage && <option value="">Please choose a category</option>}
+              <option value="Walls">Walls</option>
+              <option value="Paintings">Paintings</option>
+              <option value="Sketchbooks">Sketchbooks</option>
+              <option value="Video">Video</option>
+              <option value="Sculpture">Sculpture</option>
+              {/* {optionElements} */}
+            </select>
+          </fieldset>
+
+          <TagsInputForm />
+
+          <input className="btn-submit" type="submit" value={editPage ? "Save changes " : "Create new post"} />
+        </div>
+
       </form>
       {/* {logoutButton} */}
     </div>
