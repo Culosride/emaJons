@@ -33,7 +33,7 @@ export default function Carousel({ media, toggleFullScreen }) {
     },
     responsive: [
       {
-        breakpoint: 1024,
+        breakpoint: 1040,
         settings: {
           fade: false,
           swipe: true

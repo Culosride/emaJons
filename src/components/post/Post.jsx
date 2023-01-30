@@ -72,7 +72,7 @@ export default function Post() {
     }
   }
 
-  const content = post.content && post.content.length > 100
+  const content = post.content && post.content.length > 500
 
   return (
     <div className={`post-container ${content ? "layout-50" : ""} ${fullscreen ? "layout-100" : ""}`}>

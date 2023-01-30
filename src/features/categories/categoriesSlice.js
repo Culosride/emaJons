@@ -32,7 +32,7 @@ export const fetchAllTags = createAsyncThunk("fetchAllTags", async () => {
 })
 
 
-const categorySlice = createSlice({
+const categoriesSlice = createSlice({
   name: 'categories',
   initialState,
   reducers: {
@@ -80,7 +80,7 @@ const categorySlice = createSlice({
       })
       .addCase(addNewTag.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.availableTags = state.availableTags.concat(action.payload)
+        state.selectedTags = state.selectedTags.concat(action.payload)
       })
       .addCase(addNewTag.rejected, (state, action) => {
         state.status = "failed";
@@ -104,7 +104,7 @@ const categorySlice = createSlice({
   }
 })
 
-export const { toggleTag, toggleNavbar, resetTags } = categorySlice.actions
+export const { toggleTag, toggleNavbar, resetTags } = categoriesSlice.actions
 
 
-export default categorySlice.reducer
+export default categoriesSlice.reducer

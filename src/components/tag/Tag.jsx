@@ -1,17 +1,15 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 
-export default function Tag(props) {
-  // const [selected, setSelected] = useState(false)
-  
+export default function Tag({ handleTagToggle, handleTagDelete, tag, selected }) {
+
   function handleClick() {
     // setSelected(!selected);
-    props.handleTagToggle(props.name)
+    handleTagToggle(tag)
   }
-
   return (
-    <div className='tag-wrapper'>
-      <p onClick={handleClick} className="tag">{props.name}</p>
-      {!props.selected && <div onClick={() => props.handleTagDelete(props.name)} className='delete-tag'>X</div>}
-    </div>
+    <a href="#" className={selected ? 'tag-wrapper-selected tag-wrapper' : 'tag-wrapper'}>
+      <p onClick={handleClick} className={selected ? 'selected tag' : 'tag'}>{tag}</p>
+      {!selected && <i onClick={() => handleTagDelete(tag)} className='delete-tag'></i>}
+    </a>
   )
 }

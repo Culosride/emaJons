@@ -1,7 +1,7 @@
 const express = require("express")
 require("./src/db/mongoose")
 // const User = require("./src/models/user") // needed to authenticate session
-const Category = require('./src/models/category');
+// const Category = require('./src/models/category');
 const routers = require("./src/routes/routers")
 const errorHandler = require("./src/middleware/errorHandler")
 const path = require('path')
@@ -19,7 +19,7 @@ app.set("views", "./src/views")
 app.use(express.static("public"))
 app.use(express.urlencoded({extended: true}))
 
-app.use(routers.authRouter, routers.postRouter, routers.categoryRouter, routers.registerRouter)
+app.use(routers.authRouter, routers.postRouter, routers.registerRouter, routers.categoryRouter)
 
 app.use(errorHandler)
 app.use('/assets', express.static(path.join(__dirname, '../public')))
