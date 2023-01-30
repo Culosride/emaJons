@@ -15,6 +15,7 @@ export default function PostForm () {
   const postId = currentPost._id
   const availableTags = useSelector(state => state.categories.availableTags);
   const selectedTags = useSelector(state => state.categories.selectedTags);
+  const status = useSelector(state => state.categories.status)
   const editPage = pathname.includes("edit")
   const [error, setError] = useState(null);
   const [tempFiles, setTempFiles] = useState([])
@@ -35,11 +36,9 @@ export default function PostForm () {
     dispatch(fetchAllTags())
     if(editPage && currentPost.postTags) {
       setPostData(currentPost)
-      currentPost.postTags.forEach(tag => {
-        dispatch(toggleTag(tag))})
-      } else if(!editPage){
-        dispatch(resetTags())
-        dispatch(fetchAllTags())
+    } else if(!editPage){
+      dispatch(resetTags())
+      dispatch(fetchAllTags())
       setPostData(
         {
           title: "",
@@ -53,10 +52,12 @@ export default function PostForm () {
       }
     }, [pathname, dispatch])
 
-    // useEffect(() => {
-      //   if(editPage && currentPost.postTags) {
-        //   }
-        // }, [status])
+    useEffect(() => {
+        if(editPage && currentPost.postTags) {
+        currentPost.postTags.forEach(tag => {
+          dispatch(toggleTag(tag))})
+          }
+        }, [status])
 
         // create media preview
         useEffect(() => {
