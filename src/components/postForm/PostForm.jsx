@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
-import { createPost, editPost } from "../../features/posts/postsSlice"
+import { createPost, editPost, fetchPostById, setCurrentPost } from "../../features/posts/postsSlice"
 import { deleteTag, fetchAllTags, toggleTag, resetTags } from "../../features/categories/categoriesSlice";
 import { useSelector, useDispatch } from "react-redux";
+import TagsInputForm from "../tag/TagsInputForm"
 const _ = require("lodash")
 
 export default function PostForm () {
@@ -14,22 +15,19 @@ export default function PostForm () {
   const postId = currentPost._id
   const availableTags = useSelector(state => state.categories.availableTags);
   const selectedTags = useSelector(state => state.categories.selectedTags);
-  // const error = useSelector(state => state.categories.error);
-  const status = useSelector(state => state.categories.status);
   const editPage = pathname.includes("edit")
-  const [emptyCategory, setEmptyCategory] = useState(false);
   const [error, setError] = useState(null);
+  const [tempFiles, setTempFiles] = useState([])
   const [postData, setPostData] = useState({
-      title: "",
-      subtitle: "",
-      content: "",
-      media: [],
-      category: "",
-      postTags: []
-    }
+    title: "",
+    subtitle: "",
+    content: "",
+    media: [],
+    category: "",
+    postTags: []
+  }
   );
   const [mediaElements, setMediaElements] = useState([]);
-  // const categories = ['Walls', 'Paintings', 'Sketchbooks', 'Video', 'Sculptures']
 
   // fetch data
   useEffect(() => {
@@ -37,9 +35,11 @@ export default function PostForm () {
     dispatch(fetchAllTags())
     if(editPage && currentPost.postTags) {
       setPostData(currentPost)
-    } else if(!editPage){
-      dispatch(resetTags())
-      dispatch(fetchAllTags())
+      currentPost.postTags.forEach(tag => {
+        dispatch(toggleTag(tag))})
+      } else if(!editPage){
+        dispatch(resetTags())
+        dispatch(fetchAllTags())
       setPostData(
         {
           title: "",
@@ -50,24 +50,21 @@ export default function PostForm () {
           postTags: []
         }
         )
-    }
-  }, [pathname])
+      }
+    }, [pathname, dispatch])
 
-  useEffect(() => {
-    if(editPage && currentPost.postTags) {
-      currentPost.postTags.forEach(tag => {
-        dispatch(toggleTag(tag))})
-    }
-  }, [status])
+    // useEffect(() => {
+      //   if(editPage && currentPost.postTags) {
+        //   }
+        // }, [status])
 
-  // create media preview
-  useEffect(() => {
-    console.log(postData)
-    setMediaElements(postData.media.map((file, i) => {
-      const mediaKey = file.publicId ? 'publicId' : 'name';
-      const src = file.publicId ? file.url : URL.createObjectURL(file);
-      return (
-        <div key={`media-${i}`} className="preview-media">
+        // create media preview
+        useEffect(() => {
+          setMediaElements(postData.media.map((file, i) => {
+            const mediaKey = file.publicId ? 'publicId' : 'name';
+            const src = file.publicId ? file.url : URL.createObjectURL(file);
+            return (
+              <div key={`media-${i}`} className="preview-media">
           <img src={src} />
           <i id={file[mediaKey]} onClick={deleteMedia}></i>
         </div>
@@ -82,6 +79,7 @@ export default function PostForm () {
       const mediaKey = file.publicId ? 'publicId' : 'name';
       return file[mediaKey] !== id
     })
+    tempFiles.length && setTempFiles((prev => [prev.filter(file => file.name !== id)]))
     setPostData(prev => ({
       ...prev,
       media: updatedMedia
@@ -91,8 +89,10 @@ export default function PostForm () {
   function handleChange(e) {
     setError("")
     const { name, value, files } = e.target;
+    if (name === "media") setTempFiles(prev => [...prev, ...files])
     setPostData(prev => {
       if (name === "media") {
+        setTempFiles(prev => [...prev, ...files])
         return ({ ...prev, media: [...prev.media, ...files] })
       } else {
         return ({ ...prev, [name]: value })

@@ -2,14 +2,13 @@
 import React, {useRef, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux'; // hook to select data from redux store
 import { fetchPostsByCategory, setCurrentCategory } from "../../features/posts/postsSlice";
-import { fetchAllTags } from "../../features/categories/categorySlice";
+import { fetchAllTags } from "../../features/categories/categoriesSlice";
 import { Link, useParams } from 'react-router-dom';
 import NotFound from '../404/NotFound';
 import {  } from 'react';
 const _ = require('lodash');
 
 export default function AllPosts() {
-
   const params = useParams();
   const dispatch = useDispatch()
   const posts = useSelector(state => state.posts.posts)

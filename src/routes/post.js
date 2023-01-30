@@ -21,18 +21,9 @@ postRouter.get('/api/posts', async (req, res) => {
   }
 });
 
-postRouter.get('/api/posts/:category', async (req, res) => {
+postRouter.get('/api/posts/:postId', async (req, res) => {
   try {
-    const allPosts = await Post.find({category: _.capitalize(req.params.category)});
-    res.status(200).json(allPosts);
-  } catch (err) {
-    res.status(404).send(err);
-  }
-});
-
-postRouter.get('/api/posts/:category/:postId', async (req, res) => {
-  try {
-    const post = await Post.findById(req.params.postId);
+    const post = await Post.findOne({_id: req.params.postId});
     res.status(200).json(post);
   } catch (err) {
     res.status(400).send(err);
@@ -106,7 +97,7 @@ postRouter.post('/posts', verifyJWT, multerUpload, async (req, res) => {
     const media = req.files;
     console.log(post)
     await Promise.all(media.map(async (med) => {
-      
+
       // gets video file type
       const mediaType = med.mimetype.split("/")[0]
 

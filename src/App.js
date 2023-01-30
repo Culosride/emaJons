@@ -21,8 +21,8 @@ import {
 } from 'react-router-dom';
 import { ROLES } from './config/roles'
 
-const AllPostsWrapped = withRouteValidation(AllPosts)
-const PostWrapped = withRouteValidation(Post)
+const AllPostsValidated = withRouteValidation(AllPosts)
+const PostValidated = withRouteValidation(Post)
 
 export default function App() {
   const dispatch = useDispatch();
@@ -41,8 +41,8 @@ export default function App() {
         <Route path="/login" element={<Login />} />
         <Route path='/contact' element={<Contact />}/>
         <Route path='/bio' element={<Bio />}/>
-        <Route path='/:category' element={<AllPostsWrapped />} />
-        <Route path="/:category/:postId" element={<PostWrapped />} />
+        <Route path='/:category' element={<AllPostsValidated /> } />
+        {posts.length && <Route path="/:category/:postId" element={<PostValidated posts={posts} />} />}
         {/* protected */}
         <Route element={<RequireAuth allowedRoles={[ROLES.Admin]} />}>
           <Route path='/posts/new' element={<PostForm />}/>
