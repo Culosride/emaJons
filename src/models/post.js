@@ -1,12 +1,11 @@
 const mongoose = require("mongoose")
-const { imageSchema } = require("./image")
-const { tagSchema } = require("./tag")
+const { mediaSchema } = require("./media")
 
 const postSchema = new mongoose.Schema({
   title: String,
   subtitle: String,
   content: String,
-  images: [imageSchema],
+  media: [mediaSchema],
   postTags: [String],
   category: String,
 }, {timestamps: true})

@@ -4,7 +4,6 @@ import * as api from "../../API/index"
 const initialState = {
   availableTags: [],
   selectedTags: [],
-  // isExpanded: false,
   status: 'idle' || 'loading' || 'succeeded' || 'failed',
   error: "" || null
 }

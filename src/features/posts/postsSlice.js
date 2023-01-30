@@ -36,8 +36,8 @@ export const fetchPostsByCategory = createAsyncThunk("getPostsByCategory", async
   return response.data
 })
 
-export const fetchPostById = createAsyncThunk("getPostById", async (params) => {
-  const response = await api.fetchPostById(params)
+export const fetchPostById = createAsyncThunk("getPostById", async (postId) => {
+  const response = await api.fetchPostById(postId)
   return response.data
 })
 
@@ -62,6 +62,8 @@ const postsSlice = createSlice({
       }
     },
     setCurrentCategory(state, action) {
+      state.status = "succeeded"
+      state.error = null
       state.currentCategory = action.payload
     }
   },

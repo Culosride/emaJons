@@ -1,13 +1,9 @@
-import React, { useState, useEffect, useRef } from "react";
-import { useNavigate, useParams, matchPath, useLocation } from 'react-router-dom';
-import { createPost, editPost } from "../../features/posts/postsSlice"
-// import { deleteTag, fetchAllTags, addNewTag, toggleTag, resetTags } from "../../features/tags/tagsSlice"
-import { deleteTag, fetchAllTags, addNewTag, toggleTag, resetTags } from "../../features/categories/categoriesSlice";
-import { selectAuthStatus } from "../../features/auth/authSlice"
+import React, { useState, useEffect } from "react";
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import { createPost, editPost, fetchPostById, setCurrentPost } from "../../features/posts/postsSlice"
+import { deleteTag, fetchAllTags, toggleTag, resetTags } from "../../features/categories/categoriesSlice";
 import { useSelector, useDispatch } from "react-redux";
-// import Tag from "../tag/Tag";
-import TagsInputForm from "../tag/TagsInputForm";
-import { persistor } from "../../app/store";
+import TagsInputForm from "../tag/TagsInputForm"
 const _ = require("lodash")
 
 export default function PostForm () {
@@ -19,22 +15,20 @@ export default function PostForm () {
   const postId = currentPost._id
   const availableTags = useSelector(state => state.categories.availableTags);
   const selectedTags = useSelector(state => state.categories.selectedTags);
-  // const error = useSelector(state => state.categories.error);
-  const status = useSelector(state => state.categories.status);
+  const status = useSelector(state => state.categories.status)
   const editPage = pathname.includes("edit")
-  const [emptyCategory, setEmptyCategory] = useState(false);
   const [error, setError] = useState(null);
+  const [tempFiles, setTempFiles] = useState([])
   const [postData, setPostData] = useState({
-      title: "",
-      subtitle: "",
-      content: "",
-      images: [],
-      category: "",
-      postTags: []
-    }
+    title: "",
+    subtitle: "",
+    content: "",
+    media: [],
+    category: "",
+    postTags: []
+  }
   );
-  const [imageElements, setImageElements] = useState([]);
-  // const categories = ['Walls', 'Paintings', 'Sketchbooks', 'Video', 'Sculptures']
+  const [mediaElements, setMediaElements] = useState([]);
 
   // fetch data
   useEffect(() => {
@@ -50,61 +44,58 @@ export default function PostForm () {
           title: "",
           subtitle: "",
           content: "",
-          images: [],
+          media: [],
           category: "",
           postTags: []
         }
         )
-    }
-  }, [pathname])
+      }
+    }, [pathname, dispatch])
 
-  useEffect(() => {
-    if(editPage && currentPost.postTags) {
-      currentPost.postTags.forEach(tag => {
-        dispatch(toggleTag(tag))})
-    }
-  }, [status])
+    useEffect(() => {
+        if(editPage && currentPost.postTags) {
+        currentPost.postTags.forEach(tag => {
+          dispatch(toggleTag(tag))})
+          }
+        }, [status])
 
-  // create image preview
-  useEffect(() => {
-    console.log(postData)
-    setImageElements(postData.images.map((file, i) => {
-      const imageKey = file.publicId ? 'publicId' : 'name';
-      const src = file.publicId ? file.imageUrl : URL.createObjectURL(file);
-      return (
-        <div key={`image-${i}`} className="preview-images">
+        // create media preview
+        useEffect(() => {
+          setMediaElements(postData.media.map((file, i) => {
+            const mediaKey = file.publicId ? 'publicId' : 'name';
+            const src = file.publicId ? file.url : URL.createObjectURL(file);
+            return (
+              <div key={`media-${i}`} className="preview-media">
           <img src={src} />
-          <i id={file[imageKey]} onClick={deleteImage}></i>
+          <i id={file[mediaKey]} onClick={deleteMedia}></i>
         </div>
       )
     }))
-  }, [postData.images])
+  }, [postData.media])
 
-  // delete images from preview
-  const deleteImage = (e) => {
+  // delete media from preview
+  const deleteMedia = (e) => {
     const { id } = e.target;
-    const updatedImages = postData.images.filter(file => {
-      const imageKey = file.publicId ? 'publicId' : 'name';
-      return file[imageKey] !== id
+    const updatedMedia = postData.media.filter(file => {
+      const mediaKey = file.publicId ? 'publicId' : 'name';
+      return file[mediaKey] !== id
     })
+    tempFiles.length && setTempFiles((prev => [prev.filter(file => file.name !== id)]))
     setPostData(prev => ({
       ...prev,
-      images: updatedImages
+      media: updatedMedia
     }))
   }
 
-  // set Post Data with input values
   function handleChange(e) {
     setError("")
     const { name, value, files } = e.target;
+    if (name === "media") setTempFiles(prev => [...prev, ...files])
     setPostData(prev => {
-      if (name === "images") {
-        return ({ ...prev, images: [...prev.images, ...files] })
-      }
-      // else if (name === "postTags") {
-      //   return ({ ...prev, postTags: [...prev.postTags, value] })
-      // }
-      else {
+      if (name === "media") {
+        setTempFiles(prev => [...prev, ...files])
+        return ({ ...prev, media: [...prev.media, ...files] })
+      } else {
         return ({ ...prev, [name]: value })
       }
     });
@@ -118,14 +109,14 @@ export default function PostForm () {
     if(!postData.category) {
       setError("Select a category");
       return
-    } else if (!postData.images.length) {
+    } else if (!postData.media.length) {
       setError("A post with no pictures?");
       return
     }
     const formData = new FormData()
     Object.keys(postData).map((key) => {
-      if (key === "images") {
-        return postData.images.map(img => formData.append("images", img))
+      if (key === "media") {
+        return postData.media.map(med => formData.append("media", med))
       } else if (key === "postTags") {
         return selectedTags.map(tag => formData.append("postTags", tag))
       } else {
@@ -148,9 +139,9 @@ export default function PostForm () {
     }
     const formData = new FormData()
     Object.keys(postData).map((key) => {
-      if (key === "images") {
-        return postData.images.map(img => {
-          (img.name) ? formData.append("images", img) : formData.append("images", JSON.stringify(img))
+      if (key === "media") {
+        return postData.media.map(med => {
+          (med.name) ? formData.append("media", med) : formData.append("media", JSON.stringify(med))
         })
       } else if (key === "postTags") {
         return selectedTags.map(tag => formData.append("postTags", tag))
@@ -174,8 +165,8 @@ export default function PostForm () {
       <form className="post-form" onSubmit={editPage ? handleEdit : handleSubmit}>
 
         <div className="post-form-layout">
-          <input className="form-post-imgs" type="file" onChange={handleChange} name="images" title="upload images" multiple />
-          <div className="image-preview-container">{imageElements}</div>
+          <input type="file" onChange={handleChange} name="media" title="upload media" multiple />
+          <div className="media-preview-container">{mediaElements}</div>
         </div>
 
         <div className="post-form-layout">
