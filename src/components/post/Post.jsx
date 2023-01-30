@@ -23,10 +23,8 @@ export default function Post() {
   useEffect(() => {
     dispatch(setCurrentPost(post))
   }, [])
-  console.log(post.media)
   useEffect(() => {
     const escapeFullscreen = (e) => {
-      console.log(fullscreen)
       if(e.key === "Escape" && fullscreen) {
         navigate(`/${category}/${currentId}`)
         dispatch(toggleFullscreen(false))
@@ -85,7 +83,7 @@ export default function Post() {
             toggleFullScreen={handleFullscreen}
           ></Carousel>
         }
-        
+
         <div className="text-container" onScroll={handleScroll} onClick={handleFullscreen}>
           <div className="description-container">
             <div className="headline">

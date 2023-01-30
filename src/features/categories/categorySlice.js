@@ -4,12 +4,11 @@ import * as api from "../../API/index"
 const initialState = {
   availableTags: [],
   selectedTags: [],
-  // isExpanded: false,
   status: 'idle' || 'loading' || 'succeeded' || 'failed',
   error: "" || null
 }
 
-export const addNewTag = createAsyncThunk("api/tags/new", async (tag, { rejectWithValue }) => {
+export const addNewTag = createAsyncThunk("createTag", async (tag, { rejectWithValue }) => {
   try {
     const response = await api.addNewTag(tag)
     return response.data
@@ -18,7 +17,7 @@ export const addNewTag = createAsyncThunk("api/tags/new", async (tag, { rejectWi
   }
 })
 
-export const deleteTag = createAsyncThunk("api/tags/delete", async (tagToDelete, { rejectWithValue }) => {
+export const deleteTag = createAsyncThunk("deleteTag", async (tagToDelete, { rejectWithValue }) => {
   try {
     const response = await api.deleteTag(tagToDelete)
     return response.data
@@ -27,7 +26,7 @@ export const deleteTag = createAsyncThunk("api/tags/delete", async (tagToDelete,
   }
 })
 
-export const fetchAllTags = createAsyncThunk("/api/tags/get", async () => {
+export const fetchAllTags = createAsyncThunk("fetchAllTags", async () => {
   const response = await api.fetchAllTags()
   return response.data
 })

@@ -78,10 +78,12 @@ export default function PostForm () {
   }
 
   function handleTagDelete(tagName) {
+    setError("")
     dispatch(deleteTag(tagName))
   }
 
   function handleTagToggle(tagName) {
+    setError("")
     dispatch(toggleTag(tagName))
   }
 
@@ -187,7 +189,7 @@ export default function PostForm () {
 
         <label htmlFor="categories">Category:</label>
         <select name="category" id="categories" onChange={handleChange}>
-          {/* {editPage && <option value="">{postData.category}</option>}
+          {/* {editPage && <option value={}>{postData.category}</option>}
           {!editPage && <option value="">-- Please choose a category --</option>} */}
           {/* {optionElements} */}
           <option value="">-- Please choose a category --</option>
@@ -197,7 +199,6 @@ export default function PostForm () {
           <option value="Video">Video</option>
           <option value="Sculpture">Sculpture</option>
         </select>
-        {error && <p>Devi pigliarne una</p>}
         <div className="selected-tags-wrapper">
           {selectedTagElements}
         </div>
@@ -205,7 +206,7 @@ export default function PostForm () {
           <div className="available-tags-wrapper">
             {tagElements}
           </div>
-          <input type="text" onKeyDown={handleKeyDown} value={tag} placeholder="New tag" name="tag" onChange={handleTag} className="" />
+          <input type="text" onKeyDown={handleKeyDown} value={tag} placeholder="New tag: year, place.." name="tag" onChange={handleTag} className="" />
           {/* {error && <p>{error}</p>} */}
         </div>
 

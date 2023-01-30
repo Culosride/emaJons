@@ -5,9 +5,9 @@ import Item from '../item/Item';
 export default function Carousel({ media, toggleFullScreen }) {
   const slider = useRef()
 
+
   useEffect(() => {
     media.forEach((_, i) => {
-      console.log(media)
       const slide = document.querySelector(`[data-index="${i}"]`)
       slide.parentElement.classList.add('center-mobile')
       slide.style.transition = 'left 200ms ease, width 200ms ease, opacity 600ms ease 0s, visibility 600ms ease 0s'
@@ -42,30 +42,25 @@ export default function Carousel({ media, toggleFullScreen }) {
     ]
   };
 
-  const mediaElements = media.map((med, i) => {
-    if(med.mediaType === "video") {
-      return (
-        <video key={med.publicId} id={i} className="slides" controls>
-          <source src={med.url} type="video/mp4" />
-        </video>
-      )
-    } else {
-      return <Item
-        url={med.url}
-        key={med.publicId}
-        id={i}
-        toggleFullScreen={toggleFullScreen}
-        className="slides"
-        />
-    }
-  })
-
   const next = () => {
     slider.current.slickNext();
   }
   const previous = () => {
     slider.current.slickPrev();
   }
+  
+  const mediaElements = media.map((med, i) => {
+    return (
+      <Item
+      url={med.url}
+      key={med.publicId}
+      type={med.mediaType}
+      toggleFullScreen={toggleFullScreen}
+      id={i}
+      className="slides"
+      />
+    )
+  })
 
   return (
     <div className="images-container carousel">

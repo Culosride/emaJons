@@ -2,6 +2,7 @@
 import React, {useRef, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux'; // hook to select data from redux store
 import { fetchPostsByCategory, setCurrentCategory } from "../../features/posts/postsSlice";
+import { fetchAllTags } from "../../features/categories/categorySlice";
 import { Link, useParams } from 'react-router-dom';
 import NotFound from '../404/NotFound';
 import {  } from 'react';
@@ -15,7 +16,6 @@ export default function AllPosts() {
   const postsByCategory = posts.filter(post => (post.category === _.capitalize(params.category)))
 
   let status = useSelector(state => state.posts.status)
-  let authStatus = useSelector(state => state.auth.status)
   const error = useSelector(state => state.posts.error)
   const allTags = postsByCategory.flatMap(post => post.postTags.map(tag => tag))
   const cleanedTags = [...new Set(allTags.sort((a, b) => b.localeCompare(a)))];
@@ -54,6 +54,7 @@ export default function AllPosts() {
 
   useEffect(() => {
     dispatch(setCurrentCategory(params.category))
+    dispatch(fetchAllTags())
   }, [params])
 
   if(status === "failed") {
