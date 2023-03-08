@@ -28,7 +28,6 @@ export default function AllPosts() {
 
   useEffect(() => {
     const filtered = postsByCategory.filter((post) => {
-      // console.log("ss",post.postTags)
       return tagsFilter.every((tag) => post.postTags.includes(tag));
       });
 
@@ -63,9 +62,6 @@ export default function AllPosts() {
                 key={i}
                 src={post.media[0].url}
               />
-              <div>
-                {post.postTags}
-              </div>
               {hoveredPost === post._id && (
                 <div className="post-info">
                   <p>{post.title.split(",").join("").toUpperCase()}</p>
