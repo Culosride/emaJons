@@ -7,14 +7,13 @@
 
   img {
     width: 85%;
-    height: calc(100vh - 100px);
+    height: calc(100vh - 90px);
     object-fit: contain;
   }
 
   video {
     width: 85%;
-    height: calc(100vh - 140px);
-    object-fit: cover;
+    object-fit: contain;
   }
 }
 
@@ -25,6 +24,13 @@
 }
 
 .slide {
+  .video-container {
+    height: calc(100vh - 90px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   position: absolute;
   margin-top: 40px;
   box-sizing: border-box;

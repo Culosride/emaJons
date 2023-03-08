@@ -32,7 +32,7 @@ postInstance.interceptors.request.use(async (req) => {
     return req;
   }
 
-  const response = await axios.get(`${baseURL}/auth/refresh/`);
+  const response = await axios.get(`${baseURL}/auth/refresh`);
   req.headers.Authorization = `Bearer ${response.data.accessToken}`;
   return req;
 });
@@ -65,7 +65,7 @@ authInstance.interceptors.request.use(async (req) => {
   req.headers.Authorization = `Bearer ${token}`;
   if (!isExpired) return req;
 
-  const response = await axios.get(`${baseURL}/auth/refresh/`);
+  const response = await axios.get(`${baseURL}/auth/refresh`);
 
   req.headers.Authorization = `Bearer ${response.data.accessToken}`;
   return req;
