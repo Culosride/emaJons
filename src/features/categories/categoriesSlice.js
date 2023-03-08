@@ -41,6 +41,7 @@ const categoriesSlice = createSlice({
     },
     resetTags: (state) => {
       state.selectedTags = []
+      state.availableTags = []
     },
     toggleTag: (state, action) => {
       if(state.selectedTags.includes(action.payload)) {
@@ -104,7 +105,7 @@ const categoriesSlice = createSlice({
   }
 })
 
-export const { toggleTag, toggleNavbar, resetTags } = categoriesSlice.actions
+export const { toggleNavbar, } = categoriesSlice.actions
 
 
 export default categoriesSlice.reducer

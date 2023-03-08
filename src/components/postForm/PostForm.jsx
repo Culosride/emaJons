@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { createPost, editPost, fetchPostById, setCurrentPost } from "../../features/posts/postsSlice"
-import { deleteTag, fetchAllTags, toggleTag, resetTags } from "../../features/categories/categoriesSlice";
+import { deleteTag, fetchAllTags, toggleTag, resetTags } from "../../features/tags/tagsSlice";
 import { useSelector, useDispatch } from "react-redux";
 import TagsInputForm from "../tag/TagsInputForm"
 const _ = require("lodash")
@@ -11,11 +11,11 @@ export default function PostForm () {
   const navigate = useNavigate();
   const params = useParams();
   const { pathname } = useLocation()
-  const currentPost = useSelector(state => state.posts.selectedPost)
+  const currentPost = useSelector(state => state.posts.currentPost)
   const postId = currentPost._id
-  const availableTags = useSelector(state => state.categories.availableTags);
-  const selectedTags = useSelector(state => state.categories.selectedTags);
-  const status = useSelector(state => state.categories.status)
+  // const availableTags = useSelector(state => state.tags.availableTags);
+  const selectedTags = useSelector(state => state.tags.selectedTags);
+  const status = useSelector(state => state.tags.status)
   const editPage = pathname.includes("edit")
   const [error, setError] = useState(null);
   const [tempFiles, setTempFiles] = useState([])
@@ -30,45 +30,43 @@ export default function PostForm () {
   );
   const [mediaElements, setMediaElements] = useState([]);
 
-  // fetch data
   useEffect(() => {
     dispatch(resetTags())
     dispatch(fetchAllTags())
-    if(editPage && currentPost.postTags) {
-      setPostData(currentPost)
-    } else if(!editPage){
-      dispatch(resetTags())
-      dispatch(fetchAllTags())
-      setPostData(
-        {
-          title: "",
-          subtitle: "",
-          content: "",
-          media: [],
-          category: "",
-          postTags: []
+      .then(() => {
+        if(editPage) {
+          dispatch(fetchPostById(params.postId))
+            .then((res) => {
+              setPostData(res.payload)
+              res.payload.postTags.forEach(tag => {
+                dispatch(toggleTag(tag))
+              })
+            })
+          } else {
+            dispatch(setCurrentPost(""))
+            dispatch(resetTags())
+            setPostData({
+                title: "",
+                subtitle: "",
+                content: "",
+                media: [],
+                category: "",
+                postTags: []
+            })
         }
-        )
-      }
-    }, [pathname, dispatch])
+      })
+  }, [editPage])
 
-    useEffect(() => {
-        if(editPage && currentPost.postTags) {
-        currentPost.postTags.forEach(tag => {
-          dispatch(toggleTag(tag))})
-          }
-        }, [status])
-
-        // create media preview
-        useEffect(() => {
-          setMediaElements(postData.media.map((file, i) => {
-            const mediaKey = file.publicId ? 'publicId' : 'name';
-            const src = file.publicId ? file.url : URL.createObjectURL(file);
-            return (
-              <div key={`media-${i}`} className="preview-media">
+  // create media preview
+  useEffect(() => {
+    setMediaElements(postData.media.map((file, i) => {
+      const mediaKey = file.publicId ? 'publicId' : 'name';
+      const src = file.publicId ? file.url : URL.createObjectURL(file);
+      return (
+        <div key={`media-${i}`} className="preview-media">
           <img src={src} />
           <i id={file[mediaKey]} onClick={deleteMedia}></i>
-        </div>
+       </div>
       )
     }))
   }, [postData.media])
@@ -102,9 +100,7 @@ export default function PostForm () {
   }
 
   // submit form
-
   const handleSubmit = async (e) => {
-    // persistor.purge(["posts"])
     e.preventDefault()
     if(!postData.category) {
       setError("Select a category");
@@ -130,7 +126,7 @@ export default function PostForm () {
       }})
   }
 
-  // edit existing post
+  // edit post
   function handleEdit(e) {
     e.preventDefault()
     if(!postData.category) {
@@ -144,7 +140,7 @@ export default function PostForm () {
           (med.name) ? formData.append("media", med) : formData.append("media", JSON.stringify(med))
         })
       } else if (key === "postTags") {
-        return selectedTags.map(tag => formData.append("postTags", tag))
+        return selectedTags.forEach(tag => formData.append("postTags", tag))
       } else {
         return formData.append(key, postData[key]);
       }
@@ -155,9 +151,6 @@ export default function PostForm () {
         navigate(`/${postData.category}/${res.payload._id}`)
     }})
   }
-
-  // const optionElements = categories.filter(category => category !== postData.category)
-  //                                  .map((element, i) => { return <option key={element+i} value={element}>{element}</option> })
 
   return (
     <div className="form-wrapper">
@@ -197,15 +190,13 @@ export default function PostForm () {
 
             <hr />
 
-            <select name="category" id="categories" onChange={handleChange}>
-              {editPage && <option value="">{postData.category}</option>}
-              {!editPage && <option value="">Please choose a category</option>}
+            <select value={postData.category} name="category" id="categories" onChange={handleChange}>
+              <option disabled hidden value="">Please choose a category</option>
               <option value="Walls">Walls</option>
               <option value="Paintings">Paintings</option>
               <option value="Sketchbooks">Sketchbooks</option>
               <option value="Video">Video</option>
-              <option value="Sculpture">Sculpture</option>
-              {/* {optionElements} */}
+              <option value="Sculptures">Sculptures</option>
             </select>
           </fieldset>
 

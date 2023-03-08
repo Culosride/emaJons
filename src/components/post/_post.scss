@@ -43,7 +43,7 @@ button {
   cursor: pointer;
   // position: fixed;
   right: 30px;
-  top: 24px;
+  // top: 24px;
   z-index: 6;
   .close-icon:after {
     content: url('../img/CloseIcon.svg')
@@ -130,7 +130,7 @@ button {
     opacity: 0;
     right: calc(($description-width-50 - $slider-padding) * (-1));
   }
-  .slides:hover {
+  .slider:hover {
     img {
       cursor: url('../img/CloseIcon.svg'), auto;
     }
@@ -177,6 +177,7 @@ button.delete-post {
     }
   }
   .layout-100 {
+
     .header-50 {
       right: 0;
       top: -74px;

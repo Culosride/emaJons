@@ -4,6 +4,8 @@ const _ = require("lodash")
 
 async function tagValidation(req, res, next) {
   const { newTag } = req.body
+  if(newTag, /^\s*$/.test(newTag)) return res.status(400).json({message: "Invalid tag"})
+
   const capitalizedTag = _.capitalize(newTag)
   const selectedCategory = await Category.findOne({}).exec();
   selectedCategory.allTags.some(catTag => catTag === capitalizedTag) ?

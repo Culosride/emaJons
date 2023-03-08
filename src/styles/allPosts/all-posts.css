@@ -47,18 +47,20 @@
   font-size: 2.5rem;
 }
 
-.select-tags-container ul {
-  list-style-type: none;
-  padding-left: 0;
-}
-.select-tags-container li {
-  animation: fadeIn 0.5s ease-in;
+.select-tags-container {
+  display: flex;
+  flex-direction: column;
   text-transform: uppercase;
+  animation: fadeIn 0.5s ease-in;
   padding-bottom: 10px;
+  gap: 10px;
 }
 .select-tags-container a {
   text-decoration: none;
   color: black;
+}
+.select-tags-container .tag-active {
+  font-weight: 600;
 }
 
 @media screen and (max-width: 1400px) {
@@ -79,7 +81,7 @@
     justify-content: flex-start;
     margin-top: 0;
   }
-  .select-tags-container li {
+  .select-tags-container a {
     margin-right: 20px;
     padding: 10px 0;
   }

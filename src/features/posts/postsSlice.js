@@ -4,8 +4,9 @@ import * as api from "../../API/index"
 const initialState = {
   posts: [],
   currentCategory: "",
+  currentPost: "",
+  currentMediaIsVideo: false,
   fullscreen: false,
-  selectedPost: "",
   status: 'idle' || 'loading' || 'succeeded' || 'failed',
   error: "" || null
 }
@@ -17,7 +18,6 @@ export const createPost = createAsyncThunk("createPost", async (formData) => {
 
 export const editPost = createAsyncThunk("updatePost", async (payload) => {
   const { formData, postId } = payload
-  console.log(payload)
   const response = await api.editPost(formData, postId)
   return response.data
 })
@@ -49,22 +49,37 @@ const postsSlice = createSlice({
       state.status = "idle"
     },
     toggleFullscreen(state, action) {
-      state.fullscreen = action.payload ?
-      action.payload :
-      !state.fullscreen
+      state.fullscreen =
+        action.payload !== undefined ?
+        action.payload :
+        !state.fullscreen
     },
     setCurrentPost(state, action) {
-      return state = {
-        ...state,
-        selectedPost: action.payload,
-        currentCategory: action.payload.category,
-        fullscreen: false
+      if(action.payload) {
+        return state = {
+          ...state,
+          currentPost: action.payload,
+          currentCategory: action.payload.category,
+          fullscreen: false
+        }
+      } else {
+        return state = {
+          ...state,
+          fullscreen: false,
+          currentPost: "",
+          currentCategory: "",
+        }
       }
     },
     setCurrentCategory(state, action) {
       state.status = "succeeded"
       state.error = null
       state.currentCategory = action.payload
+    },
+    setCurrentMedia(state, action) {
+      state.status = "succeeded"
+      state.error = null
+      state.currentMediaIsVideo = action.payload
     }
   },
   extraReducers(builder) {
@@ -77,7 +92,7 @@ const postsSlice = createSlice({
         return state = {
           ...state,
           status: 'succeeded',
-          selectedPost: action.payload,
+          currentPost: action.payload,
           posts: state.posts.concat(action.payload),
           error: ""
         }
@@ -86,7 +101,7 @@ const postsSlice = createSlice({
         state.status = 'failed'
         state.error = action.error.message
       })
-      .addCase(editPost.pending, (state, action) => {
+      .addCase(editPost.pending, (state) => {
         state.status = 'loading'
       })
       .addCase(editPost.fulfilled, (state, action) => {
@@ -95,7 +110,7 @@ const postsSlice = createSlice({
           ...state,
           posts: [...filteredPosts, action.payload],
           status: 'succeeded',
-          selectedPost: action.payload,
+          currentPost: action.payload,
           error: ""
         }
       })
@@ -107,7 +122,6 @@ const postsSlice = createSlice({
         state.status = 'loading'
       })
       .addCase(deletePost.fulfilled, (state, action) => {
-        console.log("payload", state, action.payload)
         state.status = 'succeeded'
         state.error= ""
       })
@@ -139,11 +153,10 @@ const postsSlice = createSlice({
       })
       .addCase(fetchPostsByCategory.fulfilled, (state, action) => {
         state.status = 'succeeded'
-        console.log(action.payload)
         const filteredPosts = action.payload.filter(post => state.posts._id !== post._id )
         state.status = 'succeeded'
         state.currentCategory = action.meta.arg
-        state.posts = [...filteredPosts]
+        state.posts = filteredPosts
       })
       .addCase(fetchPostsByCategory.rejected, (state, action) => {
         state.status = 'failed'
@@ -157,7 +170,7 @@ const postsSlice = createSlice({
           ...state,
           status: 'succeeded',
           currentCategory: action.payload.category,
-          selectedPost: action.payload
+          currentPost: action.payload
        }
       })
       .addCase(fetchPostById.rejected, (state, action) => {
@@ -167,6 +180,6 @@ const postsSlice = createSlice({
     }
 })
 
-export const { resetStatus, clearResults, setCurrentPost, setCurrentCategory, toggleFullscreen } = postsSlice.actions
+export const { resetStatus, clearResults, setCurrentPost, setCurrentCategory, toggleFullscreen, setCurrentMedia } = postsSlice.actions
 
 export default postsSlice.reducer

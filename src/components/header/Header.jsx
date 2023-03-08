@@ -2,10 +2,11 @@ import React, {useState, useRef, useEffect} from "react"
 import { Link, useLocation, matchPath, useParams, useNavigate } from 'react-router-dom'
 import _ from 'lodash'
 import { useDispatch, useSelector } from "react-redux";
-import { toggleNavbar } from "../../features/categories/categoriesSlice.js";
+import { toggleNavbar } from "../../features/tags/tagsSlice.js";
 import { deletePost, editPost, setCurrentCategory, fetchPosts, setCurrentPost } from '../../features/posts/postsSlice';
 import useAuth from "../../hooks/useAuth.jsx";
 import { logout, selectCurrentToken } from "../../features/auth/authSlice"
+import { CATEGORIES } from "../../config/categories.js";
 
 export default function Header () {
   const authorization = useAuth(false)
@@ -16,11 +17,10 @@ export default function Header () {
   const isAdmin = authorization.isAdmin
   const token = useSelector(selectCurrentToken)
 
-  // const isExpanded = useSelector(state => state.categories.isExpanded)
   let currentCategory = useSelector(state => state.posts.currentCategory)
   const isFullscreen = useSelector(state => state.posts.fullscreen)
-  const currentPostId = useSelector(state => state.posts.selectedPost._id)
-  const hasContent = useSelector(state => state.posts.selectedPost.content?.length > 500)
+  const currentPostId = useSelector(state => state.posts.currentPost._id)
+  const hasContent = useSelector(state => state.posts.currentPost.content?.length > 500)
 
   // to rename ?
   const admin = matchPath("/posts/*", pathname);
@@ -33,8 +33,6 @@ export default function Header () {
   const [on, setOn] = useState(false)
   const logoAndCategoryRef = useRef()
   const navRef = useRef()
-
-  const categories = ['Walls', 'Paintings', 'Sketchbooks', 'Video', 'Sculptures']
 
   if(pathname.includes("new")) {
     currentCategory = "New Post"
@@ -115,7 +113,7 @@ export default function Header () {
     )
   }
 
-  const navElements = () => categories.map((category, i) => {
+  const navElements = () => CATEGORIES.map((category, i) => {
     if((category) !== _.capitalize(currentCategory)) {
       return (
         <li key={i}>

@@ -1,7 +1,7 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import postsReducer from "../features/posts/postsSlice"
-import categoriesReducer from "../features/categories/categoriesSlice"
 import authReducer from "../features/auth/authSlice"
+import tagReducer from "../features/tags/tagsSlice"
 import storage from 'redux-persist/lib/storage';
 import {
   persistStore,
@@ -17,13 +17,13 @@ import {
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ["posts", "auth"]
+  whitelist: ["auth"]
 }
 
 const rootReducer = combineReducers({
   posts: postsReducer,
-  categories: categoriesReducer,
   auth: authReducer,
+  tags: tagReducer,
 })
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)

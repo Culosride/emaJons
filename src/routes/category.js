@@ -28,6 +28,7 @@ categoryRouter.get("/api/categories", async (req, res) => {
 
 // routes requiring authorization
 
+// new tag
 categoryRouter.patch("/api/categories/tags", tagValidation, async (req, res) => {
   const { newTag } = (req.body)
   const capitalizedTag = _.capitalize(newTag)
@@ -42,6 +43,7 @@ categoryRouter.patch("/api/categories/tags", tagValidation, async (req, res) => 
     }
 })
 
+// delete tag
 categoryRouter.patch("/api/categories/deleteTag", async (req, res) => {
   const { tagToDelete } = req.body
   try {
@@ -49,11 +51,11 @@ categoryRouter.patch("/api/categories/deleteTag", async (req, res) => {
       { name: "dummy" },
       { $pull: { allTags: tagToDelete } }
     );
-    const post = await Post.updateMany(
+    const updatedPosts = await Post.updateMany(
       { },
       { $pull: { postTags: tagToDelete } }
     );
-    console.log(post)
+    console.log(updatedPosts)
     res.status(200).json({deletedTag: tagToDelete, message: "Tag deleted"});
     } catch (err) {
       res.status(400).send(err);

@@ -33,6 +33,7 @@ postRouter.get('/api/posts/:postId', async (req, res) => {
 
 // routes requiring authorization
 
+// create post
 postRouter.post('/posts', verifyJWT, multerUpload, async (req, res) => {
   const { postTags } = req.body;
   const post = new Post(req.body);
@@ -57,26 +58,11 @@ postRouter.post('/posts', verifyJWT, multerUpload, async (req, res) => {
     res.status(200).json(updatedPost);
   });
 
-  postRouter.delete('/:category/:postId', verifyJWT, async (req, res) => {
-    const { postId } = req.params
-    try {
-      const post = await Post.findOne({_id: postId}).exec();
-      console.log(post)
-      if(!post) return res.status(204).json({ message: "No post found with this id."})
-      const publicIds = post.media.map(med => med.publicId)
-
-      if(publicIds.length) {await removeFromCloudinary(publicIds)};
-      await post.deleteOne();
-
-      res.status(200).json({message: 'post deleted successfully'});
-    } catch (err) {
-      res.status(400).send(err);
-    }
-  });
-
+  // edit post
   postRouter.patch('/posts/:postId/edit', verifyJWT, multerUpload, async (req, res) => {
+    if(!req.body.postTags) req.body.postTags = []
     const update = Object.assign({}, req.body);
-    update.media = (typeof(update.media) === 'string') ? [update.media] : update.media
+    update.media = (typeof update.media === 'string') ? [update.media] : update.media
     update.media = update.media.map(med => JSON.parse(med))
 
     // filter public id that is not in update media and save public id
@@ -95,7 +81,6 @@ postRouter.post('/posts', verifyJWT, multerUpload, async (req, res) => {
     await post.updateOne({ $set: update }, { new: true }).exec();
 
     const media = req.files;
-    console.log(post)
     await Promise.all(media.map(async (med) => {
 
       // gets video file type
@@ -116,5 +101,24 @@ postRouter.post('/posts', verifyJWT, multerUpload, async (req, res) => {
     const updatedPost = await Post.findById(post._id)
     res.status(200).json(updatedPost);
   });
+
+  // delete post
+  postRouter.delete('/:category/:postId', verifyJWT, async (req, res) => {
+    const { postId } = req.params
+    try {
+      const post = await Post.findOne({_id: postId}).exec();
+      console.log(post)
+      if(!post) return res.status(204).json({ message: "No post found with this id."})
+      const publicIds = post.media.map(med => med.publicId)
+
+      if(publicIds.length) {await removeFromCloudinary(publicIds)};
+      await post.deleteOne();
+
+      res.status(200).json({message: 'post deleted successfully'});
+    } catch (err) {
+      res.status(400).send(err);
+    }
+  });
+
 
 module.exports = postRouter

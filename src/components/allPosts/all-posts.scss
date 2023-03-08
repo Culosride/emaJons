@@ -13,7 +13,7 @@
   grid-template-rows: 240px;
   row-gap: 80px;
   a {
-    animation: slideIn .5s ease-in, fadeIn .5s ease-in;
+    animation: slideIn 0.5s ease-in, fadeIn 0.5s ease-in;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -24,7 +24,7 @@
     width: 100%;
     height: 100%;
     object-fit: contain;
-    transition: .1s;
+    transition: 0.1s;
   }
 
   img:hover {
@@ -32,18 +32,18 @@
   }
 
   .post-info {
-  transition: .2s;
-  display: inline-block;
-  text-align: center;
-  pointer-events: none;
-  width: 150%;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: black;
-  font-weight: 900;
-  text-align: center;
+    transition: 0.2s;
+    display: inline-block;
+    text-align: center;
+    pointer-events: none;
+    width: 150%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: black;
+    font-weight: 900;
+    text-align: center;
   }
 
   p {
@@ -51,20 +51,20 @@
   }
 }
 
-
 .select-tags-container {
-  ul {
-    list-style-type: none;
-    padding-left: 0;
-  }
-  li {
-    animation: fadeIn .5s ease-in;
-    text-transform: uppercase;
-    padding-bottom: 10px;
-  }
+  display: flex;
+  flex-direction: column;
+  text-transform: uppercase;
+  animation: fadeIn 0.5s ease-in;
+  padding-bottom: 10px;
+  gap: 10px;
+
   a {
     text-decoration: none;
     color: black;
+  }
+  .tag-active {
+    font-weight: 600;
   }
 }
 
@@ -88,7 +88,7 @@
       justify-content: flex-start;
       margin-top: 0;
     }
-    li {
+    a {
       margin-right: 20px;
       padding: 10px 0;
     }
