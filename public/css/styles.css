@@ -113,7 +113,7 @@
 
 .header-100 {
   border-bottom: 1px solid black;
-  margin-bottom: 30px;
+  margin-bottom: 48px;
   justify-content: space-between;
 }
 .header-100 .dashboard-link {
@@ -640,13 +640,12 @@ button.delete-post {
 }
 .slider img {
   width: 85%;
-  height: calc(100vh - 100px);
+  height: calc(100vh - 90px);
   object-fit: contain;
 }
 .slider video {
   width: 85%;
-  height: calc(100vh - 140px);
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .slider:hover img {
@@ -664,6 +663,12 @@ button.delete-post {
   height: 100%;
   opacity: 0;
   transition: opacity 0.35s ease-in;
+}
+.slide .video-container {
+  height: calc(100vh - 90px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .slide.active {

@@ -1,9 +1,8 @@
 import React, {useState, useRef, useEffect} from "react"
-import { Link, useLocation, matchPath, useParams, useNavigate } from 'react-router-dom'
+import { Link, useLocation, matchPath, useNavigate } from 'react-router-dom'
 import _ from 'lodash'
 import { useDispatch, useSelector } from "react-redux";
-import { toggleNavbar } from "../../features/tags/tagsSlice.js";
-import { deletePost, editPost, setCurrentCategory, fetchPosts, setCurrentPost } from '../../features/posts/postsSlice';
+import { deletePost, setCurrentCategory, fetchPosts } from '../../features/posts/postsSlice';
 import useAuth from "../../hooks/useAuth.jsx";
 import { logout, selectCurrentToken } from "../../features/auth/authSlice"
 import { CATEGORIES } from "../../config/categories.js";

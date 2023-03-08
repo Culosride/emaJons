@@ -127,11 +127,11 @@ export default function AllPosts() {
   ));
 
   return (
-    <div>
+    <>
       <div className="category-container">
         <div className="select-tags-container">{tagElements}</div>
         <div className="posts-grid">{postElements}</div>
       </div>
-    </div>
+    </>
   );
 }

@@ -46,10 +46,12 @@ const Slider = ({ slides }) => {
       {slides.map((slide, index) => (
         <div key={index} className={`slide ${index === currentSlide ? "active" : ""}`} style={{ zIndex: index === currentSlide ? 1 : 0 }}>
           {slide.mediaType === "video" ?
-            <video muted controls>
-              <source src={slide.url} type="video/mp4"/>
-              <source src={slide.url} type="video/mov"/>
-            </video> :
+            <div className="video-container">
+              <video muted controls>
+                <source src={slide.url} type="video/mp4"/>
+                <source src={slide.url} type="video/mov"/>
+              </video>
+            </div> :
             <img src={slide.url} onClick={handleFullscreen} alt={slide.alt} />}
         </div>
       ))}
