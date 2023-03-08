@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux'; // hook select data from state (in redux store)
+import { useSelector, useDispatch } from 'react-redux';
 import { toggleFullscreen, setCurrentPost } from '../../features/posts/postsSlice';
 import Slider from '../slider/Slider';
 
