@@ -1,16 +1,13 @@
-import React, { useState, useEffect, useRef } from 'react';
-// import Axios from 'axios';
-import { useParams, Link, useNavigate } from 'react-router-dom';
-import Carousel from '../carousel/Carousel';
+import React, { useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux'; // hook select data from state (in redux store)
 import { toggleFullscreen, setCurrentPost } from '../../features/posts/postsSlice';
-import { selectCurrentToken } from '../../features/auth/authSlice';
+import Slider from '../slider/Slider';
 
 export default function Post() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const params = useParams()
-  const token = useSelector(selectCurrentToken)
   const currentId = params.postId
   const post = useSelector(state => state.posts.posts.find(post => post._id === currentId))
   const status = useSelector(state => state.posts.status)
@@ -22,11 +19,12 @@ export default function Post() {
 
   useEffect(() => {
     dispatch(setCurrentPost(post))
-  }, [])
+  }, [post])
+
   useEffect(() => {
     const escapeFullscreen = (e) => {
       if(e.key === "Escape" && fullscreen) {
-        navigate(`/${category}/${currentId}`)
+        navigate(-1)
         dispatch(toggleFullscreen(false))
       } else if(e.key === "Escape" && !fullscreen) {
         navigate(`/${category}`)
@@ -76,13 +74,7 @@ export default function Post() {
 
   return (
     <div className={`post-container ${content ? "layout-50" : ""} ${fullscreen ? "layout-100" : ""}`}>
-        {post.media &&
-          <Carousel
-            content={content}
-            media={post.media}
-            toggleFullScreen={handleFullscreen}
-          ></Carousel>
-        }
+        {post.media && <Slider content={content} slides={post.media} />}
 
         <div className="text-container" onScroll={handleScroll} onClick={handleFullscreen}>
           <div className="description-container">

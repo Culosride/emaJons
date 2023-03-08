@@ -1,0 +1,111 @@
+.slider {
+  position: relative;
+  height: 100vh;
+  padding: 30px;
+  width: 100%;
+  box-sizing: border-box;
+}
+.slider img {
+  width: 85%;
+  height: calc(100vh - 100px);
+  object-fit: contain;
+}
+.slider video {
+  width: 85%;
+  height: calc(100vh - 140px);
+  object-fit: cover;
+}
+
+.slider:hover img {
+  cursor: url("../img/PlusBold.svg"), auto;
+}
+
+.slide {
+  position: absolute;
+  margin-top: 40px;
+  box-sizing: border-box;
+  padding: 0 32px;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 0.35s ease-in;
+}
+
+.slide.active {
+  opacity: 1;
+  z-index: 1;
+}
+
+button {
+  border: 0;
+  background-color: Transparent;
+  font-size: 20px;
+}
+
+.dot, .dot-active {
+  cursor: pointer;
+  height: 2px;
+  width: 16px;
+  margin: 0 2px;
+  background-color: #ddd;
+  display: inline-flex;
+  transition: background-color 0.5s ease-in;
+}
+
+.dot:hover, .dot-active {
+  background-color: #717171;
+  opacity: 1;
+}
+
+.prev, .prev-video {
+  left: 0;
+}
+
+.next, .next-video {
+  right: 0;
+}
+
+.next, .prev {
+  top: 0;
+  position: absolute;
+  height: 80vh;
+  width: 20vw;
+}
+
+.full {
+  height: 100vh;
+}
+
+.next-video, .prev-video {
+  bottom: 0;
+  position: absolute;
+  height: 10%;
+  width: 20vw;
+}
+
+.next:before, .next-video:hover {
+  content: "";
+}
+
+.next:hover, .next-video:hover {
+  cursor: url("../img/ArrowIcon.svg"), auto;
+}
+
+.prev:before, .prev-video:hover {
+  content: "";
+}
+
+.prev:hover, .prev-video:hover {
+  cursor: url("../img/ArrowBack.svg"), auto;
+}
+
+.page {
+  position: absolute;
+  width: 100%;
+  bottom: 3vh;
+  z-index: 2;
+}
+
+/*# sourceMappingURL=slider.css.map */

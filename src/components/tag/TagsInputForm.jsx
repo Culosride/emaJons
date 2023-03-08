@@ -2,20 +2,21 @@ import React, { useState, useEffect, useRef } from "react";
 import { useLocation } from 'react-router-dom';
 import Tag from "../tag/Tag";
 // import { deleteTag, fetchAllTags, addNewTag, toggleTag, resetTags } from "../../features/tags/tagsSlice"
-import { deleteTag, fetchAllTags, addNewTag, toggleTag, resetTags } from "../../features/categories/categoriesSlice";
+import { deleteTag, fetchAllTags, addNewTag, toggleTag, resetTags } from "../../features/tags/tagsSlice";
 import { useSelector, useDispatch } from "react-redux";
+import { fetchPosts } from "../../features/posts/postsSlice";
 
 const TagsInputForm = () => {
   const dispatch = useDispatch();
   const [tag, setTag] = useState("");
   const { pathname } = useLocation()
   const editPage = pathname.includes("edit")
-  const selectedTags = useSelector(state => state.categories.selectedTags);
-  const availableTags = useSelector(state => state.categories.availableTags);
+  const selectedTags = useSelector(state => state.tags.selectedTags);
+  const availableTags = useSelector(state => state.tags.availableTags);
 
   // CRUD tags
   function createNewTag(e) {
-    if (selectedTags.includes((tag))) {
+    if (selectedTags.includes(tag)) {
       setTag("")
     } else if (availableTags.includes(tag)) {
       dispatch(toggleTag(tag))
@@ -34,6 +35,9 @@ const TagsInputForm = () => {
 
   function handleTagDelete(tag) {
     dispatch(deleteTag(tag))
+      .then(() => {
+        dispatch(fetchPosts())
+      })
   }
 
   function handleTagToggle(tag) {

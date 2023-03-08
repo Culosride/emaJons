@@ -86,7 +86,6 @@ const handleLogout = async (req, res) => {
 }
 
 const validatePath = async (req, res) => {
-  // console.log(req.params)
   const { category, postId } = req.params
   const catExists = await Category.findOne({name: _.capitalize(category)})
   if(!catExists) {

@@ -12,26 +12,29 @@ import Home from './components/home/Home';
 import NotFound from './components/404/NotFound';
 import withRouteValidation from "./hocs/RouteValidation";
 import RequireAuth from './hocs/RequireAuth'
-import { fetchPosts } from './features/posts/postsSlice';
+import { fetchPosts, setCurrentPost } from './features/posts/postsSlice';
 
 import {
   Routes,
   Route,
   Navigate,
+  useParams,
 } from 'react-router-dom';
 import { ROLES } from './config/roles'
+import { fetchAllTags } from './features/tags/tagsSlice';
 
 const AllPostsValidated = withRouteValidation(AllPosts)
 const PostValidated = withRouteValidation(Post)
 
 export default function App() {
   const dispatch = useDispatch();
-  const posts = useSelector(state => state.posts.posts)
+  const posts = useSelector(state => state.posts.posts) || []
+  const currentPost = useSelector(state => state.posts.currentPost) || ""
 
   useEffect(() => {
-    if(!posts.length)
-    dispatch(fetchPosts());
-  }, [dispatch, posts.length]);
+      console.log("fetching posts")
+      dispatch(fetchPosts());
+  }, []);
 
   return (
     <Routes>

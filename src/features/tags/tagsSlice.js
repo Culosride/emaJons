@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import { createAsyncThunk, current, createSlice } from '@reduxjs/toolkit'
 import * as api from "../../API/index"
 
 const initialState = {
@@ -38,7 +38,7 @@ const tagsSlice = createSlice({
       state.selectedTags = []
     },
     toggleTag: (state, action) => {
-      if(state.selectedTags.some(tag => tag === (action.payload))) {
+      if(state.selectedTags.includes(action.payload)) {
         const filteredTags = state.selectedTags.filter(tag => tag !== action.payload)
           return state = {
             ...state,
@@ -49,7 +49,7 @@ const tagsSlice = createSlice({
         const filteredTags = state.availableTags.filter(tag => tag !== action.payload)
           return state = {
             ...state,
-            availableTags: [...filteredTags],
+            availableTags: filteredTags,
             selectedTags: state.selectedTags.concat(action.payload),
           }
       }
@@ -61,11 +61,8 @@ const tagsSlice = createSlice({
         state.status = 'loading'
       })
       .addCase(fetchAllTags.fulfilled, (state, action) => {
-        return state = {
-          ...state,
-          availableTags: [...action.payload.map(tag => tag.name)],
-          status: 'succeeded',
-        }
+        state.status = 'succeeded';
+        state.availableTags = action.payload
       })
       .addCase(fetchAllTags.rejected, (state) => {
         state.status = "failed";
@@ -75,20 +72,20 @@ const tagsSlice = createSlice({
       })
       .addCase(addNewTag.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.selectedTags = state.selectedTags.concat(action.payload.name)
+        state.selectedTags = state.selectedTags.concat(action.payload)
       })
       .addCase(addNewTag.rejected, (state, action) => {
         state.status = "failed";
-        state.error = action.payload
+        state.error = action.error.message
       })
       .addCase(deleteTag.pending, (state) => {
         state.status = 'loading'
       })
-      .addCase(deleteTag.fulfilled, (state, {payload}) => {
-        const filteredTags = state.availableTags.filter(tag => tag !== payload.deletedTag.name)
+      .addCase(deleteTag.fulfilled, (state, { payload }) => {
+        const filteredTags = state.availableTags.filter(tag => tag !== payload.deletedTag)
         return state = {
           ...state,
-          availableTags: [...filteredTags],
+          availableTags: filteredTags,
           status: 'succeeded',
         }
       })
