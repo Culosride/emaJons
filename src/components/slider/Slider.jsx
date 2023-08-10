@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { toggleFullscreen } from "../../features/posts/postsSlice";
 
@@ -7,10 +7,19 @@ const Slider = ({ slides }) => {
   const isVideo = slides[currentSlide].mediaType === "video"
   const dispatch = useDispatch()
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const videoRefs = slides.map(() => useRef(null)); // Create a ref for each video
 
   useEffect(() => {
     if(isVideo) dispatch(toggleFullscreen(false))
   }, [isVideo])
+
+  useEffect(() => {
+    videoRefs.forEach((videoRef, index) => {
+      if (videoRef.current && index !== currentSlide) {
+        videoRef.current.pause();
+      }
+    });
+  }, [currentSlide]);
 
   const handleNext = () => {
     if (!isTransitioning) {
@@ -40,14 +49,13 @@ const Slider = ({ slides }) => {
     dispatch(toggleFullscreen())
   }
 
-
   return (
     <div className="slider">
       {slides.map((slide, index) => (
         <div key={index} className={`slide ${index === currentSlide ? "active" : ""}`} style={{ zIndex: index === currentSlide ? 1 : 0 }}>
           {slide.mediaType === "video" ?
             <div className="video-container">
-              <video muted controls>
+              <video ref={videoRefs[index]} muted controls>
                 <source src={slide.url} type="video/mp4"/>
                 <source src={slide.url} type="video/mov"/>
               </video>

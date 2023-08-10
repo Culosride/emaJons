@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux"; // hook to select data f
 import { setCurrentCategory } from "../../features/posts/postsSlice";
 import { fetchAllTags } from "../../features/tags/tagsSlice";
 import { Link, useParams } from "react-router-dom";
+import ImageContainer from "../image/ImageContainer";
 const _ = require("lodash");
 
 export default function AllPosts() {
@@ -20,58 +21,33 @@ export default function AllPosts() {
 
   const sortedTags = [...new Set(allTags.sort((a, b) => b.localeCompare(a)))];
   const [filteredPosts, setFilteredPosts] = useState(postsByCategory);
-  const [tagsFilter, setTagsFilter] = useState([])
-
-  console.log("filter", tagsFilter)
+  const [tagsFilter, setTagsFilter] = useState([]);
 
   let postElements = [];
 
   useEffect(() => {
     const filtered = postsByCategory.filter((post) => {
       return tagsFilter.every((tag) => post.postTags.includes(tag));
-      });
+    });
 
-    filtered.length && setFilteredPosts(filtered) ||
-    !filtered.length && setFilteredPosts(postsByCategory)
-    console.log(filteredPosts)
+    (filtered.length && setFilteredPosts(filtered)) ||
+      (!filtered.length && setFilteredPosts(postsByCategory));
+    console.log(filteredPosts);
   }, [tagsFilter]);
-
-  const [hoveredPost, setHoveredPost] = useState(null);
-  const handleMouseEnter = (postId) => {
-    setHoveredPost(postId);
-  };
-  const handleMouseLeave = () => {
-    setHoveredPost(null);
-  };
 
   const displayPosts = (posts) => {
     return posts.map((post, i) => {
       return (
-        <Link
-          reloadDocument
-          to={`/${params.category}/${post._id}`}
-          id={post._id}
-          key={post._id}
-        >
-          {post.media.length ? (
-            <>
-              <img
-                className="allposts-img"
-                onMouseEnter={() => handleMouseEnter(post._id)}
-                onMouseLeave={handleMouseLeave}
-                key={i}
-                src={post.media[0].url}
-              />
-              {hoveredPost === post._id && (
-                <div className="post-info">
-                  <p>{post.title.split(",").join("").toUpperCase()}</p>
-                </div>
-              )}
-            </>
-          ) : (
-            <p key={i}>{post.title}</p>
-          )}
-        </Link>
+        post.media.length && (
+          <ImageContainer
+            key={post._id}
+            id={post._id}
+            linkUrl={`/${params.category}/${post._id}`}
+            src={post.media[0].url}
+            alt={post.title}
+            hoverContent={post.title.split(",").join("").toUpperCase()}
+          />
+        )
       );
     });
   };
@@ -96,11 +72,11 @@ export default function AllPosts() {
   const handleClick = (e) => {
     e.preventDefault();
     const filter = e.target.getAttribute("data-value");
-    console.log("filter", filter)
-    if(tagsFilter.includes(filter)) {
-      setTagsFilter(prev => prev.filter(tag => tag !== filter))
+    console.log("filter", filter);
+    if (tagsFilter.includes(filter)) {
+      setTagsFilter((prev) => prev.filter((tag) => tag !== filter));
     } else {
-      setTagsFilter(prev => [...prev, filter])
+      setTagsFilter((prev) => [...prev, filter]);
     }
 
     const links = document.querySelectorAll(".tag-link");

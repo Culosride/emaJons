@@ -1,0 +1,15 @@
+.post-info {
+  transition: 0.2s;
+  display: inline-block;
+  text-align: center;
+  pointer-events: none;
+  width: 150%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: black;
+  font-weight: 900;
+  text-align: center;
+  font-size: 2.5rem;
+}
