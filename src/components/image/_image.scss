@@ -1,5 +1,28 @@
+.image-container {
+  display: inline-block;
+  animation: slideIn 0.5s ease-in, fadeIn 0.5s ease-in;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-height: 240px;
+  position: relative;
+
+  .image {
+    width: 100%;
+    height: 100%;
+    transition: 0.1s;
+    object-fit: none;
+  }
+}
+
+.image-container:hover .image {
+  opacity: 0.5;
+  height: 70%;
+}
+
 .post-info {
-  transition: 0.2s;
+  opacity: 0;
+  transition: 0.2s ease;
   display: inline-block;
   text-align: center;
   pointer-events: none;
@@ -10,6 +33,15 @@
   transform: translate(-50%, -50%);
   color: black;
   font-weight: 900;
-  text-align: center;
   font-size: 2.5rem;
+}
+
+.image-container:hover .post-info {
+  opacity: 1;
+}
+
+@media screen and (max-width: 1400px) {
+  .post-info {
+    font-size: 2rem;
+  }
 }
