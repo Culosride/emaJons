@@ -32,7 +32,6 @@ export default function AllPosts() {
 
     (filtered.length && setFilteredPosts(filtered)) ||
       (!filtered.length && setFilteredPosts(postsByCategory));
-    console.log(filteredPosts);
   }, [tagsFilter]);
 
   const displayPosts = (posts) => {
