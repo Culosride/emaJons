@@ -69,7 +69,6 @@ export default function PostForm() {
   useEffect(() => {
     setPreviewElement(
       postData.previewImg && (
-        <div className="preview-media">
           <img
             className="post-preview-img"
             src={
@@ -78,7 +77,6 @@ export default function PostForm() {
                 : URL.createObjectURL(postData.previewImg)
             }
           />
-        </div>
       )
     );
 

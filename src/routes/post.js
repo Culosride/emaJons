@@ -43,7 +43,7 @@ postRouter.post("/posts", verifyJWT, multerUpload, async (req, res) => {
   const savedPost = await post.save();
   const { media, previewImg } = req.files;
   const postPreviewImg = previewImg[0];
-  console.log("previewImg", previewImg);
+
   await Promise.all(
     media.map(async (media) => {
       const mediaType = media.mimetype.split("/")[0];
@@ -90,13 +90,8 @@ postRouter.patch("/posts/:postId/edit", verifyJWT, multerUpload, async (req, res
   if (!req.body.postTags) req.body.postTags = [];
   const update = Object.assign({}, req.body);
   const { previewImg, media } = req.files;
-  console.log("previewImg", previewImg);
-
   const postPreviewImg = previewImg && previewImg[0];
-  // console.log("previewImg", req.files.previewImg);
-  // console.log("media", req.files.media);
-  // console.log("update", update);
-
+  console.log('postPreviewImg', postPreviewImg)
   // filter public id that is not in update media and save public id
   const post = await Post.findOne({ _id: req.params.postId }).exec();
   if (!post)
@@ -127,18 +122,32 @@ postRouter.patch("/posts/:postId/edit", verifyJWT, multerUpload, async (req, res
   if (!update.previewImg) {
     // if there is a new preview img in incoming update it won't be in the "update = Object.assign({}, req.body)",
     // but will be in the req.files.previewImg and handled later
-
     // we can then remove the old preview img from the post
     await removeFromCloudinary(post.previewImg.publicId);
+
+    // handle new preview image
+    const mediaType = postPreviewImg.mimetype.split("/")[0];
+    const data = await uploadToCloudinary(
+      postPreviewImg.path,
+      "emaJons_dev",
+      mediaType
+    );
+    const newMedia = new Media({
+      publicId: data.public_id,
+      url: data.url,
+      mediaType,
+    });
+    post.previewImg = newMedia;
+    await post.save()
   } else {
-    // otherwise we parse the old preview img, which will be in the "update = Object.assign({}, req.body)" as a string
-    update.previewImg = postPreviewImg;
-    console.log("update.previewImg", update.previewImg);
+    // else we keep the old preview img
+    update.previewImg = post.previewImg;
   }
 
   // update post
   await post.updateOne({ $set: update }, { new: true }).exec();
 
+  // handle new media
   if (media) {
     await Promise.all(media.map(async (med) => {
       // gets media file type
@@ -159,22 +168,6 @@ postRouter.patch("/posts/:postId/edit", verifyJWT, multerUpload, async (req, res
       );
     }));
   }
-  if (previewImg) {
-    // post preview image
-    const mediaType = postPreviewImg.mimetype.split("/")[0];
-    const data = await uploadToCloudinary(
-      postPreviewImg.path,
-      "emaJons_dev",
-      mediaType
-    );
-    const newMedia = new Media({
-      publicId: data.public_id,
-      url: data.url,
-      mediaType,
-    });
-    post.previewImg = newMedia;
-    await post.save();
-  }
 
   const updatedPost = await Post.findById(post._id);
   res.status(200).json(updatedPost);
@@ -186,7 +179,7 @@ postRouter.delete("/:category/:postId", verifyJWT, async (req, res) => {
   const { postId } = req.params;
   try {
     const post = await Post.findOne({ _id: postId }).exec();
-    console.log(post);
+    console.log("post to delete:", post);
     if (!post)
       return res.status(204).json({ message: "No post found with this id." });
 

@@ -130,14 +130,12 @@ input[type="file"] {
 }
 
 .post-preview-img-container {
-  max-width: 50%;
   margin: 20px 0;
   text-align: center;
-
   .preview-img-placeholder {
     background-color: rgb(226, 226, 226);
     height: 200px;
-    width: 100%;
+    text-align: center;
     .preview-img-text {
       top: 45%;
       position: relative;
@@ -145,6 +143,7 @@ input[type="file"] {
   }
   .post-preview-img {
     max-height: 200px;
+    max-width: 100%;
   }
 }
 
@@ -186,4 +185,16 @@ input[type="file"] {
   border-radius: 2px;
   font-size: 14px;
   font-weight: lighter;
+}
+
+@media screen and (max-width: 1400px) {
+  .media-preview-container {
+    grid-template-columns: 1fr;
+  }
+  .post-preview-img-container {
+    .post-preview-img {
+      max-height: 200px;
+      max-width: 100%;
+    }
+  }
 }
