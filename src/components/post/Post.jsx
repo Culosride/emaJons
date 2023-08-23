@@ -48,7 +48,7 @@ export default function Post() {
 
   function displayMedia(post) {
     mediaElements = post.media.map((med) => {
-      return <img src={med.url} key={med.publicId}/>
+      return (<img src={med.url} key={med.publicId}/>)
     })
   }
 
@@ -74,7 +74,7 @@ export default function Post() {
 
   return (
     <div className={`post-container ${content ? "layout-50" : ""} ${fullscreen ? "layout-100" : ""}`}>
-        {post.media && <Slider content={content} slides={post.media} />}
+        {post.media && <Slider slides={post.media}/>}
 
         <div className="text-container" onScroll={handleScroll} onClick={handleFullscreen}>
           <div className="description-container">

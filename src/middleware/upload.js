@@ -2,7 +2,7 @@ const multer = require("multer")
 const storage = multer.diskStorage({})
 
 const fileFilter = (req, file, cb) => {
-  console.log("at filter",req.files, "file", file, "cb", cb)
+  // console.log("at filter",req.files, "file", file, "cb", cb)
   if (file.mimetype === 'image/jpeg' ||
       file.mimetype === 'image/png' ||
       file.mimetype === 'video/mp4' ||

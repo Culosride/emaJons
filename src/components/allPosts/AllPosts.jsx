@@ -42,7 +42,7 @@ export default function AllPosts() {
             key={post._id}
             id={post._id}
             linkUrl={`/${params.category}/${post._id}`}
-            src={post.media[0].url}
+            src={post.previewImg.url}
             alt={post.title}
             hoverContent={post.title.split(",").join("").toUpperCase()}
           />

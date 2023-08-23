@@ -28,5 +28,10 @@ const removeFromCloudinary = async (public_ids) => {
     console.log(err, res)
   })
 }
+const removeVideoFromCloudinary = async (public_ids) => {
+  await cloudinary.v2.api.delete_resources((public_ids), {resource_type: "video"},(err, res) => {
+    console.log(err, res)
+  })
+}
 
-module.exports = { uploadToCloudinary, removeFromCloudinary }
+module.exports = { uploadToCloudinary, removeFromCloudinary, removeVideoFromCloudinary }
