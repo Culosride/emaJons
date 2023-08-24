@@ -119,30 +119,30 @@ postRouter.patch("/posts/:postId/edit", verifyJWT, multerUpload, async (req, res
     }
   }
 
-  if (!update.previewImg) {
-    // if there is a new preview img in incoming update it won't be in the "update = Object.assign({}, req.body)",
-    // but will be in the req.files.previewImg and handled later
-    // we can then remove the old preview img from the post
-    await removeFromCloudinary(post.previewImg.publicId);
+  // if (!update.previewImg) {
+  //   // if there is a new preview img in incoming update it won't be in the "update = Object.assign({}, req.body)",
+  //   // but will be in the req.files.previewImg and handled later
+  //   // we can then remove the old preview img from the post
+  //   await removeFromCloudinary(post.previewImg.publicId);
 
-    // handle new preview image
-    const mediaType = postPreviewImg.mimetype.split("/")[0];
-    const data = await uploadToCloudinary(
-      postPreviewImg.path,
-      "emaJons_dev",
-      mediaType
-    );
-    const newMedia = new Media({
-      publicId: data.public_id,
-      url: data.url,
-      mediaType,
-    });
-    post.previewImg = newMedia;
-    await post.save()
-  } else {
-    // else we keep the old preview img
-    update.previewImg = post.previewImg;
-  }
+  //   // handle new preview image
+  //   const mediaType = postPreviewImg.mimetype.split("/")[0];
+  //   const data = await uploadToCloudinary(
+  //     postPreviewImg.path,
+  //     "emaJons_dev",
+  //     mediaType
+  //   );
+  //   const newMedia = new Media({
+  //     publicId: data.public_id,
+  //     url: data.url,
+  //     mediaType,
+  //   });
+  //   post.previewImg = newMedia;
+  //   await post.save()
+  // } else {
+  //   // else we keep the old preview img
+  //   update.previewImg = post.previewImg;
+  // }
 
   // update post
   await post.updateOne({ $set: update }, { new: true }).exec();

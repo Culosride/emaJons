@@ -36,13 +36,16 @@ export default function AllPosts() {
 
   const displayPosts = (posts) => {
     return posts.map((post, i) => {
+      // if mediaType is video, tranforms the extension from mp4 to jpg to display a preview
+      const transformedUrl = post.media[0].url.replace(".mp4", ".jpg");
+      const url = post.media[0].mediaType === "video" ? transformedUrl : post.media[0].url
       return (
         post.media.length && (
           <ImageContainer
             key={post._id}
             id={post._id}
             linkUrl={`/${params.category}/${post._id}`}
-            src={post.previewImg.url}
+            src={url}
             alt={post.title}
             hoverContent={post.title.split(",").join("").toUpperCase()}
           />

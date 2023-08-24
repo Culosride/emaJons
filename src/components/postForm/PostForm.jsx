@@ -67,26 +67,32 @@ export default function PostForm() {
 
   // create media preview
   useEffect(() => {
-    setPreviewElement(
-      postData.previewImg && (
-          <img
-            className="post-preview-img"
-            src={
-              postData.previewImg.publicId
-                ? postData.previewImg.url
-                : URL.createObjectURL(postData.previewImg)
-            }
-          />
-      )
-    );
+    // setPreviewElement(
+    //   postData.previewImg && (
+    //       <img
+    //         className="post-preview-img"
+    //         src={
+    //           postData.previewImg.publicId
+    //             ? postData.previewImg.url
+    //             : URL.createObjectURL(postData.previewImg)
+    //         }
+    //       />
+    //   )
+    // );
 
     setMediaElements(
       postData.media.map((file, i) => {
         const mediaKey = file.publicId ? "publicId" : "lastModified";
         const src = file.publicId ? file.url : URL.createObjectURL(file);
+         // if mediaType is video, tranforms the extension from mp4 to jpg to display a preview
+      let transformedUrl = src.replace(".mp4", ".jpg");
+      // transformedUrl = transformedUrl + ".jpg"
+      // const url = post.media[0].mediaType === "video" ? transformedUrl : post.media[0].url
+      console.log('transformedUrl', transformedUrl)
+      console.log('src', src)
         return (
           <div key={`media-${i}`} className="preview-media">
-            <img src={src} />
+            <img src={transformedUrl} />
             <i id={file[mediaKey]} onClick={deleteMedia}></i>
           </div>
         );
@@ -113,7 +119,7 @@ export default function PostForm() {
 
     setPostData((prev) => {
       if (name === "previewImg") {
-        return { ...prev, previewImg: files[0] };
+        // return { ...prev, previewImg: files[0] };
       } else if (name === "media") {
         return { ...prev, media: [...prev.media, ...files] };
       } else {
@@ -136,8 +142,8 @@ export default function PostForm() {
     Object.keys(postData).map((key) => {
       if (key === "media") {
         return postData.media.map((med) => formData.append("media", med));
-      } else if (key === "previewImg") {
-        return formData.append("previewImg", postData.previewImg);
+      // } else if (key === "previewImg") {
+      //   return formData.append("previewImg", postData.previewImg);
       } else if (key === "postTags") {
         return selectedTags.map((tag) => formData.append("postTags", tag));
       } else {
@@ -170,11 +176,11 @@ export default function PostForm() {
             : formData.append("media", JSON.stringify(med));
         });
       } else if (key === "previewImg") {
-        if (postData.previewImg.name) {
-          formData.append("previewImg", postData.previewImg);
-        } else {
-          formData.append("previewImg", JSON.stringify(postData.previewImg));
-        }
+        // if (postData.previewImg.name) {
+        //   formData.append("previewImg", postData.previewImg);
+        // } else {
+        //   formData.append("previewImg", JSON.stringify(postData.previewImg));
+        // }
       } else if (key === "postTags") {
         return selectedTags.forEach((tag) => formData.append("postTags", tag));
       } else {
@@ -188,13 +194,13 @@ export default function PostForm() {
     });
   }
 
-  const previewImgContent = postData.previewImg ? (
-    previewElement
-  ) : (
-    <div className="preview-img-placeholder">
-      <h3 className="preview-img-text">POST PREVIEW IMAGE</h3>
-    </div>
-  );
+  // const previewImgContent = postData.previewImg ? (
+  //   previewElement
+  // ) : (
+  //   <div className="preview-img-placeholder">
+  //     <h3 className="preview-img-text">POST PREVIEW IMAGE</h3>
+  //   </div>
+  // );
 
   return (
     <div className="form-wrapper">
@@ -204,7 +210,7 @@ export default function PostForm() {
         onSubmit={editPage ? handleEdit : handleSubmit}
       >
         <div className="post-form-layout">
-          <label className="custom-file-button" htmlFor="previewImg">Choose preview image (only for preview)</label>
+          {/* <label className="custom-file-button" htmlFor="previewImg">Choose preview image (only for preview)</label>
           <input
             className="hidden-file-input"
             id="previewImg"
@@ -214,7 +220,7 @@ export default function PostForm() {
             name="previewImg"
             title="upload preview"
             />
-          <div className="post-preview-img-container">{previewImgContent}</div>
+          <div className="post-preview-img-container">{previewImgContent}</div> */}
           <label className="custom-file-button" htmlFor="media">Choose media</label>
           <input
             className="hidden-file-input"
