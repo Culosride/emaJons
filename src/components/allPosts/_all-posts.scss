@@ -28,6 +28,17 @@
   .tag-active {
     font-weight: 600;
   }
+  .tag-active::before {
+    content: "";
+    display: inline-block;
+    background-image: url("../img/ArrowIcon.svg");
+    background-size: contain;
+    width: 20px;
+    background-repeat: no-repeat;
+    height: 100%;
+    vertical-align: text-bottom;
+    background-position: -6px 50%;
+  }
 }
 
 @media screen and (max-width: 1400px) {
