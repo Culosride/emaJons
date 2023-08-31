@@ -94,6 +94,7 @@ export default function PostForm() {
   function handleChange(e) {
     setError("");
     const { name, value, files } = e.target;
+
     setPostData((prev) => {
       if (name === "media") {
         return { ...prev, media: [...prev.media, ...files] };

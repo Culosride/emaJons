@@ -37,10 +37,10 @@ export default function AllPosts() {
   const displayPosts = (posts) => {
     return posts.map((post) => {
       const { mediaType, url } = post.media[0];
-      
-      const generatePreviewUrl = () => {
+
+      const getPreviewURL = () => {
         if (mediaType === "video") {
-          return post.preview
+          return post.media[0].preview
         } else {
           return url;
         }
@@ -53,7 +53,7 @@ export default function AllPosts() {
             mediaType={post.media[0].mediaType}
             id={post._id}
             linkUrl={`/${params.category}/${post._id}`}
-            src={generatePreviewUrl()}
+            src={getPreviewURL()}
             alt={post.title}
             hoverContent={post.title.split(",").join("").toUpperCase()}
           />

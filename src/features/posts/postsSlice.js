@@ -89,7 +89,6 @@ const postsSlice = createSlice({
       })
       .addCase(createPost.fulfilled, (state, action) => {
         console.log('reducer', action)
-        console.log('preview', action.payload.media[action.payload.media.length - 1])
         return state = {
           ...state,
           status: 'succeeded',

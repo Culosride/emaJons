@@ -46,7 +46,6 @@ postRouter.post("/posts", verifyJWT, multerUpload, async (req, res) => {
   for (let i = 0; i < incomingMedia.length; i++) {
     const med = incomingMedia[i];
     const mediaType = med.mimetype.split("/")[0];
-    let previewURL = "";
 
     const data = await uploadToCloudinary(med.path, "emaJons_dev", mediaType);
 
@@ -54,16 +53,12 @@ postRouter.post("/posts", verifyJWT, multerUpload, async (req, res) => {
       publicId: data.public_id,
       url: data.url,
       mediaType,
+      preview: generatePreview(data.public_id)
     });
-
-    // generates video preview with the first uploaded media
-    if (i === 0) {
-      previewURL = generatePreview(data.public_id);
-    }
 
     await Post.updateOne(
       { _id: post._id },
-      { $addToSet: { media: [newMedia] }, $set: { preview: previewURL } }
+      { $addToSet: { media: [newMedia] } }
     );
   }
 
@@ -82,7 +77,6 @@ postRouter.patch("/posts/:postId/edit", verifyJWT, multerUpload, async (req, res
 
     const post = await Post.findOne({ _id: req.params.postId }).exec();
     if (!post) return res.status(204).json({ message: "No post found with this id." });
-    const oldPreviewId = post.media[0].publicId;
 
     if (!update.media) {
       // Each old media deleted, new media added
@@ -131,6 +125,7 @@ postRouter.patch("/posts/:postId/edit", verifyJWT, multerUpload, async (req, res
           publicId: data.public_id,
           url: data.url,
           mediaType,
+          preview: generatePreview(data.public_id)
         });
 
         await Post.updateOne(
@@ -142,16 +137,7 @@ postRouter.patch("/posts/:postId/edit", verifyJWT, multerUpload, async (req, res
 
     const updatedPost = await Post.findById(post._id);
 
-    if (oldPreviewId !== updatedPost.media[0].publicId) {
-      await Post.updateOne(
-        { _id: updatedPost._id },
-        { preview: generatePreview(updatedPost.media[0].publicId) }
-      );
-    }
-
-    const finalPost = await Post.findById(post._id);
-
-    res.status(200).json(finalPost);
+    res.status(200).json(updatedPost);
   }
 );
 

@@ -8,7 +8,6 @@ const postSchema = new mongoose.Schema({
   media: [mediaSchema],
   postTags: [String],
   category: String,
-  preview: String
 }, {timestamps: true})
 
 const Post = mongoose.model('Post', postSchema);
