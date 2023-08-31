@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import {
   createPost,
@@ -25,7 +25,6 @@ export default function PostForm() {
   const postId = currentPost._id;
   const [error, setError] = useState(null);
   const [mediaElements, setMediaElements] = useState([]);
-  const [previewElement, setPreviewElement] = useState([]);
   const [postData, setPostData] = useState({
     title: "",
     subtitle: "",
@@ -33,7 +32,6 @@ export default function PostForm() {
     media: [],
     category: "",
     postTags: [],
-    previewImg: "",
   });
 
   const editPage = pathname.includes("edit");
@@ -44,7 +42,6 @@ export default function PostForm() {
       if (editPage) {
         dispatch(fetchPostById(params.postId)).then((res) => {
           setPostData(res.payload);
-          // setPostPreviewImg(res.payload.previewImg)
           res.payload.postTags.forEach((tag) => {
             dispatch(toggleTag(tag));
           });
@@ -59,7 +56,6 @@ export default function PostForm() {
           media: [],
           category: "",
           postTags: [],
-          previewImg: "",
         });
       }
     });
@@ -67,38 +63,23 @@ export default function PostForm() {
 
   // create media preview
   useEffect(() => {
-    // setPreviewElement(
-    //   postData.previewImg && (
-    //       <img
-    //         className="post-preview-img"
-    //         src={
-    //           postData.previewImg.publicId
-    //             ? postData.previewImg.url
-    //             : URL.createObjectURL(postData.previewImg)
-    //         }
-    //       />
-    //   )
-    // );
-
     setMediaElements(
       postData.media.map((file, i) => {
         const mediaKey = file.publicId ? "publicId" : "lastModified";
-        const src = file.publicId ? file.url : URL.createObjectURL(file);
-         // if mediaType is video, tranforms the extension from mp4 to jpg to display a preview
-      let transformedUrl = src.replace(".mp4", ".jpg");
-      // transformedUrl = transformedUrl + ".jpg"
-      // const url = post.media[0].mediaType === "video" ? transformedUrl : post.media[0].url
-      console.log('transformedUrl', transformedUrl)
-      console.log('src', src)
+        let src = file.publicId ? file.url : URL.createObjectURL(file);
+        if (file.mediaType === "video") src = file.url.replace("mp4", "jpg");
+
         return (
           <div key={`media-${i}`} className="preview-media">
-            <img src={transformedUrl} />
+            {file.type === "video/mp4"
+              ? <video src={src} controls></video>
+              : <img src={src} />}
             <i id={file[mediaKey]} onClick={deleteMedia}></i>
           </div>
         );
       })
     );
-  }, [postData.media, postData.previewImg]);
+  }, [postData.media]);
 
   // delete media from preview
   const deleteMedia = (e) => {
@@ -107,20 +88,14 @@ export default function PostForm() {
       const mediaKey = file.publicId ? "publicId" : "lastModified";
       return file[mediaKey].toString() !== id;
     });
-    setPostData((prev) => ({
-      ...prev,
-      media: updatedMedia,
-    }));
+    setPostData((prev) => ({...prev, media: updatedMedia}));
   };
 
   function handleChange(e) {
     setError("");
     const { name, value, files } = e.target;
-
     setPostData((prev) => {
-      if (name === "previewImg") {
-        // return { ...prev, previewImg: files[0] };
-      } else if (name === "media") {
+      if (name === "media") {
         return { ...prev, media: [...prev.media, ...files] };
       } else {
         return { ...prev, [name]: value };
@@ -135,15 +110,14 @@ export default function PostForm() {
       setError("Select a category");
       return;
     } else if (!postData.media.length) {
-      setError("A post with no pictures?");
+      setError("A post with nada?");
       return;
     }
     const formData = new FormData();
     Object.keys(postData).map((key) => {
       if (key === "media") {
+        // insert here logic to create video preview
         return postData.media.map((med) => formData.append("media", med));
-      // } else if (key === "previewImg") {
-      //   return formData.append("previewImg", postData.previewImg);
       } else if (key === "postTags") {
         return selectedTags.map((tag) => formData.append("postTags", tag));
       } else {
@@ -156,6 +130,7 @@ export default function PostForm() {
       }
     });
   };
+
   // edit post
   function handleEdit(e) {
     e.preventDefault();
@@ -175,12 +150,6 @@ export default function PostForm() {
             ? formData.append("media", med)
             : formData.append("media", JSON.stringify(med));
         });
-      } else if (key === "previewImg") {
-        // if (postData.previewImg.name) {
-        //   formData.append("previewImg", postData.previewImg);
-        // } else {
-        //   formData.append("previewImg", JSON.stringify(postData.previewImg));
-        // }
       } else if (key === "postTags") {
         return selectedTags.forEach((tag) => formData.append("postTags", tag));
       } else {
@@ -194,14 +163,6 @@ export default function PostForm() {
     });
   }
 
-  // const previewImgContent = postData.previewImg ? (
-  //   previewElement
-  // ) : (
-  //   <div className="preview-img-placeholder">
-  //     <h3 className="preview-img-text">POST PREVIEW IMAGE</h3>
-  //   </div>
-  // );
-
   return (
     <div className="form-wrapper">
       {error && <p className="error-msg">{error}</p>}
@@ -210,18 +171,9 @@ export default function PostForm() {
         onSubmit={editPage ? handleEdit : handleSubmit}
       >
         <div className="post-form-layout">
-          {/* <label className="custom-file-button" htmlFor="previewImg">Choose preview image (only for preview)</label>
-          <input
-            className="hidden-file-input"
-            id="previewImg"
-            type="file"
-            onChange={handleChange}
-            accept="image/*"
-            name="previewImg"
-            title="upload preview"
-            />
-          <div className="post-preview-img-container">{previewImgContent}</div> */}
-          <label className="custom-file-button" htmlFor="media">Choose media</label>
+          <label className="custom-file-button" htmlFor="media">
+            Choose media
+          </label>
           <input
             className="hidden-file-input"
             type="file"

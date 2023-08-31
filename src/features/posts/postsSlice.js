@@ -89,6 +89,7 @@ const postsSlice = createSlice({
       })
       .addCase(createPost.fulfilled, (state, action) => {
         console.log('reducer', action)
+        console.log('preview', action.payload.media[action.payload.media.length - 1])
         return state = {
           ...state,
           status: 'succeeded',
@@ -133,13 +134,13 @@ const postsSlice = createSlice({
         state.status = 'loading'
       })
       .addCase(fetchPosts.fulfilled, (state, action) => {
-        let cat = state.currentCategory
-        if(state.currentCategory === "") {cat = action.payload[0].category}
+        // let cat = state.currentCategory
+        // if(state.currentCategory === "" && state.posts.length) {cat = action.payload.posts[0].category}
 
         return state = {
           ...state,
           status: 'succeeded',
-          currentCategory: cat,
+          // currentCategory: cat,
           posts: action.payload,
           error: null
        }

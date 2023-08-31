@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux"; // hook to select data from redux store
 import { setCurrentCategory } from "../../features/posts/postsSlice";
 import { fetchAllTags } from "../../features/tags/tagsSlice";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import ImageContainer from "../image/ImageContainer";
 const _ = require("lodash");
 
@@ -35,17 +35,25 @@ export default function AllPosts() {
   }, [tagsFilter]);
 
   const displayPosts = (posts) => {
-    return posts.map((post, i) => {
-      // if mediaType is video, tranforms the extension from mp4 to jpg to display a preview
-      const transformedUrl = post.media[0].url.replace(".mp4", ".jpg");
-      const url = post.media[0].mediaType === "video" ? transformedUrl : post.media[0].url
+    return posts.map((post) => {
+      const { mediaType, url } = post.media[0];
+      
+      const generatePreviewUrl = () => {
+        if (mediaType === "video") {
+          return post.preview
+        } else {
+          return url;
+        }
+      };
+
       return (
         post.media.length && (
           <ImageContainer
             key={post._id}
+            mediaType={post.media[0].mediaType}
             id={post._id}
             linkUrl={`/${params.category}/${post._id}`}
-            src={url}
+            src={generatePreviewUrl()}
             alt={post.title}
             hoverContent={post.title.split(",").join("").toUpperCase()}
           />
@@ -74,7 +82,7 @@ export default function AllPosts() {
   const handleClick = (e) => {
     e.preventDefault();
     const filter = e.target.getAttribute("data-value");
-    console.log("filter", filter);
+
     if (tagsFilter.includes(filter)) {
       setTagsFilter((prev) => prev.filter((tag) => tag !== filter));
     } else {

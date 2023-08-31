@@ -1,10 +1,28 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 
-const ImageContainer = ({ src, alt, hoverContent, linkUrl }) => {
+const ImageContainer = ({ mediaType, src, alt, hoverContent, linkUrl }) => {
+  const handleMouseEnter = (e) => {
+    e.target.play();
+  };
+  const handleMouseLeave = (e) => {
+    e.target.load();
+  };
+
   return (
     <Link to={linkUrl} className="image-container">
-      <img className="image" src={src} alt={alt} />
+      {mediaType === "image" && <img className="image" src={src} alt={alt} />}
+      {mediaType === "video" && (
+        <video
+          muted
+          loop
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+          className="image"
+          src={src}
+          alt={alt}
+        />
+      )}
       <div className="post-info">{hoverContent}</div>
     </Link>
   );
