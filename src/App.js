@@ -25,7 +25,7 @@ const PostFormRouteValidated = withRouteValidation(PostForm)
 
 export default function App() {
   const dispatch = useDispatch();
-  const posts = useSelector(state => state.posts.posts) || []
+  const posts = useSelector(state => state.posts.posts)
 
   useEffect(() => {
       console.log("fetching posts")
