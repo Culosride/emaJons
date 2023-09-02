@@ -119,7 +119,12 @@ input[type="file"] {
   // bottom: 20px;
   background-color: rgb(200, 200, 200);
   cursor: pointer;
+
+  &.btn-disabled {
+    pointer-events: none;
+  }
 }
+
 
 .media-preview-container {
   display: grid;

@@ -22,6 +22,7 @@ export default function PostForm() {
   const { pathname } = useLocation();
   const selectedTags = useSelector((state) => state.tags.selectedTags);
   const currentPost = useSelector((state) => state.posts.currentPost);
+  const status = useSelector((state) => state.posts.status);
   const postId = currentPost._id;
   const [error, setError] = useState(null);
   const [mediaElements, setMediaElements] = useState([]);
@@ -35,6 +36,14 @@ export default function PostForm() {
   });
 
   const editPage = pathname.includes("edit");
+  const isLoading = status === "loading"
+
+  const btnStyles = isLoading ? "btn-submit btn-disabled" : "btn-submit";
+  const submitBtnValue =
+    (isLoading && "Submitting...") ||
+    (!isLoading && editPage ? "Save changes" : "Create new post");
+
+    // if(!currentPost) return navigate("/not-found")
 
   useEffect(() => {
     dispatch(resetTags());
@@ -88,10 +97,10 @@ export default function PostForm() {
       const mediaKey = file.publicId ? "publicId" : "lastModified";
       return file[mediaKey].toString() !== id;
     });
-    setPostData((prev) => ({...prev, media: updatedMedia}));
+    setPostData((prev) => ({ ...prev, media: updatedMedia }));
   };
 
-  function handleChange(e) {
+  const handleChange = (e) => {
     setError("");
     const { name, value, files } = e.target;
 
@@ -102,11 +111,16 @@ export default function PostForm() {
         return { ...prev, [name]: value };
       }
     });
-  }
+  };
 
   // submit form
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (isLoading) {
+      return;
+    }
+
     if (!postData.category) {
       setError("Select a category");
       return;
@@ -114,27 +128,33 @@ export default function PostForm() {
       setError("A post with nada?");
       return;
     }
-    const formData = new FormData();
-    Object.keys(postData).map((key) => {
-      if (key === "media") {
-        // insert here logic to create video preview
-        return postData.media.map((med) => formData.append("media", med));
-      } else if (key === "postTags") {
-        return selectedTags.map((tag) => formData.append("postTags", tag));
-      } else {
-        return formData.append(key, postData[key]);
-      }
-    });
-    dispatch(createPost(formData)).then((res) => {
-      if (!res.error) {
-        navigate(`/${postData.category}/${res.payload._id}`);
-      }
-    });
+
+    try {
+      const formData = new FormData();
+      Object.keys(postData).map((key) => {
+        if (key === "media") {
+          return postData.media.map((med) => formData.append("media", med));
+        } else if (key === "postTags") {
+          return selectedTags.map((tag) => formData.append("postTags", tag));
+        } else {
+          return formData.append(key, postData[key]);
+        }
+      });
+      const res = await dispatch(createPost(formData)); // await needed
+      navigate(`/${postData.category}/${res.payload._id}`);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   // edit post
-  function handleEdit(e) {
+  const handleEdit = async (e) => {
     e.preventDefault();
+
+    if (isLoading) {
+      return;
+    }
+
     if (!postData.category) {
       setEmptyCategory(true);
       return;
@@ -144,25 +164,28 @@ export default function PostForm() {
     }
     const formData = new FormData();
 
-    Object.keys(postData).map((key) => {
-      if (key === "media") {
-        return postData.media.map((med) => {
-          med.name
-            ? formData.append("media", med)
-            : formData.append("media", JSON.stringify(med));
-        });
-      } else if (key === "postTags") {
-        return selectedTags.forEach((tag) => formData.append("postTags", tag));
-      } else {
-        return formData.append(key, postData[key]);
-      }
-    });
-    dispatch(editPost({ formData, postId })).then((res) => {
-      if (!res.error) {
-        navigate(`/${postData.category}/${res.payload._id}`);
-      }
-    });
-  }
+    try {
+      Object.keys(postData).map((key) => {
+        if (key === "media") {
+          return postData.media.map((med) => {
+            med.name
+              ? formData.append("media", med)
+              : formData.append("media", JSON.stringify(med));
+          });
+        } else if (key === "postTags") {
+          return selectedTags.forEach((tag) =>
+            formData.append("postTags", tag)
+          );
+        } else {
+          return formData.append(key, postData[key]);
+        }
+      });
+      await dispatch(editPost({ formData, postId }));
+    } catch (error) {
+      console.log(error);
+    }
+    navigate(`/${postData.category}/${postId}`);
+  };
 
   return (
     <div className="form-wrapper">
@@ -236,9 +259,10 @@ export default function PostForm() {
           <TagsInputForm />
 
           <input
-            className="btn-submit"
+            disabled={isLoading}
+            className={btnStyles}
             type="submit"
-            value={editPage ? "Save changes " : "Create new post"}
+            value={submitBtnValue}
           />
         </div>
       </form>

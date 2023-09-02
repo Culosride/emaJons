@@ -5,7 +5,6 @@ const initialState = {
   posts: [],
   currentCategory: "",
   currentPost: "",
-  currentMediaIsVideo: false,
   fullscreen: false,
   status: 'idle' || 'loading' || 'succeeded' || 'failed',
   error: "" || null
@@ -76,11 +75,6 @@ const postsSlice = createSlice({
       state.error = null
       state.currentCategory = action.payload
     },
-    setCurrentMedia(state, action) {
-      state.status = "succeeded"
-      state.error = null
-      state.currentMediaIsVideo = action.payload
-    }
   },
   extraReducers(builder) {
     builder

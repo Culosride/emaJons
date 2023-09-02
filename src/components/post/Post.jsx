@@ -16,6 +16,7 @@ export default function Post() {
 
   const fullscreen = useSelector(state => state.posts.fullscreen)
   let mediaElements = []
+  // if(!post) return navigate("/not-found")
 
   useEffect(() => {
     dispatch(setCurrentPost(post))
