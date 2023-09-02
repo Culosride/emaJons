@@ -1,5 +1,4 @@
 .category-container {
-  // animation: fadeIn .5s ease-in;
   display: grid;
   grid-template-columns: 1fr 11fr; // check on different screens
   margin: 0 30px;
@@ -10,26 +9,8 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   column-gap: 80px;
-  grid-template-rows: 240px;
+  grid-template-rows: 300px;
   row-gap: 80px;
-  a {
-    animation: slideIn 0.5s ease-in, fadeIn 0.5s ease-in;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    max-height: 240px;
-    position: relative;
-  }
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    transition: 0.1s;
-  }
-
-  img:hover {
-    opacity: 0.3;
-  }
 }
 
 .select-tags-container {
@@ -46,6 +27,17 @@
   }
   .tag-active {
     font-weight: 600;
+  }
+  .tag-active::before {
+    content: "";
+    display: inline-block;
+    background-image: url("../img/ArrowIcon.svg");
+    background-size: contain;
+    width: 20px;
+    background-repeat: no-repeat;
+    height: 100%;
+    vertical-align: text-bottom;
+    background-position: -6px 50%;
   }
 }
 

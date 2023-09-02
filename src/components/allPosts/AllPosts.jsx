@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux"; // hook to select data from redux store
 import { setCurrentCategory } from "../../features/posts/postsSlice";
 import { fetchAllTags } from "../../features/tags/tagsSlice";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import ImageContainer from "../image/ImageContainer";
 const _ = require("lodash");
 
@@ -26,24 +26,35 @@ export default function AllPosts() {
   let postElements = [];
 
   useEffect(() => {
-    const filtered = postsByCategory.filter((post) => {
-      return tagsFilter.every((tag) => post.postTags.includes(tag));
-    });
+    const filtered = tagsFilter
+      ? postsByCategory.filter((post) =>
+          post.postTags.includes(tagsFilter)
+        )
+      : postsByCategory;
 
-    (filtered.length && setFilteredPosts(filtered)) ||
-      (!filtered.length && setFilteredPosts(postsByCategory));
-    console.log(filteredPosts);
+    setFilteredPosts(filtered);
   }, [tagsFilter]);
 
   const displayPosts = (posts) => {
-    return posts.map((post, i) => {
+    return posts.map((post) => {
+      const { mediaType, url } = post.media[0];
+
+      const getPreviewURL = () => {
+        if (mediaType === "video") {
+          return post.media[0].preview
+        } else {
+          return url;
+        }
+      };
+
       return (
         post.media.length && (
           <ImageContainer
             key={post._id}
+            mediaType={post.media[0].mediaType}
             id={post._id}
             linkUrl={`/${params.category}/${post._id}`}
-            src={post.media[0].url}
+            src={getPreviewURL()}
             alt={post.title}
             hoverContent={post.title.split(",").join("").toUpperCase()}
           />
@@ -70,37 +81,37 @@ export default function AllPosts() {
 
   // filter posts on tag click
   const handleClick = (e) => {
-    e.preventDefault();
-    const filter = e.target.getAttribute("data-value");
-    console.log("filter", filter);
-    if (tagsFilter.includes(filter)) {
-      setTagsFilter((prev) => prev.filter((tag) => tag !== filter));
-    } else {
-      setTagsFilter((prev) => [...prev, filter]);
-    }
+  e.preventDefault();
+  const selectedTag = e.target.getAttribute("data-value");
 
-    const links = document.querySelectorAll(".tag-link");
+  if (tagsFilter === selectedTag) {
+    setTagsFilter("");
+  } else {
+    setTagsFilter(selectedTag);
+  }
 
-    if (links[e.target.id].className.includes("active")) {
-      links[e.target.id].classList.remove("tag-active");
-    } else {
-      links[e.target.id].classList.add("tag-active");
-    }
-  };
+  // Remove the 'tag-active' class from all tag links
+  const links = document.querySelectorAll(".tag-link");
+  links.forEach((link) => link.classList.remove("tag-active"));
+
+  // Add the 'tag-active' class to the clicked tag link
+  e.target.classList.add("tag-active");
+};
 
   // create tag elements
   const tagElements = sortedTags.map((tag, i) => (
-    <a
-      data-value={tag}
-      className="tag-link"
-      key={i}
-      onClick={handleClick}
-      id={i}
-      href="#"
-    >
-      {tag}
-    </a>
-  ));
+  <a
+    data-value={tag}
+    className={`tag-link ${tagsFilter === tag ? 'tag-active' : ''}`}
+    key={i}
+    onClick={handleClick}
+    id={i}
+    href="#"
+  >
+    {tag}
+  </a>
+));
+
 
   return (
     <>
