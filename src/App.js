@@ -21,7 +21,6 @@ import { ROLES } from './config/roles'
 
 const AllPostsRouteValidated = withRouteValidation(AllPosts)
 const PostRouteValidated = withRouteValidation(Post)
-const PostFormRouteValidated = withRouteValidation(PostForm)
 
 export default function App() {
   const dispatch = useDispatch();
@@ -45,7 +44,7 @@ export default function App() {
         {/* protected */}
         <Route element={<RequireAuth allowedRoles={[ROLES.Admin]} />}>
           <Route path='/posts/new' element={<PostForm />}/>
-          <Route path='/posts/:postId/edit' element={<PostFormRouteValidated />}/>
+          <Route path='/posts/:postId/edit' element={<PostForm />}/>
         </Route>
         {/*end protected */}
         <Route path='/not-found' element={<NotFound />}/>
