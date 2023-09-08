@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { setCredentials, selectCurrentToken, login, refresh } from '../../features/auth/authSlice';
+import { login } from '../../features/auth/authSlice';
 
 function Login() {
   const status = useSelector(state => state.auth.status)
@@ -29,7 +29,7 @@ function Login() {
 
     dispatch(login(userInfo))
       .then(res => { if(!res.error) {
-        dispatch(setCredentials(res.payload.accessToken));
+        localStorage.setItem("access-token", res.payload.accessToken)
         navigate(-1)
         resetInfo()
       } else {

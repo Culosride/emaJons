@@ -23,7 +23,9 @@ const postInstance = axios.create({
 
 // post interceptor
 postInstance.interceptors.request.use(async (req) => {
-  const token = store.getState().auth.token;
+  const token = localStorage.getItem("access-token")
+  // const token = store.getState().auth.token;
+  console.log('token', token)
   const decoded = jwt_decode(token);
   const isExpired = decoded.exp < Date.now() / 1000;
 
@@ -31,7 +33,7 @@ postInstance.interceptors.request.use(async (req) => {
     req.headers.Authorization = `Bearer ${token}`;
     return req;
   }
-
+  console.log("expired!")
   const response = await axios.get(`${baseURL}/auth/refresh`);
   req.headers.Authorization = `Bearer ${response.data.accessToken}`;
   return req;

@@ -4,7 +4,7 @@ import _ from 'lodash'
 import { useDispatch, useSelector } from "react-redux";
 import { deletePost, setCurrentCategory, fetchPosts } from '../../features/posts/postsSlice';
 import useAuth from "../../hooks/useAuth.jsx";
-import { logout, selectCurrentToken } from "../../features/auth/authSlice"
+import { logout } from "../../features/auth/authSlice"
 import { CATEGORIES } from "../../config/categories.js";
 
 export default function Header () {
@@ -14,7 +14,7 @@ export default function Header () {
   const { pathname } = useLocation();
 
   const isAdmin = authorization.isAdmin
-  const token = useSelector(selectCurrentToken)
+  const token = localStorage.getItem('access-token');
 
   let currentCategory = useSelector(state => state.posts.currentCategory)
   const isFullscreen = useSelector(state => state.posts.fullscreen)
@@ -52,7 +52,6 @@ export default function Header () {
   }
 
   const toggleMenu = () => {
-    // dispatch(toggleNavbar())
     setIsExpanded(!isExpanded)
     setOn(true)
   }
@@ -76,6 +75,8 @@ export default function Header () {
 
   async function handleLogout() {
     menuOff()
+    localStorage.removeItem('access-token');
+    navigate("/")
     dispatch(logout(token))
       .then(() => navigate("/"))
     setOn(false)
@@ -150,7 +151,7 @@ export default function Header () {
           </div>
           <div>
             {isAdmin && postMenu()}
-            <button className='close-button' onClick={() => navigate(-1)}>
+            <button className='close-button' onClick={() => navigate(currentCategory)}>
               <i className="close-icon"></i>
             </button>
           </div>

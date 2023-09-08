@@ -25,7 +25,6 @@ export default function Post() {
   useEffect(() => {
     const escapeFullscreen = (e) => {
       if(e.key === "Escape" && fullscreen) {
-        navigate(-1)
         dispatch(toggleFullscreen(false))
       } else if(e.key === "Escape" && !fullscreen) {
         navigate(`/${category}`)

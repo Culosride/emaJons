@@ -10,12 +10,12 @@ const root = createRoot(document.getElementById("root"));
 
 root.render(
     <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
+      {/* <PersistGate loading={null} persistor={persistor}> */}
         <Router>
           <Routes>
             <Route path="/*" element={<App />}></Route>
           </Routes>
         </Router>
-      </PersistGate>
+      {/* </PersistGate> */}
     </Provider>
 )

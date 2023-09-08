@@ -5,11 +5,13 @@ const Category = require('../models/category');
 const Post = require('../models/post');
 const _ = require('lodash');
 
+const refreshDays = 2
+
 const cookieOptions = {
   // httpOnly: true,         // only accessible by web server
   secure: true,           // only for https, activate for deployment
   sameSite: "None",       // cross-site cookie
-  maxAge: 24*60*60*1000   // cookie expiration time matches refreshToken's
+  maxAge: 24*60*60*1000*refreshDays   // cookie expiration time matches refreshToken's
 }
 
 const handleLogin = async (req, res) => {
@@ -36,7 +38,7 @@ const handleLogin = async (req, res) => {
   const refreshToken = jwt.sign(
     { username: user.username },
     process.env.REFRESH_TOKEN_SECRET,
-    { expiresIn: "7d" }
+    { expiresIn: `${refreshDays}d` }
   );
 
   // Generates secure cookie for authentication with refresh token
@@ -46,7 +48,7 @@ const handleLogin = async (req, res) => {
 }
 
 const handleRefreshToken = async (req, res) => {
-  // look for cookies and if they have jwt property with  optional chain oparator
+  // look for cookies and if they have jwt property with optional chain oparator
   const cookies = req.cookies
   if (!cookies?.jwt) return res.status(401).json({message: "Unauthorized."});
 
