@@ -20,6 +20,12 @@ export default function Header () {
   const isFullscreen = useSelector(state => state.posts.fullscreen)
   const currentPostId = useSelector(state => state.posts.currentPost._id)
   const hasContent = useSelector(state => state.posts.currentPost.content?.length > 500)
+  const postsStatus = useSelector(state => state.posts.status)
+  const error = useSelector(state => state.posts.error)
+
+  useEffect(() => {
+    if(error.includes("401")) handleLogout()
+  }, [postsStatus])
 
   // to rename ?
   const admin = matchPath("/posts/*", pathname);
@@ -33,10 +39,8 @@ export default function Header () {
   const logoAndCategoryRef = useRef()
   const navRef = useRef()
 
-  if(pathname.includes("new")) {
-    currentCategory = "New Post"
-  } else if(pathname.includes("edit")) {
-    currentCategory = "edit"
+  if(matchPath("/posts/new", pathname)) {
+    currentCategory = "new post"
   }
 
   useEffect(() => {
@@ -76,16 +80,16 @@ export default function Header () {
   async function handleLogout() {
     menuOff()
     localStorage.removeItem('access-token');
-    navigate("/")
     dispatch(logout(token))
-      .then(() => navigate("/"))
+      .then(() => {
+        navigate("/")})
     setOn(false)
   }
 
-  function handleDelete() {
+  async function handleDelete() {
     console.log(currentPostId, currentCategory)
-    dispatch(deletePost([currentPostId, currentCategory]))
-    .then(() => dispatch(fetchPosts()) && navigate(`/${currentCategory}`))
+    await dispatch(deletePost([currentPostId, currentCategory]))
+    dispatch(fetchPosts()) && navigate(`/${currentCategory}`)
   }
 
   const adminMenu = () => {

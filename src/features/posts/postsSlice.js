@@ -7,7 +7,7 @@ const initialState = {
   currentPost: "",
   fullscreen: false,
   status: "idle" || "loading" || "succeeded" || "failed",
-  error: "" || null,
+  error: "",
 };
 
 export const createPost = createAsyncThunk("createPost", async (formData) => {
@@ -68,7 +68,7 @@ const postsSlice = createSlice({
     },
     setCurrentCategory(state, action) {
       state.status = "succeeded";
-      state.error = null;
+      state.error = "";
       state.currentCategory = action.payload;
     },
   },
@@ -136,12 +136,27 @@ const postsSlice = createSlice({
           ...state,
           status: "succeeded",
           posts: action.payload,
-          error: null,
+          error: "",
         };
       })
       .addCase(fetchPosts.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
+      })
+      .addCase(fetchPostById.pending, (state, action) => {
+        state.status = 'loading'
+      })
+      .addCase(fetchPostById.fulfilled, (state, action) => {
+        return state = {
+          ...state,
+          status: 'succeeded',
+          currentCategory: action.payload.category,
+          currentPost: action.payload
+       }
+      })
+      .addCase(fetchPostById.rejected, (state, action) => {
+        state.status = 'failed'
+        state.error = action.error.message
       })
   },
 });

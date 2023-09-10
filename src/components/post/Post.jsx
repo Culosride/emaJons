@@ -16,10 +16,10 @@ export default function Post() {
 
   const fullscreen = useSelector(state => state.posts.fullscreen)
   let mediaElements = []
-  // if(!post) return navigate("/not-found")
+  // if(!post) return navigate(`/${category}`)
 
   useEffect(() => {
-    dispatch(setCurrentPost(post))
+    if(post) dispatch(setCurrentPost(post))
   }, [post])
 
   useEffect(() => {
@@ -70,23 +70,26 @@ export default function Post() {
     }
   }
 
-  const content = post.content && post.content.length > 500
+  const content = post?.content && post.content.length > 500
 
   return (
-    <div className={`post-container ${content ? "layout-50" : ""} ${fullscreen ? "layout-100" : ""}`}>
-        {post.media && <Slider slides={post.media}/>}
-
-        <div className="text-container" onScroll={handleScroll} onClick={handleFullscreen}>
-          <div className="description-container">
-            <div className="headline">
-              <div>
-                <h1 className="title">{post.title}</h1>
-                {post.subtitle && <p className="subtitle">{post.subtitle}</p>}
+    post &&
+      (
+        <div id={"post"} className={`post-container ${content ? "layout-50" : ""} ${fullscreen ? "layout-100" : ""}`}>
+          {post.media && <Slider slides={post.media}/>}
+          <div className="text-container" onScroll={handleScroll} onClick={handleFullscreen}>
+            <div className="description-container">
+              <div className="headline">
+                <div>
+                  <h1 className="title">{post.title}</h1>
+                  {post.subtitle && <p className="subtitle">{post.subtitle}</p>}
+                </div>
               </div>
+              {post.content && <p className="content">{post.content}</p>}
             </div>
-            {post.content && <p className="content">{post.content}</p>}
           </div>
         </div>
-      </div>
+      )
+
   )
 }

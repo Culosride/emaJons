@@ -34,6 +34,7 @@ const authSlice = createSlice({
       })
       .addCase(checkPath.fulfilled, (state, action) => {
         state.status = 'succeeded'
+        state.error = ""
       })
       .addCase(checkPath.rejected, (state, action) => {
         state.status = "failed";
@@ -57,7 +58,7 @@ const authSlice = createSlice({
       })
       .addCase(logout.fulfilled, (state, action) => {
         state.token = null
-        state.status = action.payload.message
+        state.status = "succeeded"
       })
       .addCase(logout.rejected, (state, action) => {
         state.status = "failed";

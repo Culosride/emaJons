@@ -5,7 +5,7 @@ const Category = require('../models/category');
 const Post = require('../models/post');
 const _ = require('lodash');
 
-const refreshDays = 2
+const refreshDays = 30
 
 const cookieOptions = {
   // httpOnly: true,         // only accessible by web server
@@ -33,7 +33,7 @@ const handleLogin = async (req, res) => {
       }
     },
     process.env.ACCESS_TOKEN_SECRET,
-    { expiresIn: "15m" }
+    { expiresIn: "30m" }
   );
   const refreshToken = jwt.sign(
     { username: user.username },
@@ -71,7 +71,7 @@ const handleRefreshToken = async (req, res) => {
           }
         },
         process.env.ACCESS_TOKEN_SECRET,
-        { expiresIn: "15m" }
+        { expiresIn: "30m" }
       );
       // console.log("acc token", accessToken)
       res.json({ accessToken })
