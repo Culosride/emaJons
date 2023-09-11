@@ -35,6 +35,11 @@ export default function AllPosts() {
     setFilteredPosts(filtered);
   }, [tagsFilter]);
 
+  useEffect(() => {
+    dispatch(setCurrentCategory(params.category));
+    dispatch(fetchAllTags());
+  }, [params]);
+
   const displayPosts = (posts) => {
     return posts.map((post) => {
       const { mediaType, url } = post.media[0];
@@ -63,10 +68,6 @@ export default function AllPosts() {
     });
   };
 
-  useEffect(() => {
-    dispatch(setCurrentCategory(params.category));
-    dispatch(fetchAllTags());
-  }, [params]);
 
   if (status === "failed") {
     postElements = <p>{error}</p>;

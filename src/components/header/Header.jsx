@@ -4,7 +4,7 @@ import _ from 'lodash'
 import { useDispatch, useSelector } from "react-redux";
 import { deletePost, setCurrentCategory, fetchPosts } from '../../features/posts/postsSlice';
 import useAuth from "../../hooks/useAuth.jsx";
-import { logout, selectCurrentToken } from "../../features/auth/authSlice"
+import { logout } from "../../features/auth/authSlice"
 import { CATEGORIES } from "../../config/categories.js";
 
 export default function Header () {
@@ -14,12 +14,18 @@ export default function Header () {
   const { pathname } = useLocation();
 
   const isAdmin = authorization.isAdmin
-  const token = useSelector(selectCurrentToken)
+  const token = localStorage.getItem('access-token');
 
   let currentCategory = useSelector(state => state.posts.currentCategory)
   const isFullscreen = useSelector(state => state.posts.fullscreen)
   const currentPostId = useSelector(state => state.posts.currentPost._id)
   const hasContent = useSelector(state => state.posts.currentPost.content?.length > 500)
+  const postsStatus = useSelector(state => state.posts.status)
+  const error = useSelector(state => state.posts.error)
+
+  useEffect(() => {
+    if(error.includes("401")) handleLogout()
+  }, [postsStatus])
 
   // to rename ?
   const admin = matchPath("/posts/*", pathname);
@@ -33,10 +39,8 @@ export default function Header () {
   const logoAndCategoryRef = useRef()
   const navRef = useRef()
 
-  if(pathname.includes("new")) {
-    currentCategory = "New Post"
-  } else if(pathname.includes("edit")) {
-    currentCategory = "edit"
+  if(matchPath("/posts/new", pathname)) {
+    currentCategory = "new post"
   }
 
   useEffect(() => {
@@ -52,7 +56,6 @@ export default function Header () {
   }
 
   const toggleMenu = () => {
-    // dispatch(toggleNavbar())
     setIsExpanded(!isExpanded)
     setOn(true)
   }
@@ -76,15 +79,17 @@ export default function Header () {
 
   async function handleLogout() {
     menuOff()
+    localStorage.removeItem('access-token');
     dispatch(logout(token))
-      .then(() => navigate("/"))
+      .then(() => {
+        navigate("/")})
     setOn(false)
   }
 
-  function handleDelete() {
+  async function handleDelete() {
     console.log(currentPostId, currentCategory)
-    dispatch(deletePost([currentPostId, currentCategory]))
-    .then(() => dispatch(fetchPosts()) && navigate(`/${currentCategory}`))
+    await dispatch(deletePost([currentPostId, currentCategory]))
+    dispatch(fetchPosts()) && navigate(`/${currentCategory}`)
   }
 
   const adminMenu = () => {
@@ -150,7 +155,7 @@ export default function Header () {
           </div>
           <div>
             {isAdmin && postMenu()}
-            <button className='close-button' onClick={() => navigate(-1)}>
+            <button className='close-button' onClick={() => navigate(currentCategory)}>
               <i className="close-icon"></i>
             </button>
           </div>

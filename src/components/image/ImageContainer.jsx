@@ -13,15 +13,10 @@ const ImageContainer = ({ mediaType, src, alt, hoverContent, linkUrl }) => {
     <Link to={linkUrl} className="image-container">
       {mediaType === "image" && <img className="image" src={src} alt={alt} />}
       {mediaType === "video" && (
-        <video
-          muted
-          loop
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
-          className="image"
-          src={src}
-          alt={alt}
-        />
+        <video className="image" onMouseEnter={handleMouseEnter} alt={alt} onMouseLeave={handleMouseLeave} loop muted>
+          <source src={src} type="video/mp4"/>
+          <source src={src} type="video/mov"/>
+        </video>
       )}
       <div className="post-info">{hoverContent}</div>
     </Link>

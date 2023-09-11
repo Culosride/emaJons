@@ -137,3 +137,4 @@ dist
 .pnp.*
 src/components/slider/Slider_old.jsx
 src/components/slider/_slider_old.scss
+src/app/store_old.js

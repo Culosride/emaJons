@@ -147,8 +147,7 @@ postRouter.delete("/:category/:postId", verifyJWT, async (req, res) => {
   try {
     const post = await Post.findOne({ _id: postId }).exec();
     console.log("post to delete:", post);
-    if (!post)
-      return res.status(204).json({ message: "No post found with this id." });
+    if (!post) return res.status(204).json({ message: "No post found with this id." });
 
     const publicIds = post.media.map((med) => med.publicId);
 

@@ -25,12 +25,7 @@ export const checkPath = createAsyncThunk("/auth/validate-path", async (path) =>
 const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {
-    setCredentials: (state, action) => {
-      console.log("setting credentials")
-      state.token = action.payload
-    },
-  },
+  reducers: {},
   extraReducers(builder) {
     builder
       .addCase(checkPath.pending, (state) => {
@@ -39,6 +34,7 @@ const authSlice = createSlice({
       })
       .addCase(checkPath.fulfilled, (state, action) => {
         state.status = 'succeeded'
+        state.error = ""
       })
       .addCase(checkPath.rejected, (state, action) => {
         state.status = "failed";
@@ -62,7 +58,7 @@ const authSlice = createSlice({
       })
       .addCase(logout.fulfilled, (state, action) => {
         state.token = null
-        state.status = action.payload.message
+        state.status = "succeeded"
       })
       .addCase(logout.rejected, (state, action) => {
         state.status = "failed";
@@ -71,7 +67,7 @@ const authSlice = createSlice({
   }
 })
 
-export const { setCredentials } = authSlice.actions
+export const {  } = authSlice.actions
 
 export default authSlice.reducer
 

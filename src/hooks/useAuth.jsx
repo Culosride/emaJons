@@ -3,7 +3,7 @@ import { selectCurrentToken } from "../features/auth/authSlice"
 import jwtDecode from 'jwt-decode'
 
 const useAuth = () => {
-    const token = useSelector(selectCurrentToken)
+    const token = localStorage.getItem("access-token")
     let isAdmin = false
     let status = "BasicUser"
 
