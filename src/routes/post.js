@@ -18,6 +18,7 @@ const _ = require("lodash");
 require("dotenv").config();
 
 // routes for BasicUsers
+// fetch all posts
 postRouter.get("/api/posts", async (req, res) => {
   try {
     const allPosts = await Post.find({}).populate({ path: "postTags" });
@@ -27,6 +28,26 @@ postRouter.get("/api/posts", async (req, res) => {
   }
 });
 
+// fetch posts by category
+postRouter.get("/api/posts/:category", async (req, res) => {
+  const { category } = req.params
+  // const page = parseInt(req.query.page) || 1;
+  const page = parseInt(req.query.page) || 1;
+  console.log(page)
+  const pageSize = parseInt(req.query.pageSize) || 9;
+  try {
+    const posts = await Post.find({category: category})
+      .skip((page - 1) * pageSize)
+      .limit(pageSize)
+      .populate({ path: "postTags" });
+
+    res.status(200).json(posts);
+  } catch (err) {
+    res.status(404).send(err);
+  }
+});
+
+// fetch posts by id
 postRouter.get("/api/posts/:postId", async (req, res) => {
   try {
     const post = await Post.findOne({ _id: req.params.postId });

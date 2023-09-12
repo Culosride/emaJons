@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import Layout from './components/layout/Layout';
 import Login from './components/login/Login';
 import AllPosts from './components/allPosts/AllPosts';
@@ -23,9 +23,7 @@ const AllPostsRouteValidated = withRouteValidation(AllPosts)
 const PostRouteValidated = withRouteValidation(Post)
 
 export default function App() {
-  const dispatch = useDispatch();
-  const posts = useSelector(state => state.posts.posts)
-
+const dispatch = useDispatch()
   useEffect(() => {
       console.log("fetching posts")
       dispatch(fetchPosts());
@@ -40,7 +38,7 @@ export default function App() {
         <Route path='/contact' element={<Contact />}/>
         <Route path='/bio' element={<Bio />}/>
         <Route path='/:category' element={<AllPostsRouteValidated /> } />
-        {posts.length && <Route path="/:category/:postId" element={<PostRouteValidated />} />}
+        {<Route path="/:category/:postId" element={<PostRouteValidated />} />}
         {/* protected */}
         <Route element={<RequireAuth allowedRoles={[ROLES.Admin]} />}>
           <Route path='/posts/new' element={<PostForm />}/>

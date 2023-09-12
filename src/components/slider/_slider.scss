@@ -19,7 +19,7 @@
 
 .slider:hover {
   img {
-    cursor: url('../img/PlusBold.svg'), auto;
+    cursor: url('../icons/PlusBold.svg'), auto;
   }
 }
 
@@ -100,7 +100,7 @@ button {
   content: '';
 }
 .next:hover, .next-video:hover {
-  cursor: url('../img/ArrowIcon.svg'), auto;
+  cursor: url('../icons/ArrowIcon.svg'), auto;
 }
 
 .prev:before, .prev-video:hover {
@@ -108,7 +108,7 @@ button {
 }
 
 .prev:hover, .prev-video:hover {
-  cursor: url('../img/ArrowBack.svg'), auto;
+  cursor: url('../icons/ArrowBack.svg'), auto;
 }
 
 .page {

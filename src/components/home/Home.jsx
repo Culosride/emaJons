@@ -5,7 +5,7 @@ import { CATEGORIES } from "../../config/categories";
 const Home = () => {
   const categoryImages = {
     default:
-      "https://2.bp.blogspot.com/-Cd5p7_0tFtM/WkKmEef2nsI/AAAAAAAACEg/Bo8yZMz1cksmezXyeYOZMbEJl_t3sm6agCLcBGAs/s1600/cagliari-sony_44.jpg",
+      "/images/IMG_1756.jpg",
     Walls:
       "https://4.bp.blogspot.com/-hqMoSaKx3C0/WkKeWj4kIuI/AAAAAAAACCc/VO0fqOzQom48D3mC3YXlgIrHPm7kHAuoQCLcBGAs/s1600/ema-nef_2.jpg",
     Paintings:
@@ -29,8 +29,8 @@ const Home = () => {
     return (
       <li key={i}>
         <Link
-          onMouseEnter={() => setBackgroundImage(categoryImages[category])}
-          onMouseLeave={() => setBackgroundImage(categoryImages.default)}
+          // onMouseEnter={() => setBackgroundImage(categoryImages[category])}
+          // onMouseLeave={() => setBackgroundImage(categoryImages.default)}
           to={`${category}`}
         >
           <div className="italic">{_.capitalize(category)}</div>
