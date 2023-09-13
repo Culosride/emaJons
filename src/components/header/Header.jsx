@@ -41,6 +41,8 @@ export default function Header () {
 
   if(matchPath("/posts/new", pathname)) {
     currentCategory = "new post"
+  } else if(matchPath("/posts/:postId/edit", pathname)) {
+    currentCategory = "edit"
   }
 
   useEffect(() => {
@@ -86,10 +88,10 @@ export default function Header () {
     setOn(false)
   }
 
-  async function handleDelete() {
-    console.log(currentPostId, currentCategory)
-    await dispatch(deletePost([currentPostId, currentCategory]))
-    dispatch(fetchPosts()) && navigate(`/${currentCategory}`)
+  function handleDelete() {
+    console.log(currentPostId, currentCategory);
+    dispatch(deletePost([currentPostId, currentCategory]))
+      .then(() => dispatch(fetchPosts()) && navigate(`/${currentCategory}`))
   }
 
   const adminMenu = () => {

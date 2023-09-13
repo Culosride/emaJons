@@ -45,7 +45,7 @@ const Home = () => {
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
       <div className="logo">
-        <Link>EmaJons</Link>
+        <Link to={"/bio"}>EmaJons</Link>
       </div>
       <ul>
         {navElements}

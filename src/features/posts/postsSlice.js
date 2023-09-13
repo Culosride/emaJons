@@ -5,6 +5,7 @@ const initialState = {
   posts: [],
   currentCategory: "",
   currentPost: "",
+  loadMore: true,
   fullscreen: false,
   status: "idle" || "loading" || "succeeded" || "failed",
   error: "",
@@ -31,8 +32,8 @@ export const fetchPosts = createAsyncThunk("getPosts", async () => {
   return response.data;
 });
 
-export const fetchPostsByCategory = createAsyncThunk("getPostsByCategory", async (category) => {
-    const response = await api.fetchPostsByCategory(category);
+export const fetchPostsByCategory = createAsyncThunk("getPostsByCategory", async ([category, pageNum]) => {
+    const response = await api.fetchPostsByCategory(category, pageNum);
     return response.data;
 });
 
@@ -46,8 +47,7 @@ const postsSlice = createSlice({
   initialState,
   reducers: {
     toggleFullscreen(state, action) {
-      state.fullscreen =
-        action.payload !== undefined ? action.payload : !state.fullscreen;
+      state.fullscreen = action.payload !== undefined ? action.payload : !state.fullscreen;
     },
     setCurrentPost(state, action) {
       if (action.payload) {
@@ -67,7 +67,6 @@ const postsSlice = createSlice({
       }
     },
     setCurrentCategory(state, action) {
-      state.status = "succeeded";
       state.error = "";
       state.currentCategory = action.payload;
     },
@@ -140,6 +139,18 @@ const postsSlice = createSlice({
         };
       })
       .addCase(fetchPosts.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
+      .addCase(fetchPostsByCategory.pending, (state, action) => {
+        state.status = "loading";
+      })
+      .addCase(fetchPostsByCategory.fulfilled, (state, action) => {
+        state.posts = state.posts.concat(action.payload.posts)
+        state.status = "succeeded"
+        state.loadMore = action.payload.moreData
+      })
+      .addCase(fetchPostsByCategory.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       })

@@ -21,33 +21,59 @@ require("dotenv").config();
 // fetch all posts
 postRouter.get("/api/posts", async (req, res) => {
   try {
-    const allPosts = await Post.find({}).populate({ path: "postTags" });
-    res.status(200).json(allPosts);
+    // Group posts by category and limit each group to the first 9 posts
+    const pipeline = [
+      {
+        $group: {
+          _id: '$category',
+          posts: { $push: '$$ROOT' },
+        },
+      },
+      {
+        $project: {
+          category: '$_id',
+          posts: { $slice: ['$posts', 9] },
+        },
+      },
+    ];
+
+    const result = await Post.aggregate(pipeline);
+
+    const first10PostsForEachCategory = result.map((categoryData) => categoryData.posts).flat();
+
+    res.status(200).json(first10PostsForEachCategory);
   } catch (err) {
     res.status(404).send(err);
   }
 });
 
+// fetch all posts
+// postRouter.get("/api/posts", async (req, res) => {
+//   try {
+//     const allPosts = await Post.find({}).populate({ path: "postTags" });
+//     res.status(200).json(allPosts);
+//   } catch (err) {
+//     res.status(404).send(err);
+//   }
+// });
+
 // fetch posts by category
-postRouter.get("/api/posts/:category", async (req, res) => {
+postRouter.get("/api/categories/:category", async (req, res) => {
   const { category } = req.params
-  // const page = parseInt(req.query.page) || 1;
   const page = parseInt(req.query.page) || 1;
-  console.log(page)
   const pageSize = parseInt(req.query.pageSize) || 9;
   try {
     const posts = await Post.find({category: category})
-      .skip((page - 1) * pageSize)
+      .skip((page) * pageSize)
       .limit(pageSize)
       .populate({ path: "postTags" });
-
-    res.status(200).json(posts);
+    res.status(200).json({posts: posts, moreData: Boolean(posts.length)});
   } catch (err) {
     res.status(404).send(err);
   }
 });
 
-// fetch posts by id
+// fetch post by id
 postRouter.get("/api/posts/:postId", async (req, res) => {
   try {
     const post = await Post.findOne({ _id: req.params.postId });

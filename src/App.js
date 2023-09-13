@@ -23,7 +23,8 @@ const AllPostsRouteValidated = withRouteValidation(AllPosts)
 const PostRouteValidated = withRouteValidation(Post)
 
 export default function App() {
-const dispatch = useDispatch()
+  const dispatch = useDispatch()
+
   useEffect(() => {
       console.log("fetching posts")
       dispatch(fetchPosts());

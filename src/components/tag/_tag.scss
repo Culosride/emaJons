@@ -1,5 +1,6 @@
 .tag-wrapper, .ghost-tag {
   .tag{
+    cursor: pointer;
     color: black;
     font-size: 12px;
     text-transform: uppercase;
@@ -82,5 +83,4 @@
   border-radius: 20px;
   padding: 8px 12px;
   font-size: 12px;
-  cursor: pointer;
 }
