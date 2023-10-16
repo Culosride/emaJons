@@ -41,6 +41,7 @@ postRouter.get("/api/posts", async (req, res) => {
 
     const first10PostsForEachCategory = result.map((categoryData) => categoryData.posts).flat();
 
+    // res.status(404).send(err);
     res.status(200).json(first10PostsForEachCategory);
   } catch (err) {
     res.status(404).send(err);
@@ -64,10 +65,10 @@ postRouter.get("/api/categories/:category", async (req, res) => {
   const pageSize = parseInt(req.query.pageSize) || 9;
   try {
     const posts = await Post.find({category: category})
-      .skip((page) * pageSize)
+      .skip((page - 1) * pageSize)
       .limit(pageSize)
       .populate({ path: "postTags" });
-    res.status(200).json({posts: posts, moreData: Boolean(posts.length)});
+    res.status(200).json({posts: posts, moreData: Boolean(posts.length > 8)});
   } catch (err) {
     res.status(404).send(err);
   }

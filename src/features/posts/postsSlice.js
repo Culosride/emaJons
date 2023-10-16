@@ -146,15 +146,29 @@ const postsSlice = createSlice({
         state.status = "loading";
       })
       .addCase(fetchPostsByCategory.fulfilled, (state, action) => {
-        state.posts = state.posts.concat(action.payload.posts)
-        state.status = "succeeded"
-        state.loadMore = action.payload.moreData
+
+        function filterPosts(array1, array2, property) {
+          const ids = new Set(array1.map(item => item[property]));
+          const uniquePosts = array2.filter(item => !ids.has(item[property]));
+          return uniquePosts;
+        }
+
+        const array1 = state.posts;
+        const array2 = action.payload.posts
+        const filteredPosts = filterPosts(array1, array2, '_id');
+
+        return state = {
+          ...state,
+          posts: [...state.posts, ...filteredPosts],
+          status: "succeeded",
+          loadMore: action.payload.moreData
+        }
       })
       .addCase(fetchPostsByCategory.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       })
-      .addCase(fetchPostById.pending, (state, action) => {
+      .addCase(fetchPostById.pending, (state) => {
         state.status = 'loading'
       })
       .addCase(fetchPostById.fulfilled, (state, action) => {

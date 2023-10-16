@@ -26,8 +26,8 @@ export default function App() {
   const dispatch = useDispatch()
 
   useEffect(() => {
-      console.log("fetching posts")
-      dispatch(fetchPosts());
+    console.log("fetching posts")
+    dispatch(fetchPosts());
   }, []);
 
   return (
