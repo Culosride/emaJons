@@ -1,17 +1,17 @@
 import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import Layout from './components/layout/Layout';
 import Login from './components/login/Login';
 import AllPosts from './components/allPosts/AllPosts';
 import PostForm from './components/postForm/PostForm';
 import Post from './components/post/Post';
-import Bio from './components/bio/Bio';
+import About from './components/about/About';
 import Contact from './components/contact/Contact';
 import Home from './components/home/Home';
 import NotFound from './components/404/NotFound';
 import withRouteValidation from "./hocs/RouteValidation";
 import RequireAuth from './hocs/RequireAuth'
-import { fetchPosts } from './features/posts/postsSlice';
+// import { fetchPosts } from './features/posts/postsSlice';
 
 import {
   Routes,
@@ -23,12 +23,11 @@ const AllPostsRouteValidated = withRouteValidation(AllPosts)
 const PostRouteValidated = withRouteValidation(Post)
 
 export default function App() {
-  const dispatch = useDispatch();
-  const posts = useSelector(state => state.posts.posts)
+  const dispatch = useDispatch()
 
   useEffect(() => {
-      console.log("fetching posts")
-      dispatch(fetchPosts());
+    console.log("fetching posts")
+    // dispatch(fetchPosts());
   }, []);
 
   return (
@@ -38,9 +37,9 @@ export default function App() {
       <Route path="/" element={<Layout />}>
         <Route path="/login" element={<Login />} />
         <Route path='/contact' element={<Contact />}/>
-        <Route path='/bio' element={<Bio />}/>
+        <Route path='/about' element={<About />}/>
         <Route path='/:category' element={<AllPostsRouteValidated /> } />
-        {posts.length && <Route path="/:category/:postId" element={<PostRouteValidated />} />}
+        {<Route path="/:category/:postId" element={<PostRouteValidated />} />}
         {/* protected */}
         <Route element={<RequireAuth allowedRoles={[ROLES.Admin]} />}>
           <Route path='/posts/new' element={<PostForm />}/>

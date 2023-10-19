@@ -5,6 +5,8 @@ const initialState = {
   posts: [],
   currentCategory: "",
   currentPost: "",
+  loadMore: true,
+  scrollPosition: 0,
   fullscreen: false,
   status: "idle" || "loading" || "succeeded" || "failed",
   error: "",
@@ -31,8 +33,8 @@ export const fetchPosts = createAsyncThunk("getPosts", async () => {
   return response.data;
 });
 
-export const fetchPostsByCategory = createAsyncThunk("getPostsByCategory", async (category) => {
-    const response = await api.fetchPostsByCategory(category);
+export const fetchPostsByCategory = createAsyncThunk("getPostsByCategory", async ([category, pageNum]) => {
+    const response = await api.fetchPostsByCategory(category, pageNum);
     return response.data;
 });
 
@@ -46,15 +48,15 @@ const postsSlice = createSlice({
   initialState,
   reducers: {
     toggleFullscreen(state, action) {
-      state.fullscreen =
-        action.payload !== undefined ? action.payload : !state.fullscreen;
+      state.fullscreen = action.payload !== undefined ? action.payload : !state.fullscreen;
     },
     setCurrentPost(state, action) {
-      if (action.payload) {
+      const currentPost = state.posts.find(post => post._id === action.payload)
+      if (currentPost) {
         return state = {
           ...state,
-          currentPost: action.payload,
-          currentCategory: action.payload.category,
+          currentPost: currentPost,
+          currentCategory: currentPost.category,
           fullscreen: false,
         };
       } else {
@@ -66,8 +68,11 @@ const postsSlice = createSlice({
         };
       }
     },
+    setScrollPosition(state, action) {
+      state.error = "";
+      state.scrollPosition = action.payload;
+    },
     setCurrentCategory(state, action) {
-      state.status = "succeeded";
       state.error = "";
       state.currentCategory = action.payload;
     },
@@ -78,7 +83,6 @@ const postsSlice = createSlice({
         state.status = "loading";
       })
       .addCase(createPost.fulfilled, (state, action) => {
-
         return state = {
           ...state,
           status: "succeeded",
@@ -131,7 +135,6 @@ const postsSlice = createSlice({
         state.status = "loading";
       })
       .addCase(fetchPosts.fulfilled, (state, action) => {
-
         return state = {
           ...state,
           status: "succeeded",
@@ -143,7 +146,33 @@ const postsSlice = createSlice({
         state.status = "failed";
         state.error = action.error.message;
       })
-      .addCase(fetchPostById.pending, (state, action) => {
+      .addCase(fetchPostsByCategory.pending, (state, action) => {
+        state.status = "loading";
+      })
+      .addCase(fetchPostsByCategory.fulfilled, (state, action) => {
+
+        function filterPosts(array1, array2, property) {
+          const ids = new Set(array1.map(item => item[property]));
+          const uniquePosts = array2.filter(item => !ids.has(item[property]));
+          return uniquePosts;
+        }
+
+        const array1 = state.posts;
+        const array2 = action.payload.posts
+        const filteredPosts = filterPosts(array1, array2, '_id');
+
+        return state = {
+          ...state,
+          posts: [...state.posts, ...filteredPosts],
+          status: "succeeded",
+          loadMore: action.payload.moreData
+        }
+      })
+      .addCase(fetchPostsByCategory.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
+      .addCase(fetchPostById.pending, (state) => {
         state.status = 'loading'
       })
       .addCase(fetchPostById.fulfilled, (state, action) => {
@@ -165,6 +194,7 @@ export const {
   clearResults,
   setCurrentPost,
   setCurrentCategory,
+  setScrollPosition,
   toggleFullscreen,
   setCurrentMedia,
 } = postsSlice.actions;

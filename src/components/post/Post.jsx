@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { toggleFullscreen, setCurrentPost } from '../../features/posts/postsSlice';
+import { toggleFullscreen, setCurrentPost, fetchPostById } from '../../features/posts/postsSlice';
 import Slider from '../slider/Slider';
 
 export default function Post() {
@@ -9,18 +9,20 @@ export default function Post() {
   const dispatch = useDispatch()
   const params = useParams()
   const currentId = params.postId
-  const post = useSelector(state => state.posts.posts.find(post => post._id === currentId))
+  const post = useSelector(state => state.posts.posts.find(post => post._id === currentId)) || useSelector(state => state.posts.currentPost)
   const status = useSelector(state => state.posts.status)
   const error = useSelector(state => state.posts.error)
   const category = params.category
-
   const fullscreen = useSelector(state => state.posts.fullscreen)
   let mediaElements = []
-  // if(!post) return navigate(`/${category}`)
 
   useEffect(() => {
-    if(post) dispatch(setCurrentPost(post))
-  }, [post])
+    if(!post) {
+      dispatch(fetchPostById(currentId))
+    } else {
+      dispatch(setCurrentPost(currentId))
+    }
+  }, [])
 
   useEffect(() => {
     const escapeFullscreen = (e) => {
@@ -90,6 +92,5 @@ export default function Post() {
           </div>
         </div>
       )
-
   )
 }

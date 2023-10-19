@@ -33,7 +33,7 @@
   justify-content: space-between;
 }
 .text-container:hover {
-  cursor: url('../img/CloseIcon.svg'), auto;
+  cursor: url('../icons/CloseIcon.svg'), auto;
 }
 button {
   background-color: transparent;
@@ -46,7 +46,7 @@ button {
   // top: 24px;
   z-index: 6;
   .close-icon:after {
-    content: url('../img/CloseIcon.svg')
+    content: url('../icons/CloseIcon.svg')
   }
 }
 
@@ -132,7 +132,7 @@ button {
   }
   .slider:hover {
     img {
-      cursor: url('../img/CloseIcon.svg'), auto;
+      cursor: url('../icons/CloseIcon.svg'), auto;
     }
   }
   .slick-slide {

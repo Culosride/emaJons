@@ -35,20 +35,20 @@ export default function PostForm() {
     postTags: [],
   });
 
-  const editPage = pathname.includes("edit");
+  const isEditPage = pathname.includes("edit");
   const isLoading = status === "loading"
 
   const btnStyles = isLoading ? "btn-submit btn-disabled" : "btn-submit";
   const submitBtnValue =
     (isLoading && "Submitting...") ||
-    (!isLoading && editPage ? "Save changes" : "Create new post");
+    (!isLoading && isEditPage ? "Save changes" : "Create new post");
 
     // if(!currentPost) return navigate("/not-found")
 
   useEffect(() => {
     dispatch(resetTags());
     dispatch(fetchAllTags()).then(() => {
-      if (editPage) {
+      if (isEditPage) {
         dispatch(fetchPostById(params.postId)).then((res) => {
           setPostData(res.payload);
           res.payload.postTags.forEach((tag) => {
@@ -68,7 +68,7 @@ export default function PostForm() {
         });
       }
     });
-  }, [editPage]);
+  }, [isEditPage]);
 
   // create media preview
   useEffect(() => {
@@ -192,7 +192,7 @@ export default function PostForm() {
       {error && <p className="error-msg">{error}</p>}
       <form
         className="post-form"
-        onSubmit={editPage ? handleEdit : handleSubmit}
+        onSubmit={isEditPage ? handleEdit : handleSubmit}
       >
         <div className="post-form-layout">
           <label className="custom-file-button" htmlFor="media">

@@ -2,7 +2,8 @@ import React, {useState, useRef, useEffect} from "react"
 import { Link, useLocation, matchPath, useNavigate } from 'react-router-dom'
 import _ from 'lodash'
 import { useDispatch, useSelector } from "react-redux";
-import { deletePost, setCurrentCategory, fetchPosts } from '../../features/posts/postsSlice';
+import { deletePost, setCurrentCategory, fetchPosts, setScrollPosition } from '../../features/posts/postsSlice';
+import { selectTag } from "../../features/tags/tagsSlice";
 import useAuth from "../../hooks/useAuth.jsx";
 import { logout } from "../../features/auth/authSlice"
 import { CATEGORIES } from "../../config/categories.js";
@@ -41,6 +42,8 @@ export default function Header () {
 
   if(matchPath("/posts/new", pathname)) {
     currentCategory = "new post"
+  } else if(matchPath("/posts/:postId/edit", pathname)) {
+    currentCategory = "edit"
   }
 
   useEffect(() => {
@@ -52,6 +55,8 @@ export default function Header () {
 
   const handleNewCategory = (category) => {
     setIsExpanded(!isExpanded)
+    dispatch(selectTag(""))
+    dispatch(setScrollPosition(0))
     dispatch(setCurrentCategory(category))
   }
 
@@ -86,10 +91,10 @@ export default function Header () {
     setOn(false)
   }
 
-  async function handleDelete() {
-    console.log(currentPostId, currentCategory)
-    await dispatch(deletePost([currentPostId, currentCategory]))
-    dispatch(fetchPosts()) && navigate(`/${currentCategory}`)
+  function handleDelete() {
+    console.log(currentPostId, currentCategory);
+    dispatch(deletePost([currentPostId, currentCategory]))
+      .then(() => dispatch(fetchPosts()) && navigate(`/${currentCategory}`))
   }
 
   const adminMenu = () => {
