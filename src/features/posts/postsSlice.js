@@ -51,11 +51,12 @@ const postsSlice = createSlice({
       state.fullscreen = action.payload !== undefined ? action.payload : !state.fullscreen;
     },
     setCurrentPost(state, action) {
-      if (action.payload) {
+      const currentPost = state.posts.find(post => post._id === action.payload)
+      if (currentPost) {
         return state = {
           ...state,
-          currentPost: action.payload,
-          currentCategory: action.payload.category,
+          currentPost: currentPost,
+          currentCategory: currentPost.category,
           fullscreen: false,
         };
       } else {
@@ -82,7 +83,6 @@ const postsSlice = createSlice({
         state.status = "loading";
       })
       .addCase(createPost.fulfilled, (state, action) => {
-
         return state = {
           ...state,
           status: "succeeded",
@@ -135,7 +135,6 @@ const postsSlice = createSlice({
         state.status = "loading";
       })
       .addCase(fetchPosts.fulfilled, (state, action) => {
-
         return state = {
           ...state,
           status: "succeeded",

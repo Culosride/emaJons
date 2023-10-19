@@ -1,20 +1,20 @@
 import React, { forwardRef } from "react";
 import { Link } from "react-router-dom";
 
-const ImageContainer = forwardRef(({ mediaType, handleClick, src, alt, hoverContent, linkUrl, isLast }, ref) => {
+const ImageContainer = forwardRef(({ mediaType, handleScrollPosition, src, alt, hoverContent, linkUrl, isLast }, ref) => {
   const handleMouseEnter = (e) => {
     e.target.play();
   };
   const handleMouseLeave = (e) => {
     e.target.load();
   };
-  const elClass = isLast ? "image-container last" : "image-container"
+  const imageContainerClass = isLast ? "image-container last" : "image-container"
   const content = ref ?
     (
-      <Link to={linkUrl} ref={ref} className={elClass}>
-        {mediaType === "image" && <img onClick={handleClick} className={"image"} src={src} alt={alt} />}
+      <Link onClick={handleScrollPosition} to={linkUrl} ref={ref} className={imageContainerClass}>
+        {mediaType === "image" && <img className={"image"} src={src} alt={alt} />}
         {mediaType === "video" && (
-          <video onClick={handleClick} className={"image"} onMouseEnter={handleMouseEnter} alt={alt} onMouseLeave={handleMouseLeave} loop muted>
+          <video className={"image"} onMouseEnter={handleMouseEnter} alt={alt} onMouseLeave={handleMouseLeave} loop muted>
             <source src={src} type="video/mp4"/>
             <source src={src} type="video/mov"/>
           </video>
@@ -23,10 +23,10 @@ const ImageContainer = forwardRef(({ mediaType, handleClick, src, alt, hoverCont
       </Link>
     ) :
     (
-      <Link to={linkUrl} className={elClass}>
-        {mediaType === "image" && <img onClick={handleClick} className={"image"} src={src} alt={alt} />}
+      <Link onClick={handleScrollPosition} to={linkUrl} className={imageContainerClass}>
+        {mediaType === "image" && <img className={"image"} src={src} alt={alt} />}
         {mediaType === "video" && (
-          <video onClick={handleClick} className={"image"} onMouseEnter={handleMouseEnter} alt={alt} onMouseLeave={handleMouseLeave} loop muted>
+          <video className={"image"} onMouseEnter={handleMouseEnter} alt={alt} onMouseLeave={handleMouseLeave} loop muted>
             <source src={src} type="video/mp4"/>
             <source src={src} type="video/mov"/>
           </video>

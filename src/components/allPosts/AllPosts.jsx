@@ -8,33 +8,32 @@ import usePosts from "../../hooks/usePosts";
 const _ = require("lodash");
 
 export default function AllPosts() {
-  const params = useParams();
   const dispatch = useDispatch();
+  const params = useParams();
+  const currentCategory = params.category
+
   const status = useSelector((state) => state.posts.status);
   const error = useSelector((state) => state.posts.error);
   const posts = useSelector((state) => state.posts.posts);
-  const scrollPosition = useSelector((state) => state.posts.scrollPosition);
   const hasMorePosts = useSelector((state) => state.posts.loadMore);
-  const postsByCategory = posts.filter(post => post.category === _.capitalize(params.category));
-  const [filteredPosts, setFilteredPosts] = useState(postsByCategory);
-  const allTags = postsByCategory.flatMap(post => post.postTags.map((tag) => tag));
-  const sortedTags = [...new Set(allTags.sort((a, b) => b.localeCompare(a)))];
+  const scrollPosition = useSelector((state) => state.posts.scrollPosition);
   const activeTag = useSelector(state => state.tags.activeTag)
 
+  const postsByCategory = posts.filter(post => post.category === _.capitalize(currentCategory));
+  const [filteredPosts, setFilteredPosts] = useState(postsByCategory);
+
+  const allTags = postsByCategory.flatMap(post => post.postTags.map((tag) => tag));
+  const sortedTags = [...new Set(allTags.sort((a, b) => b.localeCompare(a)))];
+
+  const { setPageNum } = usePosts(currentCategory);
+
   useEffect(() => {
+    dispatch(setCurrentCategory(currentCategory));
     window.scrollTo(0, scrollPosition)
   }, [])
 
   let content
   let postElements = [];
-
-  const { setPageNum } = usePosts(params.category);
-
-  useEffect(() => {
-    dispatch(setCurrentCategory(params.category));
-    dispatch(selectTag(""))
-    dispatch(setScrollPosition(0))
-  }, [params.category]);
 
   useEffect(() => {
     const filtered = activeTag
@@ -43,7 +42,7 @@ export default function AllPosts() {
     setFilteredPosts(filtered);
   }, [activeTag, posts]);
 
-  const handleClick = () => {
+  const handleScrollPosition = () => {
     dispatch(setScrollPosition(window.scrollY))
   }
 
@@ -65,9 +64,9 @@ export default function AllPosts() {
             mediaType={post.media[0].mediaType}
             id={post._id}
             ref={i === posts.length - 1 ? lastPostRef : undefined}
-            linkUrl={`/${params.category}/${post._id}`}
+            linkUrl={`/${currentCategory}/${post._id}`}
             src={getPreviewURL()}
-            handleClick={handleClick}
+            handleScrollPosition={handleScrollPosition}
             alt={post.title}
             hoverContent={post.title.split(",").join("").toUpperCase()}
           />
