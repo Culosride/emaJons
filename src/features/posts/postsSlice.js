@@ -6,6 +6,7 @@ const initialState = {
   currentCategory: "",
   currentPost: "",
   loadMore: true,
+  scrollPosition: 0,
   fullscreen: false,
   status: "idle" || "loading" || "succeeded" || "failed",
   error: "",
@@ -65,6 +66,10 @@ const postsSlice = createSlice({
           currentCategory: "",
         };
       }
+    },
+    setScrollPosition(state, action) {
+      state.error = "";
+      state.scrollPosition = action.payload;
     },
     setCurrentCategory(state, action) {
       state.error = "";
@@ -190,6 +195,7 @@ export const {
   clearResults,
   setCurrentPost,
   setCurrentCategory,
+  setScrollPosition,
   toggleFullscreen,
   setCurrentMedia,
 } = postsSlice.actions;

@@ -2,14 +2,14 @@ import React from 'react';
 import { useDispatch } from 'react-redux';
 import { setCurrentCategory } from '../../features/posts/postsSlice';
 
-export default function Bio() {
+export default function About() {
   const dispatch = useDispatch()
 
   dispatch(setCurrentCategory(("About")))
 
   return (
-    <div className="bio-container">
-      <h1>Bio</h1>
+    <div className="about-container">
+      <h1>About</h1>
     </div>
   )
 }

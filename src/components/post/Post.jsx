@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { toggleFullscreen, setCurrentPost } from '../../features/posts/postsSlice';
 import Slider from '../slider/Slider';
+import usePosts from '../../hooks/usePosts';
 
 export default function Post() {
   const navigate = useNavigate()
@@ -17,7 +18,8 @@ export default function Post() {
   const fullscreen = useSelector(state => state.posts.fullscreen)
   let mediaElements = []
   // if(!post) return navigate(`/${category}`)
-
+  const { setPageNum } = usePosts(category)
+  
   useEffect(() => {
     if(post) dispatch(setCurrentPost(post))
   }, [post])

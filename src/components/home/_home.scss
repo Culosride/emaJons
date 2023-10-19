@@ -11,13 +11,9 @@
   box-sizing: border-box;
   background-size: cover;
   background-position: 50% 50%;
-  // transition: all ease-in-out .5s;
-  // background-image: url("/images/IMG_1756.jpg");
   background-repeat: no-repeat;
   .logo {
     font-size: 36px;
-    // height: calc(100vh - 60px);
-    // height: calc(100vh - 300px);
     position: absolute;
     left: 10vw;
     top: 47%
@@ -33,39 +29,17 @@
   a {
     padding: 10px 0;
     line-height: 60px;
-    transition: all ease-in-out .5s;
     color: rgb(32, 32, 32);
     text-decoration: none;
     text-transform: uppercase;
     text-align: right;
     position: relative;
   }
-  // .italic:hover::after {
-  //   content: url('../icons/ArrowIcon.svg');
-  //   display: inline-block;
-  //   position: absolute;
-  //   right: -40px;
-  //   top: 0;
-  // }
 }
 
-.italic {
-  // -moz-transition: all 1s;
-  // -webkit-transition: all 1s;
-  // -o-transition: all 1s;
-  transition: all 0.2s;
-}
 .italic:hover {
-  // font-weight: light;
-  // -webkit-transform: skewX(-10deg);
-  // -moz-transform: skewX(-10deg);
-  // -o-transform: skewX(-10deg);
-  // transform: skewX(-10deg);
-  // transform: translateX(-40px);
   text-shadow: 0 0 6px rgb(255, 255, 255, 0.5);
-
 }
-
 
 @media screen and (max-width: 1400px) {
   .home {

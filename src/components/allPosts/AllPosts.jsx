@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux"; // hook to select data from redux store
-import { setCurrentCategory } from "../../features/posts/postsSlice";
+import { setCurrentCategory, setScrollPosition } from "../../features/posts/postsSlice";
 import { selectTag } from "../../features/tags/tagsSlice";
 import ImageContainer from "../image/ImageContainer";
 import usePosts from "../../hooks/usePosts";
@@ -13,13 +13,18 @@ export default function AllPosts() {
   const status = useSelector((state) => state.posts.status);
   const error = useSelector((state) => state.posts.error);
   const posts = useSelector((state) => state.posts.posts);
+  const scrollPosition = useSelector((state) => state.posts.scrollPosition);
   const hasMorePosts = useSelector((state) => state.posts.loadMore);
   const postsByCategory = posts.filter(post => post.category === _.capitalize(params.category));
   const [filteredPosts, setFilteredPosts] = useState(postsByCategory);
   const allTags = postsByCategory.flatMap(post => post.postTags.map((tag) => tag));
   const sortedTags = [...new Set(allTags.sort((a, b) => b.localeCompare(a)))];
   const activeTag = useSelector(state => state.tags.activeTag)
-  
+
+  useEffect(() => {
+    window.scrollTo(0, scrollPosition)
+  }, [])
+
   let content
   let postElements = [];
 
@@ -28,6 +33,7 @@ export default function AllPosts() {
   useEffect(() => {
     dispatch(setCurrentCategory(params.category));
     dispatch(selectTag(""))
+    dispatch(setScrollPosition(0))
   }, [params.category]);
 
   useEffect(() => {
@@ -36,6 +42,10 @@ export default function AllPosts() {
     : postsByCategory;
     setFilteredPosts(filtered);
   }, [activeTag, posts]);
+
+  const handleClick = () => {
+    dispatch(setScrollPosition(window.scrollY))
+  }
 
   const displayPosts = (posts) => {
     return posts.map((post, i) => {
@@ -57,6 +67,7 @@ export default function AllPosts() {
             ref={i === posts.length - 1 ? lastPostRef : undefined}
             linkUrl={`/${params.category}/${post._id}`}
             src={getPreviewURL()}
+            handleClick={handleClick}
             alt={post.title}
             hoverContent={post.title.split(",").join("").toUpperCase()}
           />

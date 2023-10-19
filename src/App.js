@@ -5,7 +5,7 @@ import Login from './components/login/Login';
 import AllPosts from './components/allPosts/AllPosts';
 import PostForm from './components/postForm/PostForm';
 import Post from './components/post/Post';
-import Bio from './components/bio/Bio';
+import About from './components/about/About';
 import Contact from './components/contact/Contact';
 import Home from './components/home/Home';
 import NotFound from './components/404/NotFound';
@@ -37,7 +37,7 @@ export default function App() {
       <Route path="/" element={<Layout />}>
         <Route path="/login" element={<Login />} />
         <Route path='/contact' element={<Contact />}/>
-        <Route path='/bio' element={<Bio />}/>
+        <Route path='/about' element={<About />}/>
         <Route path='/:category' element={<AllPostsRouteValidated /> } />
         {<Route path="/:category/:postId" element={<PostRouteValidated />} />}
         {/* protected */}

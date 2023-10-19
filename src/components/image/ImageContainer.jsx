@@ -1,7 +1,7 @@
 import React, { forwardRef } from "react";
 import { Link } from "react-router-dom";
 
-const ImageContainer = forwardRef(({ mediaType, src, alt, hoverContent, linkUrl, isLast }, ref) => {
+const ImageContainer = forwardRef(({ mediaType, handleClick, src, alt, hoverContent, linkUrl, isLast }, ref) => {
   const handleMouseEnter = (e) => {
     e.target.play();
   };
@@ -12,9 +12,9 @@ const ImageContainer = forwardRef(({ mediaType, src, alt, hoverContent, linkUrl,
   const content = ref ?
     (
       <Link to={linkUrl} ref={ref} className={elClass}>
-        {mediaType === "image" && <img className={"image"} src={src} alt={alt} />}
+        {mediaType === "image" && <img onClick={handleClick} className={"image"} src={src} alt={alt} />}
         {mediaType === "video" && (
-          <video className={"image"} onMouseEnter={handleMouseEnter} alt={alt} onMouseLeave={handleMouseLeave} loop muted>
+          <video onClick={handleClick} className={"image"} onMouseEnter={handleMouseEnter} alt={alt} onMouseLeave={handleMouseLeave} loop muted>
             <source src={src} type="video/mp4"/>
             <source src={src} type="video/mov"/>
           </video>
@@ -24,9 +24,9 @@ const ImageContainer = forwardRef(({ mediaType, src, alt, hoverContent, linkUrl,
     ) :
     (
       <Link to={linkUrl} className={elClass}>
-        {mediaType === "image" && <img className={"image"} src={src} alt={alt} />}
+        {mediaType === "image" && <img onClick={handleClick} className={"image"} src={src} alt={alt} />}
         {mediaType === "video" && (
-          <video className={"image"} onMouseEnter={handleMouseEnter} alt={alt} onMouseLeave={handleMouseLeave} loop muted>
+          <video onClick={handleClick} className={"image"} onMouseEnter={handleMouseEnter} alt={alt} onMouseLeave={handleMouseLeave} loop muted>
             <source src={src} type="video/mp4"/>
             <source src={src} type="video/mov"/>
           </video>
