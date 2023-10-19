@@ -11,7 +11,7 @@ import Home from './components/home/Home';
 import NotFound from './components/404/NotFound';
 import withRouteValidation from "./hocs/RouteValidation";
 import RequireAuth from './hocs/RequireAuth'
-import { fetchPosts } from './features/posts/postsSlice';
+// import { fetchPosts } from './features/posts/postsSlice';
 
 import {
   Routes,
@@ -27,7 +27,7 @@ export default function App() {
 
   useEffect(() => {
     console.log("fetching posts")
-    dispatch(fetchPosts());
+    // dispatch(fetchPosts());
   }, []);
 
   return (

@@ -4,6 +4,7 @@ import * as api from "../../API/index"
 const initialState = {
   availableTags: [],
   selectedTags: [],
+  activeTag: "",
   status: 'idle' || 'loading' || 'succeeded' || 'failed',
   error: "" || null
 }
@@ -36,6 +37,9 @@ const tagsSlice = createSlice({
     },
     resetTags: (state) => {
       state.selectedTags = []
+    },
+    selectTag: (state, action) => {
+      state.activeTag = action.payload
     },
     toggleTag: (state, action) => {
       if(state.selectedTags.includes(action.payload)) {
@@ -96,6 +100,6 @@ const tagsSlice = createSlice({
   }
 })
 
-export const { toggleTag, toggleNavbar, resetTags } = tagsSlice.actions
+export const { toggleTag, selectTag, toggleNavbar, resetTags } = tagsSlice.actions
 
 export default tagsSlice.reducer

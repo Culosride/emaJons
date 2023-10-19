@@ -17,7 +17,7 @@ const {
 const _ = require("lodash");
 require("dotenv").config();
 
-// routes for BasicUsers
+//////////////////////////////////////////////// routes for BasicUsers ////////////////////////////////////////////////
 // fetch all posts
 postRouter.get("/api/posts", async (req, res) => {
   try {
@@ -39,24 +39,13 @@ postRouter.get("/api/posts", async (req, res) => {
 
     const result = await Post.aggregate(pipeline);
 
-    const first10PostsForEachCategory = result.map((categoryData) => categoryData.posts).flat();
+    const posts = result.map((categoryData) => categoryData.posts).flat();
 
-    // res.status(404).send(err);
-    res.status(200).json(first10PostsForEachCategory);
+    res.status(200).json(posts);
   } catch (err) {
     res.status(404).send(err);
   }
 });
-
-// fetch all posts
-// postRouter.get("/api/posts", async (req, res) => {
-//   try {
-//     const allPosts = await Post.find({}).populate({ path: "postTags" });
-//     res.status(200).json(allPosts);
-//   } catch (err) {
-//     res.status(404).send(err);
-//   }
-// });
 
 // fetch posts by category
 postRouter.get("/api/categories/:category", async (req, res) => {
@@ -84,7 +73,7 @@ postRouter.get("/api/posts/:postId", async (req, res) => {
   }
 });
 
-// routes requiring authorization
+/////////////////////////////////////////////////// protected routes ///////////////////////////////////////////////////
 // create post
 postRouter.post("/posts", verifyJWT, multerUpload, async (req, res) => {
   const post = new Post(req.body);

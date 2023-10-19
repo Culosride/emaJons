@@ -1,7 +1,8 @@
 import React, { useCallback, useEffect, useState, useRef } from "react";
+import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux"; // hook to select data from redux store
 import { setCurrentCategory } from "../../features/posts/postsSlice";
-import { useParams } from "react-router-dom";
+import { selectTag } from "../../features/tags/tagsSlice";
 import ImageContainer from "../image/ImageContainer";
 import usePosts from "../../hooks/usePosts";
 const _ = require("lodash");
@@ -11,34 +12,30 @@ export default function AllPosts() {
   const dispatch = useDispatch();
   const status = useSelector((state) => state.posts.status);
   const error = useSelector((state) => state.posts.error);
-
-  const {
-    isError,
-    error: usePostsError,
-    hasNextPage,
-    setPageNum,
-  } = usePosts(params.category);
-
   const posts = useSelector((state) => state.posts.posts);
+  const hasMorePosts = useSelector((state) => state.posts.loadMore);
   const postsByCategory = posts.filter(post => post.category === _.capitalize(params.category));
   const [filteredPosts, setFilteredPosts] = useState(postsByCategory);
   const allTags = postsByCategory.flatMap(post => post.postTags.map((tag) => tag));
   const sortedTags = [...new Set(allTags.sort((a, b) => b.localeCompare(a)))];
-  const [tagsFilter, setTagsFilter] = useState([]);
-
+  const activeTag = useSelector(state => state.tags.activeTag)
+  
+  let content
   let postElements = [];
+
+  const { setPageNum } = usePosts(params.category);
 
   useEffect(() => {
     dispatch(setCurrentCategory(params.category));
+    dispatch(selectTag(""))
   }, [params.category]);
 
-
   useEffect(() => {
-    const filtered = tagsFilter
-    ? postsByCategory.filter((post) => post.postTags.includes(tagsFilter))
+    const filtered = activeTag
+    ? postsByCategory.filter((post) => post.postTags.includes(activeTag))
     : postsByCategory;
     setFilteredPosts(filtered);
-  }, [tagsFilter]);
+  }, [activeTag, posts]);
 
   const displayPosts = (posts) => {
     return posts.map((post, i) => {
@@ -75,35 +72,23 @@ export default function AllPosts() {
 
     intObserver.current = new IntersectionObserver(
       (entries) => {
-        if(entries[0].isIntersecting && hasNextPage) {
+        if(entries[0].isIntersecting && hasMorePosts) {
           setPageNum((p) => p + 1);
         }
       }, { threshold: 0.5 }
       );
       if (post) intObserver.current.observe(post);
-    }, [status, hasNextPage]);
-
-  postElements =
-    (filteredPosts.message && filteredPosts.message) ||
-    (filteredPosts.length && displayPosts(filteredPosts)) ||
-    displayPosts(postsByCategory);
-
-  if (isError) return <p className="center">Error: {usePostsError.message}</p>;
-  if (status === "failed") {
-        postElements = <p>{error}</p>;
-  } else if (status === "loading") {
-    postElements = <p>Loading..</p>;
-  }
+  }, [status, hasMorePosts]);
 
   // filter posts on tag click
-  const handleClick = (e) => {
+  const handleSelectTag = (e) => {
     e.preventDefault();
     const selectedTag = e.target.getAttribute("data-value");
 
-    if (tagsFilter === selectedTag) {
-      setTagsFilter("");
+    if (activeTag === selectedTag) {
+      dispatch(selectTag(""))
     } else {
-      setTagsFilter(selectedTag);
+      dispatch(selectTag(selectedTag))
     }
 
     // Remove the 'tag-active' class from all tag links
@@ -118,21 +103,30 @@ export default function AllPosts() {
   const tagElements = sortedTags.map((tag, i) => (
     <p
       data-value={tag}
-      className={`tag-link ${tagsFilter === tag ? "tag-active" : ""}`}
+      className={`tag-link ${activeTag === tag ? "tag-active" : ""}`}
       key={i}
-      onClick={handleClick}
+      onClick={handleSelectTag}
       id={i}
     >
       {tag}
     </p>
   ));
 
-  return (
+  postElements =
+    (filteredPosts.message && filteredPosts.message) ||
+    (filteredPosts.length && displayPosts(filteredPosts)) ||
+    displayPosts(postsByCategory);
+
+  content = (
     <>
+      {(status === "failed") && <div className="">{error}</div>}
       <div className="category-container">
         <div className="select-tags-container">{tagElements}</div>
         <div className="posts-grid">{postElements}</div>
       </div>
+      {(status === "loading") && <div className="loading-spinner">Loading more posts</div>}
     </>
-  );
+  )
+
+  return content
 }
