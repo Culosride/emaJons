@@ -1,5 +1,6 @@
 .header-100, .header-50 {
   animation: fadeIn .5s;
+  transition: top ease .4s;
   display: flex;
   height: 74px;
   align-items: center;
@@ -60,8 +61,13 @@
 }
 .header-100 {
   border-bottom: 1px solid black;
-  margin-bottom: 48px;
   justify-content: space-between;
+  position: fixed;
+  width: 100%;
+  z-index: 10;
+  background-color: white;
+  top: 0;
+
   .dashboard-link {
     align-self: flex-end;
   }
@@ -71,14 +77,8 @@
   }
   .navigation {
     padding-left: 0;
-    // position: absolute;
-    // left: -223px;
     display: flex;
     align-items: center;
-    // transition: all 0.5s ease-out;
-    // * {
-    //   transition: all 0.5s ease-out;
-    // }
     a {
       color: #8f8f8f;
     }
@@ -97,7 +97,6 @@
 
 .rectangle {
   background-color: white;
-  // width: 240px;
   height: 72px;
   margin: 0;
   z-index: 1;

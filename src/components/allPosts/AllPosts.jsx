@@ -63,7 +63,7 @@ export default function AllPosts() {
             key={post._id}
             mediaType={post.media[0].mediaType}
             id={post._id}
-            ref={i === posts.length - 1 ? lastPostRef : undefined}
+            ref={((i === posts.length - 1) && lastPostRef) || i === 0 && firstPostRef || undefined}
             linkUrl={`/${currentCategory}/${post._id}`}
             src={getPreviewURL()}
             handleScrollPosition={handleScrollPosition}
@@ -75,20 +75,47 @@ export default function AllPosts() {
     });
   };
 
-  const intObserver = useRef();
+
+  // interception observers references
+  const firstPostObserver = useRef();
+  const lastPostObserver = useRef();
+
+  // loads more posts (infinite scroll)
   const lastPostRef = useCallback((post) => {
     if (status !== "succeeded") return;
-    if (intObserver.current) intObserver.current.disconnect();
+    if (firstPostObserver.current) firstPostObserver.current.disconnect();
 
-    intObserver.current = new IntersectionObserver(
+    firstPostObserver.current = new IntersectionObserver(
       (entries) => {
         if(entries[0].isIntersecting && hasMorePosts) {
           setPageNum((p) => p + 1);
         }
       }, { threshold: 0.5 }
       );
-      if (post) intObserver.current.observe(post);
+      if (post) firstPostObserver.current.observe(post);
   }, [status, hasMorePosts]);
+
+  // toggles navbar
+  const firstPostRef = useCallback((post) => {
+
+    if (status !== "succeeded") return;
+    if (lastPostObserver.current) lastPostObserver.current.disconnect();
+
+    lastPostObserver.current = new IntersectionObserver(
+      (entries) => {
+        const headerRef = document.querySelector(".header-100")
+
+        if(!entries[0].isIntersecting) {
+          headerRef.classList.add('fade-top')
+        } else {
+          headerRef.classList.remove('fade-top')
+        }
+
+      }, { rootMargin: '-80px 0px 0px 0px', threshold: 1 }
+      );
+      if (post) lastPostObserver.current.observe(post);
+  }, [posts]);
+
 
   // filter posts on tag click
   const handleSelectTag = (e) => {
