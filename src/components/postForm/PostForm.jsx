@@ -1,16 +1,7 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
-import {
-  createPost,
-  editPost,
-  fetchPostById,
-  setCurrentPost,
-} from "../../features/posts/postsSlice";
-import {
-  fetchAllTags,
-  toggleTag,
-  resetTags,
-} from "../../features/tags/tagsSlice";
+import { createPost, editPost, fetchPostById, setCurrentPost } from "../../features/posts/postsSlice";
+import { fetchAllTags, toggleTag, resetTags } from "../../features/tags/tagsSlice";
 import { useSelector, useDispatch } from "react-redux";
 import TagsInputForm from "../tag/TagsInputForm";
 const _ = require("lodash");
@@ -22,9 +13,12 @@ export default function PostForm() {
   const { pathname } = useLocation();
   const selectedTags = useSelector((state) => state.tags.selectedTags);
   const currentPost = useSelector((state) => state.posts.currentPost);
+  const currentCategory = useSelector((state) => state.posts.currentCategory);
   const status = useSelector((state) => state.posts.status);
   const postId = currentPost._id;
   const [error, setError] = useState(null);
+  const [tabMenu, setTabMenu] = useState(false)
+  const [currentFormTab, setCurrentFormTab] = useState("media")
   const [mediaElements, setMediaElements] = useState([]);
   const [postData, setPostData] = useState({
     title: "",
@@ -35,6 +29,7 @@ export default function PostForm() {
     postTags: [],
   });
 
+  // derived state
   const isEditPage = pathname.includes("edit");
   const isLoading = status === "loading"
 
@@ -44,6 +39,24 @@ export default function PostForm() {
     (!isLoading && isEditPage ? "Save changes" : "Create new post");
 
     // if(!currentPost) return navigate("/not-found")
+  let content;
+
+  useEffect(() => {
+    const handleResize = () => {
+      if(window.innerWidth < 1024) {
+        setTabMenu(true)
+      } else {
+        setTabMenu(false)
+      }
+    }
+    handleResize()
+
+    const windowWidth = window.addEventListener("resize", handleResize)
+
+    return () => {
+      window.removeEventListener(windowWidth, handleResize)
+    }
+  }, [window.innerWidth])
 
   useEffect(() => {
     dispatch(resetTags());
@@ -117,15 +130,15 @@ export default function PostForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (isLoading) {
-      return;
-    }
+    if (isLoading) return
 
     if (!postData.category) {
       setError("Select a category");
+      window.scrollTo(0, 0)
       return;
     } else if (!postData.media.length) {
       setError("A post with nada?");
+      window.scrollTo(0, 0)
       return;
     }
 
@@ -151,9 +164,7 @@ export default function PostForm() {
   const handleEdit = async (e) => {
     e.preventDefault();
 
-    if (isLoading) {
-      return;
-    }
+    if (isLoading) return;
 
     if (!postData.category) {
       setEmptyCategory(true);
@@ -187,17 +198,92 @@ export default function PostForm() {
     navigate(`/${postData.category}/${postId}`);
   };
 
-  return (
-    <div className="form-wrapper">
-      {error && <p className="error-msg">{error}</p>}
-      <form
-        className="post-form"
-        onSubmit={isEditPage ? handleEdit : handleSubmit}
-      >
-        <div className="post-form-layout">
+  const handleTabMenu = (e) => {
+    setCurrentFormTab(e.target.dataset.value)
+  }
+
+  if(tabMenu) {
+    content =
+      currentFormTab === "media" ? (
+        <div className="post-form-layout fullscreen">
           <label className="custom-file-button" htmlFor="media">
             Choose media
           </label>
+          <input
+            className="hidden-file-input"
+            type="file"
+            id="media"
+            onChange={handleChange}
+            name="media"
+            title="upload media"
+            multiple
+          />
+          <div className="media-preview-container">{mediaElements}</div>
+        </div>
+      ) : (
+        <div className="post-form-layout fullscreen">
+          {error && <p className="error-msg">{error}</p>}
+          <fieldset>
+            <input
+              className="title"
+              type="text"
+              placeholder="ADD A TITLE"
+              value={postData.title}
+              name="title"
+              onChange={handleChange}
+            />
+            <input
+              type="text"
+              className="subtitle"
+              placeholder="Add a subtitle"
+              value={postData.subtitle}
+              name="subtitle"
+              onChange={handleChange}
+            />
+            <textarea
+              className="content"
+              rows="6"
+              placeholder="Add content ..."
+              value={postData.content}
+              name="content"
+              onChange={handleChange}
+            />
+
+            <hr />
+
+            <select
+              value={postData.category}
+              name="category"
+              id="categories"
+              onChange={handleChange}
+            >
+              <option disabled hidden value="">
+                Please choose a category
+              </option>
+              <option value="Walls">Walls</option>
+              <option value="Paintings">Paintings</option>
+              <option value="Sketchbooks">Sketchbooks</option>
+              <option value="Video">Video</option>
+              <option value="Sculptures">Sculptures</option>
+            </select>
+          </fieldset>
+
+          <TagsInputForm />
+
+          <input
+            disabled={isLoading}
+            className={btnStyles}
+            type="submit"
+            value={submitBtnValue}
+          />
+        </div>
+      )
+  } else {
+    content =
+      <>
+        <div className="post-form-layout">
+          {error && <p className="error-msg">{error}</p>}
+          <label className="custom-file-button" htmlFor="media">Choose media</label>
           <input
             className="hidden-file-input"
             type="file"
@@ -265,6 +351,35 @@ export default function PostForm() {
             value={submitBtnValue}
           />
         </div>
+      </>
+  }
+
+  const tabMenuBtns =
+    <div className="tabMenuBtns" onClick={(e) => handleTabMenu(e)}>
+      <button
+        type="button"
+        data-value="media"
+        className={currentFormTab === "media" ? "tabBtn active" : "tabBtn"}
+      >
+        Media
+      </button>
+      <button
+        type="button"
+        data-value="postDetails"
+        className={currentFormTab === "postDetails" ? "tabBtn active" : "tabBtn"}
+      >
+        Post details
+      </button>
+    </div >
+
+  return (
+    <div className="form-wrapper">
+      {tabMenu && tabMenuBtns}
+      <form
+        className="post-form"
+        onSubmit={isEditPage ? handleEdit : handleSubmit}
+      >
+        {content}
       </form>
     </div>
   );

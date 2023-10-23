@@ -32,7 +32,30 @@ export default function AllPosts() {
     window.scrollTo(0, scrollPosition)
   }, [])
 
-  let content
+  // toggle header
+  useEffect(() => {
+    let lastScrollY = window.scrollY;
+    const headerRef = document.querySelector(".header-100")
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      if (currentScrollY <= 40 ) return headerRef.classList.remove('fade-top')
+
+      if (currentScrollY > lastScrollY) {
+        headerRef.classList.add('fade-top')
+      } else {
+        headerRef.classList.remove('fade-top')
+      }
+      lastScrollY = currentScrollY;
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
   let postElements = [];
 
   useEffect(() => {
@@ -63,7 +86,7 @@ export default function AllPosts() {
             key={post._id}
             mediaType={post.media[0].mediaType}
             id={post._id}
-            ref={((i === posts.length - 1) && lastPostRef) || i === 0 && firstPostRef || undefined}
+            ref={((i === posts.length - 1) && lastPostRef) || undefined}
             linkUrl={`/${currentCategory}/${post._id}`}
             src={getPreviewURL()}
             handleScrollPosition={handleScrollPosition}
@@ -75,10 +98,8 @@ export default function AllPosts() {
     });
   };
 
-
   // interception observers references
   const firstPostObserver = useRef();
-  const lastPostObserver = useRef();
 
   // loads more posts (infinite scroll)
   const lastPostRef = useCallback((post) => {
@@ -94,28 +115,6 @@ export default function AllPosts() {
       );
       if (post) firstPostObserver.current.observe(post);
   }, [status, hasMorePosts]);
-
-  // toggles navbar
-  const firstPostRef = useCallback((post) => {
-
-    if (status !== "succeeded") return;
-    if (lastPostObserver.current) lastPostObserver.current.disconnect();
-
-    lastPostObserver.current = new IntersectionObserver(
-      (entries) => {
-        const headerRef = document.querySelector(".header-100")
-
-        if(!entries[0].isIntersecting) {
-          headerRef.classList.add('fade-top')
-        } else {
-          headerRef.classList.remove('fade-top')
-        }
-
-      }, { rootMargin: '-80px 0px 0px 0px', threshold: 1 }
-      );
-      if (post) lastPostObserver.current.observe(post);
-  }, [posts]);
-
 
   // filter posts on tag click
   const handleSelectTag = (e) => {
@@ -154,16 +153,14 @@ export default function AllPosts() {
     (filteredPosts.length && displayPosts(filteredPosts)) ||
     displayPosts(postsByCategory);
 
-  content = (
+  return (
     <>
       {(status === "failed") && <div className="">{error}</div>}
-      <div className="category-container">
+      <div className="posts-container">
         <div className="select-tags-container">{tagElements}</div>
         <div className="posts-grid">{postElements}</div>
       </div>
       {(status === "loading") && <div className="loading-spinner">Loading more posts</div>}
     </>
   )
-
-  return content
 }

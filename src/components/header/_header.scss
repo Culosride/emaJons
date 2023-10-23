@@ -8,7 +8,7 @@
   padding: 0 30px;
   box-sizing: border-box;
   font-size: 20px;
-  // margin-right: 16px;
+  margin-bottom: 32px;
   font-weight: bold;
   text-transform: uppercase;
   color: black;
@@ -34,6 +34,7 @@
     background-color: #fff;
     color: black;
     margin-right: 16px;
+    width: max-content;
   }
   button {
     background-color: transparent;
@@ -62,7 +63,7 @@
 .header-100 {
   border-bottom: 1px solid black;
   justify-content: space-between;
-  position: fixed;
+  position: sticky;
   width: 100%;
   z-index: 10;
   background-color: white;
@@ -137,6 +138,7 @@
 }
 
 .admin-menu{
+  display: flex;
   a, button {
     font-size: 18px;
     color: #8f8f8f;
@@ -144,8 +146,24 @@
     font-weight: normal;
     text-transform: none;
   }
+  a {
+    display: inline-block;
+    background-image: url('../icons/New.svg');
+    background-repeat: no-repeat;
+    background-position: 0% 50%;
+    height: 40px;
+    width: 40px;
+  }
   a:last-child, button:last-child {
     margin-right: 0;
+  }
+  button {
+    display: inline-block;
+    background-image: url('../icons/Logout.svg');
+    background-repeat: no-repeat;
+    background-position: 0% 50%;
+    height: 40px;
+    width: 40px;
   }
 }
 
@@ -154,8 +172,23 @@
   transition: top ease .4s
 }
 
-@media screen and (max-width: 1040px) {
-  .header-full-screen {
-    margin-bottom: 20px;
+@media screen and (max-width: 1024px) {
+  .flex {
+    .logo, .dash, li {
+      font-size: 18px;
+    }
   }
+  .admin-menu {
+    a, button {
+      height: 30px;
+      width: 30px;
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .logo {
+    font-size: 15px;
+  }
+
 }

@@ -88,7 +88,6 @@ const TagsInputForm = () => {
       <fieldset className="available-tags-wrapper">
         {tagElements}
       </fieldset>
-      {/* {error && <p>{error}</p> */}
     </fieldset>
   )
 }

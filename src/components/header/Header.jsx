@@ -101,8 +101,8 @@ export default function Header () {
     if(isAdmin) {
       return (
         <div className="admin-menu">
-          <Link onClick={menuOff} className="new-post-btn" to={"/posts/new"}>New Post</Link>
-          <button className="logout-btn" title="Logout" onClick={handleLogout}>Logout</button>
+          <Link onClick={menuOff} className="new-post-btn" to={"/posts/new"}/>
+          <button className="logout-btn" title="Logout" onClick={handleLogout}/>
         </div>
       )
     } else {
@@ -138,7 +138,7 @@ export default function Header () {
         <div className="header-100">
           <div className="flex">
             <div ref={logoAndCategoryRef} className="logo-wrapper">
-              <div onClick={menuOff}><Link to="/" className="logo">EmaJons</Link></div>
+              <Link onClick={menuOff} to="/" className="logo">EmaJons</Link>
               <span className="dash"></span>
               <div className="logo">{currentCategory}</div>
             </div>
@@ -154,7 +154,7 @@ export default function Header () {
       post && !isFullscreen &&
       <div className={`${hasContent ? 'header-50' : 'header-30 header-50'}`}>
           <div ref={logoAndCategoryRef} className="logo-wrapper">
-            <div onClick={menuOff}><Link to="/" className="logo">EmaJons</Link></div>
+            <Link onClick={menuOff} to="/" className="logo">EmaJons</Link>
             <span className="dash"></span>
             <Link to={`/${currentCategory}`}>{currentCategory}</Link>
           </div>

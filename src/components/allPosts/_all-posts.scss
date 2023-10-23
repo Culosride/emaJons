@@ -1,8 +1,8 @@
-.category-container {
-  display: grid;
-  grid-template-columns: 1fr 11fr; // check on different screens
+.posts-container {
+  // display: grid;
+  // grid-template-columns: 1fr 11fr; // check on different screens
   margin: 0 30px;
-  padding-top: 120px;
+  // padding-top: 120px;
 }
 
 .posts-grid {
@@ -10,9 +10,10 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   column-gap: 80px;
-  grid-template-rows: 300px;
+  // grid-template-rows: 300px;
   row-gap: 80px;
-  margin-bottom: 32px;
+  // padding-top: 40px;
+  padding-left: 120px;
 }
 
 .select-tags-container {
@@ -22,6 +23,8 @@
   animation: fadeIn 0.5s ease-in;
   padding-bottom: 10px;
   gap: 10px;
+  position: fixed;
+  height: 100%;
 
   p {
     text-decoration: none;
@@ -50,19 +53,22 @@
   padding: 32px;
 }
 
-@media screen and (max-width: 1400px) {
-  .category-container {
-    grid-template-columns: 2fr 10fr; // check on different screens
+@media screen and (max-width: 1024px) {
+  .posts-grid {
+    row-gap: 60px;
+    grid-template-columns: 6fr 6fr; // check on different screens
   }
 }
 
-@media screen and (max-width: 1040px) {
-  .category-container {
+@media screen and (max-width: 768px) {
+  .posts-container {
     grid-template-columns: 1fr;
   }
   .posts-grid {
+    grid-template-columns: 2fr 10fr; // check on different screens
     grid-template-columns: 1fr;
-    grid-template-rows: 300px;
+    // grid-template-rows: 300px;
+    padding-left: 0;
   }
   .select-tags-container {
     ul {

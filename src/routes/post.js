@@ -43,7 +43,7 @@ postRouter.get("/api/posts", async (req, res) => {
 
     res.status(200).json(posts);
   } catch (err) {
-    res.status(404).send(err);
+    res.status(400).send(err);
   }
 });
 
@@ -57,16 +57,21 @@ postRouter.get("/api/categories/:category", async (req, res) => {
       .skip((page - 1) * pageSize)
       .limit(pageSize)
       .populate({ path: "postTags" });
+
+    if (!posts) return res.status(404).json({ error: "Posts not found" })
+
     res.status(200).json({posts: posts, moreData: Boolean(posts.length > 8)});
   } catch (err) {
-    res.status(404).send(err);
+    res.status(400).send(err);
   }
 });
 
 // fetch post by id
 postRouter.get("/api/posts/:postId", async (req, res) => {
+  const { postId } = req.params
   try {
-    const post = await Post.findOne({ _id: req.params.postId });
+    const post = await Post.findOne({ _id: postId });
+    if (!post) return res.status(404).json({ error: "Post not found" })
     res.status(200).json(post);
   } catch (err) {
     res.status(400).send(err);
