@@ -6,7 +6,7 @@ import { deletePost, setCurrentCategory, fetchPosts, setScrollPosition } from '.
 import { selectTag } from "../../features/tags/tagsSlice";
 import useAuth from "../../hooks/useAuth.jsx";
 import { logout } from "../../features/auth/authSlice"
-import { CATEGORIES } from "../../config/categories.js";
+import DropdownNav from "../dropdownNavigation/DropdownNav";
 
 export default function Header () {
   const authorization = useAuth(false)
@@ -23,22 +23,22 @@ export default function Header () {
   const hasContent = useSelector(state => state.posts.currentPost.content?.length > 500)
   const postsStatus = useSelector(state => state.posts.status)
   const error = useSelector(state => state.posts.error)
+  const screenSize = useSelector(state => state.posts.screenSize)
+  const [isExpanded, setIsExpanded] = useState(false)
 
   useEffect(() => {
     if(error.includes("401")) handleLogout()
   }, [postsStatus])
 
+  useEffect(() => {
+    setIsExpanded(false)
+  }, [pathname, screenSize])
+
   // to rename ?
   const admin = matchPath("/posts/*", pathname);
   const post = admin ? false : matchPath("/:categories/:postId", pathname)
 
-  // front-end state
-  const [isExpanded, setIsExpanded] = useState(false)
-  const [rectangleWidth, setRectangleWidth] = useState(0)
-  const [navWidth, setNavWidth] = useState(0)
-  const [on, setOn] = useState(false)
   const logoAndCategoryRef = useRef()
-  const navRef = useRef()
 
   if(matchPath("/posts/new", pathname)) {
     currentCategory = "new post"
@@ -46,49 +46,26 @@ export default function Header () {
     currentCategory = "edit"
   }
 
-  useEffect(() => {
-    if(matchPath(":category", pathname) || matchPath("/posts/*", pathname)) {
-      setRectangleWidth(logoAndCategoryRef.current.clientWidth)
-      setNavWidth(navRef.current.clientWidth)
-    }
-  }, [currentCategory, pathname])
+  async function handleLogout() {
+    localStorage.removeItem('access-token');
+    dispatch(logout(token))
+    .then(() => {
+      navigate("/")})
+  }
 
   const handleNewCategory = (category) => {
-    setIsExpanded(!isExpanded)
+    setIsExpanded(false)
     dispatch(selectTag(""))
     dispatch(setScrollPosition(0))
     dispatch(setCurrentCategory(category))
   }
 
-  const toggleMenu = () => {
-    setIsExpanded(!isExpanded)
-    setOn(true)
-  }
   const menuOff = () => {
     setIsExpanded(false)
   }
 
-  const toggleNavBtn = {
-    transform: isExpanded ? "translateX(0px) rotate(45deg) " : `translateX(${-navWidth + "px"}) rotate(0)`,
-    transition: on ? "all 0.5s ease-out" : ""
-  }
-
-  const navStyles = {
-    transform: isExpanded ? "translateX(0px)" : `translateX(${-navWidth + "px"})`,
-    transition: on ? "all 0.5s ease-out" : ""
-  }
-
-  const rectangleStyles = {
-    width: rectangleWidth + 30 + "px"
-  }
-
-  async function handleLogout() {
-    menuOff()
-    localStorage.removeItem('access-token');
-    dispatch(logout(token))
-      .then(() => {
-        navigate("/")})
-    setOn(false)
+  const toggleMenu = () => {
+    setIsExpanded(!isExpanded)
   }
 
   function handleDelete() {
@@ -122,16 +99,6 @@ export default function Header () {
     )
   }
 
-  const navElements = () => CATEGORIES.map((category, i) => {
-    if((category) !== _.capitalize(currentCategory)) {
-      return (
-        <li key={i}>
-          <Link onClick={() => handleNewCategory(category)} to={`/${category}`}>{_.capitalize(category)}</Link>
-        </li>
-      )
-    }
-  })
-
   return (
     <>
       {!post &&
@@ -142,11 +109,7 @@ export default function Header () {
               <span className="dash"></span>
               <div className="logo">{currentCategory}</div>
             </div>
-            <div className="rectangle" style={rectangleStyles}></div>
-            <ul style={navStyles} ref={navRef} className="navigation">
-              {navElements()}
-            </ul>
-            <button className='close-button' onClick={toggleMenu} style={toggleNavBtn}><i className="close-icon"></i></button>
+            <DropdownNav setIsExpanded={setIsExpanded} isExpanded={isExpanded} toggleMenu={toggleMenu} handleNewCategory={handleNewCategory} menuOff={menuOff}/>
           </div>
           {adminMenu()}
         </div>
