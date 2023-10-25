@@ -14,10 +14,10 @@ export default function PostForm() {
   const selectedTags = useSelector((state) => state.tags.selectedTags);
   const currentPost = useSelector((state) => state.posts.currentPost);
   const currentCategory = useSelector((state) => state.posts.currentCategory);
+  const screenSize = useSelector((state) => state.posts.screenSize);
   const status = useSelector((state) => state.posts.status);
   const postId = currentPost._id;
   const [error, setError] = useState(null);
-  const [tabMenu, setTabMenu] = useState(false)
   const [currentFormTab, setCurrentFormTab] = useState("media")
   const [mediaElements, setMediaElements] = useState([]);
   const [postData, setPostData] = useState({
@@ -32,6 +32,7 @@ export default function PostForm() {
   // derived state
   const isEditPage = pathname.includes("edit");
   const isLoading = status === "loading"
+  const isSmallScreen = screenSize === "s" || screenSize === "xs"
 
   const btnStyles = isLoading ? "btn-submit btn-disabled" : "btn-submit";
   const submitBtnValue =
@@ -40,23 +41,6 @@ export default function PostForm() {
 
     // if(!currentPost) return navigate("/not-found")
   let content;
-
-  useEffect(() => {
-    const handleResize = () => {
-      if(window.innerWidth < 1024) {
-        setTabMenu(true)
-      } else {
-        setTabMenu(false)
-      }
-    }
-    handleResize()
-
-    const windowWidth = window.addEventListener("resize", handleResize)
-
-    return () => {
-      window.removeEventListener(windowWidth, handleResize)
-    }
-  }, [window.innerWidth])
 
   useEffect(() => {
     dispatch(resetTags());
@@ -202,7 +186,7 @@ export default function PostForm() {
     setCurrentFormTab(e.target.dataset.value)
   }
 
-  if(tabMenu) {
+  if(isSmallScreen) {
     content =
       currentFormTab === "media" ? (
         <div className="post-form-layout fullscreen">
@@ -242,7 +226,7 @@ export default function PostForm() {
             />
             <textarea
               className="content"
-              rows="6"
+              rows={isSmallScreen && "2" || "6"}
               placeholder="Add content ..."
               value={postData.content}
               name="content"
@@ -374,7 +358,7 @@ export default function PostForm() {
 
   return (
     <div className="form-wrapper">
-      {tabMenu && tabMenuBtns}
+      {isSmallScreen && tabMenuBtns}
       <form
         className="post-form"
         onSubmit={isEditPage ? handleEdit : handleSubmit}

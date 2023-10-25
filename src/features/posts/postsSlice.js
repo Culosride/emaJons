@@ -6,6 +6,7 @@ const initialState = {
   currentCategory: "",
   currentPost: "",
   loadMore: true,
+  screenSize: "",
   scrollPosition: 0,
   fullscreen: false,
   status: "idle" || "loading" || "succeeded" || "failed",
@@ -69,12 +70,13 @@ const postsSlice = createSlice({
       }
     },
     setScrollPosition(state, action) {
-      state.error = "";
       state.scrollPosition = action.payload;
     },
     setCurrentCategory(state, action) {
-      state.error = "";
       state.currentCategory = action.payload;
+    },
+    setScreenSize(state, action) {
+      state.screenSize = action.payload;
     },
   },
   extraReducers(builder) {
@@ -197,6 +199,7 @@ export const {
   setScrollPosition,
   toggleFullscreen,
   setCurrentMedia,
+  setScreenSize,
 } = postsSlice.actions;
 
 export default postsSlice.reducer;

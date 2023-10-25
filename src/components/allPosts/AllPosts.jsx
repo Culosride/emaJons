@@ -105,13 +105,12 @@ export default function AllPosts() {
   const lastPostRef = useCallback((post) => {
     if (status !== "succeeded") return;
     if (firstPostObserver.current) firstPostObserver.current.disconnect();
-
     firstPostObserver.current = new IntersectionObserver(
       (entries) => {
         if(entries[0].isIntersecting && hasMorePosts) {
           setPageNum((p) => p + 1);
         }
-      }, { threshold: 0.5 }
+      }, { threshold: 0.8 }
       );
       if (post) firstPostObserver.current.observe(post);
   }, [status, hasMorePosts]);

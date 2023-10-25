@@ -214,7 +214,7 @@ input[type="file"] {
   font-weight: lighter;
 }
 
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 767px) {
   .media-preview-container {
     grid-template-columns: 1fr;
   }
@@ -230,5 +230,11 @@ input[type="file"] {
       max-height: 200px;
       max-width: 100%;
     }
+  }
+}
+
+@media screen and (max-width: 1199px) {
+  .media-preview-container {
+    grid-template-columns: 1fr;
   }
 }
