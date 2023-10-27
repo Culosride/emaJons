@@ -8,6 +8,25 @@
   width: 100%;
   box-sizing: border-box;
   overflow: hidden;
+
+  .close-btn {
+    right: calc(26vw + 20px)
+  }
+}
+
+.close-btn {
+  background-color: transparent;
+  border: none;
+  padding: 10px;
+  font-size: 24px;
+  cursor: pointer;
+  position: fixed;
+  right: calc(50vw + 20px);
+  top: 60px;
+  z-index: 6;
+  .close-icon:after {
+    content: url('../icons/CloseIcon.svg')
+  }
 }
 
 .post-container.fullscreen {
@@ -38,20 +57,6 @@
 }
 .text-container:hover {
   cursor: url('../icons/CloseIcon.svg'), auto;
-}
-button.close-btn {
-  background-color: transparent;
-  border: none;
-  padding: 10px;
-  font-size: 24px;
-  cursor: pointer;
-  position: fixed;
-  right: 30px;
-  top: 60px;
-  z-index: 6;
-  .close-icon:after {
-    content: url('../icons/CloseIcon.svg')
-  }
 }
 
 .description-container {
@@ -115,6 +120,9 @@ button.close-btn {
       width: 100%;
     }
   }
+  .close-btn {
+    right: calc(50vw + 20px);
+  }
 }
 
 // full screen
@@ -153,6 +161,9 @@ button.close-btn {
     min-height: 100vh;
     height: fit-content;
     overflow: hidden;
+    .close-btn {
+      right: 20px;
+    }
   }
   .images-container, .text-container, .description-container {
     width: 100vw;
@@ -174,7 +185,6 @@ button.close-btn {
     }
   }
   .layout-100 {
-
     .header-50 {
       right: 0;
       top: -74px;

@@ -57,6 +57,11 @@
   background-color: white;
   top: 0;
 
+  .admin-menu {
+    gap: 16px;
+    margin: 0 20px;
+  }
+
   .dashboard-link {
     align-self: flex-end;
   }
@@ -97,7 +102,10 @@
   z-index: 6;
 
   .admin-menu {
-    margin-right: 40px;
+    height: auto;
+  }
+  .delete-btn, .edit-btn {
+    padding: 0;
   }
 }
 
@@ -106,6 +114,9 @@
   width: calc($description-width - $slider-padding);
   align-items: center;
   flex-wrap: wrap;
+  .logo-wrapper {
+    gap: 12px;
+  }
 }
 
 .admin-menu {
@@ -116,7 +127,6 @@
   a, button {
     font-size: 18px;
     color: #8f8f8f;
-    margin-right: 10px;
     font-weight: normal;
     text-transform: none;
   }
@@ -130,6 +140,13 @@
   button.logout-btn {
     display: inline-block;
     background-image: url('../icons/Logout.svg');
+    background-repeat: no-repeat;
+    background-position: 0% 50%;
+    width: 40px;
+  }
+  button.login-btn {
+    display: inline-block;
+    background-image: url('../icons/Login.svg');
     background-repeat: no-repeat;
     background-position: 0% 50%;
     width: 40px;
@@ -194,7 +211,15 @@ button {
 }
 
 @media screen and (max-width: 599px) {
-  .header-100, .header-50, .header-30 {
-    padding: 0 20px;
+  .admin-menu {
+    left: 20px;
+    top: 54px;
+    background-color: white;
+    height: auto;
+
+    .delete-btn, .edit-btn > * {
+      margin-right: 6px;
+      padding: 0;
+    }
   }
 }

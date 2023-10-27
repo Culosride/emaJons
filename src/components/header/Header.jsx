@@ -87,7 +87,9 @@ export default function Header () {
     } else {
       return (
         <div className="admin-menu">
-          <Link onClick={menuOff} className="login-btn" to={"/login"}>Login</Link>
+          <Link onClick={menuOff} to={"/login"}>
+            <button className="login-btn" title="Login"/>
+          </Link>
         </div>)
     }
   }
@@ -130,9 +132,6 @@ export default function Header () {
             <Link to={`/${currentCategory}`}>{currentCategory}</Link>
           </div>
             {isAdmin && postMenu()}
-            <button className='close-btn' onClick={() => navigate(currentCategory)}>
-              <i className="close-icon"></i>
-            </button>
       </div>
       }
     </>

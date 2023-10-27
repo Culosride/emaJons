@@ -15,6 +15,7 @@ export default function Post() {
   const error = useSelector(state => state.posts.error)
   const category = params.category
   const fullscreen = useSelector(state => state.posts.fullscreen)
+  const currentCategory = useSelector(state => state.posts.currentCategory)
 
   let mediaElements = []
 
@@ -74,8 +75,11 @@ export default function Post() {
     post &&
       (
         <div id={"post"} className={`post-container ${content ? "layout-50" : ""} ${fullscreen ? "layout-100 fullscreen" : ""}`}>
+          {!fullscreen && <button className='close-btn' onClick={() => navigate(`/${currentCategory}`)}>
+            <i className="close-icon"></i>
+          </button>}
           {post.media && <Slider cursorColor={cursorColor} slides={post.media}/>}
-          <div className="text-container" onScroll={handleScroll} onClick={handleFullscreen}>
+          {!fullscreen && <div className="text-container" onScroll={handleScroll} onClick={handleFullscreen}>
             <div className="description-container">
               <div className="headline">
                 <div>
@@ -85,7 +89,7 @@ export default function Post() {
               </div>
               {post.content && <p className="content">{post.content}</p>}
             </div>
-          </div>
+          </div>}
         </div>
       )
   )

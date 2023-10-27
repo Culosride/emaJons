@@ -48,11 +48,13 @@
   z-index: 1;
 }
 
-.slider button {
-  border: 0;
-  background-color: Transparent;
-  font-size: 20px;
-  z-index: 5;
+.slider {
+  .prev, .next, .full {
+    border: 0;
+    background-color: Transparent;
+    font-size: 20px;
+    z-index: 5;
+  }
 }
 
 .dot, .dot-active {
