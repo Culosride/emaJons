@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { toggleFullscreen } from "../../features/posts/postsSlice";
+import useKeyPress from "../../hooks/useKeyPress";
 
-const Slider = ({ slides }) => {
+const Slider = ({ slides, cursorColor }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const isVideo = slides[currentSlide].mediaType === "video"
   const dispatch = useDispatch()
@@ -41,6 +42,9 @@ const Slider = ({ slides }) => {
     }
   };
 
+  useKeyPress("ArrowRight", handleNext)
+  useKeyPress("ArrowLeft", handlePrev)
+
   const handlePage = page => {
     setCurrentSlide(page);
   };
@@ -63,18 +67,22 @@ const Slider = ({ slides }) => {
             <img src={slide.url} onClick={handleFullscreen} alt={slide.alt} />}
         </div>
       ))}
-        <button className={`${isVideo ? "prev" : "prev full"}`} onClick={handlePrev} />
-        {isVideo && <button className="prev-video" onClick={handlePrev} />}
+      {slides.length > 1 &&
+        <>
+          <button className={isVideo ? `prev ${cursorColor}` : `prev full ${cursorColor}`} onClick={handlePrev} />
+          {isVideo && <button className="prev-video" onClick={handlePrev} />}
 
-        <button className={`${isVideo ? "next" : "next full"}`} onClick={handleNext} />
-        {isVideo && <button className="next-video" onClick={handleNext} />}
-
-        {slides.length &&
+          <button className={isVideo ? `next ${cursorColor}` : `next full ${cursorColor}`} onClick={handleNext} />
+          {isVideo && <button className="next-video" onClick={handleNext} />}
+        </>
+      }
+      {slides.length &&
         <div className="page">
           {slides.map((slide, index) => (
             <span key={index} className={currentSlide === index ? "dot-active" : "dot"} onClick={() => handlePage(index)}/>
           ))}
-        </div>}
+        </div>
+      }
     </div>
   );
 };

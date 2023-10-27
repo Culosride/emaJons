@@ -48,10 +48,11 @@
   z-index: 1;
 }
 
-button {
+.slider button {
   border: 0;
   background-color: Transparent;
   font-size: 20px;
+  z-index: 5;
 }
 
 .dot, .dot-active {
@@ -93,7 +94,6 @@ button {
   position: absolute;
   height: 10%;
   width: 20vw;
-  // background-color: aqua;
 }
 
 .next:before, .next-video:hover {
@@ -103,12 +103,20 @@ button {
   cursor: url('../icons/ArrowIcon.svg'), auto;
 }
 
+.next.white:hover, .next-video.white:hover {
+  cursor: url('../icons/ArrowIconWhite.svg'), auto;
+}
+
 .prev:before, .prev-video:hover {
   content: '';
 }
 
 .prev:hover, .prev-video:hover {
   cursor: url('../icons/ArrowBack.svg'), auto;
+}
+
+.prev.white:hover, .prev-video.white:hover {
+  cursor: url('../icons/ArrowBackWhite.svg'), auto;
 }
 
 .page {

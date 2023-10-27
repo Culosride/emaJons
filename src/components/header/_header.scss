@@ -12,6 +12,7 @@
   font-weight: bold;
   text-transform: uppercase;
   color: black;
+
   li {
     font-size: 20px;
     display: inline-block;
@@ -34,18 +35,8 @@
     color: black;
     width: max-content;
   }
-  button {
-    background-color: transparent;
-    border: none;
-    padding: 0;
-    font-size: 24px;
-    cursor: pointer
-  }
-  .flex {
-    display: flex;
-    align-items: center;
-  }
 }
+
 .header-50{
   left: 50vw;
   right: auto
@@ -77,6 +68,12 @@
   align-items: center;
   gap: 16px;
   margin-right: 16px;
+  overflow-x: hidden;
+  height: 100%;
+
+  .dropdown-button {
+    height: 100%;
+  }
 }
 
 .rectangle {
@@ -98,13 +95,9 @@
   top: 0;
   right: 0;
   z-index: 6;
+
   .admin-menu {
     margin-right: 40px;
-  }
-  .close-button {
-    position: fixed;
-    right: 30px;
-    top: 24px;
   }
 }
 
@@ -113,15 +106,13 @@
   width: calc($description-width - $slider-padding);
   align-items: center;
   flex-wrap: wrap;
-  .admin-menu {
-    position: absolute;
-    left: 0;
-    bottom: -5px;
-  }
 }
 
-.admin-menu{
+.admin-menu {
   display: flex;
+  height: 100%;
+  align-items: center;
+
   a, button {
     font-size: 18px;
     color: #8f8f8f;
@@ -129,23 +120,25 @@
     font-weight: normal;
     text-transform: none;
   }
-  a {
-    display: inline-block;
-    background-image: url('../icons/New.svg');
-    background-repeat: no-repeat;
-    background-position: 0% 50%;
-    height: 40px;
-    width: 40px;
-  }
   a:last-child, button:last-child {
     margin-right: 0;
   }
-  button {
+  button, a {
+    height: 100%;
+    box-sizing: border-box;
+  }
+  button.logout-btn {
     display: inline-block;
     background-image: url('../icons/Logout.svg');
     background-repeat: no-repeat;
     background-position: 0% 50%;
-    height: 40px;
+    width: 40px;
+  }
+  a.new-post-btn {
+    display: inline-block;
+    background-image: url('../icons/New.svg');
+    background-repeat: no-repeat;
+    background-position: 0% 50%;
     width: 40px;
   }
 }
@@ -155,15 +148,36 @@
   transition: top ease .4s
 }
 
-@media screen and (max-width: 1024px) {
-  .flex {
-    .logo, .dash, li {
+button {
+  background-color: transparent;
+  border: none;
+  padding: 12px;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 1199px) {
+  .header-50, .header-30 {
+    .logo-wrapper {
+      gap: 8px;
+    }
+  }
+}
+
+@media screen and (max-width: 991px) {
+  .header-100 {
+    padding: 0 20px;
+  }
+  .logo-wrapper {
+    gap: 8px;
+
+    .logo, .dash, li, a {
       font-size: 18px;
     }
   }
-  .admin-menu {
+  .header-100 .admin-menu {
     a, button {
-      height: 30px;
+      height: 100%;
       width: 30px;
     }
   }
@@ -176,5 +190,11 @@
   .logo-wrapper {
     gap: 8px;
     margin-right: 0;
+  }
+}
+
+@media screen and (max-width: 599px) {
+  .header-100, .header-50, .header-30 {
+    padding: 0 20px;
   }
 }

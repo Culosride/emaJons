@@ -1,49 +1,63 @@
-import React, {useEffect} from "react";
+import React, { useEffect, useRef } from "react";
 import { CATEGORIES } from "../../config/categories.js";
-import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
-const DropdownNav = ({ handleNewCategory, toggleMenu, isExpanded }) => {
-  const currentCategory = useSelector(state => state.posts.currentCategory)
-  const screenSize = useSelector(state => state.posts.screenSize)
-
-  const isSmallScreen = screenSize === "xs" || screenSize === "s"
+const DropdownNav = ({ handleNewCategory, isSmallScreen,  toggleMenu,  isExpanded }) => {
+  const currentCategory = useSelector((state) => state.posts.currentCategory);
+  const screenSize = useSelector((state) => state.posts.screenSize);
+  const navbarRef = useRef(null);
+  const linksRef = useRef([]);
 
   useEffect(() => {
     const handleExpanded = () => {
-      const links = document.querySelectorAll(".category-link")
-      const navbar = document.querySelector(".dropdown")
-      navbar && isExpanded && navbar.classList.add("show")
-      navbar && !isExpanded && navbar.classList.remove("show")
+      isExpanded && navbarRef.current.classList.add("show");
+      !isExpanded && navbarRef.current.classList.remove("show");
 
-      links.forEach((link, index) => {
+      linksRef.current.forEach((link, index) => {
         setTimeout(() => {
-          isExpanded && link.classList.add("show") || !isSmallScreen && link.classList.remove("show") || !isExpanded && link.classList.remove("show")
-        }, 100 * index)
+          (isExpanded && link?.classList.add("show")) ||
+          ((!isSmallScreen || !isExpanded) && link?.classList.remove("show"))
+        }, 100 * index);
       });
-    }
+    };
 
-    handleExpanded()
+    handleExpanded();
+  }, [isExpanded, screenSize]);
 
-  }, [isExpanded, screenSize])
+  const navElements = () =>
+    CATEGORIES.map((category, i) => {
+      const isCurrentCategory = currentCategory === category;
 
-  const navElements = () => CATEGORIES.map((category, i) => {
-    if((category) !== _.capitalize(currentCategory)) {
-      return (
-        <li className="category-link" key={i}>
-          <Link onClick={() => handleNewCategory(category)} to={`/${category}`}>{_.capitalize(category)}</Link>
-        </li>
-      )
-    }
-  })
+      if ((isSmallScreen && !isCurrentCategory) || !isSmallScreen) {
+        return (
+          <li key={i} ref={(el) => (linksRef.current[i] = el)} className="category-link">
+            <Link
+              className={isCurrentCategory ? "nav-link active" : "nav-link"}
+              onClick={() => handleNewCategory(category)}
+              to={`/${category}`}
+            >
+              {_.capitalize(category)}
+            </Link>
+          </li>
+        );
+      }
+    });
 
   return (
     <>
-      {isSmallScreen && <button className='dropdown-button' onClick={toggleMenu}><i className="dropdown-icon"></i></button>}
-      {<ul className={isSmallScreen ? "navigation dropdown" : "navigation"}>
-        {navElements()}
-      </ul>}
-    </>)
-}
+      {isSmallScreen && (
+        <button className="dropdown-button" onClick={toggleMenu}>
+          <i className={isExpanded ? "dropdown-icon active" : "dropdown-icon"}></i>
+        </button>
+      )}
+      {
+        <ul ref={navbarRef} className={isSmallScreen ? "navigation dropdown" : "navigation"}>
+          {navElements()}
+        </ul>
+      }
+    </>
+  );
+};
 
-export default DropdownNav
+export default DropdownNav;

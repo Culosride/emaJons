@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { toggleFullscreen, setCurrentPost, fetchPostById } from '../../features/posts/postsSlice';
 import Slider from '../slider/Slider';
+import useKeyPress from "../../hooks/useKeyPress";
 
 export default function Post() {
   const navigate = useNavigate()
@@ -14,6 +15,7 @@ export default function Post() {
   const error = useSelector(state => state.posts.error)
   const category = params.category
   const fullscreen = useSelector(state => state.posts.fullscreen)
+
   let mediaElements = []
 
   useEffect(() => {
@@ -24,21 +26,15 @@ export default function Post() {
     }
   }, [])
 
-  useEffect(() => {
-    const escapeFullscreen = (e) => {
-      if(e.key === "Escape" && fullscreen) {
-        dispatch(toggleFullscreen(false))
-      } else if(e.key === "Escape" && !fullscreen) {
-        navigate(`/${category}`)
-      }
+  const escapeFullscreen = () => {
+    if (fullscreen) {
+      dispatch(toggleFullscreen(false));
+    } else {
+      navigate(`/${category}`);
     }
+  }
 
-    window.addEventListener("keydown", escapeFullscreen)
-
-    return () => {
-      window.removeEventListener("keydown", escapeFullscreen)
-    };
-  }, [fullscreen])
+  useKeyPress("Escape", escapeFullscreen);
 
   if (status === 'loading') {
     mediaElements = <p>Loading...</p>
@@ -72,12 +68,13 @@ export default function Post() {
   }
 
   const content = post?.content && post.content.length > 500
+  const cursorColor = fullscreen ? "white" : ""
 
   return (
     post &&
       (
-        <div id={"post"} className={`post-container ${content ? "layout-50" : ""} ${fullscreen ? "layout-100" : ""}`}>
-          {post.media && <Slider slides={post.media}/>}
+        <div id={"post"} className={`post-container ${content ? "layout-50" : ""} ${fullscreen ? "layout-100 fullscreen" : ""}`}>
+          {post.media && <Slider cursorColor={cursorColor} slides={post.media}/>}
           <div className="text-container" onScroll={handleScroll} onClick={handleFullscreen}>
             <div className="description-container">
               <div className="headline">

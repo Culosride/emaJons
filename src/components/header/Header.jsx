@@ -24,6 +24,8 @@ export default function Header () {
   const postsStatus = useSelector(state => state.posts.status)
   const error = useSelector(state => state.posts.error)
   const screenSize = useSelector(state => state.posts.screenSize)
+  const isSmallScreen = screenSize === "xs" || screenSize === "s"
+
   const [isExpanded, setIsExpanded] = useState(false)
 
   useEffect(() => {
@@ -94,7 +96,9 @@ export default function Header () {
     return (
       <div className="admin-menu">
         <button className="delete-btn" onClick={handleDelete}>Delete</button>
-        <Link onClick={menuOff} className="edit-btn" to={`/posts/${currentPostId}/edit`}>Edit</Link>
+        <Link onClick={menuOff} className="edit-btn" to={`/posts/${currentPostId}/edit`}>
+          <button type="button">Edit</button>
+        </Link>
       </div>
     )
   }
@@ -103,15 +107,19 @@ export default function Header () {
     <>
       {!post &&
         <div className="header-100">
-          <div className="flex">
-            <div ref={logoAndCategoryRef} className="logo-wrapper">
-              <Link onClick={menuOff} to="/" className="logo">EmaJons</Link>
-              <span className="dash"></span>
-              <div className="logo">{currentCategory}</div>
-            </div>
-            <DropdownNav setIsExpanded={setIsExpanded} isExpanded={isExpanded} toggleMenu={toggleMenu} handleNewCategory={handleNewCategory} menuOff={menuOff}/>
-          </div>
-          {adminMenu()}
+          <div ref={logoAndCategoryRef} className="logo-wrapper">
+          <Link onClick={menuOff} to="/" className="logo">EmaJons</Link>
+          <span className="dash"></span>
+          {isSmallScreen && <div className="logo">{currentCategory}
+          </div>}
+        <DropdownNav
+          isSmallScreen={isSmallScreen}
+          isExpanded={isExpanded}
+          toggleMenu={toggleMenu}
+          handleNewCategory={handleNewCategory}
+        />
+      </div>
+        {adminMenu()}
         </div>
       ||
       post && !isFullscreen &&
@@ -121,12 +129,10 @@ export default function Header () {
             <span className="dash"></span>
             <Link to={`/${currentCategory}`}>{currentCategory}</Link>
           </div>
-          <div>
             {isAdmin && postMenu()}
-            <button className='close-button' onClick={() => navigate(currentCategory)}>
+            <button className='close-btn' onClick={() => navigate(currentCategory)}>
               <i className="close-icon"></i>
             </button>
-          </div>
       </div>
       }
     </>
