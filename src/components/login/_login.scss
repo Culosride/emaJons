@@ -7,9 +7,18 @@
 }
 
 .form {
-  padding: 0 30px;
+  padding: 0 16px;
+
   input {
-    width: 10%;
+    width: 100%;
     margin: 5px 0 25px;
+    box-sizing: border-box;
+  }
+}
+
+.actions-btns {
+  display: flex;
+  button {
+    font-size: 16px;
   }
 }

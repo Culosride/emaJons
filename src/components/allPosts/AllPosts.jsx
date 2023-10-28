@@ -113,7 +113,7 @@ export default function AllPosts() {
       }, { threshold: 0.8 }
       );
       if (post) firstPostObserver.current.observe(post);
-  }, [status, hasMorePosts]);
+  }, [status, hasMorePosts, activeTag]);
 
   // filter posts on tag click
   const handleSelectTag = (e) => {

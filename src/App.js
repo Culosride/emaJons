@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { Routes, Route } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import Layout from "./components/layout/Layout";
 import Login from "./components/login/Login";
@@ -12,8 +13,6 @@ import NotFound from "./components/404/NotFound";
 import withRouteValidation from "./hocs/RouteValidation";
 import RequireAuth from "./hocs/RequireAuth";
 import { setScreenSize } from "./features/posts/postsSlice";
-
-import { Routes, Route } from "react-router-dom";
 import { ROLES } from "./config/roles";
 
 const AllPostsRouteValidated = withRouteValidation(AllPosts);
@@ -53,26 +52,28 @@ export default function App() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-
   return (
-    <Routes>
-      {/* public */}
-      <Route index path="/" element={<Home />} />
-      <Route path="/" element={<Layout />}>
-        <Route path="/login" element={<Login />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/:category" element={<AllPostsRouteValidated />} />
-        {<Route path="/:category/:postId" element={<PostRouteValidated />} />}
-        {/* protected */}
-        <Route element={<RequireAuth allowedRoles={[ROLES.Admin]} />}>
-          <Route path="/posts/new" element={<PostForm />} />
-          <Route path="/posts/:postId/edit" element={<PostForm />} />
+    <>
+      <Login />
+      <Routes>
+        {/* public */}
+        <Route index path="/" element={<Home />} />
+        <Route path="/" element={<Layout />}>
+          {/* <Route path="/login" element={<Login />} /> */}
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/:category" element={<AllPostsRouteValidated />} />
+          {<Route path="/:category/:postId" element={<PostRouteValidated />} />}
+          {/* protected */}
+          <Route element={<RequireAuth allowedRoles={[ROLES.Admin]} />}>
+            <Route path="/posts/new" element={<PostForm />} />
+            <Route path="/posts/:postId/edit" element={<PostForm />} />
+          </Route>
+          {/*end protected */}
+          <Route path="/not-found" element={<NotFound />} />
+          <Route path="*" element={<NotFound />} />
         </Route>
-        {/*end protected */}
-        <Route path="/not-found" element={<NotFound />} />
-        <Route path="*" element={<NotFound />} />
-      </Route>
-    </Routes>
+      </Routes>
+    </>
   );
 }

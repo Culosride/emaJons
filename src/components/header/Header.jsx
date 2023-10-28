@@ -7,6 +7,7 @@ import { selectTag } from "../../features/tags/tagsSlice";
 import useAuth from "../../hooks/useAuth.jsx";
 import { logout } from "../../features/auth/authSlice"
 import DropdownNav from "../dropdownNavigation/DropdownNav";
+import { setModal } from "../../features/auth/authSlice";
 
 export default function Header () {
   const authorization = useAuth(false)
@@ -69,6 +70,10 @@ export default function Header () {
   const toggleMenu = () => {
     setIsExpanded(!isExpanded)
   }
+  const handleLogin = () => {
+    setIsExpanded(false)
+    dispatch(setModal(true))
+  }
 
   function handleDelete() {
     console.log(currentPostId, currentCategory);
@@ -87,9 +92,9 @@ export default function Header () {
     } else {
       return (
         <div className="admin-menu">
-          <Link onClick={menuOff} to={"/login"}>
-            <button className="login-btn" title="Login"/>
-          </Link>
+          {/* <Link  to={"/login"}> */}
+            <button onClick={handleLogin} className="login-btn" title="Login"/>
+          {/* </Link> */}
         </div>)
     }
   }

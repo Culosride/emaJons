@@ -1,18 +1,21 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { login } from '../../features/auth/authSlice';
+import { login, setModal } from '../../features/auth/authSlice';
+import Modal from '../UI/Modal';
 
 function Login() {
   const status = useSelector(state => state.auth.status)
   const error = useSelector(state => state.auth.error)
-  const userRef = useRef()
+  const isModalOpen = useSelector(state => state.auth.isModalOpen)
+  const usernameRef = useRef()
   const errRef = useRef()
   const [ userInfo, setUserInfo ] = useState({ username: "", password: "" })
   const [ errMsg, setErrMsg] = useState("")
 
+
   useEffect(() => {
-    userRef.current.focus()
+    usernameRef && usernameRef.current.focus()
   }, [])
 
   const navigate = useNavigate()
@@ -41,6 +44,10 @@ function Login() {
 
 }
 
+const handleClose = () => {
+  dispatch(setModal(false))
+}
+
 function resetInfo() {
   setUserInfo({
     username: "",
@@ -59,7 +66,7 @@ function resetInfo() {
             className="form__input"
             type="text"
             id="username"
-            ref={userRef}
+            ref={usernameRef}
             name="username"
             value={userInfo.username}
             onChange={handleChange}
@@ -77,12 +84,19 @@ function resetInfo() {
             value={userInfo.password}
             required
         />
-        <button className="form__submit-button">Sign In</button>
+        <div className="actions-btns">
+          <button className="form__submit-button">Sign In</button>
+          <button onClick={handleClose}>Close</button>
+        </div>
 
       </form>
     </section>
   )
-  return content
+  return (
+    <Modal className='login' open={isModalOpen}>
+      {content}
+    </Modal>
+  )
 }
 
 export default Login
