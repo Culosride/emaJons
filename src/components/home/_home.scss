@@ -41,14 +41,13 @@
   text-shadow: 0 0 6px rgb(255, 255, 255, 0.5);
 }
 
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 991px) {
   .home {
     font-size: 24px;
   }
 }
 @media screen and (max-width: 767px) {
   .home {
-
     ul{
       right: 8%;
     }

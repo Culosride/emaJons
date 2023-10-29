@@ -53,13 +53,11 @@ export default function App() {
   }, []);
 
   return (
-    <>
-      <Login />
       <Routes>
         {/* public */}
         <Route index path="/" element={<Home />} />
         <Route path="/" element={<Layout />}>
-          {/* <Route path="/login" element={<Login />} /> */}
+          <Route path="/login" element={<Login />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/about" element={<About />} />
           <Route path="/:category" element={<AllPostsRouteValidated />} />
@@ -74,6 +72,5 @@ export default function App() {
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
-    </>
   );
 }

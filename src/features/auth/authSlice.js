@@ -53,9 +53,7 @@ const authSlice = createSlice({
         state.status = 'succeeded'
       })
       .addCase(login.rejected, (state, action) => {
-        console.log("error at login.rejected",action)
         state.status = "failed";
-        console.log(action)
         state.error = "401 Wrong username or password"
       })
       .addCase(logout.pending, (state) => {

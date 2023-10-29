@@ -1,0 +1,77 @@
+.btn {
+  width: 100%;
+  background-color: transparent;
+  cursor: pointer;
+  padding: 12px;
+  border: none;
+  box-sizing: border-box;
+  height: 100%;
+
+  &.disabled {
+    pointer-events: none;
+  }
+}
+
+.submit {
+  background-color: rgb(200, 200, 200);
+  font-size: 24px;
+  height: auto;
+}
+
+.login {
+  background-image: url('../icons/Login.svg');
+  height: 100%;
+}
+
+.logout {
+  background-image: url('../icons/Logout.svg');
+}
+
+.new-post {
+  background-image: url('../icons/New.svg');
+}
+
+.edit {
+  background-image: url('../icons/Edit.svg');
+}
+
+.delete {
+  background-image: url('../icons/Delete.svg');
+}
+
+.delete, .edit, .new-post, .logout, .login {
+  padding: 0;
+  width: 40px;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: inline-block;
+}
+
+.dropdown {
+  background-image: url("../icons/Dropdown.svg");
+  background-size: contain;
+  width: fit-content;
+  background-repeat: no-repeat;
+  height: 80%;
+  background-position: center;
+  display: block;
+  transition: 0.3s ease-out;
+}
+.dropdown.active {
+  transform: rotate(-180deg);
+}
+
+.kebab-menu {
+  background-image: url("../icons/KebabMenu.svg");
+  background-size: contain;
+  width: fit-content;
+  background-repeat: no-repeat;
+  background-position: center;
+  transition: 0.3s ease-out;
+}
+
+@media screen and (max-width: 767px) {
+  .logout, .new-post, .edit, .delete {
+    width: 100%;
+  }
+}

@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from "react";
 import { CATEGORIES } from "../../config/categories.js";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import Button from "../UI/Button.jsx";
 
 const DropdownNav = ({ handleNewCategory, isSmallScreen,  toggleMenu,  isExpanded }) => {
   const currentCategory = useSelector((state) => state.posts.currentCategory);
@@ -31,28 +32,23 @@ const DropdownNav = ({ handleNewCategory, isSmallScreen,  toggleMenu,  isExpande
 
       if ((isSmallScreen && !isCurrentCategory) || !isSmallScreen) {
         return (
-          <li key={i} ref={(el) => (linksRef.current[i] = el)} className="category-link">
-            <Link
-              className={isCurrentCategory ? "nav-link active" : "nav-link"}
-              onClick={() => handleNewCategory(category)}
-              to={`/${category}`}
-            >
-              {_.capitalize(category)}
-            </Link>
-          </li>
+          <Link
+            onClick={() => handleNewCategory(category)}
+            key={i} ref={(el) => (linksRef.current[i] = el)}
+            className={isCurrentCategory ? "category-link nav-link active" : "category-link nav-link"}
+            to={`/${category}`}
+          >
+            {_.capitalize(category)}
+          </Link>
         );
       }
     });
 
   return (
     <>
-      {isSmallScreen && (
-        <button className="dropdown-button" onClick={toggleMenu}>
-          <i className={isExpanded ? "dropdown-icon active" : "dropdown-icon"}></i>
-        </button>
-      )}
+      {isSmallScreen && <Button className={isExpanded ? "dropdown active" : "dropdown"} onClick={toggleMenu}/>}
       {
-        <ul ref={navbarRef} className={isSmallScreen ? "navigation dropdown" : "navigation"}>
+        <ul ref={navbarRef} className={isSmallScreen ? "navigation dropdown-menu" : "navigation"}>
           {navElements()}
         </ul>
       }

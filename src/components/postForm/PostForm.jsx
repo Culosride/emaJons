@@ -4,6 +4,7 @@ import { createPost, editPost, fetchPostById, setCurrentPost } from "../../featu
 import { fetchAllTags, toggleTag, resetTags } from "../../features/tags/tagsSlice";
 import { useSelector, useDispatch } from "react-redux";
 import TagsInputForm from "../tag/TagsInputForm";
+import Button from "../UI/Button";
 const _ = require("lodash");
 
 export default function PostForm() {
@@ -34,7 +35,7 @@ export default function PostForm() {
   const isLoading = status === "loading"
   const isSmallScreen = screenSize === "s" || screenSize === "xs"
 
-  const btnStyles = isLoading ? "btn-submit btn-disabled" : "btn-submit";
+  const btnStyles = isLoading ? "submit disabled" : "submit";
   const submitBtnValue =
     (isLoading && "Submitting...") ||
     (!isLoading && isEditPage ? "Save changes" : "Create new post");
@@ -254,12 +255,11 @@ export default function PostForm() {
 
           <TagsInputForm />
 
-          <input
+          <Button
             disabled={isLoading}
             className={btnStyles}
             type="submit"
-            value={submitBtnValue}
-          />
+          >{submitBtnValue}</Button>
         </div>
       )
   } else {
@@ -328,12 +328,11 @@ export default function PostForm() {
 
           <TagsInputForm />
 
-          <input
+          <Button
             disabled={isLoading}
             className={btnStyles}
             type="submit"
-            value={submitBtnValue}
-          />
+          >{submitBtnValue}</Button>
         </div>
       </>
   }
