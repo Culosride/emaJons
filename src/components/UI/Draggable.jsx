@@ -4,25 +4,25 @@ export default function Draggable({ children, userRef, className }) {
   const [dragging, setDragging] = useState(false);
   const [startX, setStartX] = useState(0);
 
-  const daref = userRef
+  const localRef = userRef
 
   const handleMouseDown = (e) => {
     setDragging(true);
-    setStartX(e.pageX + daref.current.scrollLeft);
+    setStartX(e.pageX + localRef.current.scrollLeft);
   };
 
-  const handleMouseUp = (e) => {
+  const handleMouseUp = () => {
     setDragging(false);
   };
 
   const handleMouseMove = (e) => {
     if (!dragging) return;
-    daref.current.scrollLeft = startX - e.pageX
+    localRef.current.scrollLeft = startX - e.pageX
   };
 
   const handleTouchStart = (e) => {
     setDragging(true);
-    setStartX(e.touches[0].pageX + daref.current.scrollLeft);
+    setStartX(e.touches[0].pageX + localRef.current.scrollLeft);
   };
 
   const handleTouchEnd = () => {
@@ -31,20 +31,20 @@ export default function Draggable({ children, userRef, className }) {
 
   const handleTouchMove = (e) => {
     if (!dragging) return;
-    daref.current.scrollLeft = startX - e.touches[0].pageX
+    localRef.current.scrollLeft = startX - e.touches[0].pageX
   };
 
   return (
     <div
       ref={userRef}
-      className={`draggable-container ${className} ${dragging && "dragging"}`}
+      className={`draggable-container ${className} ${dragging ? "dragging" : ""}`}
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
       onMouseMove={handleMouseMove}
+      onMouseLeave={() => setDragging(false)}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
       onTouchMove={handleTouchMove}
-      onMouseLeave={() => setDragging(false)}
       onTouchCancel={() => setDragging(false)}
     >
       {children}

@@ -12,27 +12,33 @@
   background-size: cover;
   background-position: 50% 50%;
   background-repeat: no-repeat;
+  .logo a {
+    text-transform: none;
+  }
   .logo {
     font-size: 36px;
     position: absolute;
     left: 10vw;
-    top: 47%
   }
-  ul{
+  ul {
+    display: flex;
+    flex-direction: column;
     position: absolute;
     right: 15%;
+    height: 75vh;
+    max-height: 480px;
   }
   li {
+    flex: 1;
     list-style-type: none;
-    text-align: right;
+    display: flex;
+    align-items: center;
+    align-self: flex-end;
   }
   a {
-    padding: 10px 0;
-    line-height: 60px;
     color: rgb(32, 32, 32);
     text-decoration: none;
     text-transform: uppercase;
-    text-align: right;
     position: relative;
   }
 }
@@ -43,13 +49,14 @@
 
 @media screen and (max-width: 991px) {
   .home {
-    font-size: 24px;
+    ul{
+      right: 8%;
+    }
   }
 }
 @media screen and (max-width: 767px) {
   .home {
-    ul{
-      right: 8%;
-    }
+    background-position: right;
+    font-size: 32px;
   }
 }

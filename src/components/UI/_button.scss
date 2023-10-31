@@ -65,7 +65,7 @@
   background-image: url('../icons/CloseIcon.svg');
   right: calc(50vw + 20px);
   position: fixed;
-  top: 60px;
+  top: 22px;
   z-index: 6;
   height: 30px;
 }
@@ -116,7 +116,7 @@
   }
 
   .close, .close.h30 {
-    right: 20px;
+    right: 50px;
   }
 }
 

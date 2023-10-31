@@ -134,12 +134,13 @@
 
 @media screen and (max-width: 991px) {
   .post-container {
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    min-height: 100vh;
-    height: fit-content;
-    overflow: hidden;
+    // display: flex;
+    grid-template-columns: 100vw;
+    // justify-content: center;
+    // flex-direction: column;
+    // min-height: 100vh;
+    // height: fit-content;
+    overflow: auto;
   }
   .images-container, .text-container, .description-container {
     width: 100vw;

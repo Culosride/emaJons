@@ -8,14 +8,14 @@ export const useScroll = (customRef, cb = () => {}, options = {}) => {
 
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-
-      if (currentScrollY <= threshold) return customRef.current?.classList.remove(scrollClass);
+      const currentRef = customRef.current
+      if (currentScrollY <= threshold) return currentRef?.classList.remove(scrollClass);
 
       if (currentScrollY > lastScrollY) {
-        customRef.current?.classList.add(scrollClass);
+        currentRef?.classList.add(scrollClass);
         cb();
       } else {
-        customRef.current?.classList.remove(scrollClass);
+        currentRef?.classList.remove(scrollClass);
       }
       lastScrollY = currentScrollY;
     };

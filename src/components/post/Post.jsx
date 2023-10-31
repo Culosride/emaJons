@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { toggleFullscreen, setCurrentPost, fetchPostById } from '../../features/posts/postsSlice';
@@ -19,6 +19,7 @@ export default function Post() {
   const currentCategory = useSelector(state => state.posts.currentCategory)
 
   let mediaElements = []
+  const headlineRef = useRef()
 
   useEffect(() => {
     if(!post) {
@@ -57,8 +58,8 @@ export default function Post() {
     dispatch(toggleFullscreen())
   }
 
-  const handleScroll = (e) => {
-    const headline = e.target.lastElementChild.firstElementChild;
+  const handleScroll = () => {
+    const headline = headlineRef.current;
     const headerRef = document.querySelector(".header-50")
     if (headline.getBoundingClientRect().top < 60) {
       headline.classList.add('headline-sticky')
@@ -80,7 +81,7 @@ export default function Post() {
           {post.media && <Slider cursorColor={cursorColor} slides={post.media}/>}
           {!fullscreen && <div className="text-container" onScroll={handleScroll} onClick={handleFullscreen}>
             <div className="description-container">
-              <div className="headline">
+              <div ref={headlineRef} className="headline">
                 <div>
                   <h1 className="title">{post.title}</h1>
                   {post.subtitle && <p className="subtitle">{post.subtitle}</p>}

@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { createPost, editPost, fetchPostById, setCurrentPost } from "../../features/posts/postsSlice";
 import { fetchAllTags, toggleTag, resetTags } from "../../features/tags/tagsSlice";
 import { useSelector, useDispatch } from "react-redux";
 import TagsInputForm from "../tag/TagsInputForm";
 import Button from "../UI/Button";
+import Modal from "../UI/Modal"
+import { useScroll } from "../../hooks/useScroll";
 const _ = require("lodash");
 
 export default function PostForm() {
@@ -14,9 +16,9 @@ export default function PostForm() {
   const { pathname } = useLocation();
   const selectedTags = useSelector((state) => state.tags.selectedTags);
   const currentPost = useSelector((state) => state.posts.currentPost);
-  const currentCategory = useSelector((state) => state.posts.currentCategory);
   const screenSize = useSelector((state) => state.posts.screenSize);
   const status = useSelector((state) => state.posts.status);
+
   const postId = currentPost._id;
   const [error, setError] = useState(null);
   const [currentFormTab, setCurrentFormTab] = useState("media")
@@ -42,6 +44,9 @@ export default function PostForm() {
 
     // if(!currentPost) return navigate("/not-found")
   let content;
+
+  const tabMenuRef = useRef()
+  useScroll(tabMenuRef, _, { threshold: 40, scrollClass: "fade-top" })
 
   useEffect(() => {
     dispatch(resetTags());
@@ -339,7 +344,7 @@ export default function PostForm() {
   }
 
   const tabMenuBtns =
-  <div className="tabMenuBtns" onClick={(e) => handleTabMenu(e)}>
+    <div ref={tabMenuRef} className="tabMenuBtns" onClick={(e) => handleTabMenu(e)}>
       <Button
         type="button"
         dataValue="media"

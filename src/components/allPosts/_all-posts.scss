@@ -34,6 +34,9 @@
   }
   .tag-active {
     font-weight: 600;
+    z-index: 1;
+    word-break: break-all;
+    text-wrap: balance;
   }
   .tag-active::before {
     content: "";
@@ -42,7 +45,7 @@
     background-size: contain;
     width: 20px;
     background-repeat: no-repeat;
-    height: 100%;
+    height: 18px;
     vertical-align: text-bottom;
     background-position: -6px 50%;
   }
@@ -80,20 +83,6 @@
     grid-auto-rows: 200px;
   }
   .select-tags-container {
-    ul {
-      display: flex;
-      justify-content: flex-start;
-      margin-top: 0;
-    }
-    p {
-      margin-right: 20px;
-      padding: 10px 0;
-    }
-  }
-}
-
-@media screen and (max-width: 767px) {
-  .select-tags-container {
     flex-direction: row;
     gap: 6px;
     position: sticky;
@@ -106,8 +95,21 @@
     padding: 12px 30px;
     box-sizing: border-box;
     transition: top ease 0.4s;
-  }
 
+    .tag-active {
+      text-wrap: nowrap;
+    }
+
+    ul {
+      display: flex;
+      justify-content: flex-start;
+      margin-top: 0;
+    }
+    p {
+      margin-right: 20px;
+      padding: 10px 0;
+    }
+  }
   .tag-link {
     user-select: none;
   }
@@ -118,22 +120,12 @@
 }
 
 @media screen and (max-width: 599px) {
+  .select-tags-container {
+    gap: 0;
+  }
   .posts-grid {
     grid-template-columns: 1fr;
-    padding-left: 0;
-    padding: 16px;
     row-gap: 60px;
     grid-auto-rows: 180px;
-  }
-  .select-tags-container {
-    ul {
-      display: flex;
-      justify-content: flex-start;
-      margin-top: 0;
-    }
-    p {
-      margin-right: 20px;
-      padding: 10px 0;
-    }
   }
 }

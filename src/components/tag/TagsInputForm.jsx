@@ -5,6 +5,9 @@ import Tag from "../tag/Tag";
 import { deleteTag, fetchAllTags, addNewTag, toggleTag, resetTags } from "../../features/tags/tagsSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchPosts } from "../../features/posts/postsSlice";
+import { setModal } from "../../features/auth/authSlice";
+import Modal from "../UI/Modal";
+import Button from "../UI/Button";
 
 const TagsInputForm = () => {
   const dispatch = useDispatch();
@@ -13,6 +16,8 @@ const TagsInputForm = () => {
   const editPage = pathname.includes("edit")
   const selectedTags = useSelector(state => state.tags.selectedTags);
   const availableTags = useSelector(state => state.tags.availableTags);
+  const isModal = useSelector(state => state.auth.isModalOpen);
+  const [tagToDelete, setTagToDelete] = useState("")
 
   // CRUD tags
   function createNewTag(e) {
@@ -34,10 +39,16 @@ const TagsInputForm = () => {
   }
 
   function handleTagDelete(tag) {
-    dispatch(deleteTag(tag))
+    dispatch(setModal(true))
+    setTagToDelete(tag)
+  }
+
+  function confirmTagDelete() {
+    dispatch(deleteTag(tagToDelete))
       .then(() => {
         dispatch(fetchPosts())
       })
+    dispatch(setModal(false))
   }
 
   function handleTagToggle(tag) {
@@ -88,6 +99,15 @@ const TagsInputForm = () => {
       <fieldset className="available-tags-wrapper">
         {tagElements}
       </fieldset>
+      {isModal && <Modal open={isModal}>
+        <div>
+          <p>Do you want to globally delete the tag: {tagToDelete}?</p>
+          <div className="modal-actions-container">
+            <Button type="button" className="modal-action" onClick={() => dispatch(setModal(false))}>No</Button>
+            <Button type="button" className="modal-action" onClick={confirmTagDelete}>Yes</Button>
+          </div>
+        </div>
+      </Modal>}
     </fieldset>
   )
 }

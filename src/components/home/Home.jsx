@@ -21,7 +21,7 @@ const Home = () => {
       <div className="logo">
         <Link to={"/about"}>EmaJons</Link>
       </div>
-      <ul>
+      <ul className="categories-list">
         {navElements}
         {/* <li>
           <a

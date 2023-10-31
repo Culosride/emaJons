@@ -111,9 +111,7 @@ input[type="file"] {
   justify-content: center;
   position: fixed;
   top: 74px;
-  left: 50%;
   width: 100%;
-  transform: translate(-50%, 0);
   background-color: rgb(50, 50, 50);
   z-index: 1;
   padding: 12px 0 18px;
@@ -123,7 +121,7 @@ input[type="file"] {
   display: flex;
   justify-content: flex-start;
   flex-wrap: wrap;
-  height: 44px;
+  height: fit-content;
   align-items: center;
 }
 
@@ -206,11 +204,12 @@ input[type="file"] {
   }
   .post-form {
     display: block;
+    margin-top: 0px;
 
     .fullscreen {
       height: 100%;
       border-right: none;
-      margin-top: 64px;
+      margin-top: 0px;
     }
   }
   .post-preview-img-container {
@@ -218,5 +217,16 @@ input[type="file"] {
       max-height: 200px;
       max-width: 100%;
     }
+  }
+
+  .tabMenuBtns {
+    position: sticky;
+    top: 74px;
+    transition: top ease 0.4s;
+
+  }
+  .tabMenuBtns.fade-top {
+    top: -1px;
+    z-index: 10;
   }
 }
