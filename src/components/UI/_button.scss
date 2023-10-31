@@ -4,7 +4,6 @@
   cursor: pointer;
   padding: 12px;
   border: none;
-  box-sizing: border-box;
   height: 100%;
 
   &.disabled {
@@ -23,6 +22,29 @@
   height: 100%;
 }
 
+.sign-in {
+  font-size: 16px;
+  padding: 6px;
+  width: 100%;
+  border: 1px solid rgb(146, 146, 146);
+  background-color: rgb(240, 240, 240);
+  margin: 20px 0;
+  height: auto;
+}
+
+.tab {
+  font-size: 18px;
+  padding: 8px;
+  width: 30%;
+  transition: 0.3s ease-out;
+  background-color: transparent;
+  color: white;
+}
+
+.tab.active {
+  border-bottom: 1px solid rgb(240, 240, 240);
+}
+
 .logout {
   background-image: url('../icons/Logout.svg');
 }
@@ -39,9 +61,22 @@
   background-image: url('../icons/Delete.svg');
 }
 
-.delete, .edit, .new-post, .logout, .login {
+.close {
+  background-image: url('../icons/CloseIcon.svg');
+  right: calc(50vw + 20px);
+  position: fixed;
+  top: 60px;
+  z-index: 6;
+  height: 30px;
+}
+
+.close.h30 {
+  right: calc(26vw + 20px);
+}
+
+.delete, .edit, .new-post, .logout, .login, .close {
   padding: 0;
-  width: 40px;
+  width: $icon-width;
   background-position: center;
   background-repeat: no-repeat;
   display: inline-block;
@@ -70,8 +105,30 @@
   transition: 0.3s ease-out;
 }
 
-@media screen and (max-width: 767px) {
+.kebab-menu.medium {
+  scale: 1;
+}
+
+
+@media screen and (max-width: 991px) {
   .logout, .new-post, .edit, .delete {
     width: 100%;
+  }
+
+  .close, .close.h30 {
+    right: 20px;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .kebab-menu.medium {
+    scale: 0;
+  }
+}
+
+@media screen and (max-width: 599px) {
+  .tab {
+    width: 40%;
+    text-wrap: nowrap;
   }
 }

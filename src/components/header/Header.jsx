@@ -13,6 +13,7 @@ import useAuth from "../../hooks/useAuth.jsx";
 import { logout } from "../../features/auth/authSlice";
 import DropdownNav from "../dropdownNavigation/DropdownNav";
 import Button from "../UI/Button";
+import { useScroll } from "../../hooks/useScroll";
 
 export default function Header() {
   const authorization = useAuth(false);
@@ -36,6 +37,10 @@ export default function Header() {
 
   const [isExpanded, setIsExpanded] = useState(false);
 
+  const logoAndCategoryRef = useRef();
+  const adminMenuRef = useRef()
+  const headerRef = useRef()
+
   useEffect(() => {
     if (error.includes("401")) handleLogout();
   }, [postsStatus]);
@@ -45,12 +50,17 @@ export default function Header() {
     adminMenuRef.current?.classList.remove("active")
   }, [pathname, screenSize]);
 
+  const menuOff = () => {
+    setIsExpanded(false);
+    adminMenuRef.current?.classList.remove("active")
+  };
+
+  useScroll(headerRef, menuOff, { threshold: 40, scrollClass: "fade-top" })
+
   // to rename ?
   const admin = matchPath("/posts/*", pathname);
   const post = admin ? false : matchPath("/:categories/:postId", pathname);
 
-  const logoAndCategoryRef = useRef();
-  const adminMenuRef = useRef()
 
   if (matchPath("/posts/new", pathname)) {
     currentCategory = "new post";
@@ -70,10 +80,6 @@ export default function Header() {
     dispatch(selectTag(""));
     dispatch(setScrollPosition(0));
     dispatch(setCurrentCategory(category));
-  };
-
-  const menuOff = () => {
-    setIsExpanded(false);
   };
 
   const toggleAdminMenu = () => {
@@ -105,7 +111,7 @@ export default function Header() {
     if (isAdmin) {
       return (
         <>
-          {isSmallScreen && <Button type="button" className="kebab-menu" onClick={toggleAdminMenu}/>}
+          <Button type="button" className="kebab-menu medium" onClick={toggleAdminMenu}/>
           <div ref={adminMenuRef} className="admin-menu">
             <Link onClick={menuOff} className="new-post" to={"/posts/new"} />
             <Button className="logout" title="Logout" onClick={handleLogout} />
@@ -120,7 +126,7 @@ export default function Header() {
   const postMenu = () => {
     return (
       <>
-        {isSmallScreen && <Button type="button" className="kebab-menu" onClick={toggleAdminMenu}/>}
+        {<Button type="button" className="kebab-menu medium" onClick={toggleAdminMenu}/>}
         <div ref={adminMenuRef} className="admin-menu">
           <Button type="button" className="delete" onClick={handleDelete} />
           <Link onClick={menuOff} className="edit" to={`/posts/${currentPostId}/edit`} />
@@ -132,7 +138,7 @@ export default function Header() {
   return (
     <>
       {(!post && (
-        <div className="header-100">
+        <div ref={headerRef} className="header-100">
           <div ref={logoAndCategoryRef} className="logo-wrapper">
             <Link onClick={menuOff} to="/" className="logo">
               EmaJons

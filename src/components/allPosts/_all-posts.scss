@@ -1,5 +1,5 @@
 .posts-container {
-  margin: 0 30px;
+  margin: 32px 30px;
 }
 
 .posts-grid {
@@ -9,7 +9,7 @@
   grid-auto-rows: 280px;
   column-gap: 80px;
   row-gap: 64px;
-  padding-left: 120px;
+  padding-left: 200px;
 }
 
 .select-tags-container {
@@ -21,6 +21,10 @@
   gap: 10px;
   position: fixed;
   height: 100%;
+  width: 170px;
+  text-wrap: nowrap;
+  overflow: hidden;
+  background-color: white;
 
   p {
     text-decoration: none;
@@ -66,10 +70,13 @@
 }
 
 @media screen and (max-width: 767px) {
+  .posts-container {
+    margin: 0;
+  }
   .posts-grid {
     column-gap: 48px;
     row-gap: 48px;
-    padding-left: 0;
+    padding: 0 30px;
     grid-auto-rows: 200px;
   }
   .select-tags-container {
@@ -82,6 +89,31 @@
       margin-right: 20px;
       padding: 10px 0;
     }
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .select-tags-container {
+    flex-direction: row;
+    gap: 6px;
+    position: sticky;
+    height: auto;
+    width: 100%;
+    background-color: white;
+    z-index: 1;
+    top: 74px;
+    left: 0;
+    padding: 12px 30px;
+    box-sizing: border-box;
+    transition: top ease 0.4s;
+  }
+
+  .tag-link {
+    user-select: none;
+  }
+
+  .select-tags-container.fade-top {
+    top: 0;
   }
 }
 

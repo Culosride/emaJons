@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { login } from '../../features/auth/authSlice';
+import Button from '../UI/Button';
 
 function Login() {
   const status = useSelector(state => state.auth.status)
@@ -76,7 +77,7 @@ function Login() {
             value={userInfo.password}
             required
         />
-          <button type="submit" className="sign-in-btn">Sign In</button>
+          <Button type="submit" className="sign-in">Sign In</Button>
       </form>
     </div>
   )

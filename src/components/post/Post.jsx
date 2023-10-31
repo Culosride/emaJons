@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { toggleFullscreen, setCurrentPost, fetchPostById } from '../../features/posts/postsSlice';
 import Slider from '../slider/Slider';
 import useKeyPress from "../../hooks/useKeyPress";
+import Button from '../UI/Button';
 
 export default function Post() {
   const navigate = useNavigate()
@@ -75,9 +76,7 @@ export default function Post() {
     post &&
       (
         <div id={"post"} className={`post-container ${content ? "layout-50" : ""} ${fullscreen ? "layout-100 fullscreen" : ""}`}>
-          {!fullscreen && <button className='close-btn' onClick={() => navigate(`/${currentCategory}`)}>
-            <i className="close-icon"></i>
-          </button>}
+          {!fullscreen && <Button className={`close ${content ? "" : "h30"}`} onClick={() => navigate(`/${currentCategory}`)} />}
           {post.media && <Slider cursorColor={cursorColor} slides={post.media}/>}
           {!fullscreen && <div className="text-container" onScroll={handleScroll} onClick={handleFullscreen}>
             <div className="description-container">

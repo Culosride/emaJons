@@ -5,6 +5,8 @@ import { setCurrentCategory, setScrollPosition } from "../../features/posts/post
 import { selectTag } from "../../features/tags/tagsSlice";
 import ImageContainer from "../image/ImageContainer";
 import usePosts from "../../hooks/usePosts";
+import { useScroll } from "../../hooks/useScroll";
+import Draggable from "../UI/Draggable";
 const _ = require("lodash");
 
 export default function AllPosts() {
@@ -25,6 +27,9 @@ export default function AllPosts() {
   const allTags = postsByCategory.flatMap(post => post.postTags.map((tag) => tag));
   const sortedTags = [...new Set(allTags.sort((a, b) => b.localeCompare(a)))];
 
+  const firstPostObserver = useRef();
+  const selectTagsRef = useRef()
+
   const { setPageNum } = usePosts(currentCategory);
 
   useEffect(() => {
@@ -32,29 +37,7 @@ export default function AllPosts() {
     window.scrollTo(0, scrollPosition)
   }, [])
 
-  // toggle header
-  useEffect(() => {
-    let lastScrollY = window.scrollY;
-    const headerRef = document.querySelector(".header-100")
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-
-      if (currentScrollY <= 40 ) return headerRef.classList.remove('fade-top')
-
-      if (currentScrollY > lastScrollY) {
-        headerRef.classList.add('fade-top')
-      } else {
-        headerRef.classList.remove('fade-top')
-      }
-      lastScrollY = currentScrollY;
-    };
-
-    window.addEventListener('scroll', handleScroll);
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
+  useScroll(selectTagsRef, _, { threshold: 40, scrollClass: "fade-top" })
 
   let postElements = [];
 
@@ -97,9 +80,6 @@ export default function AllPosts() {
       );
     });
   };
-
-  // interception observers references
-  const firstPostObserver = useRef();
 
   // loads more posts (infinite scroll)
   const lastPostRef = useCallback((post) => {
@@ -156,7 +136,9 @@ export default function AllPosts() {
     <>
       {(status === "failed") && <div className="">{error}</div>}
       <div className="posts-container">
-        <div className="select-tags-container">{tagElements}</div>
+        <Draggable userRef={selectTagsRef} className="select-tags-container">
+          {tagElements}
+        </Draggable>
         <div className="posts-grid">{postElements}</div>
       </div>
       {(status === "loading") && <div className="loading-spinner">Loading more posts</div>}

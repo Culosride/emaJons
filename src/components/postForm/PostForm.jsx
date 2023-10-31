@@ -184,7 +184,8 @@ export default function PostForm() {
   };
 
   const handleTabMenu = (e) => {
-    setCurrentFormTab(e.target.dataset.value)
+    const { value } = e.target.dataset
+    value && setCurrentFormTab(value)
   }
 
   if(isSmallScreen) {
@@ -338,21 +339,22 @@ export default function PostForm() {
   }
 
   const tabMenuBtns =
-    <div className="tabMenuBtns" onClick={(e) => handleTabMenu(e)}>
-      <button
+  <div className="tabMenuBtns" onClick={(e) => handleTabMenu(e)}>
+      <Button
         type="button"
-        data-value="media"
-        className={currentFormTab === "media" ? "tabBtn active" : "tabBtn"}
+        dataValue="media"
+        className={currentFormTab === "media" ? "tab active" : "tab"}
       >
         Media
-      </button>
-      <button
+      </Button>
+      <Button
         type="button"
-        data-value="postDetails"
-        className={currentFormTab === "postDetails" ? "tabBtn active" : "tabBtn"}
+        dataValue="postDetails"
+        className={currentFormTab === "postDetails" ? "tab active" : "tab"}
       >
         Post details
-      </button>
+      </Button>
+      <div className="highlight"></div>
     </div >
 
   return (

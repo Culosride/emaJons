@@ -13,7 +13,7 @@
   }
 
   video {
-    width: 85%;
+    height: 100%;
     object-fit: contain;
   }
 }
@@ -27,7 +27,7 @@
 .slide {
   .video-container {
     height: calc(100vh - 90px);
-    display: flex;
+    // display: flex;
     align-items: center;
     justify-content: center;
   }
