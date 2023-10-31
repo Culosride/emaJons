@@ -10,10 +10,11 @@ import {
 } from "../../features/posts/postsSlice";
 import { selectTag } from "../../features/tags/tagsSlice";
 import useAuth from "../../hooks/useAuth.jsx";
-import { logout } from "../../features/auth/authSlice";
+import { logout, setModal } from "../../features/auth/authSlice";
 import DropdownNav from "../dropdownNavigation/DropdownNav";
 import Button from "../UI/Button";
 import { useScroll } from "../../hooks/useScroll";
+import Modal from "../UI/Modal";
 
 export default function Header() {
   const authorization = useAuth(false);
@@ -30,6 +31,7 @@ export default function Header() {
   const hasContent = useSelector(
     (state) => state.posts.currentPost.content?.length > 500
   );
+  const isModal = useSelector(state => state.auth.isModalOpen);
   const postsStatus = useSelector((state) => state.posts.status);
   const error = useSelector((state) => state.posts.error);
   const screenSize = useSelector((state) => state.posts.screenSize);
@@ -101,10 +103,14 @@ export default function Header() {
   };
 
   function handleDelete() {
-    console.log(currentPostId, currentCategory);
+    dispatch(setModal(true))
+  }
+
+  function confirmPostDelete() {
     dispatch(deletePost([currentPostId, currentCategory])).then(
       () => dispatch(fetchPosts()) && navigate(`/${currentCategory}`)
     );
+    dispatch(setModal(false))
   }
 
   const adminMenu = () => {
@@ -166,6 +172,15 @@ export default function Header() {
               <span className="dash"></span>
               <Link to={`/${currentCategory}`}>{currentCategory}</Link>
             </div>
+            {isModal && <Modal open={isModal}>
+              <div>
+                <p>Delete this post?</p>
+                <div className="modal-actions-container">
+                  <Button type="button" className="modal-action" onClick={() => dispatch(setModal(false))}>No</Button>
+                  <Button type="button" className="modal-action" onClick={confirmPostDelete}>Yes</Button>
+                </div>
+              </div>
+            </Modal>}
             {isAdmin && postMenu()}
           </div>
         ))}
