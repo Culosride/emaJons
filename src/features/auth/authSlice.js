@@ -3,7 +3,7 @@ import * as api from "../../API/index"
 
 const initialState = {
   token: null,
-  isModalOpen: false,
+  isModal: false,
   status: 'idle' || 'loading' || 'succeeded' || 'failed',
   error: "" || null
 }
@@ -28,7 +28,7 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     setModal: (state, action) => {
-      state.isModalOpen = action.payload
+      state.isModal = action.payload
     }
   },
   extraReducers(builder) {

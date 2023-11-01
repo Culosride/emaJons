@@ -16,7 +16,7 @@ export default function PostForm() {
   const { pathname } = useLocation();
   const selectedTags = useSelector((state) => state.tags.selectedTags);
   const currentPost = useSelector((state) => state.posts.currentPost);
-  const screenSize = useSelector((state) => state.posts.screenSize);
+  const screenSize = useSelector((state) => state.ui.screenSize);
   const status = useSelector((state) => state.posts.status);
 
   const postId = currentPost._id;
@@ -233,7 +233,7 @@ export default function PostForm() {
             />
             <textarea
               className="content"
-              rows={isSmallScreen && "2" || "6"}
+              rows="2"
               placeholder="Add content ..."
               value={postData.content}
               name="content"
@@ -306,7 +306,7 @@ export default function PostForm() {
             />
             <textarea
               className="content"
-              rows="6"
+              rows="4"
               placeholder="Add content ..."
               value={postData.content}
               name="content"

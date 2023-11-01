@@ -32,9 +32,6 @@ const tagsSlice = createSlice({
   name: 'tags',
   initialState,
   reducers: {
-    toggleNavbar: (state) => {
-      state.isExpanded = !state.isExpanded
-    },
     resetTags: (state) => {
       state.selectedTags = []
     },
@@ -100,6 +97,6 @@ const tagsSlice = createSlice({
   }
 })
 
-export const { toggleTag, selectTag, toggleNavbar, resetTags } = tagsSlice.actions
+export const { toggleTag, selectTag, resetTags } = tagsSlice.actions
 
 export default tagsSlice.reducer

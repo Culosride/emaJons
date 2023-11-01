@@ -1,7 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { toggleFullscreen, setCurrentPost, fetchPostById } from '../../features/posts/postsSlice';
+import { setCurrentPost, fetchPostById } from '../../features/posts/postsSlice';
+import { toggleFullscreen } from '../../features/UI/uiSlice';
 import Slider from '../slider/Slider';
 import useKeyPress from "../../hooks/useKeyPress";
 import Button from '../UI/Button';
@@ -15,7 +16,7 @@ export default function Post() {
   const status = useSelector(state => state.posts.status)
   const error = useSelector(state => state.posts.error)
   const category = params.category
-  const fullscreen = useSelector(state => state.posts.fullscreen)
+  const isFullscreen = useSelector(state => state.ui.isFullscreen)
   const currentCategory = useSelector(state => state.posts.currentCategory)
 
   let mediaElements = []
@@ -30,7 +31,7 @@ export default function Post() {
   }, [])
 
   const escapeFullscreen = () => {
-    if (fullscreen) {
+    if (isFullscreen) {
       dispatch(toggleFullscreen(false));
     } else {
       navigate(`/${category}`);
@@ -71,15 +72,15 @@ export default function Post() {
   }
 
   const content = post?.content && post.content.length > 500
-  const cursorColor = fullscreen ? "white" : ""
+  const cursorColor = isFullscreen ? "white" : ""
 
   return (
     post &&
       (
-        <div id={"post"} className={`post-container ${content ? "layout-50" : ""} ${fullscreen ? "layout-100 fullscreen" : ""}`}>
-          {!fullscreen && <Button className={`close ${content ? "" : "h30"}`} onClick={() => navigate(`/${currentCategory}`)} />}
+        <div id={"post"} className={`post-container ${content ? "layout-50" : ""} ${isFullscreen ? "layout-100 fullscreen" : ""}`}>
+          {!isFullscreen && <Button className={`close ${content ? "" : "h30"}`} onClick={() => navigate(`/${currentCategory}`)} />}
           {post.media && <Slider cursorColor={cursorColor} slides={post.media}/>}
-          {!fullscreen && <div className="text-container" onScroll={handleScroll} onClick={handleFullscreen}>
+          {!isFullscreen && <div className="text-container" onScroll={handleScroll} onClick={handleFullscreen}>
             <div className="description-container">
               <div ref={headlineRef} className="headline">
                 <div>

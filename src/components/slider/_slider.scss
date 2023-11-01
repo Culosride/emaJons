@@ -13,7 +13,7 @@
   }
 
   video {
-    height: 100%;
+    width: 85%;
     object-fit: contain;
   }
 }
@@ -26,8 +26,8 @@
 
 .slide {
   .video-container {
+    display: flex;
     height: calc(100vh - 90px);
-    // display: flex;
     align-items: center;
     justify-content: center;
   }
@@ -50,11 +50,25 @@
 }
 
 .slider {
-  .prev, .next, .full {
+  .prev, .next, .prev-video, .next-video {
     border: 0;
     background-color: Transparent;
     font-size: 20px;
     z-index: 5;
+    width: 20vw;
+    top: 0;
+    position: absolute;
+    height: 100vh;
+    width: 20vw;
+  }
+  .prev-video, .next-video {
+    width: 10%;
+  }
+  .prev, .prev-video {
+    left: 0;
+  }
+  .next, .next-video {
+    right: 0;
   }
 }
 
@@ -71,32 +85,6 @@
 .dot:hover, .dot-active {
   background-color: #717171;
   opacity: 1;
-}
-
-.prev, .prev-video {
-  left: 0;
-}
-
-.next, .next-video {
-  right: 0;
-}
-
-.next, .prev {
-  top: 0;
-  position: absolute;
-  height: 80vh;
-  width: 20vw;
-}
-
-.full {
-  height: 100vh;
-}
-
-.next-video, .prev-video {
-  bottom: 0;
-  position: absolute;
-  height: 10%;
-  width: 20vw;
 }
 
 .next:before, .next-video:hover {
@@ -129,4 +117,10 @@
   left: 50%;
   bottom: 3vh;
   z-index: 2;
+}
+
+@media screen and (max-width: 991px) {
+  .slider {
+    border: none;
+  }
 }

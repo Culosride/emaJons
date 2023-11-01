@@ -6,9 +6,9 @@ import {
   deletePost,
   setCurrentCategory,
   fetchPosts,
-  setScrollPosition,
 } from "../../features/posts/postsSlice";
 import { selectTag } from "../../features/tags/tagsSlice";
+import { setScrollPosition } from "../../features/UI/uiSlice";
 import useAuth from "../../hooks/useAuth.jsx";
 import { logout, setModal } from "../../features/auth/authSlice";
 import DropdownNav from "../dropdownNavigation/DropdownNav";
@@ -26,15 +26,15 @@ export default function Header() {
   const token = localStorage.getItem("access-token");
 
   let currentCategory = useSelector((state) => state.posts.currentCategory);
-  const isFullscreen = useSelector((state) => state.posts.fullscreen);
+  const isFullscreen = useSelector((state) => state.ui.isFullscreen);
   const currentPostId = useSelector((state) => state.posts.currentPost._id);
   const hasContent = useSelector(
     (state) => state.posts.currentPost.content?.length > 500
   );
-  const isModal = useSelector(state => state.auth.isModalOpen);
+  const isModal = useSelector(state => state.auth.isModal);
   const postsStatus = useSelector((state) => state.posts.status);
   const error = useSelector((state) => state.posts.error);
-  const screenSize = useSelector((state) => state.posts.screenSize);
+  const screenSize = useSelector((state) => state.ui.screenSize);
   const isSmallScreen = screenSize === "xs" || screenSize === "s";
 
   const [isExpanded, setIsExpanded] = useState(false);

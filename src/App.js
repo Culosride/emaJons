@@ -12,7 +12,7 @@ import Home from "./components/home/Home";
 import NotFound from "./components/404/NotFound";
 import withRouteValidation from "./hocs/RouteValidation";
 import RequireAuth from "./hocs/RequireAuth";
-import { setScreenSize } from "./features/posts/postsSlice";
+import { setScreenSize } from "./features/UI/uiSlice";
 import { ROLES } from "./config/roles";
 
 const AllPostsRouteValidated = withRouteValidation(AllPosts);

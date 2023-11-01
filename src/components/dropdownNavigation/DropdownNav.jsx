@@ -6,7 +6,7 @@ import Button from "../UI/Button.jsx";
 
 const DropdownNav = ({ handleNewCategory, isSmallScreen,  toggleMenu,  isExpanded }) => {
   const currentCategory = useSelector((state) => state.posts.currentCategory);
-  const screenSize = useSelector((state) => state.posts.screenSize);
+  const screenSize = useSelector((state) => state.ui.screenSize);
   const navbarRef = useRef(null);
   const linksRef = useRef([]);
 

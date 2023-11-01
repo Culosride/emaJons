@@ -36,9 +36,6 @@ const categoriesSlice = createSlice({
   name: 'categories',
   initialState,
   reducers: {
-    toggleNavbar: (state) => {
-      state.isExpanded = !state.isExpanded
-    },
     resetTags: (state) => {
       state.selectedTags = []
       state.availableTags = []
@@ -105,7 +102,7 @@ const categoriesSlice = createSlice({
   }
 })
 
-export const { toggleNavbar, } = categoriesSlice.actions
+export const { } = categoriesSlice.actions
 
 
 export default categoriesSlice.reducer

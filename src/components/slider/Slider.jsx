@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
-import { toggleFullscreen } from "../../features/posts/postsSlice";
+import { toggleFullscreen } from "../../features/UI/uiSlice";
 import useKeyPress from "../../hooks/useKeyPress";
 import Button from "../UI/Button"
 
@@ -70,11 +70,8 @@ const Slider = ({ slides, cursorColor }) => {
       ))}
       {slides.length > 1 &&
         <>
-          <Button type="button" className={isVideo ? `prev ${cursorColor}` : `prev full ${cursorColor}`} onClick={handlePrev} />
-          {isVideo && <Button type="button" className="prev-video" onClick={handlePrev} />}
-
-          <Button type="button" className={isVideo ? `next ${cursorColor}` : `next full ${cursorColor}`} onClick={handleNext} />
-          {isVideo && <Button type="button" className="next-video" onClick={handleNext} />}
+          <Button type="button" className={`${cursorColor} ${isVideo ? "prev-video" : "prev"}`} onClick={handlePrev} />
+          <Button type="button" className={`${cursorColor} ${isVideo ? "next-video" : "next"}`} onClick={handleNext} />
         </>
       }
       {slides.length &&

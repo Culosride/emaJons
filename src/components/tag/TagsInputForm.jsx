@@ -8,16 +8,18 @@ import { fetchPosts } from "../../features/posts/postsSlice";
 import { setModal } from "../../features/auth/authSlice";
 import Modal from "../UI/Modal";
 import Button from "../UI/Button";
+import useKeyPress from "../../hooks/useKeyPress";
 
 const TagsInputForm = () => {
   const dispatch = useDispatch();
   const [tag, setTag] = useState("");
-  const { pathname } = useLocation()
-  const editPage = pathname.includes("edit")
   const selectedTags = useSelector(state => state.tags.selectedTags);
   const availableTags = useSelector(state => state.tags.availableTags);
-  const isModal = useSelector(state => state.auth.isModalOpen);
+  const isModal = useSelector(state => state.auth.isModal);
   const [tagToDelete, setTagToDelete] = useState("")
+
+  useKeyPress("Tab", createNewTag)
+  useKeyPress("Escape", () => dispatch(setModal(false)))
 
   // CRUD tags
   function createNewTag(e) {
@@ -29,13 +31,6 @@ const TagsInputForm = () => {
       dispatch(addNewTag(tag))
     }
     setTag("")
-  }
-
-  function handleKeyDown(e) {
-    if(e.keyCode === 9) {
-      e.preventDefault();
-      createNewTag()
-    }
   }
 
   function handleTagDelete(tag) {
@@ -80,7 +75,6 @@ const TagsInputForm = () => {
       <span className="tags-input-form">
         <input
           type="text"
-          onKeyDown={handleKeyDown}
           value={tag}
           placeholder="Search tags or add a new tag"
           name="postTags"

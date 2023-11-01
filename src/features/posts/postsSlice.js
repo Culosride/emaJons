@@ -6,9 +6,6 @@ const initialState = {
   currentCategory: "",
   currentPost: "",
   loadMore: true,
-  screenSize: "",
-  scrollPosition: 0,
-  fullscreen: false,
   status: "idle" || "loading" || "succeeded" || "failed",
   error: "",
 };
@@ -48,9 +45,7 @@ const postsSlice = createSlice({
   name: "posts",
   initialState,
   reducers: {
-    toggleFullscreen(state, action) {
-      state.fullscreen = action.payload !== undefined ? action.payload : !state.fullscreen;
-    },
+
     setCurrentPost(state, action) {
       const currentPost = state.posts.find(post => post._id === action.payload)
       if (currentPost) {
@@ -58,25 +53,17 @@ const postsSlice = createSlice({
           ...state,
           currentPost: currentPost,
           currentCategory: currentPost.category,
-          fullscreen: false,
         };
       } else {
         return state = {
           ...state,
-          fullscreen: false,
           currentPost: "",
-          currentCategory: "",
+          currentCategor: "",
         };
       }
     },
-    setScrollPosition(state, action) {
-      state.scrollPosition = action.payload;
-    },
     setCurrentCategory(state, action) {
       state.currentCategory = action.payload;
-    },
-    setScreenSize(state, action) {
-      state.screenSize = action.payload;
     },
   },
   extraReducers(builder) {
@@ -196,10 +183,7 @@ export const {
   clearResults,
   setCurrentPost,
   setCurrentCategory,
-  setScrollPosition,
-  toggleFullscreen,
   setCurrentMedia,
-  setScreenSize,
 } = postsSlice.actions;
 
 export default postsSlice.reducer;
