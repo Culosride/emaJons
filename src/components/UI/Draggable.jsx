@@ -1,14 +1,12 @@
 import React, {useRef, useState} from 'react'
 
-export default function Draggable({ children, userRef, className }) {
+export default function Draggable({ children, userRef, isSmallScreen, className }) {
   const [dragging, setDragging] = useState(false);
   const [startX, setStartX] = useState(0);
 
-  const localRef = userRef
-
   const handleMouseDown = (e) => {
     setDragging(true);
-    setStartX(e.pageX + localRef.current.scrollLeft);
+    setStartX(e.pageX + userRef.current.scrollLeft);
   };
 
   const handleMouseUp = () => {
@@ -17,12 +15,12 @@ export default function Draggable({ children, userRef, className }) {
 
   const handleMouseMove = (e) => {
     if (!dragging) return;
-    localRef.current.scrollLeft = startX - e.pageX
+    userRef.current.scrollLeft = startX - e.pageX
   };
 
   const handleTouchStart = (e) => {
     setDragging(true);
-    setStartX(e.touches[0].pageX + localRef.current.scrollLeft);
+    setStartX(e.touches[0].pageX + userRef.current.scrollLeft);
   };
 
   const handleTouchEnd = () => {
@@ -31,13 +29,15 @@ export default function Draggable({ children, userRef, className }) {
 
   const handleTouchMove = (e) => {
     if (!dragging) return;
-    localRef.current.scrollLeft = startX - e.touches[0].pageX
+    userRef.current.scrollLeft = startX - e.touches[0].pageX
   };
+
+  const classStyle = `draggable-container ${className} ${(dragging && isSmallScreen) ? "dragging" : ""}`
 
   return (
     <div
       ref={userRef}
-      className={`draggable-container ${className} ${dragging ? "dragging" : ""}`}
+      className={classStyle}
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
       onMouseMove={handleMouseMove}

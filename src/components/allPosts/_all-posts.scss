@@ -13,20 +13,25 @@
 }
 
 .select-tags-container {
-  display: flex;
-  flex-direction: column;
   text-transform: uppercase;
   animation: fadeIn 0.5s ease-in;
   padding-bottom: 10px;
-  gap: 10px;
   position: fixed;
-  height: 100%;
   width: 170px;
   text-wrap: nowrap;
-  overflow: hidden;
   background-color: white;
 
-  p {
+  .mask {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow-x: clip;
+  }
+
+  .tag-link {
+    user-select: none;
+    word-break: break-all;
+    text-wrap: balance;
     text-decoration: none;
     color: black;
     margin: 0;
@@ -83,19 +88,29 @@
     padding: 0 30px;
     grid-auto-rows: 200px;
   }
+
+  .mask p:last-child {
+    margin-right: 18%;
+  }
   .select-tags-container {
-    flex-direction: row;
-    gap: 6px;
     position: sticky;
-    height: auto;
-    width: 100%;
-    background-color: white;
     z-index: 1;
+    width: 100%;
+    transition: top ease 0.4s;
     top: 74px;
     left: 0;
-    padding: 12px 30px;
     box-sizing: border-box;
-    transition: top ease 0.4s;
+    padding: 0;
+
+    .mask {
+      display: flex;
+      flex-direction: row;
+      background-color: white;
+      padding: 12px 30px;
+      -webkit-mask-image: linear-gradient(to right, black 75%, transparent 100%);
+      mask-image: linear-gradient(to right, black 75%, transparent 100%);
+      overflow: hidden;
+    }
 
     .tag-active {
       text-wrap: nowrap;
@@ -106,18 +121,18 @@
       justify-content: flex-start;
       margin-top: 0;
     }
-    p {
+
+    .tag-link {
+      text-wrap: nowrap;
       margin-right: 20px;
       padding: 10px 0;
     }
-  }
-  .tag-link {
-    user-select: none;
   }
 
   .select-tags-container.fade-top {
     top: 0;
   }
+
 }
 
 @media screen and (max-width: 599px) {

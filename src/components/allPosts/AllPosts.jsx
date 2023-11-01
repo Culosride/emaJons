@@ -21,6 +21,8 @@ export default function AllPosts() {
   const hasMorePosts = useSelector((state) => state.posts.loadMore);
   const scrollPosition = useSelector((state) => state.ui.scrollPosition);
   const activeTag = useSelector(state => state.tags.activeTag)
+  const screenSize = useSelector((state) => state.ui.screenSize);
+  const isSmallScreen = screenSize === "xs" || screenSize === "s";
 
   const postsByCategory = posts.filter(post => post.category === _.capitalize(currentCategory));
   const [filteredPosts, setFilteredPosts] = useState(postsByCategory);
@@ -29,7 +31,8 @@ export default function AllPosts() {
   const sortedTags = [...new Set(allTags.sort((a, b) => b.localeCompare(a)))];
 
   const firstPostObserver = useRef();
-  const selectTagsRef = useRef()
+  const maskTagsRef = useRef()
+  const tagsContainerRef = useRef()
 
   const { setPageNum } = usePosts(currentCategory);
 
@@ -38,7 +41,7 @@ export default function AllPosts() {
     window.scrollTo(0, scrollPosition)
   }, [])
 
-  useScroll(selectTagsRef, _, { threshold: 40, scrollClass: "fade-top" })
+  useScroll(tagsContainerRef, _, { threshold: 40, scrollClass: "fade-top" })
 
   let postElements = [];
 
@@ -137,9 +140,11 @@ export default function AllPosts() {
     <>
       {(status === "failed") && <div className="">{error}</div>}
       <div className="posts-container">
-        <Draggable userRef={selectTagsRef} className="select-tags-container">
-          {tagElements}
-        </Draggable>
+        <div ref={tagsContainerRef} className="select-tags-container">
+          <Draggable isSmallScreen={isSmallScreen} userRef={maskTagsRef} className="mask">
+            {tagElements}
+          </Draggable>
+        </div>
         <div className="posts-grid">{postElements}</div>
       </div>
       {(status === "loading") && <div className="loading-spinner">Loading more posts</div>}
