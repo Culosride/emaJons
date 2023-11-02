@@ -7,6 +7,7 @@ const usePosts = (category) => {
   const [pageNum, setPageNum] = useState(1)
 
   useEffect(() => {
+
     const controller = new AbortController()
     const { signal } = controller
     dispatch(fetchPostsByCategory([category, pageNum], { signal }))

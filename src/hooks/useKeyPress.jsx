@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useSelector } from "react-redux";
 
 const useKeyPress = (targetKey, cb) => {
-  const isModal = useSelector(state => state.auth.isModal)
+  const isModal = useSelector(state => state.ui.isModal)
 
   useEffect(() => {
     const handleKeyDown = (e) => {

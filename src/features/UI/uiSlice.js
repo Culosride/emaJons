@@ -4,6 +4,7 @@ const initialState = {
   screenSize: "",
   scrollPosition: 0,
   isFullscreen: false,
+  isModal: false,
   status: 'idle' || 'loading' || 'succeeded' || 'failed',
   error: "" || null
 }
@@ -21,6 +22,9 @@ const uiSlice = createSlice({
     toggleFullscreen(state, action) {
       state.isFullscreen = action.payload !== undefined ? action.payload : !state.isFullscreen;
     },
+    setModal: (state, action) => {
+      state.isModal = action.payload
+    }
   }
 })
 
@@ -28,7 +32,7 @@ export const {
   setScreenSize,
   setScrollPosition,
   toggleFullscreen,
-
+  setModal
 } = uiSlice.actions
 
 export default uiSlice.reducer

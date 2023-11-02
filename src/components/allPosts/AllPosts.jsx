@@ -99,9 +99,23 @@ export default function AllPosts() {
       if (post) firstPostObserver.current.observe(post);
   }, [status, hasMorePosts, activeTag]);
 
+  const centerTag = (e) => {
+    const container = maskTagsRef.current;
+    const element = e.target;
+    const containerCenter = container.clientWidth / 2;
+    const elementWidth = element.clientWidth;
+    const elementRight = element.getBoundingClientRect().right;
+    const elementCenterfromLeft = elementRight - (elementWidth / 2)
+
+    const newScrollLeft =
+    container.scrollLeft + elementCenterfromLeft - containerCenter;
+
+    container.scrollLeft = newScrollLeft;
+  }
+
   // filter posts on tag click
   const handleSelectTag = (e) => {
-    e.preventDefault();
+    isSmallScreen && centerTag(e)
     const selectedTag = e.target.getAttribute("data-value");
 
     if (activeTag === selectedTag) {
@@ -124,7 +138,7 @@ export default function AllPosts() {
       data-value={tag}
       className={`tag-link ${activeTag === tag ? "tag-active" : ""}`}
       key={i}
-      onClick={handleSelectTag}
+      onMouseUp={handleSelectTag}
       id={i}
     >
       {tag}

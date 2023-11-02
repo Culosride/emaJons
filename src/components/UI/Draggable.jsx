@@ -1,38 +1,49 @@
 import React, {useRef, useState} from 'react'
 
 export default function Draggable({ children, userRef, isSmallScreen, className }) {
-  const [dragging, setDragging] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startDragging, setStartDragging] = useState(false)
   const [startX, setStartX] = useState(0);
 
+  //--- mouse events ---//
   const handleMouseDown = (e) => {
-    setDragging(true);
+    setStartDragging(true)
     setStartX(e.pageX + userRef.current.scrollLeft);
   };
 
-  const handleMouseUp = () => {
-    setDragging(false);
-  };
-
   const handleMouseMove = (e) => {
-    if (!dragging) return;
+    if (!startDragging) return;
+
+    const movementX = e.pageX - (startX - userRef.current.scrollLeft);
+    if (Math.abs(movementX) > 5 && startDragging) setIsDragging(true)
     userRef.current.scrollLeft = startX - e.pageX
   };
 
+  const handleMouseUp = () => {
+    setStartDragging(false)
+    setIsDragging(false);
+  };
+
+  //--- touch events ---//
   const handleTouchStart = (e) => {
-    setDragging(true);
+    setStartDragging(true)
     setStartX(e.touches[0].pageX + userRef.current.scrollLeft);
   };
 
-  const handleTouchEnd = () => {
-    setDragging(false);
-  };
-
   const handleTouchMove = (e) => {
-    if (!dragging) return;
+    if (!startDragging) return;
+    const movementX = e.touches[0].pageX - (startX - userRef.current.scrollLeft);
+    if (Math.abs(movementX) > 5 && startDragging) setIsDragging(true)
     userRef.current.scrollLeft = startX - e.touches[0].pageX
   };
 
-  const classStyle = `draggable-container ${className} ${(dragging && isSmallScreen) ? "dragging" : ""}`
+  const handleTouchEnd = () => {
+    setStartDragging(false)
+    setIsDragging(false);
+  };
+
+
+  const classStyle = `draggable-container ${className} ${(isDragging && isSmallScreen) ? "dragging" : ""}`
 
   return (
     <div
@@ -41,11 +52,11 @@ export default function Draggable({ children, userRef, isSmallScreen, className 
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
       onMouseMove={handleMouseMove}
-      onMouseLeave={() => setDragging(false)}
+      onMouseLeave={() => setStartDragging(false)}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
       onTouchMove={handleTouchMove}
-      onTouchCancel={() => setDragging(false)}
+      onTouchCancel={() => setStartDragging(false)}
     >
       {children}
     </div>

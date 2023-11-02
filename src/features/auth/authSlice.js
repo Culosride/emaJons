@@ -3,7 +3,6 @@ import * as api from "../../API/index"
 
 const initialState = {
   token: null,
-  isModal: false,
   status: 'idle' || 'loading' || 'succeeded' || 'failed',
   error: "" || null
 }
@@ -26,11 +25,7 @@ export const checkPath = createAsyncThunk("/auth/validate-path", async (path) =>
 const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {
-    setModal: (state, action) => {
-      state.isModal = action.payload
-    }
-  },
+  reducers: { },
   extraReducers(builder) {
     builder
       .addCase(checkPath.pending, (state) => {
@@ -70,7 +65,7 @@ const authSlice = createSlice({
   }
 })
 
-export const { setModal } = authSlice.actions
+export const { } = authSlice.actions
 
 export default authSlice.reducer
 

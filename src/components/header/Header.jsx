@@ -8,9 +8,9 @@ import {
   fetchPosts,
 } from "../../features/posts/postsSlice";
 import { selectTag } from "../../features/tags/tagsSlice";
-import { setScrollPosition } from "../../features/UI/uiSlice";
+import { setModal, setScrollPosition } from "../../features/UI/uiSlice";
 import useAuth from "../../hooks/useAuth.jsx";
-import { logout, setModal } from "../../features/auth/authSlice";
+import { logout } from "../../features/auth/authSlice";
 import DropdownNav from "../dropdownNavigation/DropdownNav";
 import Button from "../UI/Button";
 import { useScroll } from "../../hooks/useScroll";
@@ -31,7 +31,7 @@ export default function Header() {
   const hasContent = useSelector(
     (state) => state.posts.currentPost.content?.length > 500
   );
-  const isModal = useSelector(state => state.auth.isModal);
+  const isModal = useSelector(state => state.ui.isModal);
   const postsStatus = useSelector((state) => state.posts.status);
   const error = useSelector((state) => state.posts.error);
   const screenSize = useSelector((state) => state.ui.screenSize);

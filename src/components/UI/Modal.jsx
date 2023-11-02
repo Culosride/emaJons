@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { useDispatch } from "react-redux";
-import { setModal } from "../../features/auth/authSlice";
+import { setModal } from "../../features/UI/uiSlice";
 
 const modalRoot = document.getElementById("modal");
 

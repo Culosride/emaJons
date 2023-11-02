@@ -1,11 +1,9 @@
-import React, { useState, useEffect, useRef } from "react";
-import { useLocation } from 'react-router-dom';
+import React, { useState } from "react";
 import Tag from "../tag/Tag";
-// import { deleteTag, fetchAllTags, addNewTag, toggleTag, resetTags } from "../../features/tags/tagsSlice"
-import { deleteTag, fetchAllTags, addNewTag, toggleTag, resetTags } from "../../features/tags/tagsSlice";
+import { deleteTag, addNewTag, toggleTag } from "../../features/tags/tagsSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchPosts } from "../../features/posts/postsSlice";
-import { setModal } from "../../features/auth/authSlice";
+import { setModal } from "../../features/UI/uiSlice";
 import Modal from "../UI/Modal";
 import Button from "../UI/Button";
 import useKeyPress from "../../hooks/useKeyPress";
@@ -15,7 +13,7 @@ const TagsInputForm = () => {
   const [tag, setTag] = useState("");
   const selectedTags = useSelector(state => state.tags.selectedTags);
   const availableTags = useSelector(state => state.tags.availableTags);
-  const isModal = useSelector(state => state.auth.isModal);
+  const isModal = useSelector(state => state.ui.isModal);
   const [tagToDelete, setTagToDelete] = useState("")
 
   useKeyPress("Tab", createNewTag)
