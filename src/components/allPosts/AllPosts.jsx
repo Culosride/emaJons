@@ -115,6 +115,8 @@ export default function AllPosts() {
 
   // filter posts on tag click
   const handleSelectTag = (e) => {
+    window.scrollTo(0, 0)
+
     isSmallScreen && centerTag(e)
     const selectedTag = e.target.getAttribute("data-value");
 
@@ -153,14 +155,14 @@ export default function AllPosts() {
   return (
     <>
       {(status === "failed") && <div className="">{error}</div>}
-      <div className="posts-container">
+      <main className="posts-container">
         <div ref={tagsContainerRef} className="select-tags-container">
           <Draggable isSmallScreen={isSmallScreen} userRef={maskTagsRef} className="mask">
             {tagElements}
           </Draggable>
         </div>
         <div className="posts-grid">{postElements}</div>
-      </div>
+      </main>
       {(status === "loading") && <div className="loading-spinner">Loading more posts</div>}
     </>
   )

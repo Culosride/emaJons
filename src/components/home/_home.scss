@@ -1,7 +1,5 @@
 .home {
   font-family: $main-font;
-  font-size: 36px;
-  font-weight: bold;
   width: 100vw;
   height: 100vh;
   display: flex;
@@ -9,35 +7,134 @@
   align-items: center;
   padding: 30px 40px;
   box-sizing: border-box;
+  background-image: url("/images/IMG_1756.jpg");
   background-size: cover;
   background-position: 50% 50%;
   background-repeat: no-repeat;
 
-  .logo {
-    font-size: 36px;
+  .logo-home {
     position: absolute;
     left: 10vw;
   }
-  ul {
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-    right: 15%;
-    height: 75vh;
-    max-height: 480px;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 16px;
+
+  &--primary {
+    @extend .nav;
+    .nav__link {
+      color: #8f8f8f;
+      transition: all 0.2s ease;
+    }
   }
-  li {
+
+  &--secondary {
+    @extend .nav;
+    justify-content: space-around;
+    height: 70vh;
+    max-height: 480px;
+    gap: 0px;
+
+    .nav__menu {
+      flex-direction: column;
+      gap: 0;
+    }
+  }
+  &__menu {
+    display: flex;
+    margin: 0;
+    padding: 0;
+    gap: 16px;
+    height: 100%;
+  }
+
+  &__item {
     flex: 1;
     list-style-type: none;
     display: flex;
     align-items: center;
     align-self: flex-end;
   }
-  a {
-    color: rgb(32, 32, 32);
+
+  &__link,
+  &__logo {
     text-decoration: none;
     text-transform: uppercase;
-    position: relative;
+    color: black;
+    font-weight: bold;
+    &--small {
+      font-size: 24px;
+    }
+    &--large {
+      font-size: 40px;
+    }
+    &--huge {
+      font-size: 48px;
+    }
+    &.is-active {
+      color: black;
+      pointer-events: none;
+    }
+  }
+
+  &__divider {
+    // margin: 0 4px;
+    height: 20px;
+    width: 1px;
+    display: inline-block;
+    transform: rotate(20deg);
+    background-color: black;
+  }
+}
+
+.nav-main__dropdown {
+  display: none;
+
+  &--show {
+    display: flex;
+    position: absolute;
+    top: 74px;
+    flex-direction: column;
+    left: 0;
+    margin: 0;
+    width: 100%;
+
+    .nav__item--category {
+      transition: left 0.5s ease;
+      position: relative;
+      border-bottom: 1px solid black;
+      padding: 12px 32px;
+      width: 100%;
+      box-sizing: border-box;
+      left: -150%;
+      background-color: white;
+    }
+    .nav__item--category.show {
+      left: 0;
+    }
+  }
+}
+
+///////////////////////////////////// nav-alt //////////////////////////////////
+.nav-alt {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 70vh;
+  max-height: 480px;
+  width: 100%;
+  gap: 0px;
+
+  &__menu {
+    display: flex;
+    margin: 0;
+    padding: 0;
+    flex-direction: column;
+    height: 100%;
   }
 }
 
@@ -47,7 +144,7 @@
 
 @media screen and (max-width: 991px) {
   .home {
-    ul{
+    ul {
       right: 8%;
     }
   }

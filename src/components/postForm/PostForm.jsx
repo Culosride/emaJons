@@ -37,7 +37,7 @@ export default function PostForm() {
   const isLoading = status === "loading"
   const isSmallScreen = screenSize === "s" || screenSize === "xs"
 
-  const btnStyles = isLoading ? "submit disabled" : "submit";
+  const btnStyles = isLoading ? "btn-submit disabled" : "btn-submit";
   const submitBtnValue =
     (isLoading && "Submitting...") ||
     (!isLoading && isEditPage ? "Save changes" : "Create new post");
@@ -86,7 +86,7 @@ export default function PostForm() {
             {file.type === "video/mp4"
               ? <video src={src} controls></video>
               : <img src={src} />}
-            <i id={file[mediaKey]} onClick={deleteMedia}></i>
+            <span id={file[mediaKey]} className="icon" onClick={deleteMedia}></span>
           </div>
         );
       })
@@ -348,14 +348,14 @@ export default function PostForm() {
       <Button
         type="button"
         dataValue="media"
-        className={currentFormTab === "media" ? "tab active" : "tab"}
+        className={currentFormTab === "media" ? "btn-tab active" : "btn-tab"}
       >
         Media
       </Button>
       <Button
         type="button"
         dataValue="postDetails"
-        className={currentFormTab === "postDetails" ? "tab active" : "tab"}
+        className={currentFormTab === "postDetails" ? "btn-tab active" : "btn-tab"}
       >
         Post details
       </Button>

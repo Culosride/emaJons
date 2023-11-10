@@ -3,36 +3,29 @@ import { Link } from "react-router-dom";
 import { CATEGORIES } from "../../config/categories";
 
 const Home = () => {
-  const bgImgURL = "/images/IMG_1756.jpg"
-  const categories = CATEGORIES.concat(["About", "Contact"]);
+  const navLinks = CATEGORIES.concat(["About", "Contact"]);
 
-  const navElements = categories.map((category, i) => {
+  const navElements = navLinks.map((category, i) => {
     return (
-      <li key={i}>
-        <Link to={`${category}`}>
-          <div className="italic">{_.capitalize(category)}</div>
+      <li key={i} className="nav__item">
+        <Link className="nav__link nav__link--large" to={`${category}`}>
+          {_.capitalize(category)}
         </Link>
       </li>
     );
   });
 
   return (
-    <div className="home" style={{ backgroundImage: `url(${bgImgURL})` }}>
-      <div className="logo">
-        <Link to={"/about"}>EmaJons</Link>
-      </div>
-      <ul className="categories-list">
-        {navElements}
-        {/* <li>
-          <a
-            target="_blank"
-            href="https://drive.google.com/file/d/1KBPbeJ0qBVJwroJOFP5IcpmB2yLfuPuu/view?usp=share_link"
-            download="portfolio.pdf"
-          >
-            Portfolio
-          </a>
-        </li> */}
-      </ul>
+    <div className="home">
+      <nav className="nav-main nav-main--secondary">
+
+        <Link className="nav__logo nav__logo--huge" to={"/about"}>EmaJons</Link>
+
+        <ul className="nav__menu">
+          {navElements}
+        </ul>
+
+      </nav>
     </div>
   );
 };

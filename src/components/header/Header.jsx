@@ -117,15 +117,21 @@ export default function Header() {
     if (isAdmin) {
       return (
         <>
-          <Button type="button" className="kebab-menu medium" onClick={toggleAdminMenu}/>
+          <Button type="button" className="header__btn--kebabMenu medium" onClick={toggleAdminMenu}>
+            <span className="icon icon-kebab"></span>
+          </Button>
           <div ref={adminMenuRef} className="admin-menu">
-            <Link onClick={menuOff} className="new-post" to={"/posts/new"} />
-            <Button className="logout" title="Logout" onClick={handleLogout} />
+            <Link onClick={menuOff} className="nav-link" to={"/posts/new"}>
+              <span className="icon new-post"></span>
+            </Link>/
+            <Button className="btn" title="Logout" onClick={handleLogout}>
+              <span className="icon logout"></span>
+            </Button>
           </div>
         </>
       );
     } else {
-      return <Link to={"/login"} onClick={handleLogin} className="login" title="Login" />
+      return <Link to={"/login"} onClick={handleLogin} className="icon-login" title="Login" />
     }
   };
 
@@ -144,34 +150,35 @@ export default function Header() {
   return (
     <>
       {(!post && (
-        <div ref={headerRef} className="header-100">
-          <div ref={logoAndCategoryRef} className="logo-wrapper">
-            <Link onClick={menuOff} to="/" className="logo">
+        <header ref={headerRef} className="header--100">
+          <nav ref={logoAndCategoryRef} className="nav-main">
+            <Link onClick={menuOff} to="/" className="nav-main__logo nav-main__logo--small">
               EmaJons
             </Link>
-            <span className="dash"></span>
-            {isSmallScreen && <div className="logo">{currentCategory}</div>}
+            <span className="nav-main__divider"></span>
+            {isSmallScreen && <span className="nav-main__link nav-main__link--small is-active">{currentCategory}</span>}
             <DropdownNav
               isSmallScreen={isSmallScreen}
               isExpanded={isExpanded}
               toggleMenu={toggleMenu}
               handleNewCategory={handleNewCategory}
             />
-          </div>
+          </nav>
           {adminMenu()}
-        </div>
+        </header>
       )) ||
         (post && !isFullscreen && (
-          <div
+          <header
+            ref={headerRef}
             className={`${hasContent ? "header-50" : "header-30 header-50"}`}
           >
-            <div ref={logoAndCategoryRef} className="logo-wrapper">
-              <Link onClick={menuOff} to="/" className="logo">
+            <nav ref={logoAndCategoryRef} className="header__nav">
+              <Link onClick={menuOff} to="/" className="nav-main__logo nav-main__logo--small">
                 EmaJons
               </Link>
-              <span className="dash"></span>
+              <span className="nav-main__divider"></span>
               <Link to={`/${currentCategory}`}>{currentCategory}</Link>
-            </div>
+            </nav>
             {isModal && <Modal open={isModal}>
               <div>
                 <p>Delete this post?</p>
@@ -182,7 +189,7 @@ export default function Header() {
               </div>
             </Modal>}
             {isAdmin && postMenu()}
-          </div>
+          </header>
         ))}
     </>
   );

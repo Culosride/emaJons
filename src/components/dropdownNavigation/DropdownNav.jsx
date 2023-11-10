@@ -12,9 +12,6 @@ const DropdownNav = ({ handleNewCategory, isSmallScreen,  toggleMenu,  isExpande
 
   useEffect(() => {
     const handleExpanded = () => {
-      isExpanded && navbarRef.current.classList.add("show");
-      !isExpanded && navbarRef.current.classList.remove("show");
-
       linksRef.current.forEach((link, index) => {
         setTimeout(() => {
           (isExpanded && link?.classList.add("show")) ||
@@ -26,29 +23,34 @@ const DropdownNav = ({ handleNewCategory, isSmallScreen,  toggleMenu,  isExpande
     handleExpanded();
   }, [isExpanded, screenSize]);
 
+  const navbarClass = `${isSmallScreen ? "nav-main__menu nav-main__dropdown" : "nav-main__menu"}${isExpanded && isSmallScreen ? "--show" : ""}`
+
   const navElements = () =>
     CATEGORIES.map((category, i) => {
       const isCurrentCategory = currentCategory === category;
 
       if ((isSmallScreen && !isCurrentCategory) || !isSmallScreen) {
         return (
-          <Link
-            onClick={() => handleNewCategory(category)}
-            key={i} ref={(el) => (linksRef.current[i] = el)}
-            className={isCurrentCategory ? "category-link nav-link active" : "category-link nav-link"}
-            to={`/${category}`}
-          >
-            {_.capitalize(category)}
-          </Link>
+          <li key={i} ref={(el) => (linksRef.current[i] = el)} className="nav-main__item">
+            <Link
+              onClick={() => handleNewCategory(category)}
+              className={isCurrentCategory ? "nav-main__link nav-main__link--small is-active" : "nav-main__link nav-main__link--small"}
+              to={`/${category}`}
+            >
+              {_.capitalize(category)}
+            </Link>
+          </li>
         );
       }
     });
 
   return (
     <>
-      {isSmallScreen && <Button className={isExpanded ? "dropdown active" : "dropdown"} onClick={toggleMenu}/>}
+      {isSmallScreen && <Button className={isExpanded ? "dropdown active" : "dropdown"} onClick={toggleMenu}>
+        <span className="icon icon--dropdown"></span>
+        </Button>}
       {
-        <ul ref={navbarRef} className={isSmallScreen ? "navigation dropdown-menu" : "navigation"}>
+        <ul ref={navbarRef} className={navbarClass}>
           {navElements()}
         </ul>
       }

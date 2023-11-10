@@ -77,7 +77,7 @@ function Login() {
             value={userInfo.password}
             required
         />
-          <Button type="submit" className="sign-in">Sign In</Button>
+          <Button type="btn-submit" className="btn-sign-in">Sign In</Button>
       </form>
     </div>
   )

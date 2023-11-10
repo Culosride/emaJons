@@ -1,83 +1,19 @@
-.navigation {
-  padding-left: 0;
-  gap: 16px;
-  margin-right: 16px;
-  display: flex;
-  align-items: center;
-  a.nav-link {
-    color: #8f8f8f;
-  }
-  a.nav-link.active {
-    color: black;
-  }
-}
-
-.dropdown-icon {
-  background-image: url("../icons/Dropdown.svg");
-  background-size: contain;
-  width: 20px;
-  background-repeat: no-repeat;
-  height: 100%;
-  background-position: center;
-  display: block;
-  transition: 0.3s ease-out;
-}
-.dropdown-icon.active {
-  transform: rotate(-180deg);
-}
-
-.dropdown-menu {
-  position: absolute;
-  top: 74px;
-  display: none;
-  flex-direction: column;
-  left: 0;
-  margin: 0;
-  width: 100%;
-
-  .category-link {
-    transition: left 0.5s ease;
-    position: relative;
-    border-bottom: 1px solid black;
-    padding: 12px 32px;
-    width: 100%;
-    box-sizing: border-box;
-    left: -150%;
-    background-color: white;
-  }
-}
-
- .category-link.show {
-  left: 0;
-}
-
-.dropdown-menu.show {
-  display: flex;
-  .category-link {
-    cursor: pointer;
-  }
-  .category-link:hover {
-      color: black;
-      transition: color ease-in-out .25s;
-  }
-}
-
 @media screen and (max-width: 991px) {
-  .header-100 .navigation {
+  .header--100 .nav {
     gap: 8px;
     margin-right: 8px;
   }
 }
 
 @media screen and (max-width: 767px) {
-  .header-100 .navigation {
+  .header--100 .nav {
     gap: 0;
     margin-right: 0;
   }
 }
 
 @media screen and (max-width: 599px) {
-  .nav-link {
+  .link {
     font-size: 18px;
   }
 }
