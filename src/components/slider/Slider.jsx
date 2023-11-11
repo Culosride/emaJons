@@ -1,15 +1,20 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toggleFullscreen } from "../../features/UI/uiSlice";
 import useKeyPress from "../../hooks/useKeyPress";
 import Button from "../UI/Button"
+import { useNavigate } from "react-router-dom";
 
-const Slider = ({ slides, cursorColor }) => {
+const Slider = ({ slides, cursorColor, content }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const isVideo = slides[currentSlide].mediaType === "video"
   const dispatch = useDispatch()
   const [isTransitioning, setIsTransitioning] = useState(false);
   const videoRefs = slides.map(() => useRef(null)); // Create a ref for each video
+  const isFullscreen = useSelector(state => state.ui.isFullscreen)
+  const currentCategory = useSelector(state => state.posts.currentCategory)
+
+  const navigate = useNavigate()
 
   useEffect(() => {
     if(isVideo) dispatch(toggleFullscreen(false))
@@ -56,6 +61,9 @@ const Slider = ({ slides, cursorColor }) => {
 
   return (
     <div className="slider">
+      {!isFullscreen && <Button className={`btn--close ${content ? "" : "h30"}`} onClick={() => navigate(`/${currentCategory}`)}>
+        <span className={"icon icon--close"}></span>
+      </Button>}
       {slides.map((slide, index) => (
         <div key={index} className={`slide ${index === currentSlide ? "active" : ""}`} style={{ zIndex: index === currentSlide ? 1 : 0 }}>
           {slide.mediaType === "video" ?

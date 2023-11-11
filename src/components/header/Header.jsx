@@ -35,7 +35,9 @@ export default function Header() {
   const postsStatus = useSelector((state) => state.posts.status);
   const error = useSelector((state) => state.posts.error);
   const screenSize = useSelector((state) => state.ui.screenSize);
+
   const isSmallScreen = screenSize === "xs" || screenSize === "s";
+  const isMediumScreen = screenSize === "xs" || screenSize === "s" || screenSize === "m";
 
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -49,12 +51,12 @@ export default function Header() {
 
   useEffect(() => {
     setIsExpanded(false);
-    adminMenuRef.current?.classList.remove("active")
+    adminMenuRef.current?.classList.remove("is-active")
   }, [pathname, screenSize]);
 
   const menuOff = () => {
     setIsExpanded(false);
-    adminMenuRef.current?.classList.remove("active")
+    adminMenuRef.current?.classList.remove("is-active")
   };
 
   useScroll(headerRef, menuOff, { threshold: 40, scrollClass: "fade-top" })
@@ -85,17 +87,17 @@ export default function Header() {
   };
 
   const toggleAdminMenu = () => {
-    if(adminMenuRef.current?.className.includes("active")) {
-      adminMenuRef.current?.classList.remove("active")
+    if(adminMenuRef.current?.className.includes("is-active")) {
+      adminMenuRef.current?.classList.remove("is-active")
     } else {
-      adminMenuRef.current?.classList.add("active")
+      adminMenuRef.current?.classList.add("is-active")
       setIsExpanded(false)
     }
   };
 
   const toggleMenu = () => {
     setIsExpanded(!isExpanded)
-    adminMenuRef.current?.classList.remove("active")
+    adminMenuRef.current?.classList.remove("is-active")
   };
 
   const handleLogin = () => {
@@ -117,28 +119,32 @@ export default function Header() {
     if (isAdmin) {
       return (
         <>
-          <Button type="button" className="header__btn--kebabMenu medium" onClick={toggleAdminMenu}>
-            <span className="icon icon-kebab"></span>
-          </Button>
+          {isMediumScreen && <Button type="button" className="btn--kebab medium" onClick={toggleAdminMenu}>
+            <span className="icon icon--kebab"></span>
+          </Button>}
           <div ref={adminMenuRef} className="admin-menu">
-            <Link onClick={menuOff} className="nav-link" to={"/posts/new"}>
-              <span className="icon new-post"></span>
-            </Link>/
-            <Button className="btn" title="Logout" onClick={handleLogout}>
-              <span className="icon logout"></span>
+            <Link onClick={menuOff} className="nav-main__link" to={"/posts/new"}>
+              <span className="icon icon--new-post"></span>
+            </Link>
+            <Button className="btn--logout" title="Logout" onClick={handleLogout}>
+              <span className="icon icon--logout"></span>
             </Button>
           </div>
         </>
       );
     } else {
-      return <Link to={"/login"} onClick={handleLogin} className="icon-login" title="Login" />
+      return (
+        <Link to={"/login"} onClick={handleLogin} className="nav-main__link" title="Login">
+          <span className="icon icon--login"></span>
+        </Link>
+      )
     }
   };
 
   const postMenu = () => {
     return (
       <>
-        {<Button type="button" className="kebab-menu medium" onClick={toggleAdminMenu}/>}
+        {<Button type="button" className="btn--kebab medium" onClick={toggleAdminMenu}/>}
         <div ref={adminMenuRef} className="admin-menu">
           <Button type="button" className="delete" onClick={handleDelete} />
           <Link onClick={menuOff} className="edit" to={`/posts/${currentPostId}/edit`} />
@@ -150,15 +156,14 @@ export default function Header() {
   return (
     <>
       {(!post && (
-        <header ref={headerRef} className="header--100">
+        <header ref={headerRef} className="header header--100">
           <nav ref={logoAndCategoryRef} className="nav-main">
             <Link onClick={menuOff} to="/" className="nav-main__logo nav-main__logo--small">
               EmaJons
             </Link>
             <span className="nav-main__divider"></span>
-            {isSmallScreen && <span className="nav-main__link nav-main__link--small is-active">{currentCategory}</span>}
+            {isMediumScreen && <Link className="nav-main__link nav-main__link--small is-active">{currentCategory}</Link>}
             <DropdownNav
-              isSmallScreen={isSmallScreen}
               isExpanded={isExpanded}
               toggleMenu={toggleMenu}
               handleNewCategory={handleNewCategory}
@@ -170,14 +175,14 @@ export default function Header() {
         (post && !isFullscreen && (
           <header
             ref={headerRef}
-            className={`${hasContent ? "header-50" : "header-30 header-50"}`}
+            className={`header ${hasContent ? "header--50" : "header--30 header--50"}`}
           >
-            <nav ref={logoAndCategoryRef} className="header__nav">
+            <nav ref={logoAndCategoryRef} className="nav-main">
               <Link onClick={menuOff} to="/" className="nav-main__logo nav-main__logo--small">
                 EmaJons
               </Link>
               <span className="nav-main__divider"></span>
-              <Link to={`/${currentCategory}`}>{currentCategory}</Link>
+              <Link className="nav-main__link nav-main__link--small is-active">{currentCategory}</Link>
             </nav>
             {isModal && <Modal open={isModal}>
               <div>

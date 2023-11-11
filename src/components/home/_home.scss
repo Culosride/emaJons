@@ -91,34 +91,6 @@
   }
 }
 
-.nav-main__dropdown {
-  display: none;
-
-  &--show {
-    display: flex;
-    position: absolute;
-    top: 74px;
-    flex-direction: column;
-    left: 0;
-    margin: 0;
-    width: 100%;
-
-    .nav__item--category {
-      transition: left 0.5s ease;
-      position: relative;
-      border-bottom: 1px solid black;
-      padding: 12px 32px;
-      width: 100%;
-      box-sizing: border-box;
-      left: -150%;
-      background-color: white;
-    }
-    .nav__item--category.show {
-      left: 0;
-    }
-  }
-}
-
 ///////////////////////////////////// nav-alt //////////////////////////////////
 .nav-alt {
   display: flex;
@@ -136,10 +108,6 @@
     flex-direction: column;
     height: 100%;
   }
-}
-
-.italic:hover {
-  text-shadow: 0 0 6px rgb(255, 255, 255, 0.5);
 }
 
 @media screen and (max-width: 991px) {

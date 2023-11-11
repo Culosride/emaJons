@@ -21,9 +21,9 @@ const Home = () => {
 
         <Link className="nav__logo nav__logo--huge" to={"/about"}>EmaJons</Link>
 
-        <ul className="nav__menu">
+        <menu className="nav__menu">
           {navElements}
-        </ul>
+        </menu>
 
       </nav>
     </div>

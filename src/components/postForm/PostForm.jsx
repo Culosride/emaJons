@@ -37,7 +37,7 @@ export default function PostForm() {
   const isLoading = status === "loading"
   const isSmallScreen = screenSize === "s" || screenSize === "xs"
 
-  const btnStyles = isLoading ? "btn-submit disabled" : "btn-submit";
+  const btnStyles = isLoading ? "btn--submit disabled" : "btn--submit";
   const submitBtnValue =
     (isLoading && "Submitting...") ||
     (!isLoading && isEditPage ? "Save changes" : "Create new post");
@@ -363,7 +363,7 @@ export default function PostForm() {
     </div >
 
   return (
-    <div className="form-wrapper">
+    <main className="form-wrapper">
       {isSmallScreen && tabMenuBtns}
       <form
         className="post-form"
@@ -371,6 +371,6 @@ export default function PostForm() {
       >
         {content}
       </form>
-    </div>
+    </main>
   );
 }

@@ -4,7 +4,43 @@
   cursor: pointer;
   padding: 0px;
   border: none;
-  height: 80%;
+  height: 100%;
+  // width: fit-content;
+
+  &--logout {
+    width: 100%;
+  }
+
+  &--dropdown {
+    height: 48px;
+  }
+  &--kebab {
+    @media (min-width: 992px) {
+      scale: 0;
+    }
+  }
+  &--submit {
+    background-color: rgb(200, 200, 200);
+    font-size: 24px;
+    height: auto;
+    width: 100%;
+    padding: 4px;
+  }
+  &--close {
+    right: 50px;
+    position: absolute;
+    top: 80px;
+    z-index: 6;
+    height: $icon-height;
+
+    &.h30 {
+      right: calc(26vw + 20px);
+
+      @media (max-width: 991px) {
+        right: 50px;
+      }
+    }
+  }
 
   &.disabled {
     pointer-events: none;
@@ -22,86 +58,142 @@
   border: none;
   padding: 0;
 
-  &.disabled {
-    pointer-events: none;
+  &--dropdown {
+    background-image: url("../icons/Dropdown.svg");
+    background-repeat: no-repeat;
+    background-position: center;
+    display: block;
+    transition: 0.3s ease-out;
+
+    &.is-active {
+      transform: rotate(-180deg);
+    }
   }
+
+  &--kebab {
+    background-image: url("../icons/KebabMenu.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    transition: 0.3s ease-out;
+
+    &.medium {
+      height: 50%;
+      scale: 1;
+    }
+  }
+
+  &--sign-in {
+    font-size: 16px;
+    padding: 6px;
+    width: 100%;
+    border: 1px solid rgb(146, 146, 146);
+    background-color: rgb(240, 240, 240);
+    margin: 20px 0;
+    height: auto;
+  }
+
+  &--tab {
+    font-size: 18px;
+    padding: 8px;
+    width: 30%;
+    transition: 0.3s ease-out;
+    background-color: transparent;
+    color: white;
+
+    &.is-active {
+    border-bottom: 1px solid rgb(240, 240, 240);
+  }
+  }
+
+  &--login {
+    background-image: url('../icons/Login.svg');
+  }
+  &--logout {
+    background-image: url('../icons/Logout.svg');
+  }
+  &--new-post {
+    background-image: url('../icons/New.svg');
+  }
+  &--edit {
+    background-image: url('../icons/Edit.svg');
+  }
+  &--delete {
+    background-image: url('../icons/Delete.svg');
+  }
+  &--close {
+    background-image: url('../icons/Close.svg');
+    height: $icon-height--small;
+    width: $icon-width--small;
+    &.h30 {
+      right: calc(26vw + 20px);
+    }
+  }
+
 }
 
-.icon--dropdown {
-  background-image: url("../icons/Dropdown.svg");
-  background-repeat: no-repeat;
-  background-position: center;
-  display: block;
-  transition: 0.3s ease-out;
+// .btn-submit {
+//   background-color: rgb(200, 200, 200);
+//   font-size: 24px;
+//   height: auto;
+// }
 
-}
-.icon--dropdown.active {
-  transform: rotate(-180deg);
-}
+// .icon-login {
+//   background-image: url('../icons/Login.svg');
+//   height: 100%;
+// }
 
+// .btn-sign-in {
+//   font-size: 16px;
+//   padding: 6px;
+//   width: 100%;
+//   border: 1px solid rgb(146, 146, 146);
+//   background-color: rgb(240, 240, 240);
+//   margin: 20px 0;
+//   height: auto;
+// }
 
-.btn-submit {
-  background-color: rgb(200, 200, 200);
-  font-size: 24px;
-  height: auto;
-}
+// .btn-tab {
+//   font-size: 18px;
+//   padding: 8px;
+//   width: 30%;
+//   transition: 0.3s ease-out;
+//   background-color: transparent;
+//   color: white;
+// }
 
-.icon-login {
-  background-image: url('../icons/Login.svg');
-  height: 100%;
-}
+// .btn-tab.active {
+//   border-bottom: 1px solid rgb(240, 240, 240);
+// }
 
-.btn-sign-in {
-  font-size: 16px;
-  padding: 6px;
-  width: 100%;
-  border: 1px solid rgb(146, 146, 146);
-  background-color: rgb(240, 240, 240);
-  margin: 20px 0;
-  height: auto;
-}
+// .btn-logout {
+//   background-image: url('../icons/Logout.svg');
+// }
 
-.btn-tab {
-  font-size: 18px;
-  padding: 8px;
-  width: 30%;
-  transition: 0.3s ease-out;
-  background-color: transparent;
-  color: white;
-}
+// .new-post {
+//   background-image: url('../icons/New.svg');
+// }
 
-.btn-tab.active {
-  border-bottom: 1px solid rgb(240, 240, 240);
-}
+// .edit {
+//   background-image: url('../icons/Edit.svg');
+// }
 
-.btn-logout {
-  background-image: url('../icons/Logout.svg');
-}
+// .delete {
+//   background-image: url('../icons/Delete.svg');
+// }
 
-.new-post {
-  background-image: url('../icons/New.svg');
-}
+// .close {
+//   background-image: url('../icons/Close.svg');
+//   right: calc(50vw + 20px);
+//   position: fixed;
+//   top: 22px;
+//   z-index: 6;
+//   height: 30px;
+// }
 
-.edit {
-  background-image: url('../icons/Edit.svg');
-}
-
-.delete {
-  background-image: url('../icons/Delete.svg');
-}
-
-.close {
-  background-image: url('../icons/CloseIcon.svg');
-  right: calc(50vw + 20px);
-  position: fixed;
-  top: 22px;
-  z-index: 6;
-  height: 30px;
-}
-
-.close.h30 {
-  right: calc(26vw + 20px);
-}
+// .close.h30 {
+//   right: calc(26vw + 20px);
+// }
 
 // .delete, .edit, .new-post, .btn-logout, .icon-login, .close {
 //   padding: 0;
@@ -111,40 +203,40 @@
 //   display: inline-block;
 // }
 
-.header__btn--kebabMenu {
-  background-image: url("../icons/KebabMenu.svg");
-  background-size: contain;
-  width: fit-content;
-  background-repeat: no-repeat;
-  background-position: center;
-  transition: 0.3s ease-out;
-}
+// .header__btn--kebabMenu {
+//   background-image: url("../icons/KebabMenu.svg");
+//   background-size: contain;
+//   width: fit-content;
+//   background-repeat: no-repeat;
+//   background-position: center;
+//   transition: 0.3s ease-out;
+// }
 
-.header__btn--kebabMenu.medium {
-  height: 50%;
-  scale: 1;
-}
+// .header__btn--kebabMenu.medium {
+//   height: 50%;
+//   scale: 1;
+// }
 
 
-@media screen and (max-width: 991px) {
-  .btn-logout, .new-post, .edit, .delete {
-    width: 100%;
-  }
+// @media screen and (max-width: 991px) {
+//   .btn-logout, .new-post, .edit, .delete {
+//     width: 100%;
+//   }
 
-  .close, .close.h30 {
-    right: 50px;
-  }
-}
+//   .close, .close.h30 {
+//     right: 50px;
+//   }
+// }
 
-@media screen and (min-width: 992px) {
-  .header__btn--kebabMenu.medium {
-    scale: 0;
-  }
-}
+// @media screen and (min-width: 992px) {
+//   .header__btn--kebabMenu.medium {
+//     scale: 0;
+//   }
+// }
 
-@media screen and (max-width: 599px) {
-  .btn-tab {
-    width: 40%;
-    text-wrap: nowrap;
-  }
-}
+// @media screen and (max-width: 599px) {
+//   .btn-tab {
+//     width: 40%;
+//     text-wrap: nowrap;
+//   }
+// }

@@ -61,7 +61,7 @@ export default function Post() {
 
   const handleScroll = () => {
     const headline = headlineRef.current;
-    const headerRef = document.querySelector(".header-50")
+    const headerRef = document.querySelector(".header--50")
     if (headline.getBoundingClientRect().top < 60) {
       headline.classList.add('headline-sticky')
       headerRef.classList.add('fade-top')
@@ -78,8 +78,7 @@ export default function Post() {
     post &&
       (
         <div id={"post"} className={`post-container ${content ? "layout-50" : ""} ${isFullscreen ? "layout-100 fullscreen" : ""}`}>
-          {!isFullscreen && <Button className={`close ${content ? "" : "h30"}`} onClick={() => navigate(`/${currentCategory}`)} />}
-          {post.media && <Slider cursorColor={cursorColor} slides={post.media}/>}
+          {post.media && <Slider content={content} cursorColor={cursorColor} slides={post.media}/>}
           {!isFullscreen && <div className="text-container" onScroll={handleScroll} onClick={handleFullscreen}>
             <div className="description-container">
               <div ref={headlineRef} className="headline">
