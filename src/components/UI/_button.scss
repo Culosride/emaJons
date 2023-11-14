@@ -19,6 +19,9 @@
       scale: 0;
     }
   }
+  &--delete {
+    width: 100%;
+  }
   &--submit {
     background-color: rgb(200, 200, 200);
     font-size: 24px;
@@ -29,12 +32,16 @@
   &--close {
     right: 50px;
     position: absolute;
-    top: 80px;
+    top: 20px;
     z-index: 6;
     height: $icon-height;
 
+    &.medium {
+      top: 80px;
+    }
+
     &.h30 {
-      right: calc(26vw + 20px);
+      // right: calc(26vw + 20px);
 
       @media (max-width: 991px) {
         right: 50px;

@@ -4,7 +4,7 @@ const initialState = {
   screenSize: "",
   scrollPosition: 0,
   isFullscreen: false,
-  isModal: false,
+  modals: {},
   status: 'idle' || 'loading' || 'succeeded' || 'failed',
   error: "" || null
 }
@@ -23,7 +23,7 @@ const uiSlice = createSlice({
       state.isFullscreen = action.payload !== undefined ? action.payload : !state.isFullscreen;
     },
     setModal: (state, action) => {
-      state.isModal = action.payload
+      state.modals[action.payload.key] = action.payload.state
     }
   }
 })

@@ -13,11 +13,11 @@ const TagsInputForm = () => {
   const [tag, setTag] = useState("");
   const selectedTags = useSelector(state => state.tags.selectedTags);
   const availableTags = useSelector(state => state.tags.availableTags);
-  const isModal = useSelector(state => state.ui.isModal);
+  const modals = useSelector(state => state.ui.modals);
   const [tagToDelete, setTagToDelete] = useState("")
 
   useKeyPress("Tab", createNewTag)
-  useKeyPress("Escape", () => dispatch(setModal(false)))
+  useKeyPress("Escape", () => dispatch(setModal({ key: "tagDelete", state: false })))
 
   // CRUD tags
   function createNewTag(e) {
@@ -32,7 +32,7 @@ const TagsInputForm = () => {
   }
 
   function handleTagDelete(tag) {
-    dispatch(setModal(true))
+    dispatch(setModal({ key: "tagDelete", state: true }))
     setTagToDelete(tag)
   }
 
@@ -41,7 +41,7 @@ const TagsInputForm = () => {
       .then(() => {
         dispatch(fetchPosts())
       })
-    dispatch(setModal(false))
+    dispatch(setModal({ key: "tagDelete", state: false }))
   }
 
   function handleTagToggle(tag) {
@@ -78,7 +78,7 @@ const TagsInputForm = () => {
           name="postTags"
           onChange={handleTag}
           className="search-tags"
-        />
+          />
         {tag && <div className="add-new-tag" onClick={createNewTag}> + Add/Select</div>}
       </span>
 
@@ -91,15 +91,7 @@ const TagsInputForm = () => {
       <fieldset className="available-tags-wrapper">
         {tagElements}
       </fieldset>
-      {isModal && <Modal open={isModal}>
-        <div>
-          <p>Do you want to globally delete the tag: {tagToDelete}?</p>
-          <div className="modal-actions-container">
-            <Button type="button" className="modal-action" onClick={() => dispatch(setModal(false))}>No</Button>
-            <Button type="button" className="modal-action" onClick={confirmTagDelete}>Yes</Button>
-          </div>
-        </div>
-      </Modal>}
+      {modals.tagDelete && <Modal modalKey="tagDelete" description={`Globally delete the tag: ${tagToDelete}?`} confirmDelete={confirmTagDelete} />}
     </fieldset>
   )
 }

@@ -11,11 +11,6 @@
   background-size: cover;
   background-position: 50% 50%;
   background-repeat: no-repeat;
-
-  .logo-home {
-    position: absolute;
-    left: 10vw;
-  }
 }
 
 .nav {
@@ -68,12 +63,21 @@
     font-weight: bold;
     &--small {
       font-size: 24px;
+      @media (max-width: 991px) {
+        font-size: 8px;
+      }
     }
     &--large {
       font-size: 40px;
+      @media (max-width: 991px) {
+        font-size: 24px;
+      }
     }
     &--huge {
       font-size: 48px;
+      @media (max-width: 991px) {
+        font-size: 32px;
+      }
     }
     &.is-active {
       color: black;

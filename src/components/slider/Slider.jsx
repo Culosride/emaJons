@@ -13,7 +13,10 @@ const Slider = ({ slides, cursorColor, content }) => {
   const videoRefs = slides.map(() => useRef(null)); // Create a ref for each video
   const isFullscreen = useSelector(state => state.ui.isFullscreen)
   const currentCategory = useSelector(state => state.posts.currentCategory)
+  const screenSize = useSelector((state) => state.ui.screenSize);
 
+  // const isSmallScreen = screenSize === "xs" || screenSize === "s";
+  const isMediumScreen = screenSize === "xs" || screenSize === "s" || screenSize === "m";
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -61,7 +64,7 @@ const Slider = ({ slides, cursorColor, content }) => {
 
   return (
     <div className="slider">
-      {!isFullscreen && <Button className={`btn--close ${content ? "" : "h30"}`} onClick={() => navigate(`/${currentCategory}`)}>
+      {!isFullscreen && <Button className={`btn--close ${content ? "" : "h30"} ${isMediumScreen ? "medium" : ""}`} onClick={() => navigate(`/${currentCategory}`)}>
         <span className={"icon icon--close"}></span>
       </Button>}
       {slides.map((slide, index) => (

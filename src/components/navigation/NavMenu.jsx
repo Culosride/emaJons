@@ -1,16 +1,16 @@
 import React, { useEffect, useRef } from "react";
 import { CATEGORIES } from "../../config/categories.js";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, matchPath, useLocation } from "react-router-dom";
 import Button from "../UI/Button.jsx";
 
-const DropdownNav = ({ handleNewCategory,  toggleMenu,  isExpanded }) => {
-  const currentCategory = useSelector((state) => state.posts.currentCategory);
+const NavMenu = ({ handleNewCategory,  toggleMenu,  isExpanded }) => {
+  let currentCategory = useSelector((state) => state.posts.currentCategory);
   const screenSize = useSelector((state) => state.ui.screenSize);
   const navbarRef = useRef(null);
   const linksRef = useRef([]);
   const isMediumScreen = screenSize === "xs" || screenSize === "s" || screenSize === "m";
-
+  const { pathname } = useLocation();
 
   useEffect(() => {
     const handleExpanded = () => {
@@ -21,11 +21,16 @@ const DropdownNav = ({ handleNewCategory,  toggleMenu,  isExpanded }) => {
         }, 100 * index);
       });
     };
-
     handleExpanded();
   }, [isExpanded, screenSize]);
 
-  const navbarClass = `${isMediumScreen ? "nav-main__menu nav-main__menu--dropdown" : "nav-main__menu"} ${isExpanded && isMediumScreen ? "is-active" : ""}`
+  if (matchPath("/posts/new", pathname)) {
+    currentCategory = "new post";
+  } else if (matchPath("/posts/:postId/edit", pathname)) {
+    currentCategory = "edit";
+  }
+
+  const navbarClass = `nav-main__menu ${isMediumScreen ? "nav-main__menu--dropdown" : ""} ${isExpanded && isMediumScreen ? "is-active" : ""}`
 
   const navElements = () =>
     CATEGORIES.map((category, i) => {
@@ -64,4 +69,4 @@ const DropdownNav = ({ handleNewCategory,  toggleMenu,  isExpanded }) => {
   );
 };
 
-export default DropdownNav;
+export default NavMenu;

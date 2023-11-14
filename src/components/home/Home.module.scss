@@ -1,0 +1,53 @@
+.nav-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  gap: 0px;
+
+  height: 70vh;
+  max-height: 480px;
+
+  &__menu {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  &__link,
+  &__logo {
+    text-decoration: none;
+    text-transform: uppercase;
+    color: black;
+    font-weight: bold;
+    &--small {
+      font-size: 24px;
+      @media (max-width: 991px) {
+        font-size: 8px;
+      }
+    }
+    &--large {
+      font-size: 40px;
+      @media (max-width: 991px) {
+        font-size: 24px;
+      }
+    }
+    &--huge {
+      font-size: 48px;
+      @media (max-width: 991px) {
+        font-size: 32px;
+      }
+    }
+    &.is-active {
+      color: black;
+      pointer-events: none;
+    }
+  }
+
+  &__divider {
+    // margin: 0 4px;
+    height: 20px;
+    width: 1px;
+    display: inline-block;
+    transform: rotate(20deg);
+    background-color: black;
+  }
+}

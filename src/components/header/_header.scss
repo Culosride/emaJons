@@ -5,12 +5,11 @@
   &--30 {
     transition: top ease 0.4s;
     position: fixed;
-    justify-content: space-between;
-    margin: 0 30px;
     padding: 0;
     top: 0;
     right: 0;
     z-index: 6;
+    left: auto;
 
     .nav-main {
       z-index: 2;
@@ -21,13 +20,47 @@
     }
   }
 
+  &--100 {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    background-color: white;
+    border-bottom: 1px solid black;
+    z-index: 10;
+  }
+
+  &--50 {
+    left: 50vw;
+    width: 50vw;
+
+    @media (max-width: 991px) {
+      left: 0;
+    }
+  }
+
+  &--30 {
+    width: 26vw;
+
+    @media (max-width: 991px) {
+      left: 0;
+    }
+    .btn--kebab {
+      scale: 1;
+    }
+    .admin-menu {
+      scale: 0;
+      transform-origin: center left;
+    }
+  }
+
   &--100, &--50, &--30 {
-    animation: fadeIn 0.5s;
-    transition: top ease 0.4s;
     display: flex;
-    height: 74px;
+    justify-content: space-between;
     align-items: center;
-    // padding: 0 30px;
+    transition: top ease 0.4s;
+    height: 74px;
+    padding: 0 30px;
+    animation: fadeIn 0.5s;
 
     &.fade-top {
       top: -74px;
@@ -36,14 +69,17 @@
 
     .admin-menu {
       display: flex;
+      align-items: center;
       column-gap: 16px;
       height: 100%;
       margin: 0;
+      padding: 0;
 
       @media (max-width: 991px) {
         scale: 0;
         .nav-main__link {
           height: 100%;
+          width: 100%;
           justify-content: center;
         }
       }
@@ -64,7 +100,11 @@
 
     @media (max-width: 1199px) {
     }
+
     @media (max-width: 991px) {
+      width: 100%;
+      left: 0;
+
       .admin-menu {
         flex-direction: column;
         position: absolute;
@@ -78,34 +118,7 @@
       }
     }
   }
-  &--100 {
-    border-bottom: 1px solid black;
-    justify-content: space-between;
-    position: sticky;
-    width: 100%;
-    z-index: 10;
-    background-color: white;
-    top: 0;
 
-    .dashboard-link {
-      align-self: flex-end;
-    }
-  }
-
-  &--50 {
-    left: 50vw;
-    // right: auto;
-  }
-
-  &--30 {
-    left: auto;
-    width: calc($description-width - $slider-padding);
-    align-items: center;
-    flex-wrap: wrap;
-    .header__nav {
-      // gap: 12px;
-    }
-  }
 }
 
 .nav-main {
