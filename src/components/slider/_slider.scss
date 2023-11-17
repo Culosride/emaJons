@@ -6,35 +6,15 @@
   box-sizing: border-box;
   border-right: 1px solid black;
   z-index: 1;
-  img {
-    width: 85%;
-    // height: calc(100vh - 90px);
-    // width: 100%;
-    height: 100%;
-    object-fit: contain;
-  }
-
-  video {
-    width: 85%;
-    object-fit: contain;
-  }
 }
 
 .slider:hover {
   img {
-    cursor: url('../icons/PlusBold.svg'), auto;
+    cursor: url("../icons/PlusBold.svg"), auto;
   }
 }
 
 .slide {
-  .video-container {
-    display: flex;
-    height: calc(100vh - 90px);
-    align-items: center;
-    justify-content: center;
-    width: 85%;
-  }
-
   position: absolute;
   margin-top: 74px;
   box-sizing: border-box;
@@ -42,13 +22,43 @@
   top: 0;
   left: 0;
   width: 100%;
-  // height: 100%;
   opacity: 0;
   transition: opacity 0.35s ease-in;
 
   display: flex;
   height: calc(100vh - 74px);
   justify-content: center;
+  align-items: center;
+
+  img {
+    width: 85%;
+    height: 85%;
+    object-fit: contain;
+
+    @media (max-width: 767px) {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  .video-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 85vh;
+    max-height: 100%;
+    width: 100%;
+
+    @media (max-width: 1199px) {
+      width: 85%;
+      height: 100%;
+    }
+
+    video {
+      object-fit: contain;
+      width: 100%;
+    }
+  }
 }
 
 .slide.active {
@@ -57,7 +67,10 @@
 }
 
 .slider {
-  .prev, .next, .prev-video, .next-video {
+  .prev,
+  .next,
+  .prev-video,
+  .next-video {
     border: 0;
     background-color: Transparent;
     font-size: 20px;
@@ -68,18 +81,22 @@
     height: 100vh;
     width: 20vw;
   }
-  .prev-video, .next-video {
+  .prev-video,
+  .next-video {
     width: 10%;
   }
-  .prev, .prev-video {
+  .prev,
+  .prev-video {
     left: 0;
   }
-  .next, .next-video {
+  .next,
+  .next-video {
     right: 0;
   }
 }
 
-.dot, .dot-active {
+.dot,
+.dot-active {
   cursor: pointer;
   height: 2px;
   width: 16px;
@@ -89,32 +106,39 @@
   transition: background-color 0.5s ease-in;
 }
 
-.dot:hover, .dot-active {
+.dot:hover,
+.dot-active {
   background-color: #717171;
   opacity: 1;
 }
 
-.next:before, .next-video:hover {
-  content: '';
+.next:before,
+.next-video:hover {
+  content: "";
 }
-.next:hover, .next-video:hover {
-  cursor: url('../icons/ArrowIcon.svg'), auto;
-}
-
-.next.white:hover, .next-video.white:hover {
-  cursor: url('../icons/ArrowIconWhite.svg'), auto;
+.next:hover,
+.next-video:hover {
+  cursor: url("../icons/ArrowIcon.svg"), auto;
 }
 
-.prev:before, .prev-video:hover {
-  content: '';
+.next.white:hover,
+.next-video.white:hover {
+  cursor: url("../icons/ArrowIconWhite.svg"), auto;
 }
 
-.prev:hover, .prev-video:hover {
-  cursor: url('../icons/ArrowBack.svg'), auto;
+.prev:before,
+.prev-video:hover {
+  content: "";
 }
 
-.prev.white:hover, .prev-video.white:hover {
-  cursor: url('../icons/ArrowBackWhite.svg'), auto;
+.prev:hover,
+.prev-video:hover {
+  cursor: url("../icons/ArrowBack.svg"), auto;
+}
+
+.prev.white:hover,
+.prev-video.white:hover {
+  cursor: url("../icons/ArrowBackWhite.svg"), auto;
 }
 
 .page {
@@ -130,8 +154,8 @@
   .slider {
     border: none;
     img {
-      height: 85%;
-      width: 85%;
+      // height: 85%;
+      // width: 85%;
     }
   }
 }

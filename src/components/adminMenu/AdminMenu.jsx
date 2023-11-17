@@ -5,6 +5,9 @@ import { Link, useNavigate } from "react-router-dom";
 import Button from "../UI/Button";
 import { logout } from "../../features/auth/authSlice";
 import { setModal } from "../../features/UI/uiSlice";
+import styles from "./AdminMenu.module"
+import { selectTag } from "../../features/tags/tagsSlice";
+
 
 const AdminMenu = forwardRef(( { isPostPage, menuOff, setIsExpanded }, ref) => {
 
@@ -26,16 +29,13 @@ const AdminMenu = forwardRef(( { isPostPage, menuOff, setIsExpanded }, ref) => {
     }
   };
 
-  const handleLogin = () => {
-    setIsExpanded(false);
-  };
-
   function handleDelete() {
     dispatch(setModal({ key: "postDelete", state: true }));
   }
 
   async function handleLogout() {
     localStorage.removeItem("access-token");
+    dispatch(selectTag(""))
     dispatch(logout(token)).then(() => {
       navigate("/");
     });
@@ -49,7 +49,7 @@ const AdminMenu = forwardRef(( { isPostPage, menuOff, setIsExpanded }, ref) => {
           <Button type="button" className="btn--delete" onClick={handleDelete}>
             <span className="icon icon--delete"></span>
           </Button>
-          <Link onClick={menuOff} className="nav__link nav__link--edit" to={`/posts/${currentPostId}/edit`}>
+          <Link onClick={menuOff} className={styles["nav-link--edit"]} to={`/posts/${currentPostId}/edit`}>
             <span className="icon icon--edit"></span>
           </Link>
         </>
@@ -69,7 +69,7 @@ const AdminMenu = forwardRef(( { isPostPage, menuOff, setIsExpanded }, ref) => {
   } else {
     // if logged out
     content = (
-      <Link to={"/login"} onClick={handleLogin} className="nav-main__link" title="Login">
+      <Link to={"/login"} className="nav-main__link" title="Login">
         <span className="icon icon--login"></span>
       </Link>
     );

@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import * as api from "../../API/index"
 
 const initialState = {
-  token: null,
+  isLogged: false,
   status: 'idle' || 'loading' || 'succeeded' || 'failed',
   error: "" || null
 }
@@ -25,7 +25,11 @@ export const checkPath = createAsyncThunk("/auth/validate-path", async (path) =>
 const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: { },
+  reducers: {
+    setIsLogged(state, action) {
+      state.isLogged = action.payload
+    }
+  },
   extraReducers(builder) {
     builder
       .addCase(checkPath.pending, (state) => {
@@ -46,16 +50,18 @@ const authSlice = createSlice({
       })
       .addCase(login.fulfilled, (state, action) => {
         state.status = 'succeeded'
+        state.isLogged = true
       })
       .addCase(login.rejected, (state, action) => {
         state.status = "failed";
+        state.isLogged = false
         state.error = "401 Wrong username or password"
       })
       .addCase(logout.pending, (state) => {
         state.status = 'loading'
       })
       .addCase(logout.fulfilled, (state, action) => {
-        state.token = null
+        state.isLogged = false
         state.status = "succeeded"
       })
       .addCase(logout.rejected, (state, action) => {
@@ -65,7 +71,7 @@ const authSlice = createSlice({
   }
 })
 
-export const { } = authSlice.actions
+export const { setIsLogged } = authSlice.actions
 
 export default authSlice.reducer
 

@@ -7,10 +7,17 @@ import { useNavigate } from "react-router-dom";
 
 const Slider = ({ slides, cursorColor, content }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [isDragging, setIsDragging] = useState(false)
+  const [dragStartX, setDragStartX] = useState()
+  const [dragEndX, setDragEndX] = useState()
   const isVideo = slides[currentSlide].mediaType === "video"
   const dispatch = useDispatch()
   const [isTransitioning, setIsTransitioning] = useState(false);
+
   const videoRefs = slides.map(() => useRef(null)); // Create a ref for each video
+  const slideRefs = slides.map(() => useRef(null));
+  console.log('slideRefs', videoRefs)
+
   const isFullscreen = useSelector(state => state.ui.isFullscreen)
   const currentCategory = useSelector(state => state.posts.currentCategory)
   const screenSize = useSelector((state) => state.ui.screenSize);
@@ -51,6 +58,25 @@ const Slider = ({ slides, cursorColor, content }) => {
     }
   };
 
+  const handleTouchStart = (e) => {
+    if(isDragging) return
+    setDragStartX(e.touches[0].pageX)
+  };
+
+  const handleTouchMove = (e) => {
+    // if(isDragging) return
+    setIsDragging(true)
+    // console.log('e.touches[0].pageX', e.touches[0].pageX, "dragEndX", dragEndX)
+    setDragEndX(e.touches[0].pageX)
+  };
+
+
+  const handleTouchEnd = () => {
+    if(dragStartX > dragEndX) handleNext()
+    else handlePrev()
+    setIsDragging(false)
+  };
+
   useKeyPress("ArrowRight", handleNext)
   useKeyPress("ArrowLeft", handlePrev)
 
@@ -63,12 +89,12 @@ const Slider = ({ slides, cursorColor, content }) => {
   }
 
   return (
-    <div className="slider">
+    <div className="slider" onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd}>
       {!isFullscreen && <Button className={`btn--close ${content ? "" : "h30"} ${isMediumScreen ? "medium" : ""}`} onClick={() => navigate(`/${currentCategory}`)}>
         <span className={"icon icon--close"}></span>
       </Button>}
       {slides.map((slide, index) => (
-        <div key={index} className={`slide ${index === currentSlide ? "active" : ""}`} style={{ zIndex: index === currentSlide ? 1 : 0 }}>
+        <div ref={slideRefs[index]} key={index} className={`slide ${index === currentSlide ? "active" : ""}`} style={{ zIndex: index === currentSlide ? 1 : 0 }}>
           {slide.mediaType === "video" ?
             <div className="video-container">
               <video ref={videoRefs[index]} muted controls>

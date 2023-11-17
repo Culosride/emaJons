@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { login } from '../../features/auth/authSlice';
 import Button from '../UI/Button';
@@ -7,6 +7,8 @@ import Button from '../UI/Button';
 function Login() {
   const status = useSelector(state => state.auth.status)
   const error = useSelector(state => state.auth.error)
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
   const usernameRef = useRef()
   const errRef = useRef()
   const [ userInfo, setUserInfo ] = useState({ username: "", password: "" })
@@ -15,9 +17,6 @@ function Login() {
   useEffect(() => {
     usernameRef && usernameRef.current.focus()
   }, [])
-
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
 
   function handleChange(e) {
     setErrMsg("");

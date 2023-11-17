@@ -5,9 +5,16 @@
   padding: 0px;
   border: none;
   height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   // width: fit-content;
 
   &--logout {
+    width: 100%;
+  }
+
+  &--edit {
     width: 100%;
   }
 
@@ -32,7 +39,7 @@
   &--close {
     right: 50px;
     position: absolute;
-    top: 20px;
+    top: 22px;
     z-index: 6;
     height: $icon-height;
 
@@ -48,6 +55,14 @@
       }
     }
   }
+
+  &--delete, &--edit, &--new-post, &--btn-logout {
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
 
   &.disabled {
     pointer-events: none;

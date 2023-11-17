@@ -8,13 +8,13 @@ const NavMenu = ({ handleNewCategory,  toggleMenu,  isExpanded }) => {
   let currentCategory = useSelector((state) => state.posts.currentCategory);
   const screenSize = useSelector((state) => state.ui.screenSize);
   const navbarRef = useRef(null);
-  const linksRef = useRef([]);
+  const linkRefs = useRef([]);
   const isMediumScreen = screenSize === "xs" || screenSize === "s" || screenSize === "m";
   const { pathname } = useLocation();
 
   useEffect(() => {
     const handleExpanded = () => {
-      linksRef.current.forEach((link, index) => {
+      linkRefs.current.forEach((link, index) => {
         setTimeout(() => {
           (isExpanded && link?.classList.add("is-visible")) ||
           ((!isMediumScreen || !isExpanded) && link?.classList.remove("is-visible"))
@@ -40,7 +40,7 @@ const NavMenu = ({ handleNewCategory,  toggleMenu,  isExpanded }) => {
         return (
           <li
             key={i}
-            ref={(el) => (linksRef.current[i] = el)}
+            ref={(el) => (linkRefs.current[i] = el)}
             className={`nav-main__item ${isMediumScreen ? " nav-main__item--dropdown" : ""}`}
             >
             <Link
