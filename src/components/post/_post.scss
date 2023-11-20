@@ -112,22 +112,15 @@
 // full screen
 .layout-100 {
   grid-template-columns: 100vw 0;
-  transition: all ease-out .3s;
-  transition-delay: .1s;
+  transition: all ease-out .25s;
   .text-container {
-    transition: all ease-out .3s;
-    transition-delay: .1s;
+    transition: all ease-out .25s;
     width: calc($description-width-50 - $slider-padding);
   }
   .slider:hover {
     img {
       cursor: url('../icons/CloseIconWhite.svg'), auto;
     }
-  }
-  .slick-slide {
-    transition: all ease-out .5s;
-    transition-delay: .1s;
-    width: 100%;
   }
 }
 

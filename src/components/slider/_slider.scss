@@ -8,6 +8,28 @@
   z-index: 1;
 }
 
+.slider-mobile {
+  display: flex;
+  overflow: hidden;
+  padding: 0;
+  .draggable {
+    width: max-content;
+    display: flex;
+
+  }
+  .slide {
+    position: relative;
+    flex: none;
+    opacity: 1;
+    @media (max-width: 991px) {
+      width: 100vw;
+    }
+  }
+  .slide.active {
+    opacity: 1;
+  }
+}
+
 .slider:hover {
   img {
     cursor: url("../icons/PlusBold.svg"), auto;
@@ -17,13 +39,11 @@
 .slide {
   position: absolute;
   margin-top: 74px;
-  box-sizing: border-box;
   padding: 0 32px 32px;
   top: 0;
   left: 0;
   width: 100%;
   opacity: 0;
-  transition: opacity 0.35s ease-in;
 
   display: flex;
   height: calc(100vh - 74px);
@@ -103,7 +123,7 @@
   margin: 0 2px;
   background-color: #ddd;
   display: inline-flex;
-  transition: background-color 0.5s ease-in;
+  transition: background-color 0.25s ease-in;
 }
 
 .dot:hover,

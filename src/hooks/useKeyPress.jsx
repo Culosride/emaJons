@@ -21,4 +21,5 @@ const useKeyPress = (targetKey, cb) => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [targetKey, cb]);
 };
+
 export default useKeyPress;

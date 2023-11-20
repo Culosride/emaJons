@@ -5,7 +5,7 @@ export default function Draggable({ children, userRef, isSmallScreen, className 
   const [startDragging, setStartDragging] = useState(false)
   const [startX, setStartX] = useState(0);
 
-  //--- mouse events ---//
+  //////////////////////////// --- mouse events --- ////////////////////////////
   const handleMouseDown = (e) => {
     setStartDragging(true)
     setStartX(e.pageX + userRef.current.scrollLeft);
@@ -24,7 +24,7 @@ export default function Draggable({ children, userRef, isSmallScreen, className 
     setIsDragging(false);
   };
 
-  //--- touch events ---//
+  //////////////////////////// --- touch events --- ////////////////////////////
   const handleTouchStart = (e) => {
     setStartDragging(true)
     setStartX(e.touches[0].pageX + userRef.current.scrollLeft);
@@ -41,7 +41,7 @@ export default function Draggable({ children, userRef, isSmallScreen, className 
     setStartDragging(false)
     setIsDragging(false);
   };
-
+  //////////////////////////////////////////////////////////////////////////////
 
   const classStyle = `draggable-container ${className} ${(isDragging && isSmallScreen) ? "dragging" : ""}`
 
