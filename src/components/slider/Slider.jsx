@@ -4,45 +4,35 @@ import { toggleFullscreen } from "../../features/UI/uiSlice";
 import useKeyPress from "../../hooks/useKeyPress";
 import Button from "../UI/Button"
 import { useNavigate } from "react-router-dom";
-import useMeasureRef from "../../hooks/useMeasureRef";
-
 
 const Slider = ({ slides, cursorColor, content }) => {
-  const infiniteSlides = [slides[slides.length -1], ...slides, slides[0]]
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const isFullscreen = useSelector(state => state.ui.isFullscreen)
+  const currentCategory = useSelector(state => state.posts.currentCategory)
+  const screenSize = useSelector((state) => state.ui.screenSize);
+
+  // slider state
+  const [currentSlide, setCurrentSlide] = useState(1);
+  const [translation, setTranslation] = useState(0)
+  const [transition, setTransition] = useState("none")
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
   // touch events state
   const [isDragging, setIsDragging] = useState(false)
   const [startingPosition, setStartingPosition] = useState()
   const [delta, setDelta] = useState(0)
 
-  //slider state
-  const [currentSlide, setCurrentSlide] = useState(1);
-  const [translation, setTranslation] = useState(0)
-  const [transition, setTransition] = useState("none")
-  const [isTransitioning, setIsTransitioning] = useState(false);
-
+  // derived state
+  const infiniteSlides = [slides[slides.length -1], ...slides, slides[0]]
   const isVideo = infiniteSlides[currentSlide].mediaType === "video"
+  const isMediumScreen = ["xs", "s", "m"].includes(screenSize);
+  const isLastSlide = currentSlide === infiniteSlides.length - 1
+  const isFirstSlide = currentSlide === 0
+  const currentDot = isLastSlide ? 0 : isFirstSlide ? slides.length - 1 : currentSlide - 1;
 
   const mediaRefs = slides.map(() => useRef(null)); // Create a ref for each video
-
-  const isFullscreen = useSelector(state => state.ui.isFullscreen)
-  const currentCategory = useSelector(state => state.posts.currentCategory)
-  const screenSize = useSelector((state) => state.ui.screenSize);
-
-  const isMediumScreen = ["xs", "s", "m"].includes(screenSize);
-
-  const isLastSlide = currentSlide  === infiniteSlides.length -1
-  const isFirstSlide = currentSlide  === 0
-
-  const draggableRef = (node) => {
-    if(node) {
-      const slideWidth = node?.firstChild.getBoundingClientRect().width
-      const translation = slideWidth * currentSlide
-      setTranslation(translation)
-    }
-  }
+  const observer = useRef(null);
 
   useEffect(() => {
     mediaRefs.forEach((ref, index) => {
@@ -50,19 +40,32 @@ const Slider = ({ slides, cursorColor, content }) => {
         ref.current.pause();
       }
     });
-
-    if (isLastSlide || isFirstSlide) {
-      setTimeout(() => {
-        setTransition("none");
-        setCurrentSlide(isLastSlide ? 1 : slides.length);
-      }, 250);
-    }
-
   }, [currentSlide]);
 
-  useEffect(() => {
-    setTranslation(draggableRef.translation)
-  }, [draggableRef])
+  const calcTranslation = (node) => {
+    if(node) {
+      const slideWidth = node.firstChild.getBoundingClientRect().width
+      const newTranslation = slideWidth * currentSlide
+      setTranslation(newTranslation)
+
+      if (isLastSlide || isFirstSlide) {
+        setTimeout(() => {
+          setCurrentSlide(isLastSlide ? 1 : slides.length);
+          setTransition("none");
+        }, 250);
+      }
+    }
+  }
+
+  const draggableRef = useCallback(element => {
+    if (observer.current) observer.current.disconnect();
+
+    observer.current = new ResizeObserver((entries) => {
+      calcTranslation(entries[0].target)
+    });
+
+    if (element) observer.current.observe(element);
+  }, [currentSlide])
 
   const draggableStyles = {
     transform: `translateX(-${translation}px)`,
@@ -72,13 +75,15 @@ const Slider = ({ slides, cursorColor, content }) => {
   const handleNavigation = (direction) => {
     if (!isTransitioning) {
       setIsTransitioning(true);
+
       if(!isLastSlide || !isFirstSlide) {
         setTransition("transform 0.25s ease");
+        setCurrentSlide((currentSlide + direction + infiniteSlides.length) % infiniteSlides.length);
       }
-      setCurrentSlide((currentSlide + direction + infiniteSlides.length) % infiniteSlides.length);
+
       setTimeout(() => {
         setIsTransitioning(false);
-      }, 250);
+      }, 300);
     }
   };
 
@@ -126,7 +131,7 @@ const Slider = ({ slides, cursorColor, content }) => {
       </Button>}
       <div ref={draggableRef} style={draggableStyles} className="draggable">
         {infiniteSlides.map((slide, index) => (
-          <div key={index} className={`slide ${index === currentSlide ? "active" : ""}`} style={{ zIndex: index === currentSlide ? 1 : 0 }}>
+          <div key={index} className={`slide ${index === currentSlide ? "active" : ""}`} style={{ zIndex: index === currentSlide ? 1 : 0}}>
             {slide.mediaType === "video" ?
               <div className="video-container">
                 <video ref={mediaRefs[index]} muted controls>
@@ -146,8 +151,8 @@ const Slider = ({ slides, cursorColor, content }) => {
       }
       {slides.length &&
         <div className="page">
-          {slides.map((slide, index) => (
-            <span key={index} className={currentSlide - 1 === index ? "dot-active" : "dot"} onClick={() => handlePage(index + 1)}/>
+          {slides.map((_, index) => (
+            <span key={index} className={currentDot === index ? "dot-active" : "dot"} onClick={() => handlePage(index + 1)}/>
           ))}
         </div>
       }
@@ -156,36 +161,3 @@ const Slider = ({ slides, cursorColor, content }) => {
 };
 
 export default Slider;
-
-// return (
-//   <div className="slider" ref={sliderRef} onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd}>
-//     {!isFullscreen && <Button className={`btn--close ${content ? "" : "h30"} ${isMediumScreen ? "medium" : ""}`} onClick={() => navigate(`/${currentCategory}`)}>
-//       <span className={"icon icon--close"}></span>
-//     </Button>}
-//       {slides.map((slide, index) => (
-//         <div key={index} className={`slide ${index === currentSlide ? "active" : ""}`} style={{ zIndex: index === currentSlide ? 1 : 0 }}>
-//           {slide.mediaType === "video" ?
-//             <div className="video-container">
-//               <video ref={mediaRefs[index]} muted controls>
-//                 <source src={slide.url} type="video/mp4"/>
-//                 <source src={slide.url} type="video/mov"/>
-//               </video>
-//             </div> :
-//             <img ref={mediaRefs[index]} src={slide.url} onClick={handleFullscreen} alt={slide.alt} />}
-//         </div>
-//       ))}
-//     {slides.length > 1 &&
-//       <>
-//         <Button type="button" className={`${cursorColor} ${isVideo ? "prev-video" : "prev"}`} onClick={handlePrev} />
-//         <Button type="button" className={`${cursorColor} ${isVideo ? "next-video" : "next"}`} onClick={handleNext} />
-//       </>
-//     }
-//     {slides.length &&
-//       <div className="page">
-//         {slides.map((slide, index) => (
-//           <span key={index} className={currentSlide === index ? "dot-active" : "dot"} onClick={() => handlePage(index)}/>
-//         ))}
-//       </div>
-//     }
-//   </div>
-// );

@@ -30,7 +30,7 @@ export default function AllPosts() {
   const allTags = postsByCategory.flatMap(post => post.postTags.map((tag) => tag));
   const sortedTags = [...new Set(allTags.sort((a, b) => b.localeCompare(a)))];
 
-  const firstPostObserver = useRef();
+  const observer = useRef();
   const maskTagsRef = useRef()
   const tagsContainerRef = useRef()
 
@@ -88,15 +88,15 @@ export default function AllPosts() {
   // loads more posts (infinite scroll)
   const lastPostRef = useCallback((post) => {
     if (status !== "succeeded") return;
-    if (firstPostObserver.current) firstPostObserver.current.disconnect();
-    firstPostObserver.current = new IntersectionObserver(
+    if (observer.current) observer.current.disconnect();
+    observer.current = new IntersectionObserver(
       (entries) => {
         if(entries[0].isIntersecting && hasMorePosts) {
           setPageNum((p) => p + 1);
         }
       }, { threshold: 0.8 }
       );
-      if (post) firstPostObserver.current.observe(post);
+      if (post) observer.current.observe(post);
   }, [status, hasMorePosts, activeTag]);
 
   const centerTag = (e) => {
