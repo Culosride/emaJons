@@ -1,25 +1,24 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../../features/auth/authSlice';
 import Button from '../UI/Button';
 
 function Login() {
-  const status = useSelector(state => state.auth.status)
-  const error = useSelector(state => state.auth.error)
   const navigate = useNavigate()
   const dispatch = useDispatch()
+  const isLoggedIn = useSelector(state => state.auth.isLogged)
   const usernameRef = useRef()
   const errRef = useRef()
   const [ userInfo, setUserInfo ] = useState({ username: "", password: "" })
   const [ errMsg, setErrMsg ] = useState("")
 
   useEffect(() => {
-    usernameRef && usernameRef.current.focus()
+    usernameRef?.current.focus()
   }, [])
 
   function handleChange(e) {
-    setErrMsg("");
+    setErrMsg("")
     const { name, value } = e.target;
     setUserInfo((prev) => ({...prev, [name]: value}));
   }
@@ -27,14 +26,13 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const response = await dispatch(login(userInfo));
-
-    if (!response.error) {
-      const { accessToken } = response.payload;
+    try {
+      const response = await dispatch(login(userInfo)).unwrap()
+      const { accessToken } = response;
       localStorage.setItem("access-token", accessToken);
       navigate(-1);
       resetInfo();
-    } else {
+    } catch (error) {
       setErrMsg(error)
       errRef.current.focus();
     }
@@ -52,31 +50,31 @@ function Login() {
   const content = (
     <div className="login-container">
       <form className="login-form" onSubmit={handleSubmit}>
-        <div ref={errRef} className={errClass} aria-live="assertive">{errMsg}</div>
         <label htmlFor="username">Username:</label>
         <input
-            className="form__input"
-            type="text"
-            id="username"
-            ref={usernameRef}
-            name="username"
-            value={userInfo.username}
-            onChange={handleChange}
-            autoComplete="off"
-            required
+          className="form__input"
+          type="text"
+          id="username"
+          ref={usernameRef}
+          name="username"
+          value={userInfo.username}
+          onChange={handleChange}
+          autoComplete="off"
+          required
         />
 
         <label htmlFor="password">Password:</label>
         <input
-            className="form__input"
-            type="password"
-            name="password"
-            id="password"
-            onChange={handleChange}
-            value={userInfo.password}
-            required
+          className="form__input"
+          type="password"
+          name="password"
+          id="password"
+          onChange={handleChange}
+          value={userInfo.password}
+          required
         />
-          <Button type="btn-submit" className="btn-sign-in">Sign In</Button>
+        <Button type="submit" className="btn-sign-in">Sign In</Button>
+        <p ref={errRef} className={errClass} aria-live="assertive">{errMsg}</p>
       </form>
     </div>
   )

@@ -22,7 +22,7 @@ export default function AllPosts() {
   const scrollPosition = useSelector((state) => state.ui.scrollPosition);
   const activeTag = useSelector(state => state.tags.activeTag)
   const screenSize = useSelector((state) => state.ui.screenSize);
-  const isSmallScreen = screenSize === "xs" || screenSize === "s";
+  const isSmallScreen = ["xs", "s"].includes(screenSize);
 
   const postsByCategory = posts.filter(post => post.category === _.capitalize(currentCategory));
   const [filteredPosts, setFilteredPosts] = useState(postsByCategory);
@@ -30,9 +30,9 @@ export default function AllPosts() {
   const allTags = postsByCategory.flatMap(post => post.postTags.map((tag) => tag));
   const sortedTags = [...new Set(allTags.sort((a, b) => b.localeCompare(a)))];
 
-  const observer = useRef();
-  const maskTagsRef = useRef()
-  const tagsContainerRef = useRef()
+  const observer = useRef(null);
+  const maskTagsRef = useRef(null)
+  const tagsContainerRef = useRef(null)
 
   const { setPageNum } = usePosts(currentCategory);
 

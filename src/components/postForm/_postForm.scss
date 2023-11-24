@@ -106,7 +106,7 @@ input[type="file"] {
   }
 }
 
-.tabMenuBtns {
+.tabsMenu {
   display: flex;
   justify-content: center;
   position: fixed;
@@ -115,6 +115,7 @@ input[type="file"] {
   background-color: rgb(50, 50, 50);
   z-index: 1;
   padding: 12px 0 18px;
+  margin: 0;
 }
 
 .selected-tags-wrapper {
@@ -236,13 +237,13 @@ input[type="file"] {
     }
   }
 
-  .tabMenuBtns {
+  .tabsMenu {
     position: sticky;
     top: 74px;
     transition: top ease 0.4s;
 
   }
-  .tabMenuBtns.fade-top {
+  .tabsMenu.fade-top {
     top: -1px;
     z-index: 10;
   }

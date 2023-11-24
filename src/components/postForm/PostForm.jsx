@@ -19,7 +19,6 @@ export default function PostForm() {
   const screenSize = useSelector((state) => state.ui.screenSize);
   const status = useSelector((state) => state.posts.status);
 
-  const postId = currentPost._id;
   const [error, setError] = useState(null);
   const [currentFormTab, setCurrentFormTab] = useState("media")
   const [mediaElements, setMediaElements] = useState([]);
@@ -33,19 +32,22 @@ export default function PostForm() {
   });
 
   // derived state
+  const postId = currentPost._id;
   const isEditPage = pathname.includes("edit");
   const isLoading = status === "loading"
-  const isSmallScreen = screenSize === "s" || screenSize === "xs"
+  const isSmallScreen = ["xs", "s"].includes(screenSize);
 
   const btnStyles = isLoading ? "btn--submit disabled" : "btn--submit";
-  const submitBtnValue =
-    (isLoading && "Submitting...") ||
-    (!isLoading && isEditPage ? "Save changes" : "Create new post");
+  const submitBtnValue = isLoading
+    ? "Submitting..."
+    :  isEditPage
+      ? "Save changes"
+      : "Create new post";
 
-    // if(!currentPost) return navigate("/not-found")
+
   let content;
 
-  const tabMenuRef = useRef()
+  const tabMenuRef = useRef(null)
   useScroll(tabMenuRef, _, { threshold: 40, scrollClass: "fade-top" })
 
   useEffect(() => {
@@ -343,28 +345,28 @@ export default function PostForm() {
       </>
   }
 
-  const tabMenuBtns =
-    <div ref={tabMenuRef} className="tabMenuBtns" onClick={(e) => handleTabMenu(e)}>
+  const tabsMenu =
+    <menu ref={tabMenuRef} className="tabsMenu" onClick={(e) => handleTabMenu(e)}>
       <Button
         type="button"
         dataValue="media"
-        className={currentFormTab === "media" ? "btn-tab active" : "btn-tab"}
+        className={currentFormTab === "media" ? "btn--tab is-active" : "btn--tab"}
       >
         Media
       </Button>
       <Button
         type="button"
         dataValue="postDetails"
-        className={currentFormTab === "postDetails" ? "btn-tab active" : "btn-tab"}
+        className={currentFormTab === "postDetails" ? "btn--tab is-active" : "btn--tab"}
       >
         Post details
       </Button>
       <div className="highlight"></div>
-    </div >
+    </menu >
 
   return (
     <main className="form-wrapper">
-      {isSmallScreen && tabMenuBtns}
+      {isSmallScreen && tabsMenu}
       <form
         className="post-form"
         onSubmit={isEditPage ? handleEdit : handleSubmit}

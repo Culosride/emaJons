@@ -7,7 +7,7 @@ import Button from "./Button";
 const modalRoot = document.getElementById("modal");
 
 export default function Modal({ children, description, confirmDelete, modalKey, className = "" }) {
-  const dialogRef = useRef();
+  const dialogRef = useRef(null);
   const dispatch = useDispatch()
   const modals = useSelector(state => state.ui.modals)
 

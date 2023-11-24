@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
-import { Routes, Route } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { Routes, Route, Navigate, redirect } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import Layout from "./components/layout/Layout";
 import Login from "./components/login/Login";
 import AllPosts from "./components/allPosts/AllPosts";
@@ -14,12 +14,19 @@ import withRouteValidation from "./hocs/RouteValidation";
 import RequireAuth from "./hocs/RequireAuth";
 import { setScreenSize } from "./features/UI/uiSlice";
 import { ROLES } from "./config/roles";
+import { setIsLogged } from "./features/auth/authSlice";
 
 const AllPostsRouteValidated = withRouteValidation(AllPosts);
 const PostRouteValidated = withRouteValidation(Post);
 
 export default function App() {
   const dispatch = useDispatch();
+  const isLoggedIn = useSelector(state => state.auth.isLogged)
+  
+  useEffect(() => {
+    const token = localStorage.getItem("access-token")
+    if(token) dispatch(setIsLogged(true))
+  }, [])
 
   useEffect(() => {
     const breakpoints = [
@@ -57,13 +64,13 @@ export default function App() {
         {/* public */}
         <Route index path="/" element={<Home />} />
         <Route path="/" element={<Layout />}>
-          <Route path="/login" element={<Login />} />
+          <Route path="/login" element={isLoggedIn ? <Navigate to="/"/> : <Login />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/about" element={<About />} />
           <Route path="/:category" element={<AllPostsRouteValidated />} />
           {<Route path="/:category/:postId" element={<PostRouteValidated />} />}
           {/* protected */}
-          <Route element={<RequireAuth allowedRoles={[ROLES.Admin]} />}>
+          <Route element={<RequireAuth allowedRoles={[ROLES.Admin]}/>}>
             <Route path="/posts/new" element={<PostForm />} />
             <Route path="/posts/:postId/edit" element={<PostForm />} />
           </Route>

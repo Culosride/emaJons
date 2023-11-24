@@ -125,7 +125,7 @@ const Slider = ({ slides, cursorColor, content }) => {
  ///////////////////////////////////////////////////////////////////////////////
 
   return (
-    <div className="slider slider-mobile" onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd}>
+    <div className="slider slider-infinite" onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd}>
       {!isFullscreen && <Button className={`btn--close ${content ? "" : "h30"} ${isMediumScreen ? "medium" : ""}`} onClick={() => navigate(`/${currentCategory}`)}>
         <span className={"icon icon--close"}></span>
       </Button>}

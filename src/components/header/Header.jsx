@@ -25,14 +25,14 @@ export default function Header() {
   const error = useSelector((state) => state.posts.error);
   const screenSize = useSelector((state) => state.ui.screenSize);
 
-  // const isSmallScreen = screenSize === "xs" || screenSize === "s";
-  const isMediumScreen = screenSize === "xs" || screenSize === "s" || screenSize === "m";
+  // const isSmallScreen = ["xs", "s"].includes(screenSize);
+  const isMediumScreen = ["xs", "s", "m"].includes(screenSize);
 
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const logoAndCategoryRef = useRef();
-  const adminMenuRef = useRef()
-  const headerRef = useRef()
+  const logoAndCategoryRef = useRef(null);
+  const adminMenuRef = useRef(null)
+  const headerRef = useRef(null)
 
   useEffect(() => {
     if (error.includes("401")) handleLogout();

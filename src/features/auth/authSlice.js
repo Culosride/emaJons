@@ -7,9 +7,13 @@ const initialState = {
   error: "" || null
 }
 
-export const login = createAsyncThunk("/auth/login", async (userData) => {
-  const response = await api.login(userData)
-  return response.data
+export const login = createAsyncThunk("/auth/login", async (userData, { rejectWithValue }) => {
+  try {
+    const response = await api.login(userData)
+    return response.data
+  } catch (error) {
+    return rejectWithValue(error.response.data.message);
+  }
 })
 
 export const logout = createAsyncThunk("/auth/logout", async (token) => {
@@ -28,6 +32,10 @@ const authSlice = createSlice({
   reducers: {
     setIsLogged(state, action) {
       state.isLogged = action.payload
+    },
+    resetAuthStatus(state, action) {
+      state.status = "idle"
+      state.error = ""
     }
   },
   extraReducers(builder) {
@@ -55,7 +63,7 @@ const authSlice = createSlice({
       .addCase(login.rejected, (state, action) => {
         state.status = "failed";
         state.isLogged = false
-        state.error = "401 Wrong username or password"
+        state.error = action.payload
       })
       .addCase(logout.pending, (state) => {
         state.status = 'loading'
@@ -71,7 +79,7 @@ const authSlice = createSlice({
   }
 })
 
-export const { setIsLogged } = authSlice.actions
+export const { setIsLogged, resetAuthStatus } = authSlice.actions
 
 export default authSlice.reducer
 
