@@ -22,6 +22,7 @@ const Slider = ({ slides, cursorColor, content }) => {
   const [isDragging, setIsDragging] = useState(false)
   const [startingPosition, setStartingPosition] = useState()
   const [delta, setDelta] = useState(0)
+  // const [deltaY, setDeltaY] = useState(0)
 
   // derived state
   const infiniteSlides = [slides[slides.length -1], ...slides, slides[0]]
@@ -30,6 +31,9 @@ const Slider = ({ slides, cursorColor, content }) => {
   const isLastSlide = currentSlide === infiniteSlides.length - 1
   const isFirstSlide = currentSlide === 0
   const currentDot = isLastSlide ? 0 : isFirstSlide ? slides.length - 1 : currentSlide - 1;
+  // const deltaAbs = Math.abs(delta)
+  // const deltaAbsY = Math.abs(deltaY)
+  // document.body.style.overflowY = (deltaAbs > 0 && deltaAbsY < 100) ? 'hidden' : "auto"
 
   const mediaRefs = slides.map(() => useRef(null)); // Create a ref for each video
   const observer = useRef(null);
@@ -46,7 +50,7 @@ const Slider = ({ slides, cursorColor, content }) => {
     if(node) {
       const slideWidth = node.firstChild.getBoundingClientRect().width
       const newTranslation = slideWidth * currentSlide
-      setTranslation(newTranslation)
+      setTranslation(newTranslation - delta)
 
       if (isLastSlide || isFirstSlide) {
         setTimeout(() => {
@@ -68,7 +72,7 @@ const Slider = ({ slides, cursorColor, content }) => {
   }, [currentSlide])
 
   const draggableStyles = {
-    transform: `translateX(-${translation}px)`,
+    transform: `translateX(-${translation - delta}px)`,
     transition: transition
   }
 
@@ -103,18 +107,22 @@ const Slider = ({ slides, cursorColor, content }) => {
   const handleTouchStart = (e) => {
     setStartingPosition(e.touches[0].clientX)
     setIsDragging(true)
+    setTransition("none")
   };
 
   const handleTouchMove = (e) => {
     if(!isDragging) return
     const currentPosition = e.touches[0].clientX;
+    // const currentPositionY = e.touches[0].clientY;
+    // const deltaY = currentPositionY - startingPosition;
+
     const deltaX = currentPosition - startingPosition;
     setDelta(deltaX)
+    // setDeltaY(deltaY)
   };
 
   const handleTouchEnd = () => {
     const limit = 20
-    console.log(delta)
     if(delta > limit) handlePrev()
     else if(delta < -limit) handleNext()
 
@@ -131,7 +139,7 @@ const Slider = ({ slides, cursorColor, content }) => {
       </Button>}
       <div ref={draggableRef} style={draggableStyles} className="draggable">
         {infiniteSlides.map((slide, index) => (
-          <div key={index} className={`slide ${index === currentSlide ? "active" : ""}`} style={{ zIndex: index === currentSlide ? 1 : 0}}>
+          <div key={index} className={`slide ${index === currentSlide ? "active" : ""}`} >
             {slide.mediaType === "video" ?
               <div className="video-container">
                 <video ref={mediaRefs[index]} muted controls>
