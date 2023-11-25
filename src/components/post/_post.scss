@@ -4,7 +4,6 @@
   display: grid;
   grid-template-columns: $slider-width $description-width;
   margin: 0 auto;
-  // height: 100vh;
   width: 100%;
   box-sizing: border-box;
   overflow: hidden;
@@ -12,6 +11,15 @@
 
 .post-container.fullscreen {
   background-color: black;
+}
+
+.fullscreen {
+  .slider-infinite {
+    height: 100vh;
+    .draggable {
+      margin-top: 0;
+    }
+  }
 }
 
 .fullscreen .slider img {
@@ -143,6 +151,7 @@
   .headline {
     justify-content: center;
     z-index: 0;
+    padding-bottom: 12px;
   }
   .layout-50 {
     .description-container {

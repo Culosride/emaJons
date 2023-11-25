@@ -11,6 +11,7 @@ const Slider = ({ slides, cursorColor, content }) => {
   const isFullscreen = useSelector(state => state.ui.isFullscreen)
   const currentCategory = useSelector(state => state.posts.currentCategory)
   const screenSize = useSelector((state) => state.ui.screenSize);
+  const infiniteSlides = [slides[slides.length -1], ...slides, slides[0]]
 
   // slider state
   const [currentSlide, setCurrentSlide] = useState(1);
@@ -20,20 +21,18 @@ const Slider = ({ slides, cursorColor, content }) => {
 
   // touch events state
   const [isDragging, setIsDragging] = useState(false)
-  const [startingPosition, setStartingPosition] = useState()
-  const [delta, setDelta] = useState(0)
-  // const [deltaY, setDeltaY] = useState(0)
+  const [startingPositionX, setStartingPositionX] = useState(0)
+  const [startingPositionY, setStartingPositionY] = useState(0)
+  const [deltaX, setDeltaX] = useState(0)
+  const [deltaY, setDeltaY] = useState(0)
 
   // derived state
-  const infiniteSlides = [slides[slides.length -1], ...slides, slides[0]]
   const isVideo = infiniteSlides[currentSlide].mediaType === "video"
   const isMediumScreen = ["xs", "s", "m"].includes(screenSize);
   const isLastSlide = currentSlide === infiniteSlides.length - 1
   const isFirstSlide = currentSlide === 0
   const currentDot = isLastSlide ? 0 : isFirstSlide ? slides.length - 1 : currentSlide - 1;
-  // const deltaAbs = Math.abs(delta)
-  // const deltaAbsY = Math.abs(deltaY)
-  // document.body.style.overflowY = (deltaAbs > 0 && deltaAbsY < 100) ? 'hidden' : "auto"
+  document.body.style.overflowY = (deltaY === null) ? 'hidden' : "auto"
 
   const mediaRefs = slides.map(() => useRef(null)); // Create a ref for each video
   const observer = useRef(null);
@@ -50,7 +49,7 @@ const Slider = ({ slides, cursorColor, content }) => {
     if(node) {
       const slideWidth = node.firstChild.getBoundingClientRect().width
       const newTranslation = slideWidth * currentSlide
-      setTranslation(newTranslation - delta)
+      setTranslation(newTranslation - deltaX)
 
       if (isLastSlide || isFirstSlide) {
         setTimeout(() => {
@@ -72,7 +71,7 @@ const Slider = ({ slides, cursorColor, content }) => {
   }, [currentSlide])
 
   const draggableStyles = {
-    transform: `translateX(-${translation - delta}px)`,
+    transform: `translateX(-${translation - deltaX}px)`,
     transition: transition
   }
 
@@ -105,30 +104,46 @@ const Slider = ({ slides, cursorColor, content }) => {
 
   //////////////////////////// --- touch events --- ////////////////////////////
   const handleTouchStart = (e) => {
-    setStartingPosition(e.touches[0].clientX)
+    setStartingPositionX(e.touches[0].clientX)
+    setStartingPositionY(e.touches[0].clientY)
+
     setIsDragging(true)
     setTransition("none")
   };
 
   const handleTouchMove = (e) => {
     if(!isDragging) return
-    const currentPosition = e.touches[0].clientX;
-    // const currentPositionY = e.touches[0].clientY;
-    // const deltaY = currentPositionY - startingPosition;
 
-    const deltaX = currentPosition - startingPosition;
-    setDelta(deltaX)
-    // setDeltaY(deltaY)
+    const currentPositionX = e.touches[0].clientX;
+    const currentPositionY = e.touches[0].clientY;
+
+    const verticalDelta = currentPositionY - startingPositionY;
+    const horizontalDelta = currentPositionX - startingPositionX;
+
+    // after first time this has run, if swiping in one direction, blocks the other one
+    if(deltaX === null) return
+    if(deltaY === null) return setDeltaX(horizontalDelta)
+
+    // first time this runs, it checks starting swiping direction X or Y
+    if(Math.abs(horizontalDelta) < Math.abs(verticalDelta)) {
+      setDeltaX(null)
+      setDeltaY(verticalDelta)
+    }
+    if(Math.abs(horizontalDelta) > Math.abs(verticalDelta)) {
+      setDeltaY(null)
+      setDeltaX(horizontalDelta)
+    }
   };
 
   const handleTouchEnd = () => {
     const limit = 20
-    if(delta > limit) handlePrev()
-    else if(delta < -limit) handleNext()
+    if(deltaX > limit) handlePrev()
+    else if(deltaX < -limit) handleNext()
 
     setIsDragging(false);
-    setDelta(0)
-    setStartingPosition(null)
+    setDeltaX(0)
+    setDeltaY(0)
+    setStartingPositionX(null)
   };
  ///////////////////////////////////////////////////////////////////////////////
 

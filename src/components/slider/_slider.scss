@@ -12,9 +12,15 @@
   display: flex;
   overflow: hidden;
   padding: 0;
+
+  @media (max-width: 991px) {
+    height: 80vh;
+  }
+
   .draggable {
     width: max-content;
     display: flex;
+    margin-top: 74px;
 
   }
   .slide {
@@ -22,6 +28,7 @@
     flex: none;
     @media (max-width: 991px) {
       width: 100vw;
+      height: 100%;
     }
   }
 }
@@ -34,7 +41,7 @@
 
 .slide {
   position: absolute;
-  margin-top: 74px;
+  // margin-top: 74px;
   padding: 0 32px 32px;
   top: 0;
   left: 0;
