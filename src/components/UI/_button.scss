@@ -1,5 +1,4 @@
 .btn {
-  // width: 100%;
   background-color: transparent;
   cursor: pointer;
   padding: 0px;
@@ -8,10 +7,17 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  // width: fit-content;
 
   &--logout {
     width: 100%;
+  }
+
+  &--back {
+    width: 20px;
+    height: auto;
+    @media (max-width: 991px) {
+      margin-right: 8px;
+    }
   }
 
   &--edit {
@@ -48,12 +54,18 @@
     }
 
     &.h30 {
-      // right: calc(26vw + 20px);
-
       @media (max-width: 991px) {
         right: 50px;
       }
     }
+  }
+
+  &--next-post, &--prev-post {
+    color: rgb(146, 146, 146);
+  }
+
+  &--next-post:hover, &--prev-post:hover {
+    color: black;
   }
 
   &--tab {
@@ -73,14 +85,6 @@
       border-bottom: 1px solid rgb(240, 240, 240);
     }
   }
-
-  &--delete, &--edit, &--new-post, &--btn-logout {
-      padding: 0;
-      width: 100%;
-      height: 100%;
-      background-position: center;
-      background-repeat: no-repeat;
-    }
 
   &.disabled {
     pointer-events: none;
@@ -136,6 +140,9 @@
   &--login {
     background-image: url('../icons/Login.svg');
   }
+  &--back {
+    background-image: url('../icons/ArrowBack.svg');
+  }
   &--logout {
     background-image: url('../icons/Logout.svg');
   }
@@ -156,114 +163,4 @@
       right: calc(26vw + 20px);
     }
   }
-
 }
-
-// .btn-submit {
-//   background-color: rgb(200, 200, 200);
-//   font-size: 24px;
-//   height: auto;
-// }
-
-// .icon-login {
-//   background-image: url('../icons/Login.svg');
-//   height: 100%;
-// }
-
-// .btn-sign-in {
-//   font-size: 16px;
-//   padding: 6px;
-//   width: 100%;
-//   border: 1px solid rgb(146, 146, 146);
-//   background-color: rgb(240, 240, 240);
-//   margin: 20px 0;
-//   height: auto;
-// }
-
-// .btn-tab {
-//   font-size: 18px;
-//   padding: 8px;
-//   width: 30%;
-//   transition: 0.3s ease-out;
-//   background-color: transparent;
-//   color: white;
-// }
-
-// .btn-tab.active {
-//   border-bottom: 1px solid rgb(240, 240, 240);
-// }
-
-// .btn-logout {
-//   background-image: url('../icons/Logout.svg');
-// }
-
-// .new-post {
-//   background-image: url('../icons/New.svg');
-// }
-
-// .edit {
-//   background-image: url('../icons/Edit.svg');
-// }
-
-// .delete {
-//   background-image: url('../icons/Delete.svg');
-// }
-
-// .close {
-//   background-image: url('../icons/Close.svg');
-//   right: calc(50vw + 20px);
-//   position: fixed;
-//   top: 22px;
-//   z-index: 6;
-//   height: 30px;
-// }
-
-// .close.h30 {
-//   right: calc(26vw + 20px);
-// }
-
-// .delete, .edit, .new-post, .btn-logout, .icon-login, .close {
-//   padding: 0;
-//   width: $icon-width;
-//   background-position: center;
-//   background-repeat: no-repeat;
-//   display: inline-block;
-// }
-
-// .header__btn--kebabMenu {
-//   background-image: url("../icons/KebabMenu.svg");
-//   background-size: contain;
-//   width: fit-content;
-//   background-repeat: no-repeat;
-//   background-position: center;
-//   transition: 0.3s ease-out;
-// }
-
-// .header__btn--kebabMenu.medium {
-//   height: 50%;
-//   scale: 1;
-// }
-
-
-// @media screen and (max-width: 991px) {
-//   .btn-logout, .new-post, .edit, .delete {
-//     width: 100%;
-//   }
-
-//   .close, .close.h30 {
-//     right: 50px;
-//   }
-// }
-
-// @media screen and (min-width: 992px) {
-//   .header__btn--kebabMenu.medium {
-//     scale: 0;
-//   }
-// }
-
-// @media screen and (max-width: 599px) {
-//   .btn-tab {
-//     width: 40%;
-//     text-wrap: nowrap;
-//   }
-// }

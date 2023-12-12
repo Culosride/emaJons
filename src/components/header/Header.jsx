@@ -24,15 +24,22 @@ export default function Header() {
   const postsStatus = useSelector((state) => state.posts.status);
   const error = useSelector((state) => state.posts.error);
   const screenSize = useSelector((state) => state.ui.screenSize);
-
-  // const isSmallScreen = ["xs", "s"].includes(screenSize);
-  const isMediumScreen = ["xs", "s", "m"].includes(screenSize);
-
   const [isExpanded, setIsExpanded] = useState(false);
 
   const logoAndCategoryRef = useRef(null);
   const adminMenuRef = useRef(null)
   const headerRef = useRef(null)
+
+  const isAdminPath = matchPath("/posts/*", pathname)
+  const postExists = !isAdminPath && matchPath("/:categories/:postId", pathname);
+  const isPostPage = Boolean(postExists);
+
+  const isMediumScreen = ["xs", "s", "m"].includes(screenSize);
+  if (matchPath("/posts/new", pathname)) {
+    currentCategory = "new post";
+  } else if (matchPath("/posts/:postId/edit", pathname)) {
+    currentCategory = "edit";
+  }
 
   useEffect(() => {
     if (error.includes("401")) handleLogout();
@@ -50,18 +57,7 @@ export default function Header() {
 
   useScroll(headerRef, menuOff, { threshold: 40, scrollClass: "fade-top" })
 
-  // to rename ?
-  const admin = matchPath("/posts/*", pathname);
-  const postPage = admin ? false : matchPath("/:categories/:postId", pathname);
-  const isPostPage = Boolean(postPage)
-
-  if (matchPath("/posts/new", pathname)) {
-    currentCategory = "new post";
-  } else if (matchPath("/posts/:postId/edit", pathname)) {
-    currentCategory = "edit";
-  }
-
-  async function handleLogout() {
+  const handleLogout = async () => {
     localStorage.removeItem("access-token");
     dispatch(logout(token)).then(() => {
       navigate("/");
@@ -80,35 +76,39 @@ export default function Header() {
     dispatch(setCurrentCategory(category));
   };
 
-  function confirmPostDelete() {
+  const confirmPostDelete = () => {
     dispatch(deletePost([currentPostId, currentCategory])).then(
       () => dispatch(fetchPosts()) && navigate(`/${currentCategory}`)
     );
     dispatch(setModal({ key: "postDelete", state: false }))
   }
 
-  const headerClass = `header ${isPostPage ? "" : "header--100"} ${isPostPage && hasContent ? "header--50" : ""} ${(isPostPage && !hasContent) ? "header--30" : ""}`
+  const headerClass = `header ${isPostPage ? "" : "header--100"}${isPostPage && hasContent ? "header--50" : ""}${(isPostPage && !hasContent) ? "header--30" : ""}`
 
   return (
     !isFullscreen &&
     <header ref={headerRef} className={headerClass}>
-       <nav ref={logoAndCategoryRef} className="nav-main">
-      <Link onClick={menuOff} to="/" className="nav-main__logo nav-main__logo--small">
-        EmaJons
-      </Link>
-      <span className="nav-main__divider"></span>
-    {(isPostPage || isMediumScreen) && <Link className="nav-main__link nav-main__link--small is-active">{currentCategory}</Link>}
-    {!postPage &&
-      <NavMenu
-        isExpanded={isExpanded}
-        setIsExpanded={setIsExpanded}
-        toggleMenu={toggleMenu}
-        adminMenuRef={adminMenuRef}
-        handleNewCategory={handleNewCategory}
-        />}
-    </nav>
+      <nav ref={logoAndCategoryRef} className="nav-main">
+        <Link onClick={menuOff} to="/" className="nav-main__logo nav-main__logo--small">
+          EmaJons
+        </Link>
+        <span className="nav-main__divider"></span>
+        {(isPostPage || isMediumScreen) &&
+          <Link className="nav-main__link nav-main__link--small is-active">
+            {currentCategory}
+          </Link>}
+        {!isPostPage &&
+          <NavMenu
+            isExpanded={isExpanded}
+            setIsExpanded={setIsExpanded}
+            toggleMenu={toggleMenu}
+            adminMenuRef={adminMenuRef}
+            handleNewCategory={handleNewCategory}
+          />}
+      </nav>
       <AdminMenu ref={adminMenuRef} isPostPage={isPostPage} handleLogout={handleLogout} menuOff={menuOff} setIsExpanded={setIsExpanded}/>
-      {modals.postDelete && <Modal modalKey="postDelete" description="Delete this post?" confirmDelete={confirmPostDelete} />}
+      {modals.postDelete &&
+        <Modal modalKey="postDelete" description="Delete this post?" confirmDelete={confirmPostDelete} />}
     </header>
   );
 }

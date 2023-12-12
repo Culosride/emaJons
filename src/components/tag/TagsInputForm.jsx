@@ -16,11 +16,10 @@ const TagsInputForm = () => {
   const modals = useSelector(state => state.ui.modals);
   const [tagToDelete, setTagToDelete] = useState("")
 
-  useKeyPress("Tab", createNewTag)
   useKeyPress("Escape", () => dispatch(setModal({ key: "tagDelete", state: false })))
 
   // CRUD tags
-  function createNewTag(e) {
+  const createNewTag = (e) => {
     if (selectedTags.includes(tag)) {
       setTag("")
     } else if (availableTags.includes(tag)) {
@@ -31,12 +30,14 @@ const TagsInputForm = () => {
     setTag("")
   }
 
-  function handleTagDelete(tag) {
+  useKeyPress("Tab", createNewTag)
+
+  const handleTagDelete = (tag) => {
     dispatch(setModal({ key: "tagDelete", state: true }))
     setTagToDelete(tag)
   }
 
-  function confirmTagDelete() {
+  const confirmTagDelete = () => {
     dispatch(deleteTag(tagToDelete))
       .then(() => {
         dispatch(fetchPosts())
@@ -44,12 +45,12 @@ const TagsInputForm = () => {
     dispatch(setModal({ key: "tagDelete", state: false }))
   }
 
-  function handleTagToggle(tag) {
+  const handleTagToggle = (tag) => {
     dispatch(toggleTag(tag))
   }
 
   // set tag in useState
-  function handleTag(e) {
+  const handleTag = (e) => {
     const { name, value } = e.target;
     if(name === "postTags") { setTag(() => _.capitalize(value)) }
   }

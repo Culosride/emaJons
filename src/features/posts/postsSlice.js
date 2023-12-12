@@ -140,7 +140,7 @@ const postsSlice = createSlice({
       })
       .addCase(fetchPostsByCategory.fulfilled, (state, action) => {
 
-        function filterPosts(array1, array2, property) {
+        const filterPosts = (array1, array2, property) => {
           const ids = new Set(array1.map(item => item[property]));
           const uniquePosts = array2.filter(item => !ids.has(item[property]));
           return uniquePosts;

@@ -13,6 +13,8 @@ export default function Post() {
   const params = useParams()
   const currentId = params.postId
   const post = useSelector(state => state.posts.posts.find(post => post._id === currentId)) || useSelector(state => state.posts.currentPost)
+  const nextPostId = useSelector(state => <state className="posts posts"></state>)
+  console.log('nextPostId', nextPostId)
   const status = useSelector(state => state.posts.status)
   const error = useSelector(state => state.posts.error)
   const category = params.category
@@ -39,23 +41,18 @@ export default function Post() {
 
   useKeyPress("Escape", escapeFullscreen);
 
+  const displayMedia = (post) => {
+    mediaElements = post.media.map((med) => {
+      return (<img src={med.url} key={med.publicId}/>)
+    })
+  }
+
   if (status === 'loading') {
     mediaElements = <p>Loading...</p>
   } else if (status === 'succeeded') {
     post && displayMedia(post)
   } else if (status === 'failed') {
     mediaElements = <div>{error}</div>
-  }
-
-  function displayMedia(post) {
-    mediaElements = post.media.map((med) => {
-      return (<img src={med.url} key={med.publicId}/>)
-    })
-  }
-
-  // interaction
-  const handleFullscreen = () => {
-    dispatch(toggleFullscreen())
   }
 
   const handleScroll = () => {
@@ -70,6 +67,14 @@ export default function Post() {
     }
   }
 
+  const handlePreviousPost = () => {
+
+  }
+
+  const handleNextPost = () => {
+
+  }
+
   const content = post?.content && post.content.length > 500
   const cursorColor = isFullscreen ? "white" : ""
 
@@ -78,16 +83,22 @@ export default function Post() {
       (
         <main id={"post"} className={`post-container ${content ? "layout-50" : ""} ${isFullscreen ? "layout-100 fullscreen" : ""}`}>
           {post.media && <Slider content={content} cursorColor={cursorColor} slides={post.media}/>}
-          {!isFullscreen && <div className="text-container" onScroll={handleScroll} onClick={handleFullscreen}>
-            <div className="description-container">
+          {!isFullscreen && <div className="text-container" onScroll={handleScroll}>
+            <section className="description-container">
               <div ref={headlineRef} className="headline">
-                <div>
-                  <h1 className="title">{post.title}</h1>
-                  {post.subtitle && <p className="subtitle">{post.subtitle}</p>}
-                </div>
+                <h1 className="title">{post.title}</h1>
+                {post.subtitle && <p className="subtitle">{post.subtitle}</p>}
               </div>
               {post.content && <p className="content">{post.content}</p>}
-            </div>
+              <div className="posts-navigation">
+                <Button type="button" className="btn--prev-post" handlePreviousPost={handlePreviousPost}>
+                  PREVIOUS
+                </Button>
+                <Button type="button" className="btn--next-post" handleNextPost={handleNextPost}>
+                  NEXT
+                </Button>
+              </div>
+            </section>
           </div>}
         </main>
       )

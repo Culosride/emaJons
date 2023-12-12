@@ -21,6 +21,10 @@
       height: 100%;
       flex-wrap: wrap;
       row-gap: 0 !important;
+      gap: 8px;
+      &__divider {
+        margin: 0 4px;
+      }
     }
   }
 

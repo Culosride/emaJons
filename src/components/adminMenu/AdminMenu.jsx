@@ -29,11 +29,11 @@ const AdminMenu = forwardRef(( { isPostPage, menuOff, setIsExpanded }, ref) => {
     }
   };
 
-  function handleDelete() {
+  const handleDelete = () => {
     dispatch(setModal({ key: "postDelete", state: true }));
   }
 
-  async function handleLogout() {
+   const handleLogout = async () => {
     localStorage.removeItem("access-token");
     dispatch(selectTag(""))
     dispatch(logout(token)).then(() => {

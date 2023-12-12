@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../../features/auth/authSlice';
 import Button from '../UI/Button';
 
-function Login() {
+export default function Login() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const isLoggedIn = useSelector(state => state.auth.isLogged)
@@ -17,7 +17,7 @@ function Login() {
     usernameRef?.current.focus()
   }, [])
 
-  function handleChange(e) {
+  const handleChange = (e) => {
     setErrMsg("")
     const { name, value } = e.target;
     setUserInfo((prev) => ({...prev, [name]: value}));
@@ -38,7 +38,7 @@ function Login() {
     }
   }
 
-  function resetInfo() {
+  const resetInfo = () => {
     setUserInfo({
       username: "",
       password: ""
@@ -80,5 +80,3 @@ function Login() {
   )
   return content
 }
-
-export default Login

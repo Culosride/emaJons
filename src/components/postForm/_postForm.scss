@@ -38,9 +38,16 @@ input[type="file"] {
   }
 }
 
+.form-wrapper {
+  margin-top: 32px;
+
+  @media (max-width: 767px ){
+    margin-top: 0px;
+  }
+}
+
 .post-form {
   margin: 0 auto;
-  margin-top: 32px;
   display: grid;
   grid-template-columns: 1fr 1fr;
 
@@ -222,7 +229,6 @@ input[type="file"] {
 
   .post-form {
     display: block;
-    margin-top: 0px;
 
     .fullscreen {
       height: 100%;

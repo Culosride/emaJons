@@ -12,45 +12,69 @@
   display: flex;
   overflow: hidden;
   padding: 0;
+  align-items: center;
 
   @media (max-width: 991px) {
-    height: 80vh;
+    height: 76vh;
+    margin-top: 74px;
+    border: none;
   }
 
   .draggable {
-    width: max-content;
+    width: 100%;
     display: flex;
-    margin-top: 74px;
+    align-items: center;
+    height: 100%;
 
-  }
-  .slide {
-    position: relative;
-    flex: none;
     @media (max-width: 991px) {
-      width: 100vw;
-      height: 100%;
+      padding: 0;
+
+      @media (orientation: landscape) {
+        height: 100%;
+      }
     }
   }
-}
 
-.slider:hover {
-  img {
-    cursor: url("../icons/PlusBold.svg"), auto;
+  .slide {
+    flex: none;
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    @media (max-width: 991px) {
+      width: 100vw;
+    }
+
+    @media (max-width: 767px) {
+    }
+
+    .video-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      max-width: 85vh;
+      max-height: 100%;
+      width: 100%;
+      width: 85%;
+
+      @media (max-width: 991px) {
+        width: 100%;
+        height: 100%;
+      }
+
+      @media (orientation: landscape) {
+        // align-items: flex-start;
+      }
+
+      video {
+        object-fit: contain;
+        width: 100%;
+      }
+    }
   }
-}
-
-.slide {
-  position: absolute;
-  // margin-top: 74px;
-  padding: 0 32px 32px;
-  top: 0;
-  left: 0;
-  width: 100%;
-
-  display: flex;
-  height: calc(100vh - 74px);
-  justify-content: center;
-  align-items: center;
 
   img {
     width: 85%;
@@ -62,24 +86,11 @@
       height: 100%;
     }
   }
+}
 
-  .video-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    max-width: 85vh;
-    max-height: 100%;
-    width: 100%;
-
-    @media (max-width: 1199px) {
-      width: 85%;
-      height: 100%;
-    }
-
-    video {
-      object-fit: contain;
-      width: 100%;
-    }
+.slider:hover {
+  img {
+    cursor: url("../icons/PlusBold.svg"), auto;
   }
 }
 
@@ -135,9 +146,12 @@
 }
 
 .next:before,
-.next-video:hover {
+.next-video:hover,
+.prev:before,
+.prev-video:hover {
   content: "";
 }
+
 .next:hover,
 .next-video:hover {
   cursor: url("../icons/ArrowIcon.svg"), auto;
@@ -146,11 +160,6 @@
 .next.white:hover,
 .next-video.white:hover {
   cursor: url("../icons/ArrowIconWhite.svg"), auto;
-}
-
-.prev:before,
-.prev-video:hover {
-  content: "";
 }
 
 .prev:hover,
@@ -168,13 +177,14 @@
   width: 100%;
   transform: translateX(-50%);
   left: 50%;
-  bottom: 16px;
   z-index: 2;
-}
+  bottom: 32px;
 
-@media screen and (max-width: 991px) {
-  .slider {
-    border: none;
+  @media (max-width: 991px) {
+    bottom: 0;
 
+    @media (orientation: landscape) {
+      bottom: 8px;
+    }
   }
 }

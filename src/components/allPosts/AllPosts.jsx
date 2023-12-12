@@ -8,6 +8,7 @@ import ImageContainer from "../image/ImageContainer";
 import usePosts from "../../hooks/usePosts";
 import { useScroll } from "../../hooks/useScroll";
 import Draggable from "../UI/Draggable";
+import { POSTS_TO_LOAD } from "../../config/roles";
 const _ = require("lodash");
 
 export default function AllPosts() {
@@ -40,6 +41,10 @@ export default function AllPosts() {
     dispatch(setCurrentCategory(currentCategory));
     window.scrollTo(0, scrollPosition)
   }, [])
+
+  useEffect(() => {
+    if(filteredPosts.length < POSTS_TO_LOAD && activeTag && hasMorePosts) setPageNum(2)
+  }, [filteredPosts])
 
   useScroll(tagsContainerRef, _, { threshold: 40, scrollClass: "fade-top" })
 

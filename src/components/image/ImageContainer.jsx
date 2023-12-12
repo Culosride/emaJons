@@ -12,7 +12,7 @@ const ImageContainer = forwardRef(({ mediaType, handleScrollPosition, src, alt, 
   const content = ref ?
     (
       <Link onClick={handleScrollPosition} to={linkUrl} ref={ref} className="image-container">
-        {mediaType === "image" && <img className={"image"} src={src} alt={alt} />}
+        {mediaType === "image" && <img className="image" src={src} alt={alt} />}
         {mediaType === "video" && (
           <video className={"image"} onMouseEnter={handleMouseEnter} alt={alt} onMouseLeave={handleMouseLeave} loop muted>
             <source src={src} type="video/mp4"/>
@@ -24,7 +24,7 @@ const ImageContainer = forwardRef(({ mediaType, handleScrollPosition, src, alt, 
     ) :
     (
       <Link onClick={handleScrollPosition} to={linkUrl} className="image-container">
-        {mediaType === "image" && <img className={"image"} src={src} alt={alt} />}
+        {mediaType === "image" && <img className="image" src={src} alt={alt} />}
         {mediaType === "video" && (
           <video className="image" onMouseEnter={handleMouseEnter} alt={alt} onMouseLeave={handleMouseLeave} loop muted>
             <source src={src} type="video/mp4"/>

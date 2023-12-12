@@ -22,7 +22,7 @@ const PostRouteValidated = withRouteValidation(Post);
 export default function App() {
   const dispatch = useDispatch();
   const isLoggedIn = useSelector(state => state.auth.isLogged)
-  
+
   useEffect(() => {
     const token = localStorage.getItem("access-token")
     if(token) dispatch(setIsLogged(true))

@@ -2,23 +2,22 @@ const express = require("express");
 const postRouter = new express.Router();
 const upload = require("../middleware/upload");
 const multerUpload = upload.array("media", 20);
-// const multerUpload = upload.fields([{ name: "media", maxCount: 20 }, { name: "previewImg", maxCount: 1 }]);
 const verifyJWT = require("../middleware/verifyJWT");
-// const validatePath = require("../middleware/pathValidation")
 const Post = require("../models/post");
 const Category = require("../models/category");
 const { Media } = require("../models/media");
+const _ = require("lodash");
+const { POSTS_TO_LOAD } = require("../config/roles");
 const {
   uploadToCloudinary,
   removeFromCloudinary,
   removeVideoFromCloudinary,
   generatePreview,
 } = require("../services/cloudinary.config");
-const _ = require("lodash");
 require("dotenv").config();
 
-//////////////////////////////////////////////// routes for BasicUsers ////////////////////////////////////////////////
-// fetch all posts
+//////////////////////////// routes for BasicUsers /////////////////////////////
+// FETCH ALL POSTS
 postRouter.get("/api/posts", async (req, res) => {
   try {
     // Group posts by category and limit each group to the first 9 posts
@@ -32,7 +31,7 @@ postRouter.get("/api/posts", async (req, res) => {
       {
         $project: {
           category: '$_id',
-          posts: { $slice: ['$posts', 9] },
+          posts: { $slice: ['$posts', POSTS_TO_LOAD] },
         },
       },
     ];
@@ -47,11 +46,11 @@ postRouter.get("/api/posts", async (req, res) => {
   }
 });
 
-// fetch posts by category
+// FETCH POSTS BY CATEGORY
 postRouter.get("/api/categories/:category", async (req, res) => {
   const { category } = req.params
   const page = parseInt(req.query.page) || 1;
-  const pageSize = parseInt(req.query.pageSize) || 9;
+  const pageSize = parseInt(req.query.pageSize) || POSTS_TO_LOAD;
   try {
     const posts = await Post.find({category: category})
       .skip((page - 1) * pageSize)
@@ -66,7 +65,7 @@ postRouter.get("/api/categories/:category", async (req, res) => {
   }
 });
 
-// fetch post by id
+// FETCH POST BY ID
 postRouter.get("/api/posts/:postId", async (req, res) => {
   const { postId } = req.params
   try {
@@ -78,8 +77,10 @@ postRouter.get("/api/posts/:postId", async (req, res) => {
   }
 });
 
-/////////////////////////////////////////////////// protected routes ///////////////////////////////////////////////////
-// create post
+
+
+/////////////////////////////// protected routes ///////////////////////////////
+// CREATE POST
 postRouter.post("/posts", verifyJWT, multerUpload, async (req, res) => {
   const post = new Post(req.body);
   const savedPost = await post.save();
@@ -111,7 +112,7 @@ postRouter.post("/posts", verifyJWT, multerUpload, async (req, res) => {
   res.status(200).json(updatedPost);
 });
 
-// edit post
+// UPDATE POST
 postRouter.patch("/posts/:postId/edit", verifyJWT, multerUpload, async (req, res) => {
     if (!req.body.postTags) req.body.postTags = [];
     const update = Object.assign({}, req.body);
@@ -146,7 +147,7 @@ postRouter.patch("/posts/:postId/edit", verifyJWT, multerUpload, async (req, res
       }
     }
 
-    // update post
+    // post update
     await post.updateOne({ $set: update }, { new: true }).exec();
 
     // handle new media
@@ -183,7 +184,7 @@ postRouter.patch("/posts/:postId/edit", verifyJWT, multerUpload, async (req, res
   }
 );
 
-// delete post
+// DELETE POST
 postRouter.delete("/:category/:postId", verifyJWT, async (req, res) => {
   const { postId } = req.params;
   try {
