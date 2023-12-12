@@ -20,6 +20,10 @@
     border: none;
   }
 
+  @media (max-width: 767px) {
+    padding-bottom: 16px;
+  }
+
   .draggable {
     width: 100%;
     display: flex;
@@ -48,25 +52,26 @@
       width: 100vw;
     }
 
-    @media (max-width: 767px) {
+    @media (max-width: 991px) and (orientation: landscape) {
+      align-items: flex-start;
     }
 
     .video-container {
       display: flex;
       align-items: center;
       justify-content: center;
-      max-width: 85vh;
+      max-width: 90vh;
       max-height: 100%;
       width: 100%;
-      width: 85%;
+      width: 90%;
 
       @media (max-width: 991px) {
         width: 100%;
         height: 100%;
       }
 
-      @media (orientation: landscape) {
-        // align-items: flex-start;
+      @media (max-width: 991px) and (orientation: landscape) {
+        align-items: flex-start;
       }
 
       video {
@@ -77,8 +82,8 @@
   }
 
   img {
-    width: 85%;
-    height: 85%;
+    width: 90%;
+    height: 90%;
     object-fit: contain;
 
     @media (max-width: 767px) {
@@ -180,11 +185,12 @@
   z-index: 2;
   bottom: 32px;
 
+  @media (orientation: landscape) {
+    bottom: 20px;
+  }
+
   @media (max-width: 991px) {
     bottom: 0;
 
-    @media (orientation: landscape) {
-      bottom: 8px;
-    }
   }
 }
