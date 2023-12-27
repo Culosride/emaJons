@@ -36,24 +36,14 @@ const Slider = ({ slides, cursorColor }) => {
   const mediaRefs = slides.map(() => useRef(null)); // Create a ref for each video
   const observer = useRef(null);
 
-  // useEffect(() => {
-
-  //   const handleFullscreenChange = () => {
-  //     if(document.fullscreenElement) {
-  //       dispatch(toggleFullscreen(true))
-  //     }
-  //   }
-
-  //   document.addEventListener("fullscreenchange", handleFullscreenChange);
-
-  //   return () => document.removeEventListener("fullscreenchange", handleFullscreenChange);
-  // }, [])
-
-
   useEffect(() => {
     mediaRefs.forEach((ref, index) => {
       if (ref.current?.localName === "video" && index !== currentSlide) {
         ref.current.pause();
+      }
+      if (ref.current?.localName === "video" && index === currentSlide) {
+        console.log('ref.current', ref.current)
+        calcBtnSize(ref.current)
       }
     });
 
@@ -62,6 +52,12 @@ const Slider = ({ slides, cursorColor }) => {
     }
 
   }, [currentSlide, isFullscreen]);
+
+  const calcBtnSize = (node) => {
+    console.log(node)
+    const videoheight = node.getBoundingClientRect()
+    console.log('videoheight', videoheight)
+  }
 
   const calcTranslation = (node) => {
     if(node) {
@@ -92,6 +88,10 @@ const Slider = ({ slides, cursorColor }) => {
   const draggableStyles = {
     transform: `translateX(-${translation - deltaX}px)`,
     transition: transition,
+  }
+
+  const btnStyles = {
+    height: ""
   }
 
   const handleNavigation = (direction) => {
@@ -192,8 +192,8 @@ const Slider = ({ slides, cursorColor }) => {
       </div>
       {!isSingleSlide &&
         <>
-          <Button type="button" className={`${cursorColor} ${isVideo ? "prev-video" : "prev"}`} onClick={handlePrev} />
-          <Button type="button" className={`${cursorColor} ${isVideo ? "next-video" : "next"}`} onClick={handleNext} />
+          <Button type="button" style={btnStyles} className={`${cursorColor} ${isVideo ? "prev-video" : "prev"}`} onClick={handlePrev} />
+          <Button type="button" style={btnStyles} className={`${cursorColor} ${isVideo ? "next-video" : "next"}`} onClick={handleNext} />
         </>
       }
       {slides.length &&

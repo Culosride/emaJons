@@ -88,7 +88,11 @@ export default function PostForm() {
             {file.type === "video/mp4"
               ? <video src={src} controls></video>
               : <img src={src} />}
-            <span id={file[mediaKey]} className="icon" onClick={deleteMedia}></span>
+            <div className="btn-prev-container">
+              <Button id={file[mediaKey]} className="btn btn--delete" title="Delete" onClick={deleteMedia}>
+                <span id={file[mediaKey]} className="icon icon--delete" onClick={deleteMedia}></span>
+              </Button>
+            </div>
           </div>
         );
       })
@@ -97,6 +101,8 @@ export default function PostForm() {
 
   // delete media from preview
   const deleteMedia = (e) => {
+    e.preventDefault()
+    console.log(e.target)
     const { id } = e.target;
     const updatedMedia = postData.media.filter((file) => {
       const mediaKey = file.publicId ? "publicId" : "lastModified";
