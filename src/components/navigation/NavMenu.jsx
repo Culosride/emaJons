@@ -24,11 +24,11 @@ const NavMenu = ({ handleNewCategory,  toggleMenu,  isExpanded }) => {
     handleExpanded();
   }, [isExpanded, screenSize]);
 
-  if (matchPath("/posts/new", pathname)) {
-    currentCategory = "new post";
-  } else if (matchPath("/posts/:postId/edit", pathname)) {
-    currentCategory = "edit";
-  }
+  // if (matchPath("/posts/new", pathname)) {
+  //   currentCategory = "new post";
+  // } else if (matchPath("/posts/:postId/edit", pathname)) {
+  //   currentCategory = "edit";
+  // }
 
   const navbarClass = `nav-main__menu ${isMediumScreen ? "nav-main__menu--dropdown" : ""} ${isExpanded && isMediumScreen ? "is-active" : ""}`
 
