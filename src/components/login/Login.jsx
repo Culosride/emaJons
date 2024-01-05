@@ -3,13 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../../features/auth/authSlice';
 import Button from '../UI/Button';
+import ErrorMsg from '../UI/ErrorMsg';
 
 export default function Login() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const isLoggedIn = useSelector(state => state.auth.isLogged)
   const usernameRef = useRef()
-  const errRef = useRef()
   const [ userInfo, setUserInfo ] = useState({ username: "", password: "" })
   const [ errMsg, setErrMsg ] = useState("")
 
@@ -34,7 +33,6 @@ export default function Login() {
       resetInfo();
     } catch (error) {
       setErrMsg(error)
-      errRef.current.focus();
     }
   }
 
@@ -44,8 +42,6 @@ export default function Login() {
       password: ""
     });
   }
-
-  const errClass = errMsg ? "error-msg" : "offscreen"     // defines styles when error
 
   const content = (
     <div className="login-container">
@@ -74,7 +70,7 @@ export default function Login() {
           required
         />
         <Button type="submit" className="btn-sign-in">Sign In</Button>
-        <p ref={errRef} className={errClass} aria-live="assertive">{errMsg}</p>
+        <ErrorMsg errMsg={errMsg} />
       </form>
     </div>
   )

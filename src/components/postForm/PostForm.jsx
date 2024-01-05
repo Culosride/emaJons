@@ -5,9 +5,10 @@ import { fetchAllTags, toggleTag, resetTags } from "../../features/tags/tagsSlic
 import { useSelector, useDispatch } from "react-redux";
 import TagsInputForm from "../tag/TagsInputForm";
 import Button from "../UI/Button";
-import Modal from "../UI/Modal"
+import ErrorMsg from "../UI/ErrorMsg";
 import { useScroll } from "../../hooks/useScroll";
 const _ = require("lodash");
+
 
 export default function PostForm() {
   const dispatch = useDispatch();
@@ -19,7 +20,7 @@ export default function PostForm() {
   const screenSize = useSelector((state) => state.ui.screenSize);
   const status = useSelector((state) => state.posts.status);
 
-  const [error, setError] = useState(null);
+  const [errMsg, setErrMsg] = useState(null);
   const [currentFormTab, setCurrentFormTab] = useState("media")
   const [mediaElements, setMediaElements] = useState([]);
   const [postData, setPostData] = useState({
@@ -112,7 +113,7 @@ export default function PostForm() {
   };
 
   const handleChange = (e) => {
-    setError("");
+    setErrMsg("");
     const { name, value, files } = e.target;
 
     setPostData((prev) => {
@@ -131,11 +132,11 @@ export default function PostForm() {
     if (isLoading) return
 
     if (!postData.category) {
-      setError("Select a category");
+      setErrMsg("Select a category");
       window.scrollTo(0, 0)
       return;
     } else if (!postData.media.length) {
-      setError("A post with nada?");
+      setErrMsg("A post with nada?");
       window.scrollTo(0, 0)
       return;
     }
@@ -168,7 +169,7 @@ export default function PostForm() {
       setEmptyCategory(true);
       return;
     } else if (!postData.media.length) {
-      setError("A post with no pictures?");
+      setErrMsg("A post with no pictures?");
       return;
     }
     const formData = new FormData();
@@ -221,7 +222,7 @@ export default function PostForm() {
         </div>
       ) : (
         <div className="post-form-layout fullscreen">
-          {error && <p className="error-msg">{error}</p>}
+          <ErrorMsg errMsg={errMsg} />
           <fieldset>
             <input
               className="title"
@@ -280,7 +281,7 @@ export default function PostForm() {
     content =
       <>
         <div className="post-form-layout">
-          {error && <p className="error-msg">{error}</p>}
+          <ErrorMsg errMsg={errMsg} />
           <label className="custom-file-button" htmlFor="media">Choose media</label>
           <input
             className="hidden-file-input"

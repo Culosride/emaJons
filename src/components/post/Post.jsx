@@ -13,7 +13,7 @@ export default function Post() {
   const params = useParams()
   const currentId = params.postId
   const post = useSelector(state => state.posts.posts.find(post => post._id === currentId)) || useSelector(state => state.posts.currentPost)
-  const nextPostId = useSelector(state => <state className="posts posts"></state>)
+  const nextPostId = useSelector(state => state)
   console.log('nextPostId', nextPostId)
   const status = useSelector(state => state.posts.status)
   const error = useSelector(state => state.posts.error)
