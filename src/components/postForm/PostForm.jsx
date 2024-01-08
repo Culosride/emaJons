@@ -45,7 +45,6 @@ export default function PostForm() {
       ? "Save changes"
       : "Create new post";
 
-
   let content;
 
   const tabMenuRef = useRef(null)
