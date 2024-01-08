@@ -67,8 +67,6 @@ export default function AllPosts() {
   };
 
   const displayPosts = (posts) => {
-    if (posts) {
-    }
 
     return posts.map((post, i) => {
       const { mediaType, url } = post.media[0];
@@ -99,22 +97,18 @@ export default function AllPosts() {
   };
 
   // loads more posts (infinite scroll)
-  const lastPostRef = useCallback(
-    (post) => {
-      if (status !== "succeeded") return;
-      if (observer.current) observer.current.disconnect();
-      observer.current = new IntersectionObserver(
-        (entries) => {
-          if (entries[0].isIntersecting && hasMorePosts) {
-            setPageNum((p) => p + 1);
-          }
-        },
-        { threshold: 0.8 }
+  const lastPostRef = useCallback((post) => {
+    if (status !== "succeeded") return;
+    if (observer.current) observer.current.disconnect();
+    observer.current = new IntersectionObserver(
+      (entries) => {
+        if(entries[0].isIntersecting && hasMorePosts) {
+          setPageNum((p) => p + 1);
+        }
+      }, { threshold: 0.8 }
       );
       if (post) observer.current.observe(post);
-    },
-    [status, hasMorePosts, activeTag]
-  );
+  }, [status, hasMorePosts, activeTag]);
 
   const centerTag = (e) => {
     const container = maskTagsRef.current;

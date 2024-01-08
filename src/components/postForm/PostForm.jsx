@@ -38,7 +38,7 @@ export default function PostForm() {
   const isLoading = status === "loading"
   const isSmallScreen = ["xs", "s"].includes(screenSize);
 
-  const btnStyles = isLoading ? "btn--submit disabled" : "btn--submit";
+  const btnStyles = isLoading ? "submit disabled" : "submit";
   const submitBtnValue = isLoading
     ? "Submitting..."
     :  isEditPage
@@ -89,9 +89,7 @@ export default function PostForm() {
               ? <video src={src} controls></video>
               : <img src={src} />}
             <div className="btn-prev-container">
-              <Button id={file[mediaKey]} className="btn btn--delete" title="Delete" onClick={deleteMedia}>
-                <span id={file[mediaKey]} className="icon icon--delete" onClick={deleteMedia}></span>
-              </Button>
+              <Button hasIcon={true} id={file[mediaKey]} className="delete" title="Delete" onClick={deleteMedia} />
             </div>
           </div>
         );
@@ -270,10 +268,13 @@ export default function PostForm() {
           <TagsInputForm />
 
           <Button
+            hasIcon={false}
             disabled={isLoading}
             className={btnStyles}
             type="submit"
-          >{submitBtnValue}</Button>
+          >
+            {submitBtnValue}
+          </Button>
         </div>
       )
   } else {
@@ -343,10 +344,13 @@ export default function PostForm() {
           <TagsInputForm />
 
           <Button
+            hasIcon={false}
             disabled={isLoading}
             className={btnStyles}
             type="submit"
-          >{submitBtnValue}</Button>
+          >
+            {submitBtnValue}
+          </Button>
         </div>
       </>
   }
@@ -354,16 +358,18 @@ export default function PostForm() {
   const tabsMenu =
     <menu ref={tabMenuRef} className="tabsMenu" onClick={(e) => handleTabMenu(e)}>
       <Button
+        hasIcon={false}
         type="button"
         dataValue="media"
-        className={currentFormTab === "media" ? "btn--tab is-active" : "btn--tab"}
+        className={currentFormTab === "media" ? "tab is-active" : "tab"}
       >
         Media
       </Button>
       <Button
+        hasIcon={false}
         type="button"
         dataValue="postDetails"
-        className={currentFormTab === "postDetails" ? "btn--tab is-active" : "btn--tab"}
+        className={currentFormTab === "postDetails" ? "tab is-active" : "tab"}
       >
         Post details
       </Button>

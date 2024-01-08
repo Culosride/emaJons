@@ -8,40 +8,35 @@
   align-items: center;
   justify-content: center;
 
-  &--logout {
+  &--logout, &--edit, &--delete, &--submit {
     width: 100%;
   }
 
-  &--back {
-    width: 20px;
-    height: auto;
-    @media (max-width: 991px) {
-      margin-right: 8px;
-    }
-  }
-
-  &--edit {
-    width: 100%;
-  }
+  // &--back {
+  //   width: 20px;
+  //   height: auto;
+  //   @media (max-width: 991px) {
+  //     margin-right: 8px;
+  //   }
+  // }
 
   &--dropdown {
     height: 48px;
   }
+
   &--kebab {
     @media (min-width: 992px) {
       scale: 0;
     }
   }
-  &--delete {
-    width: 100%;
-  }
+
   &--submit {
     background-color: rgb(200, 200, 200);
     font-size: 24px;
     height: auto;
-    width: 100%;
     padding: 4px;
   }
+
   &--close {
     right: 50px;
     position: absolute;
@@ -140,9 +135,9 @@
   &--login {
     background-image: url('../icons/Login.svg');
   }
-  &--back {
-    background-image: url('../icons/ArrowBack.svg');
-  }
+  // &--back {
+  //   background-image: url('../icons/ArrowBack.svg');
+  // }
   &--logout {
     background-image: url('../icons/Logout.svg');
   }

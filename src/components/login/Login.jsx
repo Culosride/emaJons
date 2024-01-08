@@ -69,7 +69,7 @@ export default function Login() {
           value={userInfo.password}
           required
         />
-        <Button type="submit" className="btn-sign-in">Sign In</Button>
+        <Button hasIcon={false} type="submit" className="sign-in">Sign In</Button>
         <ErrorMsg errMsg={errMsg} />
       </form>
     </div>

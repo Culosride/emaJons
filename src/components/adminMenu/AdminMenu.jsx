@@ -46,9 +46,7 @@ const AdminMenu = forwardRef(( { isPostPage, menuOff, setIsExpanded }, ref) => {
       // if logged in and on post page -> posts/:postId
       content = (
         <>
-          <Button type="button" className="btn--delete" onClick={handleDelete}>
-            <span className="icon icon--delete"></span>
-          </Button>
+          <Button hasIcon={true} type="button" className="delete" onClick={handleDelete} />
           <Link onClick={menuOff} className={styles["nav-link--edit"]} to={`/posts/${currentPostId}/edit`}>
             <span className="icon icon--edit"></span>
           </Link>
@@ -60,9 +58,7 @@ const AdminMenu = forwardRef(( { isPostPage, menuOff, setIsExpanded }, ref) => {
           <Link onClick={menuOff} className="nav-main__link" to={"/posts/new"}>
             <span className="icon icon--new-post"></span>
           </Link>
-          <Button className="btn--logout" title="Logout" onClick={handleLogout}>
-            <span className="icon icon--logout"></span>
-          </Button>
+          <Button hasIcon={true} className="logout" title="Logout" onClick={handleLogout} />
         </>
       );
     }
@@ -77,9 +73,7 @@ const AdminMenu = forwardRef(( { isPostPage, menuOff, setIsExpanded }, ref) => {
 
   return (
     <>
-      <Button type="button" className="btn--kebab medium" onClick={toggleAdminMenu}>
-        <span className="icon icon--kebab"></span>
-      </Button>
+      <Button hasIcon={true} type="button" className="kebab medium" onClick={toggleAdminMenu} />
       <menu ref={ref} className="admin-menu">
         {content}
       </menu>

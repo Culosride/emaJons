@@ -57,9 +57,8 @@ const NavMenu = ({ handleNewCategory,  toggleMenu,  isExpanded }) => {
 
   return (
     <>
-      {isMediumScreen && <Button className={`btn--dropdown`} onClick={toggleMenu}>
-        <span className={`icon icon--dropdown ${isExpanded ? "is-active" : ""}`}></span>
-        </Button>}
+      {isMediumScreen && <Button hasIcon={true} className={`dropdown ${isExpanded ? "is-active" : ""}`} onClick={toggleMenu} />}
+
       {
         <menu ref={navbarRef} className={navbarClass}>
           {navElements()}
