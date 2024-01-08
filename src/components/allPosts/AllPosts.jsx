@@ -8,6 +8,7 @@ import ImageContainer from "../image/ImageContainer";
 import usePosts from "../../hooks/usePosts";
 import { useScroll } from "../../hooks/useScroll";
 import Draggable from "../UI/Draggable";
+import ErrorMsg from "../UI/ErrorMsg";
 import { POSTS_TO_LOAD } from "../../config/roles";
 const _ = require("lodash");
 
@@ -165,7 +166,7 @@ export default function AllPosts() {
 
   return (
     <>
-      {status === "failed" && <div className="">{error}</div>}
+      {status === "failed" && <ErrorMsg errMsg={error} />}
       <main className="posts-container">
         <div ref={tagsContainerRef} className="select-tags-container">
           <Draggable
