@@ -68,6 +68,7 @@ export default function AllPosts() {
   };
 
   const displayPosts = (posts) => {
+    if(posts.length < 1) return <p style={{textWrap: "nowrap"}}>EmaJons is too shy to show his {currentCategory.toLowerCase()}.</p>
 
     return posts.map((post, i) => {
       const { mediaType, url } = post.media[0];
