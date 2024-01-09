@@ -9,7 +9,7 @@ import styles from "./AdminMenu.module"
 import { selectTag } from "../../features/tags/tagsSlice";
 
 
-const AdminMenu = forwardRef(( { isPostPage, menuOff, setIsExpanded }, ref) => {
+const AdminMenu = forwardRef(( { isPostPage, headerSize, menuOff, setIsExpanded }, ref) => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -17,6 +17,10 @@ const AdminMenu = forwardRef(( { isPostPage, menuOff, setIsExpanded }, ref) => {
   const isAdmin = authorization.isAdmin;
   const token = localStorage.getItem("access-token");
   const currentPostId = useSelector((state) => state.posts.currentPost._id);
+  const screenSize = useSelector((state) => state.ui.screenSize);
+
+  const isMediumScreen = ["xs", "s", "m"].includes(screenSize);
+  const hasMenuBtn = (headerSize).includes("30") || isMediumScreen
 
   let content;
 
@@ -73,7 +77,7 @@ const AdminMenu = forwardRef(( { isPostPage, menuOff, setIsExpanded }, ref) => {
 
   return (
     <>
-      <Button hasIcon={true} type="button" className="kebab medium" onClick={toggleAdminMenu} />
+      {hasMenuBtn && <Button hasIcon={true} type="button" className="kebab" onClick={toggleAdminMenu} />}
       <menu ref={ref} className="admin-menu">
         {content}
       </menu>

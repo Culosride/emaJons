@@ -12,22 +12,8 @@
     width: 100%;
   }
 
-  // &--back {
-  //   width: 20px;
-  //   height: auto;
-  //   @media (max-width: 991px) {
-  //     margin-right: 8px;
-  //   }
-  // }
-
   &--dropdown {
     height: 48px;
-  }
-
-  &--kebab {
-    @media (min-width: 992px) {
-      scale: 0;
-    }
   }
 
   &--submit {
@@ -35,24 +21,6 @@
     font-size: 24px;
     height: auto;
     padding: 4px;
-  }
-
-  &--close {
-    right: 50px;
-    position: absolute;
-    top: 22px;
-    z-index: 6;
-    height: $icon-height;
-
-    &.medium {
-      top: 80px;
-    }
-
-    &.h30 {
-      @media (max-width: 991px) {
-        right: 50px;
-      }
-    }
   }
 
   &--next-post, &--prev-post {
@@ -115,11 +83,6 @@
     background-repeat: no-repeat;
     background-position: center;
     transition: 0.3s ease-out;
-
-    &.medium {
-      height: 50%;
-      scale: 1;
-    }
   }
 
   &--sign-in {
@@ -135,27 +98,20 @@
   &--login {
     background-image: url('../icons/Login.svg');
   }
-  // &--back {
-  //   background-image: url('../icons/ArrowBack.svg');
-  // }
+
   &--logout {
     background-image: url('../icons/Logout.svg');
   }
+
   &--new-post {
     background-image: url('../icons/New.svg');
   }
+
   &--edit {
     background-image: url('../icons/Edit.svg');
   }
+
   &--delete {
     background-image: url('../icons/Delete.svg');
-  }
-  &--close {
-    background-image: url('../icons/Close.svg');
-    height: $icon-height--small;
-    width: $icon-width--small;
-    &.h30 {
-      right: calc(26vw + 20px);
-    }
   }
 }

@@ -35,6 +35,7 @@ export default function Header() {
   const isPostPage = Boolean(postExists);
 
   const isMediumScreen = ["xs", "s", "m"].includes(screenSize);
+
   if (matchPath("/posts/new", pathname)) {
     currentCategory = "new post";
   } else if (matchPath("/posts/:postId/edit", pathname)) {
@@ -83,11 +84,15 @@ export default function Header() {
     dispatch(setModal({ key: "postDelete", state: false }))
   }
 
-  const headerClass = `header ${isPostPage ? "" : "header--100"}${isPostPage && hasContent ? "header--50" : ""}${(isPostPage && !hasContent) ? "header--30" : ""}`
+  const isHeader30 = isPostPage && !hasContent ? "header--30" : ""
+  const isHeader50 = isPostPage && hasContent ? "header--50" : ""
+  const isHeader100 = isPostPage ? "" : "header--100"
+
+  const headerClass = isHeader30 || isHeader50 || isHeader100
 
   return (
     !isFullscreen &&
-    <header ref={headerRef} className={headerClass}>
+    <header ref={headerRef} className={`header ${headerClass}`}>
       <nav ref={logoAndCategoryRef} className="nav-main">
         <Link onClick={menuOff} to="/" className="nav-main__logo nav-main__logo--small">
           EmaJons
@@ -106,7 +111,7 @@ export default function Header() {
             handleNewCategory={handleNewCategory}
           />}
       </nav>
-      <AdminMenu ref={adminMenuRef} isPostPage={isPostPage} handleLogout={handleLogout} menuOff={menuOff} setIsExpanded={setIsExpanded}/>
+      <AdminMenu headerSize={headerClass} ref={adminMenuRef} isPostPage={isPostPage} handleLogout={handleLogout} menuOff={menuOff} setIsExpanded={setIsExpanded}/>
       {modals.postDelete &&
         <Modal modalKey="postDelete" description="Delete this post?" confirmDelete={confirmPostDelete} />}
     </header>

@@ -88,7 +88,7 @@ export default function PostForm() {
             {file.type === "video/mp4"
               ? <video src={src} controls></video>
               : <img src={src} />}
-            <div className="btn-prev-container">
+            <div className="delete-prev-container">
               <Button hasIcon={true} id={file[mediaKey]} className="delete" title="Delete" onClick={deleteMedia} />
             </div>
           </div>
