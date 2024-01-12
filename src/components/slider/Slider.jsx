@@ -6,7 +6,6 @@ import Button from "../UI/Button"
 
 const Slider = ({ slides, cursorColor }) => {
   const dispatch = useDispatch()
-  const screenSize = useSelector((state) => state.ui.screenSize);
   const isSingleSlide = slides.length === 1
   const infiniteSlides = isSingleSlide ? slides : [slides[slides.length -1], ...slides, slides[0]]
 

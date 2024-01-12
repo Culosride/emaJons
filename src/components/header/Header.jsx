@@ -10,6 +10,7 @@ import Modal from "../UI/Modal";
 import AdminMenu from "../adminMenu/AdminMenu.jsx";
 import useLogout from '../../hooks/useLogout';
 import { useScroll } from "../../hooks/useScroll";
+import useScreenSize from "../../hooks/useScreenSize.jsx";
 
 export default function Header() {
   const dispatch = useDispatch();
@@ -23,7 +24,6 @@ export default function Header() {
   const modals = useSelector(state => state.ui.modals);
   const postsStatus = useSelector((state) => state.posts.status);
   const error = useSelector((state) => state.posts.error);
-  const screenSize = useSelector((state) => state.ui.screenSize);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isActive, setIsActive] = useState(false);
 
@@ -32,12 +32,12 @@ export default function Header() {
   const headerRef = useRef(null)
 
   const handleLogout = useLogout()
+  const isMediumScreen = useScreenSize(["xs", "s", "m"])
 
   const isAdminPath = matchPath("/posts/*", pathname)
   const postExists = !isAdminPath && matchPath("/:categories/:postId", pathname);
   const isPostPage = Boolean(postExists);
 
-  const isMediumScreen = ["xs", "s", "m"].includes(screenSize);
 
   if (matchPath("/posts/new", pathname)) {
     currentCategory = "new post";
@@ -52,7 +52,7 @@ export default function Header() {
   useEffect(() => {
     setIsExpanded(false);
     adminMenuRef.current?.classList.remove("is-active")
-  }, [pathname, screenSize]);
+  }, [pathname, isMediumScreen]);
 
   const menuOff = () => {
     setIsExpanded(false);

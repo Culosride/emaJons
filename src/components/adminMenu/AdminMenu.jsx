@@ -2,21 +2,20 @@ import React, { forwardRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import useAuth from "../../hooks/useAuth";
 import useLogout from '../../hooks/useLogout';
+import useScreenSize from '../../hooks/useScreenSize';
 import { Link } from "react-router-dom";
 import Button from "../UI/Button";
 import { setModal } from "../../features/UI/uiSlice";
 import styles from "./AdminMenu.module"
 
-
 const AdminMenu = forwardRef(( { isPostPage, headerSize, menuOff, setIsExpanded }, ref) => {
   const dispatch = useDispatch();
+  const currentPostId = useSelector((state) => state.posts.currentPost._id);
+  const handleLogout = useLogout()
+  const isMediumScreen = useScreenSize(["xs", "s", "m"])
   const authorization = useAuth();
   const isAdmin = authorization.isAdmin;
-  const currentPostId = useSelector((state) => state.posts.currentPost._id);
-  const screenSize = useSelector((state) => state.ui.screenSize);
-  const handleLogout = useLogout()
 
-  const isMediumScreen = ["xs", "s", "m"].includes(screenSize);
   const hasMenuBtn = (headerSize).includes("30") || isMediumScreen
 
   const toggleAdminMenu = () => {

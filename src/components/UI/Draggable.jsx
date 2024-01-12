@@ -1,9 +1,11 @@
-import React, {useRef, useState} from 'react'
+import React, { useState} from 'react'
+import useScreenSize from '../../hooks/useScreenSize';
 
-export default function Draggable({ children, userRef, isSmallScreen, className }) {
+export default function Draggable({ children, userRef, className }) {
   const [isDragging, setIsDragging] = useState(false);
   const [startDragging, setStartDragging] = useState(false)
   const [startX, setStartX] = useState(0);
+  const isMediumScreen = useScreenSize(["xs", "s", "m"])
 
   //////////////////////////// --- mouse events --- ////////////////////////////
   const handleMouseDown = (e) => {
@@ -43,7 +45,7 @@ export default function Draggable({ children, userRef, isSmallScreen, className 
   };
   //////////////////////////////////////////////////////////////////////////////
 
-  const classStyle = `draggable-container ${className} ${(isDragging && isSmallScreen) ? "dragging" : ""}`
+  const classStyle = `draggable-container ${className} ${(isDragging && isMediumScreen) ? "dragging" : ""}`
 
   return (
     <div

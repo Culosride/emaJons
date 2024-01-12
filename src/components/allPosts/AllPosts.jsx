@@ -7,6 +7,7 @@ import { selectTag } from "../../features/tags/tagsSlice";
 import ImageContainer from "../image/ImageContainer";
 import usePosts from "../../hooks/usePosts";
 import { useScroll } from "../../hooks/useScroll";
+import useScreenSize from "../../hooks/useScreenSize";
 import Draggable from "../UI/Draggable";
 import ErrorMsg from "../UI/ErrorMsg";
 import { POSTS_TO_LOAD } from "../../config/roles";
@@ -23,8 +24,8 @@ export default function AllPosts() {
   const hasMorePosts = useSelector((state) => state.posts.loadMore);
   const scrollPosition = useSelector((state) => state.ui.scrollPosition);
   const activeTag = useSelector((state) => state.tags.activeTag);
-  const screenSize = useSelector((state) => state.ui.screenSize);
-  const isSmallScreen = ["xs", "s"].includes(screenSize);
+
+  const isMediumScreen = useScreenSize(["xs", "s", "m"])
 
   const postsByCategory = posts.filter(
     (post) => post.category === _.capitalize(currentCategory)
@@ -130,7 +131,7 @@ export default function AllPosts() {
   const handleSelectTag = (e) => {
     window.scrollTo(0, 0);
 
-    isSmallScreen && centerTag(e);
+    isMediumScreen && centerTag(e);
     const selectedTag = e.target.getAttribute("data-value");
 
     if (activeTag === selectedTag) {
@@ -171,7 +172,6 @@ export default function AllPosts() {
       <main className="posts-container">
         <div ref={tagsContainerRef} className="select-tags-container">
           <Draggable
-            isSmallScreen={isSmallScreen}
             userRef={maskTagsRef}
             className="mask"
           >

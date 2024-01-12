@@ -7,6 +7,7 @@ import TagsInputForm from "../tag/TagsInputForm";
 import Button from "../UI/Button";
 import ErrorMsg from "../UI/ErrorMsg";
 import { useScroll } from "../../hooks/useScroll";
+import useScreenSize from "../../hooks/useScreenSize";
 const _ = require("lodash");
 
 
@@ -17,8 +18,10 @@ export default function PostForm() {
   const { pathname } = useLocation();
   const selectedTags = useSelector((state) => state.tags.selectedTags);
   const currentPost = useSelector((state) => state.posts.currentPost);
-  const screenSize = useSelector((state) => state.ui.screenSize);
   const status = useSelector((state) => state.posts.status);
+  const isMediumScreen = useScreenSize(["xs", "s", "m"])
+  const tabMenuRef = useRef(null)
+  useScroll(tabMenuRef, _, { threshold: 40, scrollClass: "fade-top" })
 
   const [errMsg, setErrMsg] = useState(null);
   const [currentFormTab, setCurrentFormTab] = useState("media")
@@ -36,7 +39,6 @@ export default function PostForm() {
   const postId = currentPost._id;
   const isEditPage = pathname.includes("edit");
   const isLoading = status === "loading"
-  const isSmallScreen = ["xs", "s"].includes(screenSize);
 
   const btnStyles = isLoading ? "submit disabled" : "submit";
   const submitBtnValue = isLoading
@@ -46,9 +48,6 @@ export default function PostForm() {
       : "Create new post";
 
   let content;
-
-  const tabMenuRef = useRef(null)
-  useScroll(tabMenuRef, _, { threshold: 40, scrollClass: "fade-top" })
 
   useEffect(() => {
     dispatch(resetTags());
@@ -199,7 +198,7 @@ export default function PostForm() {
     value && setCurrentFormTab(value)
   }
 
-  if(isSmallScreen) {
+  if(isMediumScreen) {
     content =
       currentFormTab === "media" ? (
         <div className="post-form-layout fullscreen">
@@ -378,7 +377,7 @@ export default function PostForm() {
 
   return (
     <main className="form-wrapper">
-      {isSmallScreen && tabsMenu}
+      {isMediumScreen && tabsMenu}
       <form
         className="post-form"
         onSubmit={isEditPage ? handleEdit : handleSubmit}

@@ -1,15 +1,15 @@
 import React, { useEffect, useRef } from "react";
 import { CATEGORIES } from "../../config/categories.js";
 import { useSelector } from "react-redux";
-import { Link, matchPath, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Button from "../UI/Button.jsx";
+import useScreenSize from "../../hooks/useScreenSize.jsx";
 
 const NavMenu = ({ handleNewCategory,  toggleMenu,  isExpanded }) => {
   let currentCategory = useSelector((state) => state.posts.currentCategory);
-  const screenSize = useSelector((state) => state.ui.screenSize);
   const navbarRef = useRef(null);
   const linkRefs = useRef([]);
-  const isMediumScreen = screenSize === "xs" || screenSize === "s" || screenSize === "m";
+  const isMediumScreen = useScreenSize(["xs", "s", "m"])
 
   useEffect(() => {
     const handleExpanded = () => {
@@ -21,7 +21,7 @@ const NavMenu = ({ handleNewCategory,  toggleMenu,  isExpanded }) => {
       });
     };
     handleExpanded();
-  }, [isExpanded, screenSize]);
+  }, [isExpanded, isMediumScreen]);
 
   const isDropdown = isMediumScreen ? "nav-main__menu--dropdown" : ""
   const isDropDownActive = isExpanded && isMediumScreen ? "is-active" : ""
