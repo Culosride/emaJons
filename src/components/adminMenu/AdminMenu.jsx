@@ -10,7 +10,6 @@ import { selectTag } from "../../features/tags/tagsSlice";
 
 
 const AdminMenu = forwardRef(( { isPostPage, headerSize, menuOff, setIsExpanded }, ref) => {
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const authorization = useAuth();
@@ -21,8 +20,6 @@ const AdminMenu = forwardRef(( { isPostPage, headerSize, menuOff, setIsExpanded 
 
   const isMediumScreen = ["xs", "s", "m"].includes(screenSize);
   const hasMenuBtn = (headerSize).includes("30") || isMediumScreen
-
-  let content;
 
   const toggleAdminMenu = () => {
     if (ref.current?.className.includes("is-active")) {
@@ -45,10 +42,9 @@ const AdminMenu = forwardRef(( { isPostPage, headerSize, menuOff, setIsExpanded 
     });
   }
 
-  if (isAdmin) {
+  const renderAdminContent = () => {
     if (isPostPage) {
-      // if logged in and on post page -> posts/:postId
-      content = (
+      return (
         <>
           <Button hasIcon={true} type="button" className="delete" onClick={handleDelete} />
           <Link onClick={menuOff} className={styles["nav-link--edit"]} to={`/posts/${currentPostId}/edit`}>
@@ -56,30 +52,28 @@ const AdminMenu = forwardRef(( { isPostPage, headerSize, menuOff, setIsExpanded 
           </Link>
         </>
       );
-    } else {
-      content = (
-        <>
-          <Link onClick={menuOff} className="nav-main__link" to={"/posts/new"}>
-            <span className="icon icon--new-post"></span>
-          </Link>
-          <Button hasIcon={true} className="logout" title="Logout" onClick={handleLogout} />
-        </>
-      );
     }
-  } else {
-    // if logged out
-    content = (
-      <Link to={"/login"} className="nav-main__link" title="Login">
-        <span className="icon icon--login"></span>
-      </Link>
+    return (
+      <>
+        <Link onClick={menuOff} className="nav-main__link" to={"/posts/new"}>
+          <span className="icon icon--new-post"></span>
+        </Link>
+        <Button hasIcon={true} className="logout" title="Logout" onClick={handleLogout} />
+      </>
     );
-  }
+  };
+
+  const renderLoggedOutContent = () => (
+    <Link to={"/login"} className="nav-main__link" title="Login">
+      <span className="icon icon--login"></span>
+    </Link>
+  );
 
   return (
     <>
       {hasMenuBtn && <Button hasIcon={true} type="button" className="kebab" onClick={toggleAdminMenu} />}
       <menu ref={ref} className="admin-menu">
-        {content}
+        {isAdmin ? renderAdminContent() : renderLoggedOutContent()}
       </menu>
     </>
   );
