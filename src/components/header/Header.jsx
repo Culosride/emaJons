@@ -23,10 +23,9 @@ export default function Header() {
   const hasContent = useSelector((state) => state.posts.currentPost.content?.length > 500);
   const modals = useSelector(state => state.ui.modals);
   const error = useSelector((state) => state.posts.error);
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isNavMenuExpanded, setIsNavMenuExpanded] = useState(false);
+  const [isAdminMenuActive, setIsAdminMenuActive] = useState(false);
 
-  const logoAndCategoryRef = useRef(null);
-  const adminMenuRef = useRef(null)
   const headerRef = useRef(null)
 
   const handleLogout = useLogout()
@@ -50,28 +49,24 @@ export default function Header() {
 
 
   useEffect(() => {
-    setIsExpanded(false);
-    if (adminMenuRef.current) {
-      adminMenuRef.current.classList.remove("is-active");
-    }
+    setIsNavMenuExpanded(false);
+    setIsAdminMenuActive(false);
   }, [pathname, isMediumScreen]);
 
   const menuOff = () => {
-    setIsExpanded(false);
-    if (adminMenuRef.current) {
-      adminMenuRef.current.classList.remove("is-active");
-    }
+    setIsNavMenuExpanded(false);
+    setIsAdminMenuActive(false);
+  };
+
+  const toggleNavMenu = () => {
+    setIsNavMenuExpanded(!isNavMenuExpanded)
+    setIsAdminMenuActive(false);
   };
 
   useScroll(headerRef, menuOff, { threshold: 40, scrollClass: "fade-top" })
 
-  const toggleMenu = () => {
-    setIsExpanded(!isExpanded)
-    adminMenuRef.current?.classList.remove("is-active")
-  };
-
   const handleNewCategory = (category) => {
-    setIsExpanded(false);
+    setIsNavMenuExpanded(false);
     dispatch(selectTag(""));
     dispatch(setScrollPosition(0));
     dispatch(setCurrentCategory(category));
@@ -93,7 +88,7 @@ export default function Header() {
   return (
     !isFullscreen &&
     <header ref={headerRef} className={headerClass}>
-      <nav ref={logoAndCategoryRef} className="nav-main">
+      <nav className="nav-main">
         <Link onClick={menuOff} to="/" className="nav-main__logo nav-main__logo--small">
           EmaJons
         </Link>
@@ -104,16 +99,26 @@ export default function Header() {
           </Link>}
         {!isPostPage &&
           <NavMenu
-            isExpanded={isExpanded}
-            setIsExpanded={setIsExpanded}
-            toggleMenu={toggleMenu}
-            adminMenuRef={adminMenuRef}
+            isNavMenuExpanded={isNavMenuExpanded}
+            setIsNavMenuExpanded={setIsNavMenuExpanded}
+            toggleNavMenu={toggleNavMenu}
             handleNewCategory={handleNewCategory}
           />}
       </nav>
-      <AdminMenu headerSize={headerClass} ref={adminMenuRef} isPostPage={isPostPage} menuOff={menuOff} setIsExpanded={setIsExpanded}/>
+      <AdminMenu
+        headerSize={headerClass}
+        isAdminMenuActive={isAdminMenuActive}
+        setIsNavMenuExpanded={setIsNavMenuExpanded}
+        setIsAdminMenuActive={setIsAdminMenuActive}
+        isPostPage={isPostPage}
+        menuOff={menuOff}
+      />
       {modals.postDelete &&
-        <Modal modalKey="postDelete" description="Delete this post?" confirmDelete={confirmPostDelete} />}
+        <Modal
+          modalKey="postDelete"
+          description="Delete this post?"
+          confirmDelete={confirmPostDelete}
+        />}
     </header>
   );
 }

@@ -1,4 +1,4 @@
-import React, { forwardRef } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import useAuth from "../../hooks/useAuth";
 import useLogout from '../../hooks/useLogout';
@@ -8,7 +8,7 @@ import Button from "../UI/Button";
 import { setModal } from "../../features/UI/uiSlice";
 import styles from "./AdminMenu.module"
 
-const AdminMenu = forwardRef(( { isPostPage, headerSize, menuOff, setIsExpanded }, ref) => {
+const AdminMenu = ({ isAdminMenuActive, setIsAdminMenuActive, setIsNavMenuExpanded, isPostPage, headerSize, menuOff }) => {
   const dispatch = useDispatch();
   const currentPostId = useSelector((state) => state.posts.currentPost._id);
   const handleLogout = useLogout()
@@ -19,12 +19,8 @@ const AdminMenu = forwardRef(( { isPostPage, headerSize, menuOff, setIsExpanded 
   const hasMenuBtn = (headerSize).includes("30") || isMediumScreen
 
   const toggleAdminMenu = () => {
-    if (ref.current?.className.includes("is-active")) {
-      ref.current?.classList.remove("is-active");
-    } else {
-      ref.current?.classList.add("is-active");
-      setIsExpanded(false);
-    }
+    setIsNavMenuExpanded(false);
+    setIsAdminMenuActive(!isAdminMenuActive)
   };
 
   const handleDelete = () => {
@@ -61,11 +57,11 @@ const AdminMenu = forwardRef(( { isPostPage, headerSize, menuOff, setIsExpanded 
   return (
     <>
       {hasMenuBtn && <Button hasIcon={true} type="button" className="kebab" onClick={toggleAdminMenu} />}
-      <menu ref={ref} className="admin-menu">
+      <menu className={`admin-menu ${isAdminMenuActive ? 'is-active' : ''}`}>
         {isAdmin ? renderAdminContent() : renderLoggedOutContent()}
       </menu>
     </>
   );
-})
+}
 
 export default AdminMenu;

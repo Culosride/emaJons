@@ -5,9 +5,8 @@ import { Link } from "react-router-dom";
 import Button from "../UI/Button.jsx";
 import useScreenSize from "../../hooks/useScreenSize.jsx";
 
-const NavMenu = ({ handleNewCategory,  toggleMenu,  isExpanded }) => {
+const NavMenu = ({ handleNewCategory,  toggleNavMenu,  isNavMenuExpanded }) => {
   let currentCategory = useSelector((state) => state.posts.currentCategory);
-  const navbarRef = useRef(null);
   const linkRefs = useRef([]);
   const isMediumScreen = useScreenSize(["xs", "s", "m"])
 
@@ -15,19 +14,19 @@ const NavMenu = ({ handleNewCategory,  toggleMenu,  isExpanded }) => {
     const handleExpanded = () => {
       linkRefs.current.forEach((link, index) => {
         setTimeout(() => {
-          (isExpanded && link?.classList.add("is-visible")) ||
-          ((!isMediumScreen || !isExpanded) && link?.classList.remove("is-visible"))
+          (isNavMenuExpanded && link?.classList.add("is-visible")) ||
+          ((!isMediumScreen || !isNavMenuExpanded) && link?.classList.remove("is-visible"))
         }, 100 * index);
       });
     };
     handleExpanded();
-  }, [isExpanded, isMediumScreen]);
+  }, [isNavMenuExpanded, isMediumScreen]);
 
   const isDropdown = isMediumScreen ? "nav-main__menu--dropdown" : ""
-  const isDropDownActive = isExpanded && isMediumScreen ? "is-active" : ""
+  const isDropDownActive = isNavMenuExpanded && isMediumScreen ? "is-active" : ""
   const navbarClass = `nav-main__menu ${isDropdown} ${isDropDownActive}`.trim()
 
-  const btnClass = `dropdown ${isExpanded ? "is-active" : ""}`.trim()
+  const btnClass = `dropdown ${isNavMenuExpanded ? "is-active" : ""}`.trim()
 
   const navElements = () =>
     CATEGORIES.map((category, i) => {
@@ -57,10 +56,10 @@ const NavMenu = ({ handleNewCategory,  toggleMenu,  isExpanded }) => {
 
   return (
     <>
-      {isMediumScreen && <Button hasIcon={true} className={btnClass} onClick={toggleMenu} />}
+      {isMediumScreen && <Button hasIcon={true} className={btnClass} onClick={toggleNavMenu} />}
 
       {
-        <menu ref={navbarRef} className={navbarClass}>
+        <menu className={navbarClass}>
           {navElements()}
         </menu>
       }
