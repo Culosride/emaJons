@@ -88,11 +88,11 @@ export default function Header() {
   const isHeader50 = isPostPage && hasContent ? "header--50" : ""
   const isHeader100 = isPostPage ? "" : "header--100"
 
-  const headerClass = isHeader30 || isHeader50 || isHeader100
+  const headerClass = `header ${isHeader30 || isHeader50 || isHeader100}`
 
   return (
     !isFullscreen &&
-    <header ref={headerRef} className={`header ${headerClass}`}>
+    <header ref={headerRef} className={headerClass}>
       <nav ref={logoAndCategoryRef} className="nav-main">
         <Link onClick={menuOff} to="/" className="nav-main__logo nav-main__logo--small">
           EmaJons

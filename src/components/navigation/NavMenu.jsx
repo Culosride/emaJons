@@ -10,7 +10,6 @@ const NavMenu = ({ handleNewCategory,  toggleMenu,  isExpanded }) => {
   const navbarRef = useRef(null);
   const linkRefs = useRef([]);
   const isMediumScreen = screenSize === "xs" || screenSize === "s" || screenSize === "m";
-  const { pathname } = useLocation();
 
   useEffect(() => {
     const handleExpanded = () => {
@@ -24,28 +23,29 @@ const NavMenu = ({ handleNewCategory,  toggleMenu,  isExpanded }) => {
     handleExpanded();
   }, [isExpanded, screenSize]);
 
-  // if (matchPath("/posts/new", pathname)) {
-  //   currentCategory = "new post";
-  // } else if (matchPath("/posts/:postId/edit", pathname)) {
-  //   currentCategory = "edit";
-  // }
+  const isDropdown = isMediumScreen ? "nav-main__menu--dropdown" : ""
+  const isDropDownActive = isExpanded && isMediumScreen ? "is-active" : ""
+  const navbarClass = `nav-main__menu ${isDropdown} ${isDropDownActive}`.trim()
 
-  const navbarClass = `nav-main__menu ${isMediumScreen ? "nav-main__menu--dropdown" : ""} ${isExpanded && isMediumScreen ? "is-active" : ""}`
+  const btnClass = `dropdown ${isExpanded ? "is-active" : ""}`.trim()
 
   const navElements = () =>
     CATEGORIES.map((category, i) => {
       const isCurrentCategory = currentCategory === category;
+
+      const categoryItemClass = `nav-main__item ${isMediumScreen ? "nav-main__item--dropdown" : ""}`
+      const categoryLinkClass = `nav-main__link nav-main__link--small ${isCurrentCategory ? "is-active" : ""}`.trim()
 
       if ((isMediumScreen && !isCurrentCategory) || !isMediumScreen) {
         return (
           <li
             key={i}
             ref={(el) => (linkRefs.current[i] = el)}
-            className={`nav-main__item ${isMediumScreen ? " nav-main__item--dropdown" : ""}`}
-            >
+            className={categoryItemClass}
+          >
             <Link
               onClick={() => handleNewCategory(category)}
-              className={isCurrentCategory ? "nav-main__link nav-main__link--small is-active" : "nav-main__link nav-main__link--small"}
+              className={categoryLinkClass}
               to={`/${category}`}
             >
               {_.capitalize(category)}
@@ -57,7 +57,7 @@ const NavMenu = ({ handleNewCategory,  toggleMenu,  isExpanded }) => {
 
   return (
     <>
-      {isMediumScreen && <Button hasIcon={true} className={`dropdown ${isExpanded ? "is-active" : ""}`} onClick={toggleMenu} />}
+      {isMediumScreen && <Button hasIcon={true} className={btnClass} onClick={toggleMenu} />}
 
       {
         <menu ref={navbarRef} className={navbarClass}>
