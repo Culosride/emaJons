@@ -5,11 +5,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { deletePost, setCurrentCategory, fetchPosts, } from "../../features/posts/postsSlice";
 import { selectTag } from "../../features/tags/tagsSlice";
 import { setModal, setScrollPosition } from "../../features/UI/uiSlice";
-import { logout } from "../../features/auth/authSlice";
 import NavMenu from "../navigation/NavMenu";
-import { useScroll } from "../../hooks/useScroll";
 import Modal from "../UI/Modal";
 import AdminMenu from "../adminMenu/AdminMenu.jsx";
+import useLogout from '../../hooks/useLogout';
+import { useScroll } from "../../hooks/useScroll";
 
 export default function Header() {
   const dispatch = useDispatch();
@@ -25,10 +25,13 @@ export default function Header() {
   const error = useSelector((state) => state.posts.error);
   const screenSize = useSelector((state) => state.ui.screenSize);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isActive, setIsActive] = useState(false);
 
   const logoAndCategoryRef = useRef(null);
   const adminMenuRef = useRef(null)
   const headerRef = useRef(null)
+
+  const handleLogout = useLogout()
 
   const isAdminPath = matchPath("/posts/*", pathname)
   const postExists = !isAdminPath && matchPath("/:categories/:postId", pathname);
@@ -57,13 +60,6 @@ export default function Header() {
   };
 
   useScroll(headerRef, menuOff, { threshold: 40, scrollClass: "fade-top" })
-
-  const handleLogout = async () => {
-    localStorage.removeItem("access-token");
-    dispatch(logout(token)).then(() => {
-      navigate("/");
-    });
-  }
 
   const toggleMenu = () => {
     setIsExpanded(!isExpanded)
@@ -111,7 +107,7 @@ export default function Header() {
             handleNewCategory={handleNewCategory}
           />}
       </nav>
-      <AdminMenu headerSize={headerClass} ref={adminMenuRef} isPostPage={isPostPage} handleLogout={handleLogout} menuOff={menuOff} setIsExpanded={setIsExpanded}/>
+      <AdminMenu headerSize={headerClass} ref={adminMenuRef} isPostPage={isPostPage} menuOff={menuOff} setIsExpanded={setIsExpanded}/>
       {modals.postDelete &&
         <Modal modalKey="postDelete" description="Delete this post?" confirmDelete={confirmPostDelete} />}
     </header>

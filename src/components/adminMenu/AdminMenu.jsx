@@ -1,22 +1,20 @@
 import React, { forwardRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import useAuth from "../../hooks/useAuth";
-import { Link, useNavigate } from "react-router-dom";
+import useLogout from '../../hooks/useLogout';
+import { Link } from "react-router-dom";
 import Button from "../UI/Button";
-import { logout } from "../../features/auth/authSlice";
 import { setModal } from "../../features/UI/uiSlice";
 import styles from "./AdminMenu.module"
-import { selectTag } from "../../features/tags/tagsSlice";
 
 
 const AdminMenu = forwardRef(( { isPostPage, headerSize, menuOff, setIsExpanded }, ref) => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const authorization = useAuth();
   const isAdmin = authorization.isAdmin;
-  const token = localStorage.getItem("access-token");
   const currentPostId = useSelector((state) => state.posts.currentPost._id);
   const screenSize = useSelector((state) => state.ui.screenSize);
+  const handleLogout = useLogout()
 
   const isMediumScreen = ["xs", "s", "m"].includes(screenSize);
   const hasMenuBtn = (headerSize).includes("30") || isMediumScreen
@@ -32,14 +30,6 @@ const AdminMenu = forwardRef(( { isPostPage, headerSize, menuOff, setIsExpanded 
 
   const handleDelete = () => {
     dispatch(setModal({ key: "postDelete", state: true }));
-  }
-
-   const handleLogout = async () => {
-    localStorage.removeItem("access-token");
-    dispatch(selectTag(""))
-    dispatch(logout(token)).then(() => {
-      navigate("/");
-    });
   }
 
   const renderAdminContent = () => {
