@@ -22,10 +22,8 @@ export default function Header() {
   const currentPostId = useSelector((state) => state.posts.currentPost._id);
   const hasContent = useSelector((state) => state.posts.currentPost.content?.length > 500);
   const modals = useSelector(state => state.ui.modals);
-  const postsStatus = useSelector((state) => state.posts.status);
   const error = useSelector((state) => state.posts.error);
   const [isExpanded, setIsExpanded] = useState(false);
-  const [isActive, setIsActive] = useState(false);
 
   const logoAndCategoryRef = useRef(null);
   const adminMenuRef = useRef(null)
@@ -38,7 +36,6 @@ export default function Header() {
   const postExists = !isAdminPath && matchPath("/:categories/:postId", pathname);
   const isPostPage = Boolean(postExists);
 
-
   if (matchPath("/posts/new", pathname)) {
     currentCategory = "new post";
   } else if (matchPath("/posts/:postId/edit", pathname)) {
@@ -46,17 +43,24 @@ export default function Header() {
   }
 
   useEffect(() => {
-    if (error.includes("401")) handleLogout();
-  }, [postsStatus]);
+    if (error.includes("401")) {
+      handleLogout();
+    }
+  }, [error, handleLogout]);
+
 
   useEffect(() => {
     setIsExpanded(false);
-    adminMenuRef.current?.classList.remove("is-active")
+    if (adminMenuRef.current) {
+      adminMenuRef.current.classList.remove("is-active");
+    }
   }, [pathname, isMediumScreen]);
 
   const menuOff = () => {
     setIsExpanded(false);
-    adminMenuRef.current?.classList.remove("is-active")
+    if (adminMenuRef.current) {
+      adminMenuRef.current.classList.remove("is-active");
+    }
   };
 
   useScroll(headerRef, menuOff, { threshold: 40, scrollClass: "fade-top" })
