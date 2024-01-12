@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState, useRef } from "react";
+import React, { useCallback, useEffect, useState, useRef, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux"; // hook to select data from redux store
 import { setCurrentCategory } from "../../features/posts/postsSlice";
@@ -11,6 +11,7 @@ import useScreenSize from "../../hooks/useScreenSize";
 import Draggable from "../UI/Draggable";
 import ErrorMsg from "../UI/ErrorMsg";
 import { POSTS_TO_LOAD } from "../../config/roles";
+import TagsContainer from "../tag/TagsContainer";
 const _ = require("lodash");
 
 export default function AllPosts() {
@@ -27,15 +28,15 @@ export default function AllPosts() {
 
   const isMediumScreen = useScreenSize(["xs", "s", "m"])
 
-  const postsByCategory = posts.filter(
-    (post) => post.category === _.capitalize(currentCategory)
-  );
+  const postsByCategory = useMemo(() => {
+    return posts.filter(post => post.category === _.capitalize(currentCategory));
+  }, [posts, currentCategory]);
   const [filteredPosts, setFilteredPosts] = useState(postsByCategory);
 
-  const allTags = postsByCategory.flatMap((post) =>
-    post.postTags.map((tag) => tag)
-  );
-  const sortedTags = [...new Set(allTags.sort((a, b) => b.localeCompare(a)))];
+  const sortedTags = useMemo(() => {
+    const allTags = postsByCategory.flatMap((post) => post.postTags);
+    return [...new Set(allTags)].sort((a, b) => b.localeCompare(a));
+  }, [postsByCategory]);
 
   const observer = useRef(null);
   const maskTagsRef = useRef(null);
@@ -73,23 +74,17 @@ export default function AllPosts() {
 
     return posts.map((post, i) => {
       const { mediaType, url } = post.media[0];
-      const getPreviewURL = () => {
-        if (mediaType === "video") {
-          return post.media[0].preview;
-        } else {
-          return url;
-        }
-      };
+      const previewURL = mediaType === "video" ? post.media[0].preview : url;
 
       return (
-        post.media.length && (
+        post.media.length > 0 && (
           <ImageContainer
             key={post._id}
             mediaType={post.media[0].mediaType}
             id={post._id}
             ref={(i === posts.length - 1 && lastPostRef) || undefined}
             linkUrl={`/${currentCategory}/${post._id}`}
-            src={getPreviewURL()}
+            src={previewURL}
             handleScrollPosition={handleScrollPosition}
             alt={post.title}
             hoverContent={post.title.split(",").join("").toUpperCase()}
@@ -113,9 +108,24 @@ export default function AllPosts() {
       if (post) observer.current.observe(post);
   }, [status, hasMorePosts, activeTag]);
 
-  const centerTag = (e) => {
+  // filter posts on tag click
+  const handleSelectTag = (e) => {
+    window.scrollTo(0, 0);
+
+    const selectedTag = e.target.getAttribute("data-value");
+    isMediumScreen && centerTag(e.target);
+
+    if (activeTag === selectedTag) {
+      dispatch(selectTag(""));
+    } else {
+      dispatch(selectTag(selectedTag));
+    }
+
+    updateTagsClass(e.target);
+  };
+
+  const centerTag = (element) => {
     const container = maskTagsRef.current;
-    const element = e.target;
     const containerCenter = container.clientWidth / 2;
     const elementWidth = element.clientWidth;
     const elementRight = element.getBoundingClientRect().right;
@@ -127,42 +137,15 @@ export default function AllPosts() {
     container.scrollLeft = newScrollLeft;
   };
 
-  // filter posts on tag click
-  const handleSelectTag = (e) => {
-    window.scrollTo(0, 0);
-
-    isMediumScreen && centerTag(e);
-    const selectedTag = e.target.getAttribute("data-value");
-
-    if (activeTag === selectedTag) {
-      dispatch(selectTag(""));
-    } else {
-      dispatch(selectTag(selectedTag));
-    }
-
-    // Remove the 'tag-active' class from all tag links
+  const updateTagsClass = (activeElement) => {
+    // Deselects all tag links
     const links = document.querySelectorAll(".tag-link");
     links.forEach((link) => link.classList.remove("tag-active"));
-
-    // Add the 'tag-active' class to the clicked tag link
-    e.target.classList.add("tag-active");
+    // Selects clicked tag link
+    activeElement.classList.add("tag-active");
   };
 
-  // create tag elements
-  const tagElements = sortedTags.map((tag, i) => (
-    <p
-      data-value={tag}
-      className={`tag-link ${activeTag === tag ? "tag-active" : ""}`}
-      key={i}
-      onMouseUp={handleSelectTag}
-      id={i}
-    >
-      {tag}
-    </p>
-  ));
-
   postElements =
-    (filteredPosts.message && filteredPosts.message) ||
     (filteredPosts.length && displayPosts(filteredPosts)) ||
     displayPosts(postsByCategory);
 
@@ -171,11 +154,12 @@ export default function AllPosts() {
       {status === "failed" && <ErrorMsg errMsg={error} />}
       <main className="posts-container">
         <div ref={tagsContainerRef} className="select-tags-container">
-          <Draggable
-            userRef={maskTagsRef}
-            className="mask"
-          >
-            {tagElements}
+          <Draggable userRef={maskTagsRef} className="mask">
+            <TagsContainer
+              sortedTags={sortedTags}
+              activeTag={activeTag}
+              handleSelectTag={handleSelectTag}
+            />
           </Draggable>
         </div>
         <div className="posts-grid">{postElements}</div>

@@ -2,7 +2,7 @@ import React from 'react'
 
 export default function Tag({ handleTagToggle, handleTagDelete, tag, selected }) {
 
-  const handleClick = () => {
+  const handleClick = () =>  {
     handleTagToggle(tag)
   }
 
