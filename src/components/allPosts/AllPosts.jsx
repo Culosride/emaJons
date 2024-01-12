@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux"; // hook to select data f
 import { setCurrentCategory } from "../../features/posts/postsSlice";
 import { setScrollPosition } from "../../features/UI/uiSlice";
 import { selectTag } from "../../features/tags/tagsSlice";
-import ImageContainer from "../image/ImageContainer";
+import PostPreview from "../post/PostPreview";
 import usePosts from "../../hooks/usePosts";
 import { useScroll } from "../../hooks/useScroll";
 import useScreenSize from "../../hooks/useScreenSize";
@@ -78,7 +78,7 @@ export default function AllPosts() {
 
       return (
         post.media.length > 0 && (
-          <ImageContainer
+          <PostPreview
             key={post._id}
             mediaType={post.media[0].mediaType}
             id={post._id}
