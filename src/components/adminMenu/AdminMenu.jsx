@@ -30,7 +30,7 @@ const AdminMenu = ({ isAdminMenuActive, setIsAdminMenuActive, setIsNavMenuExpand
     if (isPostPage) {
       return (
         <>
-          <Button hasIcon={true} type="button" className="delete" onClick={handleDelete} />
+          <Button hasIcon={true} className="delete" onClick={handleDelete} />
           <Link onClick={menuOff} className="admin-menu__link" to={`/posts/${currentPostId}/edit`}>
             <span className="icon icon--edit"></span>
           </Link>
@@ -50,12 +50,12 @@ const AdminMenu = ({ isAdminMenuActive, setIsAdminMenuActive, setIsNavMenuExpand
   const renderLoggedOutContent = () => (
     <Link to={"/login"} className="admin-menu__link" title="Login">
       <span className="icon icon--login"></span>
-    </Link> 
+    </Link>
   );
 
   return (
     <>
-      {hasMenuBtn && <Button hasIcon={true} type="button" className="kebab" onClick={toggleAdminMenu} />}
+      {hasMenuBtn && <Button hasIcon={true} className="kebab" onClick={toggleAdminMenu} />}
       <menu className={`admin-menu ${isAdminMenuActive ? 'is-active' : ''}`}>
         {isAdmin ? renderAdminContent() : renderLoggedOutContent()}
       </menu>

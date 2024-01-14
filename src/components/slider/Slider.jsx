@@ -191,8 +191,8 @@ const Slider = ({ slides, cursorColor }) => {
       </div>
       {!isSingleSlide &&
         <>
-          <Button hasIcon={false} type="button" style={btnStyles} className={`${cursorColor} ${isVideo ? "prev-video" : "prev"}`} onClick={handlePrev} />
-          <Button hasIcon={false} type="button" style={btnStyles} className={`${cursorColor} ${isVideo ? "next-video" : "next"}`} onClick={handleNext} />
+          <Button hasIcon={false} style={btnStyles} className={`${cursorColor} ${isVideo ? "prev-video" : "prev"}`} onClick={handlePrev} />
+          <Button hasIcon={false} style={btnStyles} className={`${cursorColor} ${isVideo ? "next-video" : "next"}`} onClick={handleNext} />
         </>
       }
       {slides.length &&

@@ -358,7 +358,6 @@ export default function PostForm() {
     <menu ref={tabMenuRef} className="tabsMenu" onClick={(e) => handleTabMenu(e)}>
       <Button
         hasIcon={false}
-        type="button"
         dataValue="media"
         className={currentFormTab === "media" ? "tab is-selected" : "tab"}
       >
@@ -366,7 +365,6 @@ export default function PostForm() {
       </Button>
       <Button
         hasIcon={false}
-        type="button"
         dataValue="postDetails"
         className={currentFormTab === "postDetails" ? "tab is-selected" : "tab"}
       >

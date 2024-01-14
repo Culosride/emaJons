@@ -91,10 +91,10 @@ export default function Post() {
               </div>
               {post.content && <p className="content">{post.content}</p>}
               <div className="posts-navigation">
-                <Button hasIcon={false} type="button" className="prev-post" handlePreviousPost={handlePreviousPost}>
+                <Button hasIcon={false} className="prev-post" handlePreviousPost={handlePreviousPost}>
                   PREVIOUS
                 </Button>
-                <Button hasIcon={false} type="button" className="next-post" handleNextPost={handleNextPost}>
+                <Button hasIcon={false} className="next-post" handleNextPost={handleNextPost}>
                   NEXT
                 </Button>
               </div>

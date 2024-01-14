@@ -1,6 +1,6 @@
 import React from "react";
 
-function Button({ children, id, hasIcon, dataValue, disabled, type, className = "", onClick }) {
+function Button({ children, id, hasIcon, dataValue, disabled, type = "button", className = "", onClick }) {
 
   const btnContent = hasIcon ? <span id={id} className={`icon icon--${className}`} >{children}</span> : children
 

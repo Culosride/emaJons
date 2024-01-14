@@ -36,8 +36,8 @@ export default function Modal({ children, description, confirmDelete, modalKey, 
       <div>
         <p>{description}</p>
         <div className="modal-actions-container">
-          <Button hasIcon={false} type="button" className="modal-action" onClick={() => dispatch(setModal({ key: modalKey, state: false }))}>No</Button>
-          <Button hasIcon={false} type="button" className="modal-action" onClick={confirmDelete}>Yes</Button>
+          <Button hasIcon={false} className="modal-action" onClick={() => dispatch(setModal({ key: modalKey, state: false }))}>No</Button>
+          <Button hasIcon={false} className="modal-action" onClick={confirmDelete}>Yes</Button>
         </div>
       </div>
     </dialog>
