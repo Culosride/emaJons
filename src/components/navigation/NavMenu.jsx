@@ -5,35 +5,36 @@ import { Link } from "react-router-dom";
 import Button from "../UI/Button.jsx";
 import useScreenSize from "../../hooks/useScreenSize.jsx";
 
-const NavMenu = ({ handleNewCategory,  toggleNavMenu,  isNavMenuExpanded }) => {
+const NavMenu = ({ handleNewCategory, toggleNavMenu, isNavMenuExpanded }) => {
   let currentCategory = useSelector((state) => state.posts.currentCategory);
   const linkRefs = useRef([]);
-  const isMediumScreen = useScreenSize(["xs", "s", "m"])
+  const isMediumScreen = useScreenSize(["xs", "s", "m"]);
 
   useEffect(() => {
     const handleExpanded = () => {
       linkRefs.current.forEach((link, index) => {
         setTimeout(() => {
           (isNavMenuExpanded && link?.classList.add("is-visible")) ||
-          ((!isMediumScreen || !isNavMenuExpanded) && link?.classList.remove("is-visible"))
+            ((!isMediumScreen || !isNavMenuExpanded) &&
+              link?.classList.remove("is-visible"));
         }, 100 * index);
       });
     };
     handleExpanded();
   }, [isNavMenuExpanded, isMediumScreen]);
 
-  const isDropdown = isMediumScreen ? "nav-main__menu--dropdown" : ""
-  const isDropDownActive = isNavMenuExpanded && isMediumScreen ? "is-active" : ""
-  const navbarClass = `nav-main__menu ${isDropdown} ${isDropDownActive}`.trim()
+  const isDropdown = isMediumScreen ? "nav-main__menu--dropdown" : "";
+  const isDropDownActive = isNavMenuExpanded && isMediumScreen ? "is-active" : "";
+  const navbarClass = `nav-main__menu ${isDropdown} ${isDropDownActive}`.trim();
 
-  const btnClass = `dropdown ${isNavMenuExpanded ? "is-active" : ""}`.trim()
+  const btnClass = `dropdown ${isNavMenuExpanded ? "is-active" : ""}`.trim();
 
   const navElements = () =>
     CATEGORIES.map((category, i) => {
       const isCurrentCategory = currentCategory === category;
 
-      const categoryItemClass = `nav-main__item ${isMediumScreen ? "nav-main__item--dropdown" : ""}`
-      const categoryLinkClass = `nav-main__link nav-main__link--small ${isCurrentCategory ? "is-active" : ""}`.trim()
+      const categoryItemClass = `nav-main__item ${isMediumScreen ? "nav-main__item--dropdown" : ""}`;
+      const categoryLinkClass = `nav-main__link nav-main__link txt-grey sm ${isCurrentCategory ? "is-selected" : ""}`.trim();
 
       if ((isMediumScreen && !isCurrentCategory) || !isMediumScreen) {
         return (
@@ -56,13 +57,10 @@ const NavMenu = ({ handleNewCategory,  toggleNavMenu,  isNavMenuExpanded }) => {
 
   return (
     <>
-      {isMediumScreen && <Button hasIcon={true} className={btnClass} onClick={toggleNavMenu} />}
-
-      {
-        <menu className={navbarClass}>
-          {navElements()}
-        </menu>
-      }
+      {isMediumScreen && (
+        <Button hasIcon={true} className={btnClass} onClick={toggleNavMenu} />
+      )}
+      <menu className={navbarClass}>{navElements()}</menu>
     </>
   );
 };

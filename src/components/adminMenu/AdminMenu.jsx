@@ -6,7 +6,6 @@ import useScreenSize from '../../hooks/useScreenSize';
 import { Link } from "react-router-dom";
 import Button from "../UI/Button";
 import { setModal } from "../../features/UI/uiSlice";
-import styles from "./AdminMenu.module"
 
 const AdminMenu = ({ isAdminMenuActive, setIsAdminMenuActive, setIsNavMenuExpanded, isPostPage, headerSize, menuOff }) => {
   const dispatch = useDispatch();
@@ -32,7 +31,7 @@ const AdminMenu = ({ isAdminMenuActive, setIsAdminMenuActive, setIsNavMenuExpand
       return (
         <>
           <Button hasIcon={true} type="button" className="delete" onClick={handleDelete} />
-          <Link onClick={menuOff} className={styles["nav-link--edit"]} to={`/posts/${currentPostId}/edit`}>
+          <Link onClick={menuOff} className="admin-menu__link" to={`/posts/${currentPostId}/edit`}>
             <span className="icon icon--edit"></span>
           </Link>
         </>
@@ -40,7 +39,7 @@ const AdminMenu = ({ isAdminMenuActive, setIsAdminMenuActive, setIsNavMenuExpand
     }
     return (
       <>
-        <Link onClick={menuOff} className="nav-main__link" to={"/posts/new"}>
+        <Link onClick={menuOff} className="admin-menu__link" to={"/posts/new"}>
           <span className="icon icon--new-post"></span>
         </Link>
         <Button hasIcon={true} className="logout" title="Logout" onClick={handleLogout} />
@@ -49,9 +48,9 @@ const AdminMenu = ({ isAdminMenuActive, setIsAdminMenuActive, setIsNavMenuExpand
   };
 
   const renderLoggedOutContent = () => (
-    <Link to={"/login"} className="nav-main__link" title="Login">
+    <Link to={"/login"} className="admin-menu__link" title="Login">
       <span className="icon icon--login"></span>
-    </Link>
+    </Link> 
   );
 
   return (

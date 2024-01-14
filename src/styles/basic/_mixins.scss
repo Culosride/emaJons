@@ -1,0 +1,30 @@
+@mixin link-style($size: 'sm', $color: $txt-black, $hoverColor: $txt-black) {
+  text-decoration: none;
+  text-transform: uppercase;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $color;
+
+  // Size handling
+  @if $size == 'sm' {
+    font-size: 20px;
+    @media (max-width: 599px) {
+      font-size: 18px;
+    }
+  } @else if $size == 'xl' {
+    font-size: 48px;
+    @media (max-width: 599px) {
+      font-size: 32px;
+    }
+  }
+
+  // Hover effect
+  &:hover {
+    transition: color ease-in-out 0.25s;
+    color: $hoverColor;
+  }
+
+  // Additional variations can be added as needed
+}

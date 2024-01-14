@@ -38,11 +38,26 @@
     margin: 0;
     cursor: pointer;
   }
-  .tag-active {
+
+  .is-selected {
     font-weight: 600;
     z-index: 1;
     word-break: break-all;
     text-wrap: balance;
+
+    @media (min-width: 768px) {
+        &::before {
+        content: "";
+        display: inline-block;
+        background-image: url("../icons/ArrowIcon.svg");
+        background-size: contain;
+        width: 20px;
+        background-repeat: no-repeat;
+        height: 18px;
+        vertical-align: text-bottom;
+        background-position: -6px 50%;
+      }
+    }
   }
 }
 
@@ -64,20 +79,6 @@
     column-gap: 72px;
     row-gap: 56px;
     grid-template-columns: 6fr 6fr;
-  }
-}
-
-@media screen and (min-width: 768px) {
-  .tag-active::before {
-    content: "";
-    display: inline-block;
-    background-image: url("../icons/ArrowIcon.svg");
-    background-size: contain;
-    width: 20px;
-    background-repeat: no-repeat;
-    height: 18px;
-    vertical-align: text-bottom;
-    background-position: -6px 50%;
   }
 }
 
@@ -117,7 +118,7 @@
       overflow: hidden;
     }
 
-    .tag-active {
+    .is-selected {
       text-wrap: nowrap;
     }
 

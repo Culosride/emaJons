@@ -5,7 +5,7 @@ const TagsContainer = ({ sortedTags, activeTag, handleSelectTag }) => {
     <p
       key={i}
       data-value={tag}
-      className={`tag-link ${activeTag === tag ? "tag-active" : ""}`}
+      className={`tag-link ${activeTag === tag ? "is-selected" : ""}`}
       onMouseUp={handleSelectTag}
     >
       {tag}

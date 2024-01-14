@@ -89,12 +89,12 @@ export default function Header() {
     !isFullscreen &&
     <header ref={headerRef} className={headerClass}>
       <nav className="nav-main">
-        <Link onClick={menuOff} to="/" className="nav-main__logo nav-main__logo--small">
+        <Link className="nav-main__link txt-black sm" onClick={menuOff} to="/">
           EmaJons
         </Link>
         <span className="nav-main__divider"></span>
         {(isPostPage || isMediumScreen) &&
-          <Link className="nav-main__link nav-main__link--small is-active">
+          <Link className="nav-main__link txt-black sm is-selected">
             {currentCategory}
           </Link>}
         {!isPostPage &&

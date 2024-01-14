@@ -140,9 +140,9 @@ export default function AllPosts() {
   const updateTagsClass = (activeElement) => {
     // Deselects all tag links
     const links = document.querySelectorAll(".tag-link");
-    links.forEach((link) => link.classList.remove("tag-active"));
+    links.forEach((link) => link.classList.remove("is-selected"));
     // Selects clicked tag link
-    activeElement.classList.add("tag-active");
+    activeElement.classList.add("is-selected");
   };
 
   postElements =

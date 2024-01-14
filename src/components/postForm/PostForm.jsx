@@ -360,7 +360,7 @@ export default function PostForm() {
         hasIcon={false}
         type="button"
         dataValue="media"
-        className={currentFormTab === "media" ? "tab is-active" : "tab"}
+        className={currentFormTab === "media" ? "tab is-selected" : "tab"}
       >
         Media
       </Button>
@@ -368,7 +368,7 @@ export default function PostForm() {
         hasIcon={false}
         type="button"
         dataValue="postDetails"
-        className={currentFormTab === "postDetails" ? "tab is-active" : "tab"}
+        className={currentFormTab === "postDetails" ? "tab is-selected" : "tab"}
       >
         Post details
       </Button>
