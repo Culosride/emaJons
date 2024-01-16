@@ -22,7 +22,7 @@ export default function AllPosts() {
   const status = useSelector((state) => state.posts.status);
   const error = useSelector((state) => state.posts.error);
   const posts = useSelector((state) => state.posts.posts);
-  const hasMorePosts = useSelector((state) => state.posts.loadMore);
+  const hasMorePosts = useSelector((state) => state.posts.loadMore[currentCategory]);
   const scrollPosition = useSelector((state) => state.ui.scrollPosition);
   const activeTag = useSelector((state) => state.tags.activeTag);
 
@@ -50,8 +50,9 @@ export default function AllPosts() {
   }, []);
 
   useEffect(() => {
-    if (filteredPosts.length < POSTS_TO_LOAD && activeTag && hasMorePosts)
+    if (filteredPosts.length < POSTS_TO_LOAD && activeTag && hasMorePosts) {
       setPageNum(2);
+    }
   }, [filteredPosts]);
 
   useScroll(tagsContainerRef, _, { threshold: 40, scrollClass: "fade-top" });

@@ -5,7 +5,13 @@ const initialState = {
   posts: [],
   currentCategory: "",
   currentPost: "",
-  loadMore: true,
+  loadMore: {
+    Walls: true,
+    Paintings: true,
+    Sketchbooks: true,
+    Video: true,
+    Sculptures: true
+  },
   status: "idle" || "loading" || "succeeded" || "failed",
   error: "",
 };
@@ -149,12 +155,16 @@ const postsSlice = createSlice({
         const array1 = state.posts;
         const array2 = action.payload.posts
         const filteredPosts = filterPosts(array1, array2, '_id');
+        const currentCategory = action.meta.arg[0]
 
         return state = {
           ...state,
           posts: [...state.posts, ...filteredPosts],
           status: "succeeded",
-          loadMore: action.payload.moreData
+          loadMore: {
+            ...state.loadMore,
+            [currentCategory]: action.payload.moreData
+          }
         }
       })
       .addCase(fetchPostsByCategory.rejected, (state, action) => {
@@ -185,5 +195,9 @@ export const {
   setCurrentCategory,
   setCurrentMedia,
 } = postsSlice.actions;
+
+export const selectPostsByCategory = (state, category) => {
+  return state.posts.posts.filter(post => post.category === category);
+};
 
 export default postsSlice.reducer;
