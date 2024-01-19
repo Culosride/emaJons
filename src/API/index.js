@@ -31,16 +31,16 @@ postInstance.interceptors.request.use(async (req) => {
     req.headers.Authorization = `Bearer ${token}`;
     return req;
   }
-  
+
   const response = await axios.get(`${baseURL}/auth/refresh`);
   req.headers.Authorization = `Bearer ${response.data.accessToken}`;
   return req;
 });
 
 // tags requests
-export const fetchAllTags = () => axios.get("/api/categories");
-export const addNewTag = (tag) => axios.patch("/api/categories/tags", { newTag: tag });
-export const deleteTag = (tagToDelete) => axios.patch("/api/categories/deleteTag", { tagToDelete: tagToDelete });
+export const fetchTags = () => axios.get("/api/tags");
+export const addNewTag = (tag) => axios.patch("/api/tags", { newTag: tag });
+export const deleteTag = (tagToDelete) => axios.patch("/api/tags/deleteTag", { tagToDelete: tagToDelete });
 
 // auth requests
 export const login = (userInfo) => axios.post("/auth", userInfo);

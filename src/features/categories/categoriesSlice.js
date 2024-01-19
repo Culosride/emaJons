@@ -26,8 +26,8 @@ export const deleteTag = createAsyncThunk("deleteTag", async (tagToDelete, { rej
   }
 })
 
-export const fetchAllTags = createAsyncThunk("fetchAllTags", async () => {
-  const response = await api.fetchAllTags()
+export const fetchTags = createAsyncThunk("fetchTags", async () => {
+  const response = await api.fetchTags()
   return response.data
 })
 
@@ -60,17 +60,17 @@ const categoriesSlice = createSlice({
   },
   extraReducers(builder) {
     builder
-      .addCase(fetchAllTags.pending, (state) => {
+      .addCase(fetchTags.pending, (state) => {
         state.status = 'loading'
       })
-      .addCase(fetchAllTags.fulfilled, (state, action) => {
+      .addCase(fetchTags.fulfilled, (state, action) => {
         return state = {
           ...state,
           availableTags: [...action.payload],
           status: 'succeeded',
         }
       })
-      .addCase(fetchAllTags.rejected, (state) => {
+      .addCase(fetchTags.rejected, (state) => {
         state.status = "failed";
       })
       .addCase(addNewTag.pending, (state) => {

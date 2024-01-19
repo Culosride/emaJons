@@ -25,18 +25,23 @@ export default function AllPosts() {
   const hasMorePosts = useSelector((state) => state.posts.loadMore[currentCategory]);
   const scrollPosition = useSelector((state) => state.ui.scrollPosition);
   const activeTag = useSelector((state) => state.tags.activeTag);
-
   const isMediumScreen = useScreenSize(["xs", "s", "m"])
+
+  useEffect(() => {
+    dispatch(setCurrentCategory(currentCategory));
+    window.scrollTo(0, scrollPosition);
+  }, []);
 
   const postsByCategory = useMemo(() => {
     return posts.filter(post => post.category === _.capitalize(currentCategory));
   }, [posts, currentCategory]);
   const [filteredPosts, setFilteredPosts] = useState(postsByCategory);
 
-  const sortedTags = useMemo(() => {
-    const allTags = postsByCategory.flatMap((post) => post.postTags);
-    return [...new Set(allTags)].sort((a, b) => b.localeCompare(a));
-  }, [postsByCategory]);
+  useEffect(() => {
+    if (filteredPosts.length < POSTS_TO_LOAD && activeTag && hasMorePosts) {
+      setPageNum(2);
+    }
+  }, [filteredPosts]);
 
   const observer = useRef(null);
   const maskTagsRef = useRef(null);
@@ -44,16 +49,6 @@ export default function AllPosts() {
 
   const { setPageNum } = usePosts(currentCategory);
 
-  useEffect(() => {
-    dispatch(setCurrentCategory(currentCategory));
-    window.scrollTo(0, scrollPosition);
-  }, []);
-
-  useEffect(() => {
-    if (filteredPosts.length < POSTS_TO_LOAD && activeTag && hasMorePosts) {
-      setPageNum(2);
-    }
-  }, [filteredPosts]);
 
   useScroll(tagsContainerRef, _, { threshold: 40, scrollClass: "fade-top" });
 
@@ -157,7 +152,6 @@ export default function AllPosts() {
         <div ref={tagsContainerRef} className="select-tags-container">
           <Draggable userRef={maskTagsRef} className="mask">
             <TagsContainer
-              sortedTags={sortedTags}
               activeTag={activeTag}
               handleSelectTag={handleSelectTag}
             />

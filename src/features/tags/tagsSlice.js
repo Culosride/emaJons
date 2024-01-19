@@ -1,9 +1,10 @@
-import { createAsyncThunk, current, createSlice } from '@reduxjs/toolkit'
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import * as api from "../../API/index"
 
 const initialState = {
   availableTags: [],
   selectedTags: [],
+  categoryTags: {},
   activeTag: "",
   status: 'idle' || 'loading' || 'succeeded' || 'failed',
   error: "" || null
@@ -23,8 +24,8 @@ export const deleteTag = createAsyncThunk("deleteTag", async (tagToDelete, { rej
   }
 })
 
-export const fetchAllTags = createAsyncThunk("fetchAllTags", async () => {
-  const response = await api.fetchAllTags()
+export const fetchTags = createAsyncThunk("fetchTags", async () => {
+  const response = await api.fetchTags()
   return response.data
 })
 
@@ -33,6 +34,7 @@ const tagsSlice = createSlice({
   initialState,
   reducers: {
     resetTags: (state) => {
+      state.availableTags = [...state.availableTags, ...state.selectedTags]
       state.selectedTags = []
     },
     selectTag: (state, action) => {
@@ -58,14 +60,15 @@ const tagsSlice = createSlice({
   },
   extraReducers(builder) {
     builder
-      .addCase(fetchAllTags.pending, (state) => {
+      .addCase(fetchTags.pending, (state) => {
         state.status = 'loading'
       })
-      .addCase(fetchAllTags.fulfilled, (state, action) => {
+      .addCase(fetchTags.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.availableTags = action.payload
+        state.categoryTags = action.payload.categoryTags
+        state.availableTags = action.payload.availableTags
       })
-      .addCase(fetchAllTags.rejected, (state) => {
+      .addCase(fetchTags.rejected, (state, action) => {
         state.status = "failed";
       })
       .addCase(addNewTag.pending, (state) => {

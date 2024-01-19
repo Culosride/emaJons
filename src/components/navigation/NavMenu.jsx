@@ -44,7 +44,7 @@ const NavMenu = ({ handleNewCategory, toggleNavMenu, isNavMenuExpanded }) => {
             className={categoryItemClass}
           >
             <Link
-              onClick={() => handleNewCategory(category)}
+              onClick={handleNewCategory}
               className={categoryLinkClass}
               to={`/${category}`}
             >

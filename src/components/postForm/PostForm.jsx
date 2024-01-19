@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { createPost, editPost, fetchPostById, setCurrentPost } from "../../features/posts/postsSlice";
-import { fetchAllTags, toggleTag, resetTags } from "../../features/tags/tagsSlice";
+import { fetchTags, toggleTag, resetTags } from "../../features/tags/tagsSlice";
 import { useSelector, useDispatch } from "react-redux";
 import TagsInputForm from "../tag/TagsInputForm";
 import Button from "../UI/Button";
@@ -51,27 +51,25 @@ export default function PostForm() {
 
   useEffect(() => {
     dispatch(resetTags());
-    dispatch(fetchAllTags()).then(() => {
-      if (isEditPage) {
-        dispatch(fetchPostById(params.postId)).then((res) => {
-          setPostData(res.payload);
-          res.payload.postTags.forEach((tag) => {
-            dispatch(toggleTag(tag));
-          });
+    if (isEditPage) {
+      dispatch(fetchPostById(params.postId)).then((res) => {
+        setPostData(res.payload);
+        res.payload.postTags.forEach((tag) => {
+          dispatch(toggleTag(tag));
         });
-      } else {
-        dispatch(setCurrentPost(""));
-        dispatch(resetTags());
-        setPostData({
-          title: "",
-          subtitle: "",
-          content: "",
-          media: [],
-          category: "",
-          postTags: [],
-        });
-      }
-    });
+      });
+    } else {
+      dispatch(setCurrentPost(""));
+      dispatch(resetTags());
+      setPostData({
+        title: "",
+        subtitle: "",
+        content: "",
+        media: [],
+        category: "",
+        postTags: [],
+      });
+    }
   }, [isEditPage]);
 
   // create media preview
@@ -150,6 +148,7 @@ export default function PostForm() {
       });
       const res = await dispatch(createPost(formData)); // await needed
       navigate(`/${postData.category}/${res.payload._id}`);
+      dispatch(fetchTags())
     } catch (error) {
       console.log(error);
     }
@@ -187,6 +186,7 @@ export default function PostForm() {
         }
       });
       await dispatch(editPost({ formData, postId }));
+      dispatch(fetchTags())
     } catch (error) {
       console.log(error);
     }

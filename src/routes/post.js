@@ -17,7 +17,7 @@ const {
 require("dotenv").config();
 
 //////////////////////////// routes for BasicUsers /////////////////////////////
-// FETCH ALL POSTS
+// Fetch all Posts
 postRouter.get("/api/posts", async (req, res) => {
   try {
     // Group posts by category and limit each group to the first 9 posts
@@ -46,7 +46,7 @@ postRouter.get("/api/posts", async (req, res) => {
   }
 });
 
-// FETCH POSTS BY CATEGORY
+// Fetch Posts by category
 postRouter.get("/api/categories/:category", async (req, res) => {
   const { category } = req.params
   const page = parseInt(req.query.page) || 1;
@@ -65,7 +65,7 @@ postRouter.get("/api/categories/:category", async (req, res) => {
   }
 });
 
-// FETCH POST BY ID
+// Fetch Post by ID
 postRouter.get("/api/posts/:postId", async (req, res) => {
   const { postId } = req.params
   try {
@@ -80,7 +80,7 @@ postRouter.get("/api/posts/:postId", async (req, res) => {
 
 
 /////////////////////////////// protected routes ///////////////////////////////
-// CREATE POST
+// Create Post
 postRouter.post("/posts", verifyJWT, multerUpload, async (req, res) => {
   const post = new Post(req.body);
   const savedPost = await post.save();
@@ -112,7 +112,7 @@ postRouter.post("/posts", verifyJWT, multerUpload, async (req, res) => {
   res.status(200).json(updatedPost);
 });
 
-// UPDATE POST
+// Update Post
 postRouter.patch("/posts/:postId/edit", verifyJWT, multerUpload, async (req, res) => {
     if (!req.body.postTags) req.body.postTags = [];
     const update = Object.assign({}, req.body);
@@ -124,12 +124,12 @@ postRouter.patch("/posts/:postId/edit", verifyJWT, multerUpload, async (req, res
     if (!update.media) {
       // Each old media deleted, new media added
       const publicIds = post.media.map((med) => med.publicId);
-      // the req.files.media will populate the updated post.media
+      // The req.files.media will populate the updated post.media
       update.media = [];
       await removeFromCloudinary(publicIds);
       await removeVideoFromCloudinary(publicIds);
     } else {
-      // if any of the old media exist in incoming update
+      // If any of the old media exist in incoming update
       update.media =
         typeof update.media === "string" ? [update.media] : update.media;
       update.media = update.media.map((med) => JSON.parse(med));
@@ -139,7 +139,7 @@ postRouter.patch("/posts/:postId/edit", verifyJWT, multerUpload, async (req, res
         })
       );
 
-      // remove public id from cloudinary
+      // Remove public id from cloudinary
       const publicIds = mediaToDelete.map((med) => med.publicId);
       if (publicIds.length) {
         await removeFromCloudinary(publicIds);
@@ -147,15 +147,15 @@ postRouter.patch("/posts/:postId/edit", verifyJWT, multerUpload, async (req, res
       }
     }
 
-    // post update
+    // Post update
     await post.updateOne({ $set: update }, { new: true }).exec();
 
-    // handle new media
+    // Handle new media
     if (incomingMedia) {
       for (let i = 0; i < incomingMedia.length; i++) {
         const med = incomingMedia[i];
 
-        // gets media file type
+        // Gets media file type
         const mediaType = med.mimetype.split("/")[0];
 
         const data = await uploadToCloudinary(
@@ -184,7 +184,7 @@ postRouter.patch("/posts/:postId/edit", verifyJWT, multerUpload, async (req, res
   }
 );
 
-// DELETE POST
+// Delete Post
 postRouter.delete("/:category/:postId", verifyJWT, async (req, res) => {
   const { postId } = req.params;
   try {

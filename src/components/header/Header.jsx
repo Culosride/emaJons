@@ -23,6 +23,7 @@ export default function Header() {
   const hasContent = useSelector((state) => state.posts.currentPost.content?.length > 500);
   const modals = useSelector(state => state.ui.modals);
   const error = useSelector((state) => state.posts.error);
+  const activeTag = useSelector(state => state.tags.activeTag)
   const [isNavMenuExpanded, setIsNavMenuExpanded] = useState(false);
   const [isAdminMenuActive, setIsAdminMenuActive] = useState(false);
 
@@ -65,11 +66,10 @@ export default function Header() {
 
   useScroll(headerRef, menuOff, { threshold: 40, scrollClass: "fade-top" })
 
-  const handleNewCategory = (category) => {
+  const handleNewCategory = () => {
+    if(activeTag) dispatch(selectTag(""));
     setIsNavMenuExpanded(false);
-    dispatch(selectTag(""));
     dispatch(setScrollPosition(0));
-    dispatch(setCurrentCategory(category));
   };
 
   const confirmPostDelete = () => {

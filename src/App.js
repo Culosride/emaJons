@@ -12,9 +12,10 @@ import Home from "./components/home/Home";
 import NotFound from "./components/404/NotFound";
 import withRouteValidation from "./hocs/RouteValidation";
 import RequireAuth from "./hocs/RequireAuth";
-import { setScreenSize } from "./features/UI/uiSlice";
 import { ROLES } from "./config/roles";
+import { setScreenSize } from "./features/UI/uiSlice";
 import { setIsLogged } from "./features/auth/authSlice";
+import { fetchTags } from "./features/tags/tagsSlice";
 
 const AllPostsRouteValidated = withRouteValidation(AllPosts);
 const PostRouteValidated = withRouteValidation(Post);
@@ -24,6 +25,7 @@ export default function App() {
   const isLoggedIn = useSelector(state => state.auth.isLogged)
 
   useEffect(() => {
+    dispatch(fetchTags())
     const token = localStorage.getItem("access-token")
     if(token) dispatch(setIsLogged(true))
   }, [])

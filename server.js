@@ -16,7 +16,7 @@ app.use(cookieParser())
 app.use(express.static("public"))
 app.use(express.urlencoded({extended: true}))
 
-app.use(routers.authRouter, routers.postRouter, routers.registerRouter, routers.categoryRouter)
+app.use(routers.authRouter, routers.postRouter, routers.registerRouter, routers.categoryRouter, routers.tagRouter)
 
 app.use(errorHandler)
 app.use('/assets', express.static(path.join(__dirname, '../public')))
