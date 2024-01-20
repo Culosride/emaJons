@@ -1,5 +1,5 @@
 .post-container {
-  animation: fadeIn .5s ease-in;
+  animation: fadeIn .3s ease-in;
   text-align: center;
   display: grid;
   grid-template-columns: $slider-width $description-width;
@@ -46,7 +46,7 @@
 }
 
 .text-container {
-  animation: fadeIn .5s ease-in;
+  animation: fadeIn .3s ease-in;
   box-sizing: border-box;
   text-align: left;
   width: 100%;

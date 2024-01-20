@@ -3,7 +3,7 @@
 }
 
 .posts-grid {
-  animation: slideIn 0.5s ease-in;
+  animation: slideIn 0.3s ease-in;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-auto-rows: 280px;
@@ -14,7 +14,6 @@
 
 .select-tags-container {
   text-transform: uppercase;
-  animation: fadeIn 0.5s ease-in;
   padding-bottom: 10px;
   position: fixed;
   width: 170px;
@@ -45,7 +44,7 @@
     word-break: break-all;
     text-wrap: balance;
 
-    @media (min-width: 768px) {
+    @media (min-width: 992px) {
         &::before {
         content: "";
         display: inline-block;
