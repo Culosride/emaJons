@@ -51,7 +51,6 @@ const postsSlice = createSlice({
   name: "posts",
   initialState,
   reducers: {
-
     setCurrentPost(state, action) {
       const currentPost = state.posts.find(post => post._id === action.payload)
       if (currentPost) {
@@ -64,7 +63,7 @@ const postsSlice = createSlice({
         return state = {
           ...state,
           currentPost: "",
-          currentCategor: "",
+          currentCategory: "",
         };
       }
     },

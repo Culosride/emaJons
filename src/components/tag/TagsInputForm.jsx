@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Tag from "../tag/Tag";
-import { deleteTag, addNewTag, toggleTag } from "../../features/tags/tagsSlice";
+import { deleteTag, createTag, toggleTag } from "../../features/tags/tagsSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchPosts } from "../../features/posts/postsSlice";
 import { setModal } from "../../features/UI/uiSlice";
@@ -19,13 +19,13 @@ const TagsInputForm = () => {
     dispatch(setModal({ key: "tagDelete", state: false }))
   );
 
-  const createNewTag = (e) => {
+  const createNewTag = () => {
     if (selectedTags.includes(tag)) {
       setTag("");
     } else if (availableTags.includes(tag)) {
       dispatch(toggleTag(tag));
     } else {
-      dispatch(addNewTag(tag));
+      dispatch(createTag(tag));
     }
     setTag("");
   };

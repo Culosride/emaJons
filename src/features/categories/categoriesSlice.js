@@ -8,9 +8,9 @@ const initialState = {
   error: "" || null
 }
 
-export const addNewTag = createAsyncThunk("createTag", async (tag, { rejectWithValue }) => {
+export const createTag = createAsyncThunk("createTag", async (tag, { rejectWithValue }) => {
   try {
-    const response = await api.addNewTag(tag)
+    const response = await api.createTag(tag)
     return response.data
   } catch (error) {
     return rejectWithValue(error.response.data.message)
@@ -73,14 +73,14 @@ const categoriesSlice = createSlice({
       .addCase(fetchTags.rejected, (state) => {
         state.status = "failed";
       })
-      .addCase(addNewTag.pending, (state) => {
+      .addCase(createTag.pending, (state) => {
         state.status = 'loading'
       })
-      .addCase(addNewTag.fulfilled, (state, action) => {
+      .addCase(createTag.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.selectedTags = state.selectedTags.concat(action.payload)
       })
-      .addCase(addNewTag.rejected, (state, action) => {
+      .addCase(createTag.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload
       })

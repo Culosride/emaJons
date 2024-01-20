@@ -10,6 +10,14 @@ import { useScroll } from "../../hooks/useScroll";
 import useScreenSize from "../../hooks/useScreenSize";
 const _ = require("lodash");
 
+const initPostData = () => ({
+  title: "",
+  subtitle: "",
+  content: "",
+  media: [],
+  category: "",
+  postTags: [],
+});
 
 export default function PostForm() {
   const dispatch = useDispatch();
@@ -18,7 +26,8 @@ export default function PostForm() {
   const { pathname } = useLocation();
   const selectedTags = useSelector((state) => state.tags.selectedTags);
   const currentPost = useSelector((state) => state.posts.currentPost);
-  const status = useSelector((state) => state.posts.status);
+  const postsStatus = useSelector((state) => state.posts.status);
+  const tagsStatus = useSelector((state) => state.tags.status);
   const isMediumScreen = useScreenSize(["xs", "s", "m"])
   const tabMenuRef = useRef(null)
   useScroll(tabMenuRef, _, { threshold: 40, scrollClass: "fade-top" })
@@ -26,22 +35,16 @@ export default function PostForm() {
   const [errMsg, setErrMsg] = useState(null);
   const [currentFormTab, setCurrentFormTab] = useState("media")
   const [mediaElements, setMediaElements] = useState([]);
-  const [postData, setPostData] = useState({
-    title: "",
-    subtitle: "",
-    content: "",
-    media: [],
-    category: "",
-    postTags: [],
-  });
+  const [postData, setPostData] = useState(initPostData());
 
   // derived state
   const postId = currentPost._id;
   const isEditPage = pathname.includes("edit");
-  const isLoading = status === "loading"
+  const arePostsLoading = postsStatus === "loading"
+  const areTagsLoaded = tagsStatus === "succeeded"
 
-  const btnStyles = isLoading ? "submit disabled" : "submit";
-  const submitBtnValue = isLoading
+  const btnStyles = arePostsLoading ? "submit disabled" : "submit";
+  const submitBtnValue = arePostsLoading
     ? "Submitting..."
     :  isEditPage
       ? "Save changes"
@@ -50,27 +53,21 @@ export default function PostForm() {
   let content;
 
   useEffect(() => {
-    dispatch(resetTags());
-    if (isEditPage) {
-      dispatch(fetchPostById(params.postId)).then((res) => {
-        setPostData(res.payload);
-        res.payload.postTags.forEach((tag) => {
-          dispatch(toggleTag(tag));
-        });
-      });
-    } else {
-      dispatch(setCurrentPost(""));
-      dispatch(resetTags());
-      setPostData({
-        title: "",
-        subtitle: "",
-        content: "",
-        media: [],
-        category: "",
-        postTags: [],
-      });
+    if(areTagsLoaded) {
+      if (isEditPage) {
+        dispatch(fetchPostById(params.postId)).then(res => {
+          setPostData(res.payload);
+          res.payload.postTags.forEach((tag) => {
+            dispatch(toggleTag(tag));
+          });
+        })
+      } else {
+        dispatch(resetTags());
+        dispatch(setCurrentPost(""));
+        setPostData(initPostData());
+      }
     }
-  }, [isEditPage]);
+  }, [areTagsLoaded, isEditPage])
 
   // create media preview
   useEffect(() => {
@@ -123,7 +120,7 @@ export default function PostForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (isLoading) return
+    if (arePostsLoading) return
 
     if (!postData.category) {
       setErrMsg("Select a category");
@@ -158,7 +155,7 @@ export default function PostForm() {
   const handleEdit = async (e) => {
     e.preventDefault();
 
-    if (isLoading) return;
+    if (arePostsLoading) return;
 
     if (!postData.category) {
       setEmptyCategory(true);
@@ -268,7 +265,7 @@ export default function PostForm() {
 
           <Button
             hasIcon={false}
-            disabled={isLoading}
+            disabled={arePostsLoading}
             className={btnStyles}
             type="submit"
           >
@@ -344,7 +341,7 @@ export default function PostForm() {
 
           <Button
             hasIcon={false}
-            disabled={isLoading}
+            disabled={arePostsLoading}
             className={btnStyles}
             type="submit"
           >

@@ -39,7 +39,7 @@ postInstance.interceptors.request.use(async (req) => {
 
 // tags requests
 export const fetchTags = () => axios.get("/api/tags");
-export const addNewTag = (tag) => axios.patch("/api/tags", { newTag: tag });
+export const createTag = (tag) => axios.patch("/api/tags", { newTag: tag });
 export const deleteTag = (tagToDelete) => axios.patch("/api/tags/deleteTag", { tagToDelete: tagToDelete });
 
 // auth requests
