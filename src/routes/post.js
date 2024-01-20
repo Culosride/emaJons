@@ -52,14 +52,14 @@ postRouter.get("/api/categories/:category", async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const pageSize = parseInt(req.query.pageSize) || POSTS_TO_LOAD;
   try {
-    const posts = await Post.find({category: category})
+    const posts = await Post.find({ category })
       .skip((page - 1) * pageSize)
       .limit(pageSize)
       .populate({ path: "postTags" });
 
-    if (!posts) return res.status(404).json({ error: "Posts not found" })
+    if (posts.length === 0) return res.status(404).json({ error: "Posts not found" })
 
-    res.status(200).json({posts: posts, moreData: Boolean(posts.length > 8)});
+    res.status(200).json({ posts: posts, moreData: posts.length === pageSize });
   } catch (err) {
     res.status(400).send(err);
   }
