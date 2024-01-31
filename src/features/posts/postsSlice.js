@@ -102,9 +102,11 @@ const postsSlice = createSlice({
 
         filteredPosts.splice(index, 0, action.payload);
 
+        const updatedPosts = filteredPosts.length === 1 ? [] : filteredPosts
+
         return state = {
           ...state,
-          posts: [...filteredPosts],
+          posts: [...updatedPosts],
           status: "succeeded",
           currentPost: action.payload,
           error: "",

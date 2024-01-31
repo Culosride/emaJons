@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Link, useLocation, matchPath, useNavigate } from "react-router-dom";
+import { Link, useLocation, matchPath, useNavigate, useParams } from "react-router-dom";
 import _ from "lodash";
 import { useDispatch, useSelector } from "react-redux";
-import { deletePost, setCurrentCategory, fetchPosts, } from "../../features/posts/postsSlice";
+import { deletePost, fetchPosts, } from "../../features/posts/postsSlice";
 import { selectTag } from "../../features/tags/tagsSlice";
 import { setModal, setScrollPosition } from "../../features/UI/uiSlice";
 import NavMenu from "../navigation/NavMenu";
@@ -17,9 +17,10 @@ export default function Header() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
-  let currentCategory = useSelector((state) => state.posts.currentCategory);
+  let { category } = useParams()
+  const { postId } = useParams()
+
   const isFullscreen = useSelector((state) => state.ui.isFullscreen);
-  const currentPostId = useSelector((state) => state.posts.currentPost._id);
   const hasContent = useSelector((state) => state.posts.currentPost.content?.length > 500);
   const modals = useSelector(state => state.ui.modals);
   const error = useSelector((state) => state.posts.error);
@@ -37,9 +38,9 @@ export default function Header() {
   const isPostPage = Boolean(postExists);
 
   if (matchPath("/posts/new", pathname)) {
-    currentCategory = "new post";
+    category = "new post";
   } else if (matchPath("/posts/:postId/edit", pathname)) {
-    currentCategory = "edit";
+    category = "edit";
   }
 
   useEffect(() => {
@@ -73,8 +74,8 @@ export default function Header() {
   };
 
   const confirmPostDelete = () => {
-    dispatch(deletePost([currentPostId, currentCategory])).then(
-      () => dispatch(fetchPosts()) && navigate(`/${currentCategory}`)
+    dispatch(deletePost([postId, category])).then(
+      () => dispatch(fetchPosts()) && navigate(`/${category}`)
     );
     dispatch(setModal({ key: "postDelete", state: false }))
   }
@@ -95,7 +96,7 @@ export default function Header() {
         <span className="nav-main__divider"></span>
         {(isPostPage || isMediumScreen) &&
           <Link className="nav-main__link txt-black sm is-selected">
-            {currentCategory}
+            {category}
           </Link>}
         {!isPostPage &&
           <NavMenu

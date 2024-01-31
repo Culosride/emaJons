@@ -22,11 +22,13 @@ const initPostData = () => ({
 export default function PostForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const params = useParams();
   const { pathname } = useLocation();
+  const params = useParams();
+
   const selectedTags = useSelector((state) => state.tags.selectedTags);
   const currentPost = useSelector((state) => state.posts.currentPost);
-  const postsStatus = useSelector((state) => state.posts.status);
+
+  const postStatus = useSelector((state) => state.posts.status);
   const tagsStatus = useSelector((state) => state.tags.status);
   const isMediumScreen = useScreenSize(["xs", "s", "m"])
   const tabMenuRef = useRef(null)
@@ -38,9 +40,9 @@ export default function PostForm() {
   const [postData, setPostData] = useState(initPostData());
 
   // derived state
-  const postId = currentPost._id;
+  const postId = params.postId;
   const isEditPage = pathname.includes("edit");
-  const arePostsLoading = postsStatus === "loading"
+  const arePostsLoading = postStatus === "loading"
   const areTagsLoaded = tagsStatus === "succeeded"
 
   const btnStyles = arePostsLoading ? "submit disabled" : "submit";
@@ -52,22 +54,39 @@ export default function PostForm() {
 
   let content;
 
+  const handleEditPage = () => {
+    if(postStatus === "idle" || postId !== currentPost._id) {
+      dispatch(fetchPostById(params.postId)).then(res => {
+        setPostData(res.payload);
+        res.payload.postTags.forEach((tag) => {
+          dispatch(toggleTag(tag));
+        });
+      })
+    } else if (postStatus === "succeeded") {
+      setPostData(currentPost)
+      currentPost.postTags.forEach((tag) => {
+        dispatch(toggleTag(tag));
+      });
+    }
+  }
+
+  const handleNewPage = () => {
+    dispatch(resetTags())
+    setCurrentPost("")
+    setPostData(initPostData());
+  }
+
   useEffect(() => {
-    if(areTagsLoaded) {
+    dispatch(resetTags())
+    if (areTagsLoaded) {
       if (isEditPage) {
-        dispatch(fetchPostById(params.postId)).then(res => {
-          setPostData(res.payload);
-          res.payload.postTags.forEach((tag) => {
-            dispatch(toggleTag(tag));
-          });
-        })
+        handleEditPage();
       } else {
-        dispatch(resetTags());
-        dispatch(setCurrentPost(""));
-        setPostData(initPostData());
+        handleNewPage();
       }
     }
-  }, [areTagsLoaded, isEditPage])
+  }, [areTagsLoaded, isEditPage, postId])
+
 
   // create media preview
   useEffect(() => {

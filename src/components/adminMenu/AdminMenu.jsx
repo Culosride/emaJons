@@ -3,13 +3,13 @@ import { useDispatch, useSelector } from "react-redux";
 import useAuth from "../../hooks/useAuth";
 import useLogout from '../../hooks/useLogout';
 import useScreenSize from '../../hooks/useScreenSize';
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Button from "../UI/Button";
 import { setModal } from "../../features/UI/uiSlice";
 
 const AdminMenu = ({ isAdminMenuActive, setIsAdminMenuActive, setIsNavMenuExpanded, isPostPage, headerSize, menuOff }) => {
   const dispatch = useDispatch();
-  const currentPostId = useSelector((state) => state.posts.currentPost._id);
+  const { postId } = useParams();
   const handleLogout = useLogout()
   const isMediumScreen = useScreenSize(["xs", "s", "m"])
   const authorization = useAuth();
@@ -31,7 +31,7 @@ const AdminMenu = ({ isAdminMenuActive, setIsAdminMenuActive, setIsNavMenuExpand
       return (
         <>
           <Button hasIcon={true} className="delete" onClick={handleDelete} />
-          <Link onClick={menuOff} className="admin-menu__link" to={`/posts/${currentPostId}/edit`}>
+          <Link onClick={menuOff} className="admin-menu__link" to={`/posts/${postId}/edit`}>
             <span className="icon icon--edit"></span>
           </Link>
         </>

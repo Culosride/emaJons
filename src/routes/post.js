@@ -57,7 +57,7 @@ postRouter.get("/api/categories/:category", async (req, res) => {
       .limit(pageSize)
       .populate({ path: "postTags" });
 
-    if (posts.length === 0) return res.status(404).json({ error: "Posts not found" })
+    if (!posts) return res.status(404).json({ error: "Posts not found" })
 
     res.status(200).json({ posts: posts, moreData: posts.length === pageSize });
   } catch (err) {

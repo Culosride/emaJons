@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { setCurrentPost, fetchPostById } from '../../features/posts/postsSlice';
+import { fetchPostById } from '../../features/posts/postsSlice';
 import { toggleFullscreen } from '../../features/UI/uiSlice';
 import Slider from '../slider/Slider';
 import useKeyPress from "../../hooks/useKeyPress";
@@ -11,25 +11,34 @@ export default function Post() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const params = useParams()
-  const currentId = params.postId
-  const post = useSelector(state => state.posts.posts.find(post => post._id === currentId)) || useSelector(state => state.posts.currentPost)
+
+  const postId = params.postId
+  const category = params.category
+
+  const post = useSelector(state => state.posts.posts.find(post => post._id === postId)) || useSelector(state => state.posts.currentPost)
   const nextPostId = useSelector(state => state)
   console.log('nextPostId', nextPostId)
+
   const status = useSelector(state => state.posts.status)
   const error = useSelector(state => state.posts.error)
-  const category = params.category
   const isFullscreen = useSelector(state => state.ui.isFullscreen)
 
   let mediaElements = []
   const headlineRef = useRef(null)
 
   useEffect(() => {
-    if(!post) {
-      dispatch(fetchPostById(currentId))
-    } else {
-      dispatch(setCurrentPost(currentId))
+    if(status === "idle") {
+      dispatch(fetchPostById(postId))
     }
   }, [])
+
+  //   useEffect(() => {
+  //   if(!post) {
+  //     dispatch(fetchPostById(postId))
+  //   } else {
+  //     dispatch(setCurrentPost(postId))
+  //   }
+  // }, [])
 
   const escapeFullscreen = () => {
     if (isFullscreen) {

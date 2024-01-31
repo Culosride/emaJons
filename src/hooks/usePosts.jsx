@@ -11,7 +11,9 @@ const usePosts = (category) => {
     if (posts.length === 0 || (posts && pageNum > 1)) {
       const controller = new AbortController();
       const { signal } = controller;
-      dispatch(fetchPostsByCategory([category, pageNum], { signal }));
+
+      const pageNumber = posts.length === 1 ? 1 : pageNum
+      dispatch(fetchPostsByCategory([category, pageNumber], { signal }));
 
       return () => controller.abort();
     }

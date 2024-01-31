@@ -16,25 +16,24 @@ const _ = require("lodash");
 
 export default function AllPosts() {
   const dispatch = useDispatch();
-  const params = useParams();
-  const currentCategory = params.category;
+  const { category } = useParams()
 
   const status = useSelector((state) => state.posts.status);
   const error = useSelector((state) => state.posts.error);
   const posts = useSelector((state) => state.posts.posts);
-  const hasMorePosts = useSelector((state) => state.posts.loadMore[currentCategory]);
+  const hasMorePosts = useSelector((state) => state.posts.loadMore[category]);
   const scrollPosition = useSelector((state) => state.ui.scrollPosition);
   const activeTag = useSelector((state) => state.tags.activeTag);
   const isMediumScreen = useScreenSize(["xs", "s", "m"])
 
   useEffect(() => {
-    dispatch(setCurrentCategory(currentCategory));
+    dispatch(setCurrentCategory(category));
     window.scrollTo(0, scrollPosition);
   }, []);
 
   const postsByCategory = useMemo(() => {
-    return posts.filter(post => post.category === _.capitalize(currentCategory));
-  }, [posts, currentCategory]);
+    return posts.filter(post => post.category === _.capitalize(category));
+  }, [posts, category]);
   const [filteredPosts, setFilteredPosts] = useState(postsByCategory);
 
   useEffect(() => {
@@ -47,8 +46,7 @@ export default function AllPosts() {
   const maskTagsRef = useRef(null);
   const tagsContainerRef = useRef(null);
 
-  const { setPageNum } = usePosts(currentCategory);
-
+  const { setPageNum } = usePosts(category);
 
   useScroll(tagsContainerRef, _, { threshold: 40, scrollClass: "fade-top" });
 
@@ -66,7 +64,7 @@ export default function AllPosts() {
   };
 
   const displayPosts = (posts) => {
-    if(posts.length < 1) return <p style={{textWrap: "nowrap"}}>EmaJons is too shy to show his {currentCategory.toLowerCase()}.</p>
+    if(posts.length < 1) return <p style={{textWrap: "nowrap"}}>EmaJons is too shy to show his {category.toLowerCase()}.</p>
 
     return posts.map((post, i) => {
       const { mediaType, url } = post.media[0];
@@ -79,7 +77,7 @@ export default function AllPosts() {
             mediaType={post.media[0].mediaType}
             id={post._id}
             ref={(i === posts.length - 1 && lastPostRef) || undefined}
-            linkUrl={`/${currentCategory}/${post._id}`}
+            linkUrl={`/${category}/${post._id}`}
             src={previewURL}
             handleScrollPosition={handleScrollPosition}
             alt={post.title}

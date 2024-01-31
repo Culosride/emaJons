@@ -144,3 +144,5 @@ src/app/store_old.js
 # dockerfiles
 Dockerfile
 .dockerignore
+
+src/update.js
