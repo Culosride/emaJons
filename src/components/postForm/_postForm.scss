@@ -143,6 +143,7 @@ input[type="file"] {
   grid-column-gap: 28px;
   grid-row-gap: 20px;
   margin: 20px 0;
+  justify-items: center;
 }
 
 .post-preview-img-container {
@@ -169,19 +170,26 @@ input[type="file"] {
   align-items: center;
   max-height: 200px;
   position: relative;
+  width: fit-content;
+
   img, video {
     max-width: 100%;
     max-height: 100%;
   }
   .delete-prev-container {
-    width: 40px;
-    height: 40px;
-    border: 1px solid rgb(231, 231, 231);
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    width: 30px;
+    height: 30px;
+
     background-color:rgb(245, 245, 245);
-    margin: 12px;
+    opacity: 0.6;
   }
   .delete-prev-container:hover {
-    background-color:rgba(255, 103, 103, 0.678);
+    background-color: #ff7800;
+    opacity: 1;
   }
 }
 .preview-media:hover i:after {
@@ -196,6 +204,14 @@ input[type="file"] {
   padding-left: 8px;
   background-position: center;
   z-index: 1;
+}
+
+.preview-media:hover {
+  .delete-prev-container {
+    transform: scale(1.5);
+    transform-origin: top right;
+    transition: transform 0.2s ease;
+  }
 }
 
 .hidden-file-input {

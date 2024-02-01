@@ -95,7 +95,7 @@ export default function Header() {
         </Link>
         <span className="nav-main__divider"></span>
         {(isPostPage || isMediumScreen) &&
-          <Link className="nav-main__link txt-black sm is-selected">
+          <Link className="nav-main__link txt-black sm is-selected" to={isPostPage && `/${category}`}>
             {category}
           </Link>}
         {!isPostPage &&
