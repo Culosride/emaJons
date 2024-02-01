@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import Tag from "../tag/Tag";
-import { deleteTag, createTag, toggleTag } from "../../features/tags/tagsSlice";
+import { deleteTag, createTag, toggleTag, fetchTags } from "../../features/tags/tagsSlice";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchPosts } from "../../features/posts/postsSlice";
 import { setModal } from "../../features/UI/uiSlice";
 import Modal from "../UI/Modal";
 import useKeyPress from "../../hooks/useKeyPress";
@@ -38,10 +37,9 @@ const TagsInputForm = () => {
   };
 
   const confirmTagDelete = () => {
-    dispatch(deleteTag(tagToDelete)).then(() => {
-      dispatch(fetchPosts());
-    });
+    dispatch(deleteTag(tagToDelete));
     dispatch(setModal({ key: "tagDelete", state: false }));
+    dispatch(fetchTags())
   };
 
   const handleTagToggle = (tag) => {

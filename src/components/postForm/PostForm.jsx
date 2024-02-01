@@ -55,12 +55,14 @@ export default function PostForm() {
 
   const handleEditPage = async () => {
     if(postId !== currentPost._id) {
+      await dispatch(fetchTags())
       const res = await (dispatch(fetchPostById(postId)));
       setPostData(res.payload);
       res.payload.postTags.forEach((tag) => {
         dispatch(toggleTag(tag));
       });
     } else {
+      await dispatch(fetchTags())
       setPostData(currentPost)
       currentPost.postTags.forEach((tag) => {
         dispatch(toggleTag(tag));
@@ -68,22 +70,20 @@ export default function PostForm() {
     }
   }
 
-  const handleNewPage = () => {
-    dispatch(resetTags())
-    setCurrentPost("")
+  const handleNewPage = async () => {
+    await dispatch(fetchTags())
+    dispatch(setCurrentPost(""))
     setPostData(initPostData());
   }
 
   useEffect(() => {
     dispatch(resetTags())
-    if (areTagsLoaded) {
-      if (isEditPage) {
-        handleEditPage();
-      } else {
-        handleNewPage();
-      }
+    if (isEditPage) {
+      handleEditPage();
+    } else if(!isEditPage) {
+      handleNewPage();
     }
-  }, [areTagsLoaded, isEditPage, postId])
+  }, [isEditPage, dispatch])
 
 
   // Create media preview
