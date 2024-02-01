@@ -1,7 +1,7 @@
 import React, { forwardRef } from "react";
 import { Link } from "react-router-dom";
 
-const PostPreview = forwardRef(({ mediaType, handleScrollPosition, src, alt, hoverContent, linkUrl }, ref) => {
+const PostPreview = forwardRef(({ mediaType, handleClick, src, alt, hoverContent, linkUrl }, ref) => {
   const handleMouseEnter = (e) => {
     e.target.play();
   };
@@ -10,7 +10,7 @@ const PostPreview = forwardRef(({ mediaType, handleScrollPosition, src, alt, hov
   };
 
   return (
-    <Link onClick={handleScrollPosition} to={linkUrl} ref={ref} className="post-preview__link">
+    <Link onClick={handleClick} to={linkUrl} ref={ref} className="post-preview__link">
       {mediaType === "image" && <img className="post-preview__image" src={src} alt={alt} />}
       {mediaType === "video" && (
         <video className="post-preview__video" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} loop muted>

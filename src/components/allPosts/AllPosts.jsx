@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState, useRef, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux"; // hook to select data from redux store
-import { setCurrentCategory } from "../../features/posts/postsSlice";
+import { setCurrentCategory, setCurrentPost } from "../../features/posts/postsSlice";
 import { setScrollPosition } from "../../features/UI/uiSlice";
 import { selectTag } from "../../features/tags/tagsSlice";
 import PostPreview from "../post/PostPreview";
@@ -28,6 +28,7 @@ export default function AllPosts() {
 
   useEffect(() => {
     dispatch(setCurrentCategory(category));
+    dispatch(setCurrentPost(""))
     window.scrollTo(0, scrollPosition);
   }, []);
 
@@ -59,8 +60,9 @@ export default function AllPosts() {
     setFilteredPosts(filtered);
   }, [activeTag, posts]);
 
-  const handleScrollPosition = () => {
+  const handleClick = (id) => {
     dispatch(setScrollPosition(window.scrollY));
+    dispatch(setCurrentPost(id))
   };
 
   const displayPosts = (posts) => {
@@ -79,7 +81,7 @@ export default function AllPosts() {
             ref={(i === posts.length - 1 && lastPostRef) || undefined}
             linkUrl={`/${category}/${post._id}`}
             src={previewURL}
-            handleScrollPosition={handleScrollPosition}
+            handleClick={() => handleClick(post._id)}
             alt={post.title}
             hoverContent={post.title.split(",").join("").toUpperCase()}
           />

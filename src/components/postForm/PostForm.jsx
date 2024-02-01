@@ -23,7 +23,7 @@ export default function PostForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const params = useParams();
+  const { postId } = useParams();
 
   const selectedTags = useSelector((state) => state.tags.selectedTags);
   const currentPost = useSelector((state) => state.posts.currentPost);
@@ -39,8 +39,7 @@ export default function PostForm() {
   const [mediaElements, setMediaElements] = useState([]);
   const [postData, setPostData] = useState(initPostData());
 
-  // derived state
-  const postId = params.postId;
+  // Derived state
   const isEditPage = pathname.includes("edit");
   const arePostsLoading = postStatus === "loading"
   const areTagsLoaded = tagsStatus === "succeeded"
@@ -54,15 +53,14 @@ export default function PostForm() {
 
   let content;
 
-  const handleEditPage = () => {
-    if(postStatus === "idle" || postId !== currentPost._id) {
-      dispatch(fetchPostById(params.postId)).then(res => {
-        setPostData(res.payload);
-        res.payload.postTags.forEach((tag) => {
-          dispatch(toggleTag(tag));
-        });
-      })
-    } else if (postStatus === "succeeded") {
+  const handleEditPage = async () => {
+    if(postId !== currentPost._id) {
+      const res = await (dispatch(fetchPostById(postId)));
+      setPostData(res.payload);
+      res.payload.postTags.forEach((tag) => {
+        dispatch(toggleTag(tag));
+      });
+    } else {
       setPostData(currentPost)
       currentPost.postTags.forEach((tag) => {
         dispatch(toggleTag(tag));
@@ -88,7 +86,7 @@ export default function PostForm() {
   }, [areTagsLoaded, isEditPage, postId])
 
 
-  // create media preview
+  // Create media preview
   useEffect(() => {
     setMediaElements(
       postData.media.map((file, i) => {
@@ -110,7 +108,7 @@ export default function PostForm() {
     );
   }, [postData.media]);
 
-  // delete media from preview
+  // Delete media from preview
   const deleteMedia = (e) => {
     e.preventDefault()
     console.log(e.target)
@@ -135,7 +133,7 @@ export default function PostForm() {
     });
   };
 
-  // submit form
+  // Submit form
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -162,7 +160,7 @@ export default function PostForm() {
           return formData.append(key, postData[key]);
         }
       });
-      const res = await dispatch(createPost(formData)); // await needed
+      const res = await dispatch(createPost(formData));
       navigate(`/${postData.category}/${res.payload._id}`);
       dispatch(fetchTags())
     } catch (error) {
@@ -170,7 +168,7 @@ export default function PostForm() {
     }
   };
 
-  // edit post
+  // Edit post
   const handleEdit = async (e) => {
     e.preventDefault();
 

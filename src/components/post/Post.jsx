@@ -10,12 +10,9 @@ import Button from '../UI/Button';
 export default function Post() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const params = useParams()
+  const { postId, category } = useParams()
 
-  const postId = params.postId
-  const category = params.category
-
-  const post = useSelector(state => state.posts.posts.find(post => post._id === postId)) || useSelector(state => state.posts.currentPost)
+  const currentPost = useSelector(state => state.posts.currentPost)
   const nextPostId = useSelector(state => state)
   console.log('nextPostId', nextPostId)
 
@@ -27,18 +24,11 @@ export default function Post() {
   const headlineRef = useRef(null)
 
   useEffect(() => {
-    if(status === "idle") {
+    if(status === "idle" || !currentPost) {
       dispatch(fetchPostById(postId))
     }
   }, [])
 
-  //   useEffect(() => {
-  //   if(!post) {
-  //     dispatch(fetchPostById(postId))
-  //   } else {
-  //     dispatch(setCurrentPost(postId))
-  //   }
-  // }, [])
 
   const escapeFullscreen = () => {
     if (isFullscreen) {
@@ -59,7 +49,7 @@ export default function Post() {
   if (status === 'loading') {
     mediaElements = <p>Loading...</p>
   } else if (status === 'succeeded') {
-    post && displayMedia(post)
+    currentPost && displayMedia(currentPost)
   } else if (status === 'failed') {
     mediaElements = <div>{error}</div>
   }
@@ -84,21 +74,21 @@ export default function Post() {
 
   }
 
-  const content = post?.content && post.content.length > 500
+  const content = currentPost?.content && currentPost.content.length > 500
   const cursorColor = isFullscreen ? "white" : ""
 
   return (
-    post &&
+    currentPost &&
       (
         <main id={"post"} className={`post-container ${content ? "layout-50" : ""} ${isFullscreen ? "layout-100 fullscreen" : ""}`}>
-          {post.media && <Slider content={content} cursorColor={cursorColor} slides={post.media}/>}
+          {currentPost.media && <Slider content={content} cursorColor={cursorColor} slides={currentPost.media}/>}
           {!isFullscreen && <div className="text-container" onScroll={handleScroll}>
             <section className="description-container">
               <div ref={headlineRef} className="headline">
-                <h1 className="title">{post.title}</h1>
-                {post.subtitle && <p className="subtitle">{post.subtitle}</p>}
+                <h1 className="title">{currentPost.title}</h1>
+                {currentPost.subtitle && <p className="subtitle">{currentPost.subtitle}</p>}
               </div>
-              {post.content && <p className="content">{post.content}</p>}
+              {currentPost.content && <p className="content">{currentPost.content}</p>}
               <div className="posts-navigation">
                 <Button hasIcon={false} className="prev-post" handlePreviousPost={handlePreviousPost}>
                   PREVIOUS

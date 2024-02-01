@@ -63,7 +63,6 @@ const postsSlice = createSlice({
         return state = {
           ...state,
           currentPost: "",
-          currentCategory: "",
         };
       }
     },
