@@ -13,7 +13,7 @@ const usePosts = (category) => {
       const { signal } = controller;
 
       const pageNumber = posts.length === 1 ? 1 : pageNum
-      dispatch(fetchPostsByCategory([category, pageNumber], { signal }));
+      dispatch(fetchPostsByCategory({ category, pageNum: pageNumber}, { signal }));
 
       return () => controller.abort();
     }

@@ -27,8 +27,8 @@ export const editPost = createAsyncThunk("updatePost", async (payload) => {
   return response.data;
 });
 
-export const deletePost = createAsyncThunk("deletePost", async ([postId, category]) => {
-    const response = await api.deletePost([postId, category]);
+export const deletePost = createAsyncThunk("deletePost", async (args) => {
+    const response = await api.deletePost(args);
     return response.data;
 });
 
@@ -37,13 +37,13 @@ export const fetchPosts = createAsyncThunk("getPosts", async () => {
   return response.data;
 });
 
-export const fetchPostsByCategory = createAsyncThunk("getPostsByCategory", async ([category, pageNum]) => {
-    const response = await api.fetchPostsByCategory(category, pageNum);
+export const fetchPostsByCategory = createAsyncThunk("getPostsByCategory", async (args) => {
+    const response = await api.fetchPostsByCategory(args);
     return response.data;
 });
 
-export const fetchPostById = createAsyncThunk("getPostById", async (postId) => {
-  const response = await api.fetchPostById(postId);
+export const fetchPostById = createAsyncThunk("getPostById", async (args) => {
+  const response = await api.fetchPostById(args);
   return response.data;
 });
 
@@ -119,8 +119,14 @@ const postsSlice = createSlice({
         state.status = "loading";
       })
       .addCase(deletePost.fulfilled, (state, action) => {
+        const currentCategory = action.meta.arg.category
+
         state.status = "succeeded";
         state.error = "";
+        state.loadMore = {
+          ...state.loadMore,
+          [currentCategory]: true
+        }
       })
       .addCase(deletePost.rejected, (state, action) => {
         state.status = "failed";
@@ -152,10 +158,10 @@ const postsSlice = createSlice({
           return uniquePosts;
         }
 
-        const array1 = state.posts;
-        const array2 = action.payload.posts
-        const filteredPosts = filterPosts(array1, array2, '_id');
-        const currentCategory = action.meta.arg[0]
+        const oldPosts = state.posts;
+        const newPosts = action.payload.posts
+        const filteredPosts = filterPosts(oldPosts, newPosts, '_id');
+        const currentCategory = action.meta.arg.category
 
         return state = {
           ...state,

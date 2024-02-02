@@ -89,24 +89,24 @@ const handleLogout = async (req, res) => {
 
 const validatePath = async (req, res) => {
   const { category, postId } = req.params
+
   const catExists = await Category.findOne({name: _.capitalize(category)})
   if(!catExists) {
-    console.log("cat does not exist")
-    return res.status(404).json({message: "This resource doesn't exist"})
+    console.log("category does not exist")
+    return res.status(404).json({ message: "Category not found." });
   };
 
-  if(postId) {
-    // mongoose only accepts 12 or 24 chars, without this the app just breaks
-    if(postId.length !==24 && postId.length !==12) {
-      console.log("wrong ID format")
-      return res.status(404).json({message: "This resource doesn't exist"});
-    }
+  // mongoose only accepts 24 chars, without this the app just breaks
+  if (postId && postId.length === 24) {
     const postExists = await Post.findById(postId)
     if(!postExists) {
-      console.log("post does not exist")
+      console.log("Post does not exist")
       return res.status(404).json({message: "This resource doesn't exist"});
     }
+  } else if (postId) {
+    return res.status(400).json({ message: "Invalid post ID format." });
   }
+
 
   return res.status(200).json({message: "Path is valid"})
 }

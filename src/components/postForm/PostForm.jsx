@@ -23,7 +23,7 @@ export default function PostForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const { postId } = useParams();
+  const { category, postId } = useParams();
 
   const selectedTags = useSelector((state) => state.tags.selectedTags);
   const currentPost = useSelector((state) => state.posts.currentPost);
@@ -54,9 +54,9 @@ export default function PostForm() {
   const handleEditPage = async () => {
     if(postId !== currentPost._id) {
       await dispatch(fetchTags())
-      const res = await (dispatch(fetchPostById(postId)));
-      setPostData(res.payload);
-      res.payload.postTags.forEach((tag) => {
+      const data = await dispatch(fetchPostById({ category: category, postId: postId }))
+      setPostData(data.payload);
+      data.payload.postTags.forEach((tag) => {
         dispatch(toggleTag(tag));
       });
     } else {

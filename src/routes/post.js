@@ -17,56 +17,52 @@ const {
 require("dotenv").config();
 
 //////////////////////////// routes for BasicUsers /////////////////////////////
-// Fetch all Posts
 postRouter.get("/api/posts", async (req, res) => {
+  const { category, page, pageSize = POSTS_TO_LOAD } = req.query;
+
   try {
-    // Group posts by category and limit each group to the first 9 posts
-    const pipeline = [
-      {
-        $group: {
-          _id: '$category',
-          posts: { $push: '$$ROOT' },
+    if (category) {
+      const pageNum = parseInt(page) || 1;
+      const size = parseInt(pageSize);
+
+      const posts = await Post.find({ category })
+        .skip((pageNum - 1) * size)
+        .limit(size)
+        .populate({ path: "postTags" });
+
+      const moreData = posts.length === size;
+
+      if (!posts) return res.status(404).json({ error: "Posts not found" })
+
+      res.status(200).json({ posts, moreData });
+    } else {
+      // Group posts by category and limit each group to the first 9 posts
+      const pipeline = [
+        {
+          $group: {
+            _id: "$category",
+            posts: { $push: "$$ROOT" },
+          },
         },
-      },
-      {
-        $project: {
-          category: '$_id',
-          posts: { $slice: ['$posts', POSTS_TO_LOAD] },
+        {
+          $project: {
+            category: "$_id",
+            posts: { $slice: ["$posts", POSTS_TO_LOAD] },
+          },
         },
-      },
-    ];
+      ];
 
-    const result = await Post.aggregate(pipeline);
-
-    const posts = result.map((categoryData) => categoryData.posts).flat();
-
-    res.status(200).json(posts);
-  } catch (err) {
-    res.status(400).send(err);
-  }
-});
-
-// Fetch Posts by category
-postRouter.get("/api/categories/:category", async (req, res) => {
-  const { category } = req.params
-  const page = parseInt(req.query.page) || 1;
-  const pageSize = parseInt(req.query.pageSize) || POSTS_TO_LOAD;
-  try {
-    const posts = await Post.find({ category })
-      .skip((page - 1) * pageSize)
-      .limit(pageSize)
-      .populate({ path: "postTags" });
-
-    if (!posts) return res.status(404).json({ error: "Posts not found" })
-
-    res.status(200).json({ posts: posts, moreData: posts.length === pageSize });
+      const result = await Post.aggregate(pipeline);
+      const posts = result.map(categoryData => categoryData.posts).flat();
+      res.status(200).json(posts);
+    }
   } catch (err) {
     res.status(400).send(err);
   }
 });
 
 // Fetch Post by ID
-postRouter.get("/api/posts/:postId", async (req, res) => {
+postRouter.get("/api/:category/:postId", async (req, res) => {
   const { postId } = req.params
   try {
     const post = await Post.findOne({ _id: postId });

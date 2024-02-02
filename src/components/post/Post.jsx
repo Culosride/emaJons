@@ -25,7 +25,7 @@ export default function Post() {
 
   useEffect(() => {
     if(status === "idle" || !currentPost) {
-      dispatch(fetchPostById(postId))
+      dispatch(fetchPostById({ category: category, postId: postId }))
     }
   }, [])
 

@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { Link, useLocation, matchPath, useNavigate, useParams } from "react-router-dom";
 import _ from "lodash";
 import { useDispatch, useSelector } from "react-redux";
-import { deletePost, fetchPostsByCategory, } from "../../features/posts/postsSlice";
+import { deletePost, fetchPosts, } from "../../features/posts/postsSlice";
 import { fetchTags, selectTag } from "../../features/tags/tagsSlice";
 import { setModal, setScrollPosition } from "../../features/UI/uiSlice";
 import NavMenu from "../navigation/NavMenu";
@@ -39,7 +39,7 @@ export default function Header() {
 
   if (matchPath("/posts/new", pathname)) {
     category = "new post";
-  } else if (matchPath("/posts/:postId/edit", pathname)) {
+  } else if (matchPath("/:category/:postId/edit", pathname)) {
     category = "edit";
   }
 
@@ -74,9 +74,9 @@ export default function Header() {
   };
 
   const confirmPostDelete = async () => {
-    await Promise.resolve(dispatch(deletePost([postId, category])));
+    await Promise.resolve(dispatch(deletePost({ postId, category })));
     dispatch(fetchTags());
-    dispatch(fetchPostsByCategory([category, 1]));
+    dispatch(fetchPosts());
     navigate(`/${category}`);
     dispatch(setModal({ key: "postDelete", state: false }));
   }

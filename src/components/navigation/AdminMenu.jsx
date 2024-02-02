@@ -9,7 +9,7 @@ import { setModal } from "../../features/UI/uiSlice";
 
 const AdminMenu = ({ isAdminMenuActive, setIsAdminMenuActive, setIsNavMenuExpanded, isPostPage, headerSize, menuOff }) => {
   const dispatch = useDispatch();
-  const { postId } = useParams();
+  const { category, postId } = useParams();
   const handleLogout = useLogout()
   const isMediumScreen = useScreenSize(["xs", "s", "m"])
   const authorization = useAuth();
@@ -31,7 +31,7 @@ const AdminMenu = ({ isAdminMenuActive, setIsAdminMenuActive, setIsNavMenuExpand
       return (
         <>
           <Button hasIcon={true} className="delete" onClick={handleDelete} />
-          <Link onClick={menuOff} className="admin-menu__link" to={`/posts/${postId}/edit`}>
+          <Link onClick={menuOff} className="admin-menu__link" to={`/${category}/${postId}/edit`}>
             <span className="icon icon--edit"></span>
           </Link>
         </>

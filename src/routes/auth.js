@@ -6,7 +6,6 @@ const authController = require("../controllers/authController");
 authRouter.post("/auth", authController.handleLogin);
 authRouter.get("/auth/refresh", authController.handleRefreshToken)
 authRouter.post("/auth/logout", authController.handleLogout)
-authRouter.get("/auth/validatePath/:category", authController.validatePath)
-authRouter.get("/auth/validatePath/:category/:postId", authController.validatePath)
+authRouter.get("/auth/validatePath/:category/:postId?/:edit?", authController.validatePath);
 
 module.exports = authRouter

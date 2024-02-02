@@ -19,6 +19,7 @@ import { fetchTags } from "./features/tags/tagsSlice";
 
 const AllPostsRouteValidated = withRouteValidation(AllPosts);
 const PostRouteValidated = withRouteValidation(Post);
+const EditRouteValidated = withRouteValidation(PostForm);
 
 export default function App() {
   const dispatch = useDispatch();
@@ -70,11 +71,11 @@ export default function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/about" element={<About />} />
           <Route path="/:category" element={<AllPostsRouteValidated />} />
-          {<Route path="/:category/:postId" element={<PostRouteValidated />} />}
+          <Route path="/:category/:postId" element={<PostRouteValidated />} />
           {/* protected */}
           <Route element={<RequireAuth allowedRoles={[ROLES.Admin]}/>}>
             <Route path="/posts/new" element={<PostForm />} />
-            <Route path="/posts/:postId/edit" element={<PostForm />} />
+            <Route path="/:category/:postId/edit" element={<EditRouteValidated />} />
           </Route>
           {/*end protected */}
           <Route path="/not-found" element={<NotFound />} />

@@ -42,7 +42,7 @@ const TagsInputForm = () => {
   const confirmTagDelete = () => {
     dispatch(deleteTag(tagToDelete));
     dispatch(setModal({ key: "tagDelete", state: false }));
-    dispatch(fetchPostsByCategory([currentCategory, 1]))
+    dispatch(fetchPostsByCategory({ currentCategory, pageNum: 1 }));
     dispatch(fetchTags())
   };
 
