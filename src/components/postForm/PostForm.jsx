@@ -131,79 +131,55 @@ export default function PostForm() {
     });
   };
 
-  // Submit form
-  const handleSubmit = async (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
+    if (postStatus === "loading") return;
 
-    if (arePostsLoading) return
-
-    if (!postData.category) {
-      setErrMsg("Select a category");
-      window.scrollTo(0, 0)
-      return;
-    } else if (!postData.media.length) {
-      setErrMsg("A post with nada?");
-      window.scrollTo(0, 0)
+    const validationError = validatePostData(postData);
+    if (validationError) {
+      setErrMsg(validationError);
+      window.scrollTo(0, 0);
       return;
     }
 
     try {
-      const formData = new FormData();
-      Object.keys(postData).map((key) => {
-        if (key === "media") {
-          return postData.media.map((med) => formData.append("media", med));
-        } else if (key === "postTags") {
-          return selectedTags.map((tag) => formData.append("postTags", tag));
-        } else {
-          return formData.append(key, postData[key]);
-        }
-      });
-      const res = await dispatch(createPost(formData));
-      navigate(`/${postData.category}/${res.payload._id}`);
-      dispatch(fetchTags())
+      const formData = prepareFormData(postData, selectedTags);
+      const action = isEditPage ? editPost({ formData, postId }) : createPost(formData);
+      const result = await dispatch(action);
+
+      if (editPost.fulfilled.match(result) || createPost.fulfilled.match(result)) {
+        dispatch(fetchTags());
+        navigate(`/${postData.category}/${result.payload._id}`);
+      }
     } catch (error) {
-      console.log(error);
+      console.error("Error submitting form:", error);
+      setErrMsg("An error occurred while saving the post.");
     }
   };
 
-  // Edit post
-  const handleEdit = async (e) => {
-    e.preventDefault();
+  function validatePostData(postData) {
+    if (!postData.category) return "Select a category";
+    if (postData.media.length === 0) return "A post with nada?";
+    return null;
+  }
 
-    if (arePostsLoading) return;
-
-    if (!postData.category) {
-      setEmptyCategory(true);
-      return;
-    } else if (!postData.media.length) {
-      setErrMsg("A post with no pictures?");
-      return;
-    }
+  function prepareFormData(postData, selectedTags) {
     const formData = new FormData();
-
-    try {
-      Object.keys(postData).map((key) => {
-        if (key === "media") {
-          return postData.media.map((med) => {
-            med.name
-              ? formData.append("media", med)
-              : formData.append("media", JSON.stringify(med));
-          });
-        } else if (key === "postTags") {
-          return selectedTags.forEach((tag) =>
-            formData.append("postTags", tag)
-          );
-        } else {
-          return formData.append(key, postData[key]);
-        }
-      });
-      await dispatch(editPost({ formData, postId }));
-      dispatch(fetchTags())
-    } catch (error) {
-      console.log(error);
-    }
-    navigate(`/${postData.category}/${postId}`);
-  };
+    Object.keys(postData).forEach(key => {
+      if (key === "media") {
+        postData.media.map((media) => {
+          media.name
+            ? formData.append("media", media)
+            : formData.append("media", JSON.stringify(media));
+        });
+      } else if (key === "postTags") {
+        selectedTags.forEach(tag => formData.append("postTags", tag));
+      } else {
+        formData.append(key, postData[key]);
+      }
+    });
+    return formData;
+  }
 
   const handleTabMenu = (e) => {
     const { value } = e.target.dataset
@@ -390,7 +366,8 @@ export default function PostForm() {
       {isMediumScreen && tabsMenu}
       <form
         className="post-form"
-        onSubmit={isEditPage ? handleEdit : handleSubmit}
+        onSubmit={handleFormSubmit}
+        // onSubmit={isEditPage ? handleEdit : handleSubmit}
       >
         {content}
       </form>
