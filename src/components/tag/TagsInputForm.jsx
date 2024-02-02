@@ -5,11 +5,13 @@ import { useSelector, useDispatch } from "react-redux";
 import { setModal } from "../../features/UI/uiSlice";
 import Modal from "../UI/Modal";
 import useKeyPress from "../../hooks/useKeyPress";
+import { fetchPostsByCategory } from "../../features/posts/postsSlice";
 
 const TagsInputForm = () => {
   const dispatch = useDispatch();
   const [tag, setTag] = useState("");
   const selectedTags = useSelector((state) => state.tags.selectedTags);
+  const currentCategory = useSelector((state) => state.posts.currentCategory);
   const availableTags = useSelector((state) => state.tags.availableTags);
   const modals = useSelector((state) => state.ui.modals);
   const [tagToDelete, setTagToDelete] = useState("");
@@ -39,6 +41,7 @@ const TagsInputForm = () => {
   const confirmTagDelete = () => {
     dispatch(deleteTag(tagToDelete));
     dispatch(setModal({ key: "tagDelete", state: false }));
+    dispatch(fetchPostsByCategory([currentCategory, 1]))
     dispatch(fetchTags())
   };
 

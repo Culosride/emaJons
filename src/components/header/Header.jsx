@@ -2,12 +2,12 @@ import React, { useState, useRef, useEffect } from "react";
 import { Link, useLocation, matchPath, useNavigate, useParams } from "react-router-dom";
 import _ from "lodash";
 import { useDispatch, useSelector } from "react-redux";
-import { deletePost, fetchPosts, } from "../../features/posts/postsSlice";
-import { selectTag } from "../../features/tags/tagsSlice";
+import { deletePost, fetchPostsByCategory, } from "../../features/posts/postsSlice";
+import { fetchTags, selectTag } from "../../features/tags/tagsSlice";
 import { setModal, setScrollPosition } from "../../features/UI/uiSlice";
 import NavMenu from "../navigation/NavMenu";
 import Modal from "../UI/Modal";
-import AdminMenu from "../adminMenu/AdminMenu.jsx";
+import AdminMenu from "../navigation/AdminMenu.jsx";
 import useLogout from '../../hooks/useLogout';
 import { useScroll } from "../../hooks/useScroll";
 import useScreenSize from "../../hooks/useScreenSize.jsx";
@@ -73,11 +73,12 @@ export default function Header() {
     dispatch(setScrollPosition(0));
   };
 
-  const confirmPostDelete = () => {
-    dispatch(deletePost([postId, category])).then(
-      () => dispatch(fetchPosts()) && navigate(`/${category}`)
-    );
-    dispatch(setModal({ key: "postDelete", state: false }))
+  const confirmPostDelete = async () => {
+    await Promise.resolve(dispatch(deletePost([postId, category])));
+    dispatch(fetchTags());
+    dispatch(fetchPostsByCategory([category, 1]));
+    navigate(`/${category}`);
+    dispatch(setModal({ key: "postDelete", state: false }));
   }
 
   const isHeader30 = isPostPage && !hasContent ? "header--30" : ""

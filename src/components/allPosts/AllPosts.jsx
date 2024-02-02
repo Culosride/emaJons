@@ -35,11 +35,12 @@ export default function AllPosts() {
   const postsByCategory = useMemo(() => {
     return posts.filter(post => post.category === _.capitalize(category));
   }, [posts, category]);
+
   const [filteredPosts, setFilteredPosts] = useState(postsByCategory);
 
   useEffect(() => {
     if (filteredPosts.length < POSTS_TO_LOAD && activeTag && hasMorePosts) {
-      setPageNum(2);
+      setPageNum((pageNum) => pageNum + 1);
     }
   }, [filteredPosts]);
 
