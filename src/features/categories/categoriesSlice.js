@@ -8,9 +8,9 @@ const initialState = {
   error: "" || null
 }
 
-export const addNewTag = createAsyncThunk("createTag", async (tag, { rejectWithValue }) => {
+export const createTag = createAsyncThunk("createTag", async (tag, { rejectWithValue }) => {
   try {
-    const response = await api.addNewTag(tag)
+    const response = await api.createTag(tag)
     return response.data
   } catch (error) {
     return rejectWithValue(error.response.data.message)
@@ -26,8 +26,8 @@ export const deleteTag = createAsyncThunk("deleteTag", async (tagToDelete, { rej
   }
 })
 
-export const fetchAllTags = createAsyncThunk("fetchAllTags", async () => {
-  const response = await api.fetchAllTags()
+export const fetchTags = createAsyncThunk("fetchTags", async () => {
+  const response = await api.fetchTags()
   return response.data
 })
 
@@ -36,9 +36,6 @@ const categoriesSlice = createSlice({
   name: 'categories',
   initialState,
   reducers: {
-    toggleNavbar: (state) => {
-      state.isExpanded = !state.isExpanded
-    },
     resetTags: (state) => {
       state.selectedTags = []
       state.availableTags = []
@@ -63,27 +60,27 @@ const categoriesSlice = createSlice({
   },
   extraReducers(builder) {
     builder
-      .addCase(fetchAllTags.pending, (state) => {
+      .addCase(fetchTags.pending, (state) => {
         state.status = 'loading'
       })
-      .addCase(fetchAllTags.fulfilled, (state, action) => {
+      .addCase(fetchTags.fulfilled, (state, action) => {
         return state = {
           ...state,
           availableTags: [...action.payload],
           status: 'succeeded',
         }
       })
-      .addCase(fetchAllTags.rejected, (state) => {
+      .addCase(fetchTags.rejected, (state) => {
         state.status = "failed";
       })
-      .addCase(addNewTag.pending, (state) => {
+      .addCase(createTag.pending, (state) => {
         state.status = 'loading'
       })
-      .addCase(addNewTag.fulfilled, (state, action) => {
+      .addCase(createTag.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.selectedTags = state.selectedTags.concat(action.payload)
       })
-      .addCase(addNewTag.rejected, (state, action) => {
+      .addCase(createTag.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload
       })
@@ -105,7 +102,7 @@ const categoriesSlice = createSlice({
   }
 })
 
-export const { toggleNavbar, } = categoriesSlice.actions
+export const { } = categoriesSlice.actions
 
 
 export default categoriesSlice.reducer

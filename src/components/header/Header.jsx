@@ -1,171 +1,126 @@
-import React, {useState, useRef, useEffect} from "react"
-import { Link, useLocation, matchPath, useNavigate } from 'react-router-dom'
-import _ from 'lodash'
+import React, { useState, useRef, useEffect } from "react";
+import { Link, useLocation, matchPath, useNavigate, useParams } from "react-router-dom";
+import _ from "lodash";
 import { useDispatch, useSelector } from "react-redux";
-import { deletePost, setCurrentCategory, fetchPosts, setScrollPosition } from '../../features/posts/postsSlice';
-import { selectTag } from "../../features/tags/tagsSlice";
-import useAuth from "../../hooks/useAuth.jsx";
-import { logout } from "../../features/auth/authSlice"
-import { CATEGORIES } from "../../config/categories.js";
+import { deletePost, fetchPosts, } from "../../features/posts/postsSlice";
+import { fetchTags, selectTag } from "../../features/tags/tagsSlice";
+import { setModal, setScrollPosition } from "../../features/UI/uiSlice";
+import NavMenu from "../navigation/NavMenu";
+import Modal from "../UI/Modal";
+import AdminMenu from "../navigation/AdminMenu.jsx";
+import useLogout from '../../hooks/useLogout';
+import { useScroll } from "../../hooks/useScroll";
+import useScreenSize from "../../hooks/useScreenSize.jsx";
 
-export default function Header () {
-  const authorization = useAuth(false)
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
+export default function Header() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { pathname } = useLocation();
 
-  const isAdmin = authorization.isAdmin
-  const token = localStorage.getItem('access-token');
+  let { category } = useParams()
+  const { postId } = useParams()
 
-  let currentCategory = useSelector(state => state.posts.currentCategory)
-  const isFullscreen = useSelector(state => state.posts.fullscreen)
-  const currentPostId = useSelector(state => state.posts.currentPost._id)
-  const hasContent = useSelector(state => state.posts.currentPost.content?.length > 500)
-  const postsStatus = useSelector(state => state.posts.status)
-  const error = useSelector(state => state.posts.error)
+  const isFullscreen = useSelector((state) => state.ui.isFullscreen);
+  const hasContent = useSelector((state) => state.posts.currentPost.content?.length > 500);
+  const modals = useSelector(state => state.ui.modals);
+  const error = useSelector((state) => state.posts.error);
+  const activeTag = useSelector(state => state.tags.activeTag)
+  const [isNavMenuExpanded, setIsNavMenuExpanded] = useState(false);
+  const [isAdminMenuActive, setIsAdminMenuActive] = useState(false);
 
-  useEffect(() => {
-    if(error.includes("401")) handleLogout()
-  }, [postsStatus])
+  const headerRef = useRef(null)
 
-  // to rename ?
-  const admin = matchPath("/posts/*", pathname);
-  const post = admin ? false : matchPath("/:categories/:postId", pathname)
+  const handleLogout = useLogout()
+  const isMediumScreen = useScreenSize(["xs", "s", "m"])
 
-  // front-end state
-  const [isExpanded, setIsExpanded] = useState(false)
-  const [rectangleWidth, setRectangleWidth] = useState(0)
-  const [navWidth, setNavWidth] = useState(0)
-  const [on, setOn] = useState(false)
-  const logoAndCategoryRef = useRef()
-  const navRef = useRef()
+  const isAdminPath = matchPath("/posts/*", pathname)
+  const postExists = !isAdminPath && matchPath("/:categories/:postId", pathname);
+  const isPostPage = Boolean(postExists);
 
-  if(matchPath("/posts/new", pathname)) {
-    currentCategory = "new post"
-  } else if(matchPath("/posts/:postId/edit", pathname)) {
-    currentCategory = "edit"
+  if (matchPath("/posts/new", pathname)) {
+    category = "new post";
+  } else if (matchPath("/:category/:postId/edit", pathname)) {
+    category = "edit";
   }
 
   useEffect(() => {
-    if(matchPath(":category", pathname) || matchPath("/posts/*", pathname)) {
-      setRectangleWidth(logoAndCategoryRef.current.clientWidth)
-      setNavWidth(navRef.current.clientWidth)
+    if (error.includes("401")) {
+      handleLogout();
     }
-  }, [currentCategory, pathname])
+  }, [error, handleLogout]);
 
-  const handleNewCategory = (category) => {
-    setIsExpanded(!isExpanded)
-    dispatch(selectTag(""))
-    dispatch(setScrollPosition(0))
-    dispatch(setCurrentCategory(category))
-  }
 
-  const toggleMenu = () => {
-    setIsExpanded(!isExpanded)
-    setOn(true)
-  }
+  useEffect(() => {
+    setIsNavMenuExpanded(false);
+    setIsAdminMenuActive(false);
+  }, [pathname, isMediumScreen]);
+
   const menuOff = () => {
-    setIsExpanded(false)
+    setIsNavMenuExpanded(false);
+    setIsAdminMenuActive(false);
+  };
+
+  const toggleNavMenu = () => {
+    setIsNavMenuExpanded(!isNavMenuExpanded)
+    setIsAdminMenuActive(false);
+  };
+
+  useScroll(headerRef, menuOff, { threshold: 40, scrollClass: "fade-top" })
+
+  const handleNewCategory = () => {
+    if(activeTag) dispatch(selectTag(""));
+    setIsNavMenuExpanded(false);
+    dispatch(setScrollPosition(0));
+  };
+
+  const confirmPostDelete = async () => {
+    await Promise.resolve(dispatch(deletePost({ postId, category })));
+    dispatch(fetchTags());
+    dispatch(fetchPosts());
+    navigate(`/${category}`);
+    dispatch(setModal({ key: "postDelete", state: false }));
   }
 
-  const toggleNavBtn = {
-    transform: isExpanded ? "translateX(0px) rotate(45deg) " : `translateX(${-navWidth + "px"}) rotate(0)`,
-    transition: on ? "all 0.5s ease-out" : ""
-  }
+  const isHeader30 = isPostPage && !hasContent ? "header--30" : ""
+  const isHeader50 = isPostPage && hasContent ? "header--50" : ""
+  const isHeader100 = isPostPage ? "" : "header--100"
 
-  const navStyles = {
-    transform: isExpanded ? "translateX(0px)" : `translateX(${-navWidth + "px"})`,
-    transition: on ? "all 0.5s ease-out" : ""
-  }
-
-  const rectangleStyles = {
-    width: rectangleWidth + 30 + "px"
-  }
-
-  async function handleLogout() {
-    menuOff()
-    localStorage.removeItem('access-token');
-    dispatch(logout(token))
-      .then(() => {
-        navigate("/")})
-    setOn(false)
-  }
-
-  function handleDelete() {
-    console.log(currentPostId, currentCategory);
-    dispatch(deletePost([currentPostId, currentCategory]))
-      .then(() => dispatch(fetchPosts()) && navigate(`/${currentCategory}`))
-  }
-
-  const adminMenu = () => {
-    if(isAdmin) {
-      return (
-        <div className="admin-menu">
-          <Link onClick={menuOff} className="new-post-btn" to={"/posts/new"}>New Post</Link>
-          <button className="logout-btn" title="Logout" onClick={handleLogout}>Logout</button>
-        </div>
-      )
-    } else {
-      return (
-        <div className="admin-menu">
-          <Link onClick={menuOff} className="login-btn" to={"/login"}>Login</Link>
-        </div>)
-    }
-  }
-
-  const postMenu = () => {
-    return (
-      <div className="admin-menu">
-        <button className="delete-btn" onClick={handleDelete}>Delete</button>
-        <Link onClick={menuOff} className="edit-btn" to={`/posts/${currentPostId}/edit`}>Edit</Link>
-      </div>
-    )
-  }
-
-  const navElements = () => CATEGORIES.map((category, i) => {
-    if((category) !== _.capitalize(currentCategory)) {
-      return (
-        <li key={i}>
-          <Link onClick={() => handleNewCategory(category)} to={`/${category}`}>{_.capitalize(category)}</Link>
-        </li>
-      )
-    }
-  })
+  const headerClass = `header ${isHeader30 || isHeader50 || isHeader100}`
 
   return (
-    <>
-      {!post &&
-        <div className="header-100">
-          <div className="flex">
-            <div ref={logoAndCategoryRef} className="logo-wrapper">
-              <div onClick={menuOff}><Link to="/" className="logo">EmaJons</Link></div>
-              <span className="dash"></span>
-              <div className="logo">{currentCategory}</div>
-            </div>
-            <div className="rectangle" style={rectangleStyles}></div>
-            <ul style={navStyles} ref={navRef} className="navigation">
-              {navElements()}
-            </ul>
-            <button className='close-button' onClick={toggleMenu} style={toggleNavBtn}><i className="close-icon"></i></button>
-          </div>
-          {adminMenu()}
-        </div>
-      ||
-      post && !isFullscreen &&
-      <div className={`${hasContent ? 'header-50' : 'header-30 header-50'}`}>
-          <div ref={logoAndCategoryRef} className="logo-wrapper">
-            <div onClick={menuOff}><Link to="/" className="logo">EmaJons</Link></div>
-            <span className="dash"></span>
-            <Link to={`/${currentCategory}`}>{currentCategory}</Link>
-          </div>
-          <div>
-            {isAdmin && postMenu()}
-            <button className='close-button' onClick={() => navigate(currentCategory)}>
-              <i className="close-icon"></i>
-            </button>
-          </div>
-      </div>
-      }
-    </>
-  )
+    !isFullscreen &&
+    <header ref={headerRef} className={headerClass}>
+      <nav className="nav-main">
+        <Link className="nav-main__link txt-black sm" onClick={menuOff} to="/">
+          EmaJons
+        </Link>
+        <span className="nav-main__divider"></span>
+        {(isPostPage || isMediumScreen) &&
+          <Link className="nav-main__link txt-black sm is-selected" to={isPostPage && `/${category}`}>
+            {category}
+          </Link>}
+        {!isPostPage &&
+          <NavMenu
+            isNavMenuExpanded={isNavMenuExpanded}
+            setIsNavMenuExpanded={setIsNavMenuExpanded}
+            toggleNavMenu={toggleNavMenu}
+            handleNewCategory={handleNewCategory}
+          />}
+      </nav>
+      <AdminMenu
+        headerSize={headerClass}
+        isAdminMenuActive={isAdminMenuActive}
+        setIsNavMenuExpanded={setIsNavMenuExpanded}
+        setIsAdminMenuActive={setIsAdminMenuActive}
+        isPostPage={isPostPage}
+        menuOff={menuOff}
+      />
+      {modals.postDelete &&
+        <Modal
+          modalKey="postDelete"
+          description="Delete this post?"
+          confirmDelete={confirmPostDelete}
+        />}
+    </header>
+  );
 }

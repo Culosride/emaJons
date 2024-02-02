@@ -1,68 +1,61 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { toggleFullscreen, setCurrentPost, fetchPostById } from '../../features/posts/postsSlice';
+import { fetchPostById } from '../../features/posts/postsSlice';
+import { toggleFullscreen } from '../../features/UI/uiSlice';
 import Slider from '../slider/Slider';
+import useKeyPress from "../../hooks/useKeyPress";
+import Button from '../UI/Button';
 
 export default function Post() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const params = useParams()
-  const currentId = params.postId
-  const post = useSelector(state => state.posts.posts.find(post => post._id === currentId)) || useSelector(state => state.posts.currentPost)
+  const { postId, category } = useParams()
+
+  const currentPost = useSelector(state => state.posts.currentPost)
+  const nextPostId = useSelector(state => state)
+  console.log('nextPostId', nextPostId)
+
   const status = useSelector(state => state.posts.status)
   const error = useSelector(state => state.posts.error)
-  const category = params.category
-  const fullscreen = useSelector(state => state.posts.fullscreen)
+  const isFullscreen = useSelector(state => state.ui.isFullscreen)
+
   let mediaElements = []
+  const headlineRef = useRef(null)
 
   useEffect(() => {
-    if(!post) {
-      dispatch(fetchPostById(currentId))
-    } else {
-      dispatch(setCurrentPost(currentId))
+    if(status === "idle" || !currentPost) {
+      dispatch(fetchPostById({ category: category, postId: postId }))
     }
   }, [])
 
-  useEffect(() => {
-    const escapeFullscreen = (e) => {
-      if(e.key === "Escape" && fullscreen) {
-        dispatch(toggleFullscreen(false))
-      } else if(e.key === "Escape" && !fullscreen) {
-        navigate(`/${category}`)
-      }
+  const escapeFullscreen = () => {
+    if (isFullscreen) {
+      dispatch(toggleFullscreen(false));
+    } else {
+      navigate(`/${category}`);
     }
-
-    window.addEventListener("keydown", escapeFullscreen)
-
-    return () => {
-      window.removeEventListener("keydown", escapeFullscreen)
-    };
-  }, [fullscreen])
-
-  if (status === 'loading') {
-    mediaElements = <p>Loading...</p>
-  } else if (status === 'succeeded') {
-    post && displayMedia(post)
-  } else if (status === 'failed') {
-    mediaElements = <div>{error}</div>
   }
 
-  function displayMedia(post) {
+  useKeyPress("Escape", escapeFullscreen);
+
+  const displayMedia = (post) => {
     mediaElements = post.media.map((med) => {
       return (<img src={med.url} key={med.publicId}/>)
     })
   }
 
-  // interaction
-  const handleFullscreen = () => {
-    dispatch(toggleFullscreen())
+  if (status === 'loading') {
+    mediaElements = <p>Loading...</p>
+  } else if (status === 'succeeded') {
+    currentPost && displayMedia(currentPost)
+  } else if (status === 'failed') {
+    mediaElements = <div>{error}</div>
   }
 
-  const handleScroll = (e) => {
-    const headline = e.target.lastElementChild.firstElementChild;
-
-    const headerRef = document.querySelector(".header-50")
+  const handleScroll = () => {
+    const headline = headlineRef.current;
+    const headerRef = document.querySelector(".header--50")
     if (headline.getBoundingClientRect().top < 60) {
       headline.classList.add('headline-sticky')
       headerRef.classList.add('fade-top')
@@ -72,25 +65,40 @@ export default function Post() {
     }
   }
 
-  const content = post?.content && post.content.length > 500
+  const handlePreviousPost = () => {
+
+  }
+
+  const handleNextPost = () => {
+
+  }
+
+  const content = currentPost?.content && currentPost.content.length > 500
+  const cursorColor = isFullscreen ? "white" : ""
 
   return (
-    post &&
+    currentPost &&
       (
-        <div id={"post"} className={`post-container ${content ? "layout-50" : ""} ${fullscreen ? "layout-100" : ""}`}>
-          {post.media && <Slider slides={post.media}/>}
-          <div className="text-container" onScroll={handleScroll} onClick={handleFullscreen}>
-            <div className="description-container">
-              <div className="headline">
-                <div>
-                  <h1 className="title">{post.title}</h1>
-                  {post.subtitle && <p className="subtitle">{post.subtitle}</p>}
-                </div>
+        <main id={"post"} className={`post-container ${content ? "layout-50" : ""} ${isFullscreen ? "layout-100 fullscreen" : ""}`}>
+          {currentPost.media && <Slider content={content} cursorColor={cursorColor} slides={currentPost.media}/>}
+          {!isFullscreen && <div className="text-container" onScroll={handleScroll}>
+            <section className="description-container">
+              <div ref={headlineRef} className="headline">
+                <h1 className="title">{currentPost.title}</h1>
+                {currentPost.subtitle && <p className="subtitle">{currentPost.subtitle}</p>}
               </div>
-              {post.content && <p className="content">{post.content}</p>}
-            </div>
-          </div>
-        </div>
+              {currentPost.content && <p className="content">{currentPost.content}</p>}
+              <div className="posts-navigation">
+                <Button hasIcon={false} className="prev-post" handlePreviousPost={handlePreviousPost}>
+                  PREVIOUS
+                </Button>
+                <Button hasIcon={false} className="next-post" handleNextPost={handleNextPost}>
+                  NEXT
+                </Button>
+              </div>
+            </section>
+          </div>}
+        </main>
       )
   )
 }

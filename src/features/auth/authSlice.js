@@ -2,14 +2,18 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import * as api from "../../API/index"
 
 const initialState = {
-  token: null,
+  isLogged: false,
   status: 'idle' || 'loading' || 'succeeded' || 'failed',
   error: "" || null
 }
 
-export const login = createAsyncThunk("/auth/login", async (userData) => {
-  const response = await api.login(userData)
-  return response.data
+export const login = createAsyncThunk("/auth/login", async (userData, { rejectWithValue }) => {
+  try {
+    const response = await api.login(userData)
+    return response.data
+  } catch (error) {
+    return rejectWithValue(error.response.data.message);
+  }
 })
 
 export const logout = createAsyncThunk("/auth/logout", async (token) => {
@@ -25,7 +29,15 @@ export const checkPath = createAsyncThunk("/auth/validate-path", async (path) =>
 const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {},
+  reducers: {
+    setIsLogged(state, action) {
+      state.isLogged = action.payload
+    },
+    resetAuthStatus(state, action) {
+      state.status = "idle"
+      state.error = ""
+    }
+  },
   extraReducers(builder) {
     builder
       .addCase(checkPath.pending, (state) => {
@@ -46,18 +58,18 @@ const authSlice = createSlice({
       })
       .addCase(login.fulfilled, (state, action) => {
         state.status = 'succeeded'
+        state.isLogged = true
       })
       .addCase(login.rejected, (state, action) => {
-        console.log("error at login.rejected",action)
         state.status = "failed";
-        console.log(action)
-        state.error = "401 Wrong username or password"
+        state.isLogged = false
+        state.error = action.payload
       })
       .addCase(logout.pending, (state) => {
         state.status = 'loading'
       })
       .addCase(logout.fulfilled, (state, action) => {
-        state.token = null
+        state.isLogged = false
         state.status = "succeeded"
       })
       .addCase(logout.rejected, (state, action) => {
@@ -67,7 +79,7 @@ const authSlice = createSlice({
   }
 })
 
-export const {  } = authSlice.actions
+export const { setIsLogged, resetAuthStatus } = authSlice.actions
 
 export default authSlice.reducer
 

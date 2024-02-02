@@ -1,0 +1,121 @@
+.btn {
+  background-color: transparent;
+  cursor: pointer;
+  padding: 0px;
+  border: none;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &--logout, &--edit, &--delete, &--basic {
+    width: 100%;
+  }
+
+  &--dropdown {
+    height: 48px;
+  }
+
+  &--basic {
+    background-color: rgb(200, 200, 200);
+    font-size: 24px;
+    height: auto;
+    padding: 12px;
+  }
+
+  &--basic:hover {
+    background-color: rgb(219, 219, 219);
+  }
+
+  &--next-post, &--prev-post {
+    color: rgb(146, 146, 146);
+  }
+
+  &--next-post:hover, &--prev-post:hover {
+    color: black;
+  }
+
+  &--tab {
+    font-size: 18px;
+    padding: 8px;
+    width: 30%;
+    transition: 0.3s ease-out;
+    background-color: transparent;
+    color: white;
+
+    @media (max-width: 599px) {
+      width: 40%;
+      text-wrap: nowrap;
+    }
+
+    &.is-selected {
+      border-bottom: 1px solid rgb(240, 240, 240);
+    }
+  }
+
+  &.disabled {
+    pointer-events: none;
+  }
+}
+
+.icon {
+  display: inline-block;
+  width: $icon-width;
+  height: $icon-height;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-color: transparent;
+  border: none;
+  padding: 0;
+
+  &--dropdown {
+    background-image: url("../icons/Dropdown.svg");
+    background-repeat: no-repeat;
+    background-position: center;
+    display: block;
+    transition: 0.3s ease-out;
+
+    &.is-active {
+      transform: rotate(-180deg);
+    }
+  }
+
+  &--kebab {
+    background-image: url("../icons/KebabMenu.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    transition: 0.3s ease-out;
+  }
+
+  &--sign-in {
+    font-size: 16px;
+    padding: 6px;
+    width: 100%;
+    border: 1px solid rgb(146, 146, 146);
+    background-color: rgb(240, 240, 240);
+    margin: 20px 0;
+    height: auto;
+  }
+
+  &--login {
+    background-image: url('../icons/Login.svg');
+  }
+
+  &--logout {
+    background-image: url('../icons/Logout.svg');
+  }
+
+  &--new-post {
+    background-image: url('../icons/New.svg');
+  }
+
+  &--edit {
+    background-image: url('../icons/Edit.svg');
+  }
+
+  &--delete {
+    background-image: url('../icons/Delete.svg');
+  }
+}

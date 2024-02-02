@@ -1,23 +1,119 @@
 // import evereything here
-@import 'basic/fonts.scss';
-@import 'basic/variables.scss';
-@import 'basic/animations.scss';
-@import '../components/navbar/navbar.scss';
-@import '../components/header/header.scss';
-@import '../components/allPosts/all-posts.scss';
-@import '../components/postForm/postForm.scss';
-@import '../components/post/post.scss';
-@import '../components/login/login.scss';
-@import '../components/slider/slider.scss';
-@import '../components/tag/tag.scss';
-@import '../components/home/home.scss';
-@import '../components/image/image.scss';
-@import '../components/404/notFound.scss';
-@import "~slick-carousel/slick/slick.css";
-@import "~slick-carousel/slick/slick-theme.css";
+@import "basic/fonts.scss";
+@import "basic/variables.scss";
+@import "basic/animations.scss";
+@import "basic/mixins.scss";
+@import "../components/header/header.scss";
+@import "../components/UI/modal.scss";
+@import "../components/UI/button.scss";
+@import "../components/UI/draggable.scss";
+@import "../components/UI/errorMsg.scss";
+@import "../components/navigation/navMenu";
+@import "../components/navigation/admin-menu";
+@import "../components/allPosts/all-posts.scss";
+@import "../components/postForm/postForm.scss";
+@import "../components/login/login.scss";
+@import "../components/slider/slider.scss";
+@import "../components/post/post.scss";
+@import "../components/post/post-preview.scss";
+@import "../components/tag/tag.scss";
+@import "../components/home/home.scss";
+@import "../components/404/notFound.scss";
+
+html {
+  box-sizing: border-box;
+}
 
 body {
   margin: 0;
   padding: 0;
   font-family: $main-font;
+}
+
+.app {
+  height: fit-content;
+}
+
+* {
+  box-sizing: inherit;
+  text-decoration: none;
+}
+
+// .link {
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+
+//   &--logo, &--txt {
+//     text-decoration: none;
+//     text-transform: uppercase;
+//     font-weight: bold;
+//   }
+
+//   &--logo {
+//     text-decoration: none;
+//     text-transform: uppercase;
+//     color: black;
+//     font-weight: bold;
+//     display: flex;
+//     align-items: center;
+
+//     @media (max-width: 599px) {
+//       align-self: flex-start;
+//     }
+//   }
+
+//   &--icon {
+//     height: 100%;
+//     width: 100%;
+//   }
+
+//   &--txt {
+//     &.is-active {
+//       pointer-events: none;
+//     }
+
+//     &.is-dropdown {
+//       width: 100%;
+//       padding: 12px 32px;
+//       justify-content: left;
+//     }
+
+//     &:hover {
+//       transition: color ease-in-out 0.25s;
+//       color: $color-primary;
+//     }
+//   }
+// }
+
+.sm {
+  font-size: 20px;
+
+  @media (max-width: 767px) {
+    font-size: 18px;
+  }
+}
+
+.lg {
+  font-size: 36px;
+
+  @media (max-width: 767px) {
+    font-size: 24px;
+  }
+}
+
+.xl {
+  font-size: 48px;
+
+  @media (max-width: 767px) {
+    font-size: 32px;
+  }
+}
+
+.txt-black {
+  color: $color-primary;
+}
+
+.txt-grey {
+  color: $color-secondary;
 }

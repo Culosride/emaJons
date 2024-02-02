@@ -1,88 +1,78 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../../features/auth/authSlice';
+import Button from '../UI/Button';
+import ErrorMsg from '../UI/ErrorMsg';
 
-function Login() {
-  const status = useSelector(state => state.auth.status)
-  const error = useSelector(state => state.auth.error)
-  const userRef = useRef()
-  const errRef = useRef()
-  const [ userInfo, setUserInfo ] = useState({ username: "", password: "" })
-  const [ errMsg, setErrMsg] = useState("")
-
-  useEffect(() => {
-    userRef.current.focus()
-  }, [])
-
+export default function Login() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
+  const usernameRef = useRef()
+  const [ userInfo, setUserInfo ] = useState({ username: "", password: "" })
+  const [ errMsg, setErrMsg ] = useState("")
 
-  function handleChange(e) {
-    setErrMsg('');
+  useEffect(() => {
+    usernameRef?.current.focus()
+  }, [])
+
+  const handleChange = (e) => {
+    setErrMsg("")
     const { name, value } = e.target;
     setUserInfo((prev) => ({...prev, [name]: value}));
   }
 
-  async function handleSubmit(e) {
-    e.preventDefault()
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-    dispatch(login(userInfo))
-      .then(res => { if(!res.error) {
-        localStorage.setItem("access-token", res.payload.accessToken)
-        navigate(-1)
-        resetInfo()
-      } else {
-        setErrMsg(error);
-      }
-    })
+    try {
+      const response = await dispatch(login(userInfo)).unwrap()
+      const { accessToken } = response;
+      localStorage.setItem("access-token", accessToken);
+      navigate(-1);
+      resetInfo();
+    } catch (error) {
+      setErrMsg(error)
+    }
+  }
 
-  errRef.current.focus();
-
-}
-
-function resetInfo() {
-  setUserInfo({
-    username: "",
-    password: ""
-  });
-}
-
-  const errClass = errMsg ? "error-msg" : "offscreen"     // defines styles when error
+  const resetInfo = () => {
+    setUserInfo({
+      username: "",
+      password: ""
+    });
+  }
 
   const content = (
-    <section>
-      <p ref={errRef} className={errClass} aria-live="assertive">{errMsg}</p>
-      <form className="form" onSubmit={handleSubmit}>
+    <div className="login-container">
+      <form className="login-form" onSubmit={handleSubmit}>
         <label htmlFor="username">Username:</label>
         <input
-            className="form__input"
-            type="text"
-            id="username"
-            ref={userRef}
-            name="username"
-            value={userInfo.username}
-            onChange={handleChange}
-            autoComplete="off"
-            required
+          className="form__input"
+          type="text"
+          id="username"
+          ref={usernameRef}
+          name="username"
+          value={userInfo.username}
+          onChange={handleChange}
+          autoComplete="off"
+          required
         />
 
         <label htmlFor="password">Password:</label>
         <input
-            className="form__input"
-            type="password"
-            name="password"
-            id="password"
-            onChange={handleChange}
-            value={userInfo.password}
-            required
+          className="form__input"
+          type="password"
+          name="password"
+          id="password"
+          onChange={handleChange}
+          value={userInfo.password}
+          required
         />
-        <button className="form__submit-button">Sign In</button>
-
+        <Button hasIcon={false} type="submit" className="sign-in">Sign In</Button>
+        <ErrorMsg errMsg={errMsg} />
       </form>
-    </section>
+    </div>
   )
   return content
 }
-
-export default Login

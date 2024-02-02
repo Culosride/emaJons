@@ -135,6 +135,14 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# react components
 src/components/slider/Slider_old.jsx
 src/components/slider/_slider_old.scss
 src/app/store_old.js
+
+# dockerfiles
+Dockerfile
+.dockerignore
+
+src/update.js

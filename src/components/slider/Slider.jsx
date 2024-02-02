@@ -1,80 +1,207 @@
-import React, { useState, useEffect, useRef } from "react";
-import { useDispatch } from "react-redux";
-import { toggleFullscreen } from "../../features/posts/postsSlice";
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleFullscreen } from "../../features/UI/uiSlice";
+import useKeyPress from "../../hooks/useKeyPress";
+import Button from "../UI/Button"
 
-const Slider = ({ slides }) => {
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const isVideo = slides[currentSlide].mediaType === "video"
+const Slider = ({ slides, cursorColor }) => {
   const dispatch = useDispatch()
+  const isSingleSlide = slides.length === 1
+  const infiniteSlides = isSingleSlide ? slides : [slides[slides.length -1], ...slides, slides[0]]
+
+  const fullscreen = useSelector(state => state.ui.isFullscreen)
+  const isFullscreen = fullscreen || Boolean(document.fullscreenElement)
+
+  // slider state
+  const [currentSlide, setCurrentSlide] = useState(isSingleSlide ? 0 : 1);
+  const [translation, setTranslation] = useState(0)
+  const [transition, setTransition] = useState("none")
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const videoRefs = slides.map(() => useRef(null)); // Create a ref for each video
+
+  // touch events state
+  const [isDragging, setIsDragging] = useState(false)
+  const [startingPositionX, setStartingPositionX] = useState(0)
+  const [startingPositionY, setStartingPositionY] = useState(0)
+  const [deltaX, setDeltaX] = useState(0)
+  const [deltaY, setDeltaY] = useState(0)
+
+  // derived state
+  const isVideo = infiniteSlides[currentSlide]?.mediaType === "video"
+  const isLastSlide = currentSlide === infiniteSlides.length - 1
+  const isFirstSlide = currentSlide === 0
+  const currentDot = isLastSlide ? 0 : isFirstSlide ? slides.length - 1 : currentSlide - 1;
+  document.body.style.overflowY = (deltaY === null) ? 'hidden' : "auto"
+
+  const mediaRefs = slides.map(() => useRef(null)); // Create a ref for each video
+  const observer = useRef(null);
 
   useEffect(() => {
-    if(isVideo) dispatch(toggleFullscreen(false))
-  }, [isVideo])
-
-  useEffect(() => {
-    videoRefs.forEach((videoRef, index) => {
-      if (videoRef.current && index !== currentSlide) {
-        videoRef.current.pause();
+    mediaRefs.forEach((ref, index) => {
+      if (ref.current?.localName === "video" && index !== currentSlide) {
+        ref.current.pause();
+      }
+      if (ref.current?.localName === "video" && index === currentSlide) {
+        console.log('ref.current', ref.current)
+        calcBtnSize(ref.current)
       }
     });
-  }, [currentSlide]);
 
-  const handleNext = () => {
-    if (!isTransitioning) {
-      setIsTransitioning(true);
-      setTimeout(() => {
-        setCurrentSlide((currentSlide + 1) % slides.length);
-        setIsTransitioning(false);
-      }, 250);
+    if(document.fullscreenElement) {
+      dispatch(toggleFullscreen(true))
     }
-  };
 
-  const handlePrev = () => {
-    if (!isTransitioning) {
-      setIsTransitioning(true);
-      setTimeout(() => {
-        setCurrentSlide((currentSlide - 1 + slides.length) % slides.length);
-        setIsTransitioning(false);
-      }, 250);
-    }
-  };
+  }, [currentSlide, isFullscreen]);
 
-  const handlePage = page => {
-    setCurrentSlide(page);
-  };
-
-  const handleFullscreen = () => {
-    dispatch(toggleFullscreen())
+  const calcBtnSize = (node) => {
+    console.log(node)
+    const videoheight = node.getBoundingClientRect()
+    console.log('videoheight', videoheight)
   }
 
+  const calcTranslation = (node) => {
+    if(node) {
+      const slideWidth = node.firstChild.getBoundingClientRect().width
+      const newTranslation = slideWidth * currentSlide
+      setTranslation(newTranslation - deltaX)
+
+      if (isLastSlide || isFirstSlide) {
+        setTimeout(() => {
+          setCurrentSlide(isLastSlide ? 1 : slides.length);
+          setTransition("none");
+        }, 250);
+      }
+    }
+  }
+
+  const draggableRef = useCallback(element => {
+    if (isSingleSlide) return
+    if (observer.current) observer.current.disconnect();
+
+    observer.current = new ResizeObserver((entries) => {
+      calcTranslation(entries[0].target)
+    });
+
+    if (element) observer.current.observe(element);
+  }, [currentSlide])
+
+  const draggableStyles = {
+    transform: `translateX(-${translation - deltaX}px)`,
+    transition: transition,
+  }
+
+  const btnStyles = {
+    height: ""
+  }
+
+  const handleNavigation = (direction) => {
+    if (!isTransitioning) {
+      setIsTransitioning(true);
+
+      if(!isLastSlide || !isFirstSlide) {
+        setTransition("transform 0.25s ease");
+        setCurrentSlide((currentSlide + direction + infiniteSlides.length) % infiniteSlides.length);
+      }
+
+      setTimeout(() => {
+        setIsTransitioning(false);
+      }, 300);
+    }
+  };
+
+  const handleNext = () => !isSingleSlide && handleNavigation(1);
+  const handlePrev = () => !isSingleSlide && handleNavigation(-1);
+
+  useKeyPress("ArrowRight", handleNext)
+  useKeyPress("ArrowLeft", handlePrev)
+
+  const handlePage = (page) => setCurrentSlide(page);
+
+  const handleFullscreen = () => {
+    setTransition("none")
+    dispatch(toggleFullscreen());
+  }
+
+  //////////////////////////// --- touch events --- ////////////////////////////
+  const handleTouchStart = (e) => {
+    if(isSingleSlide) return
+
+    setStartingPositionX(e.touches[0].clientX)
+    setStartingPositionY(e.touches[0].clientY)
+
+    setIsDragging(true)
+    setTransition("none")
+  };
+
+  const handleTouchMove = (e) => {
+    if(!isDragging || isSingleSlide) return
+
+    if(document.fullscreenElement) {
+      document.exitFullscreen();
+    }
+
+    const currentPositionX = e.touches[0].clientX;
+    const currentPositionY = e.touches[0].clientY;
+
+    const verticalDelta = currentPositionY - startingPositionY;
+    const horizontalDelta = currentPositionX - startingPositionX;
+
+    // after first time this has run, if swiping in one direction, blocks the other one
+    if(deltaX === null) return
+    if(deltaY === null) return setDeltaX(horizontalDelta)
+
+    // first time this runs, it checks starting swiping direction X or Y
+    if(Math.abs(horizontalDelta) < Math.abs(verticalDelta)) {
+      setDeltaX(null)
+      setDeltaY(verticalDelta)
+    }
+    if(Math.abs(horizontalDelta) > Math.abs(verticalDelta)) {
+      setDeltaY(null)
+      setDeltaX(horizontalDelta)
+    }
+  };
+
+  const handleTouchEnd = () => {
+    if(isSingleSlide) return
+    const limit = 20
+    if(deltaX > limit) handlePrev()
+    else if(deltaX < -limit) handleNext()
+
+    setIsDragging(false);
+    setDeltaX(0)
+    setDeltaY(0)
+    setStartingPositionX(null)
+  };
+ ///////////////////////////////////////////////////////////////////////////////
+
   return (
-    <div className="slider">
-      {slides.map((slide, index) => (
-        <div key={index} className={`slide ${index === currentSlide ? "active" : ""}`} style={{ zIndex: index === currentSlide ? 1 : 0 }}>
-          {slide.mediaType === "video" ?
-            <div className="video-container">
-              <video ref={videoRefs[index]} muted controls>
-                <source src={slide.url} type="video/mp4"/>
-                <source src={slide.url} type="video/mov"/>
-              </video>
-            </div> :
-            <img src={slide.url} onClick={handleFullscreen} alt={slide.alt} />}
-        </div>
-      ))}
-        <button className={`${isVideo ? "prev" : "prev full"}`} onClick={handlePrev} />
-        {isVideo && <button className="prev-video" onClick={handlePrev} />}
-
-        <button className={`${isVideo ? "next" : "next full"}`} onClick={handleNext} />
-        {isVideo && <button className="next-video" onClick={handleNext} />}
-
-        {slides.length &&
+    <div className="slider slider-infinite" onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd}>
+      <div ref={draggableRef} style={isSingleSlide ? {} : draggableStyles} className="draggable">
+        {infiniteSlides.map((slide, index) => (
+          <div key={index} className={`slide ${index === currentSlide ? "active" : ""}`} >
+            {slide.mediaType === "video" ?
+              <div className="video-container">
+                <video ref={mediaRefs[index]} muted controls>
+                  <source src={slide.url} type="video/mp4"/>
+                  <source src={slide.url} type="video/mov"/>
+                </video>
+              </div> :
+              <img ref={mediaRefs[index]} src={slide.url} onClick={handleFullscreen} alt={slide.alt} />}
+          </div>
+        ))}
+      </div>
+      {!isSingleSlide &&
+        <>
+          <Button hasIcon={false} style={btnStyles} className={`${cursorColor} ${isVideo ? "prev-video" : "prev"}`} onClick={handlePrev} />
+          <Button hasIcon={false} style={btnStyles} className={`${cursorColor} ${isVideo ? "next-video" : "next"}`} onClick={handleNext} />
+        </>
+      }
+      {slides.length &&
         <div className="page">
-          {slides.map((slide, index) => (
-            <span key={index} className={currentSlide === index ? "dot-active" : "dot"} onClick={() => handlePage(index)}/>
+          {slides.map((_, index) => (
+            <span key={index} className={currentDot === index ? "dot-active" : "dot"} onClick={() => handlePage(index + 1)}/>
           ))}
-        </div>}
+        </div>
+      }
     </div>
   );
 };

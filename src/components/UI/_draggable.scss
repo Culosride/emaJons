@@ -1,0 +1,12 @@
+@media screen and (max-width: 991px) {
+  .draggable-container {
+    cursor:-webkit-grab;
+  }
+  .dragging p {
+    pointer-events: none;
+  }
+  .draggable-container.dragging {
+    cursor: -webkit-grabbing;
+    scroll-behavior: unset !important;
+  }
+}

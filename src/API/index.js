@@ -5,12 +5,12 @@ const baseURL = "http://localhost:3000"; // use exact spelling of "baseURL", axi
 
 // posts requests
 export const fetchPosts = () => axios.get("/api/posts");
-export const fetchPostsByCategory = (category, pageNum) => axios.get(`/api/categories/${category}?page=${pageNum}`);
-export const fetchPostById = (postId) => axios.get(`/api/posts/${postId}`);
+export const fetchPostsByCategory = ({ category, pageNum }) => axios.get(`/api/posts?category=${category}&page=${pageNum}`);
+export const fetchPostById = ({ category, postId }) => axios.get(`/api/${category}/${postId}`);
 
 export const createPost = (formData) => postInstance.post("/posts", formData);
 export const editPost = (formData, postId) => postInstance.patch(`/posts/${postId}/edit`, formData);
-export const deletePost = ([postId, category]) => postInstance.delete(`/${category}/${postId}`);
+export const deletePost = ({ postId, category }) => postInstance.delete(`/${category}/${postId}`);
 
 // post axios instance
 const postInstance = axios.create({
@@ -24,7 +24,6 @@ const postInstance = axios.create({
 // post interceptor
 postInstance.interceptors.request.use(async (req) => {
   const token = localStorage.getItem("access-token")
-  // console.log('token', token)
   const decoded = jwt_decode(token);
   const isExpired = decoded.exp < Date.now() / 1000;
 
@@ -32,16 +31,16 @@ postInstance.interceptors.request.use(async (req) => {
     req.headers.Authorization = `Bearer ${token}`;
     return req;
   }
-  // console.log("expired!")
+
   const response = await axios.get(`${baseURL}/auth/refresh`);
   req.headers.Authorization = `Bearer ${response.data.accessToken}`;
   return req;
 });
 
 // tags requests
-export const fetchAllTags = () => axios.get("/api/categories");
-export const addNewTag = (tag) => axios.patch("/api/categories/tags", { newTag: tag });
-export const deleteTag = (tagToDelete) => axios.patch("/api/categories/deleteTag", { tagToDelete: tagToDelete });
+export const fetchTags = () => axios.get("/api/tags");
+export const createTag = (tag) => axios.patch("/api/tags", { newTag: tag });
+export const deleteTag = (tagToDelete) => axios.patch("/api/tags/deleteTag", { tagToDelete: tagToDelete });
 
 // auth requests
 export const login = (userInfo) => axios.post("/auth", userInfo);

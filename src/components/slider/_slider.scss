@@ -4,43 +4,99 @@
   padding: 30px;
   width: 100%;
   box-sizing: border-box;
+  border-right: 1px solid black;
+  z-index: 1;
+}
 
-  img {
-    width: 85%;
-    height: calc(100vh - 90px);
-    object-fit: contain;
+.slider-infinite {
+  display: flex;
+  overflow: hidden;
+  padding: 0;
+  align-items: center;
+
+  @media (max-width: 991px) {
+    height: 76vh;
+    margin-top: 74px;
+    border: none;
   }
 
-  video {
-    width: 85%;
+  @media (max-width: 767px) {
+    padding-bottom: 16px;
+  }
+
+  .draggable {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    height: 100%;
+
+    @media (max-width: 991px) {
+      padding: 0;
+
+      @media (orientation: landscape) {
+        height: 100%;
+      }
+    }
+  }
+
+  .slide {
+    flex: none;
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    @media (max-width: 991px) {
+      width: 100vw;
+    }
+
+    @media (max-width: 991px) and (orientation: landscape) {
+      align-items: flex-start;
+    }
+
+    .video-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      max-width: 90vh;
+      max-height: 100%;
+      width: 100%;
+      width: 90%;
+
+      @media (max-width: 991px) {
+        width: 100%;
+        height: 100%;
+      }
+
+      @media (max-width: 991px) and (orientation: landscape) {
+        align-items: flex-start;
+      }
+
+      video {
+        object-fit: contain;
+        width: 100%;
+      }
+    }
+  }
+
+  img {
+    width: 90%;
+    height: 90%;
     object-fit: contain;
+
+    @media (max-width: 767px) {
+      width: 100%;
+      height: 100%;
+    }
   }
 }
 
 .slider:hover {
   img {
-    cursor: url('../icons/PlusBold.svg'), auto;
+    cursor: url("../icons/PlusBold.svg"), auto;
   }
-}
-
-.slide {
-  .video-container {
-    height: calc(100vh - 90px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  position: absolute;
-  margin-top: 40px;
-  box-sizing: border-box;
-  padding: 0 32px;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  transition: opacity 0.35s ease-in;
 }
 
 .slide.active {
@@ -48,72 +104,94 @@
   z-index: 1;
 }
 
-button {
-  border: 0;
-  background-color: Transparent;
-  font-size: 20px;
+.slider {
+  .prev,
+  .next,
+  .prev-video,
+  .next-video {
+    border: 0;
+    background-color: transparent;
+    // background-color: blue;
+    font-size: 20px;
+    z-index: 5;
+    width: 20vw;
+    top: 0;
+    position: absolute;
+    height: 100vh;
+    width: 20vw;
+  }
+  .prev-video,
+  .next-video {
+    width: 10%;
+  }
+  .prev,
+  .prev-video {
+    left: 0;
+  }
+  .next,
+  .next-video {
+    right: 0;
+  }
 }
 
-.dot, .dot-active {
+.dot,
+.dot-active {
   cursor: pointer;
   height: 2px;
   width: 16px;
   margin: 0 2px;
   background-color: #ddd;
   display: inline-flex;
-  transition: background-color 0.5s ease-in;
+  transition: background-color 0.25s ease-in;
 }
 
-.dot:hover, .dot-active {
+.dot:hover,
+.dot-active {
   background-color: #717171;
   opacity: 1;
 }
 
-.prev, .prev-video {
-  left: 0;
+.next:before,
+.next-video:hover,
+.prev:before,
+.prev-video:hover {
+  content: "";
 }
 
-.next, .next-video {
-  right: 0;
+.next:hover,
+.next-video:hover {
+  cursor: url("../icons/ArrowIcon.svg"), auto;
 }
 
-.next, .prev {
-  top: 0;
-  position: absolute;
-  height: 80vh;
-  width: 20vw;
+.next.white:hover,
+.next-video.white:hover {
+  cursor: url("../icons/ArrowIconWhite.svg"), auto;
 }
 
-.full {
-  height: 100vh;
+.prev:hover,
+.prev-video:hover {
+  cursor: url("../icons/ArrowBack.svg"), auto;
 }
 
-.next-video, .prev-video {
-  bottom: 0;
-  position: absolute;
-  height: 10%;
-  width: 20vw;
-  // background-color: aqua;
-}
-
-.next:before, .next-video:hover {
-  content: '';
-}
-.next:hover, .next-video:hover {
-  cursor: url('../icons/ArrowIcon.svg'), auto;
-}
-
-.prev:before, .prev-video:hover {
-  content: '';
-}
-
-.prev:hover, .prev-video:hover {
-  cursor: url('../icons/ArrowBack.svg'), auto;
+.prev.white:hover,
+.prev-video.white:hover {
+  cursor: url("../icons/ArrowBackWhite.svg"), auto;
 }
 
 .page {
   position: absolute;
   width: 100%;
-  bottom: 3vh;
+  transform: translateX(-50%);
+  left: 50%;
   z-index: 2;
+  bottom: 32px;
+
+  @media (orientation: landscape) {
+    bottom: 20px;
+  }
+
+  @media (max-width: 991px) {
+    bottom: 0;
+
+  }
 }

@@ -2,7 +2,7 @@ const Category = require('../models/category');
 // const User = require("../models/user")
 const _ = require("lodash")
 
-async function tagValidation(req, res, next) {
+const tagValidation = async (req, res, next) => {
   const { newTag } = req.body
   if(newTag, /^\s*$/.test(newTag)) return res.status(400).json({message: "Invalid tag"})
 

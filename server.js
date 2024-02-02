@@ -13,13 +13,10 @@ app.use(cors())
 app.use(express.json())
 app.use(cookieParser())
 
-app.set("view engine", "ejs")
-app.set("views", "./src/views")
-
 app.use(express.static("public"))
 app.use(express.urlencoded({extended: true}))
 
-app.use(routers.authRouter, routers.postRouter, routers.registerRouter, routers.categoryRouter)
+app.use(routers.authRouter, routers.postRouter, routers.registerRouter, routers.categoryRouter, routers.tagRouter)
 
 app.use(errorHandler)
 app.use('/assets', express.static(path.join(__dirname, '../public')))
@@ -27,7 +24,7 @@ app.use('/assets', express.static(path.join(__dirname, '../public')))
 // fixes React Routes 404 on reload
 app.get('/*', (req, res) => {
   try {
-    res.render('home');
+    res.sendFile(path.join(__dirname, "public", "index.html"));
   } catch (err) {
     res.status(400).send(err);
   }

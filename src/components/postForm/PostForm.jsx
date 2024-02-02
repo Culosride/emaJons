@@ -1,76 +1,90 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
-import {
-  createPost,
-  editPost,
-  fetchPostById,
-  setCurrentPost,
-} from "../../features/posts/postsSlice";
-import {
-  fetchAllTags,
-  toggleTag,
-  resetTags,
-} from "../../features/tags/tagsSlice";
+import { createPost, editPost, fetchPostById, setCurrentPost } from "../../features/posts/postsSlice";
+import { fetchTags, toggleTag, resetTags } from "../../features/tags/tagsSlice";
 import { useSelector, useDispatch } from "react-redux";
 import TagsInputForm from "../tag/TagsInputForm";
+import Button from "../UI/Button";
+import ErrorMsg from "../UI/ErrorMsg";
+import { useScroll } from "../../hooks/useScroll";
+import useScreenSize from "../../hooks/useScreenSize";
 const _ = require("lodash");
+
+const initPostData = () => ({
+  title: "",
+  subtitle: "",
+  content: "",
+  media: [],
+  category: "",
+  postTags: [],
+});
 
 export default function PostForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const params = useParams();
   const { pathname } = useLocation();
+  const { category, postId } = useParams();
+
   const selectedTags = useSelector((state) => state.tags.selectedTags);
   const currentPost = useSelector((state) => state.posts.currentPost);
-  const status = useSelector((state) => state.posts.status);
-  const postId = currentPost._id;
-  const [error, setError] = useState(null);
+
+  const postStatus = useSelector((state) => state.posts.status);
+  const isMediumScreen = useScreenSize(["xs", "s", "m"])
+  const tabMenuRef = useRef(null)
+  useScroll(tabMenuRef, _, { threshold: 40, scrollClass: "fade-top" })
+
+  const [errMsg, setErrMsg] = useState(null);
+  const [currentFormTab, setCurrentFormTab] = useState("media")
   const [mediaElements, setMediaElements] = useState([]);
-  const [postData, setPostData] = useState({
-    title: "",
-    subtitle: "",
-    content: "",
-    media: [],
-    category: "",
-    postTags: [],
-  });
+  const [postData, setPostData] = useState(initPostData());
 
+  // Derived state
   const isEditPage = pathname.includes("edit");
-  const isLoading = status === "loading"
+  const arePostsLoading = postStatus === "loading"
 
-  const btnStyles = isLoading ? "btn-submit btn-disabled" : "btn-submit";
-  const submitBtnValue =
-    (isLoading && "Submitting...") ||
-    (!isLoading && isEditPage ? "Save changes" : "Create new post");
+  const btnStyles = arePostsLoading ? "basic disabled" : "basic";
+  const submitBtnValue = arePostsLoading
+    ? "Submitting..."
+    :  isEditPage
+      ? "Save changes"
+      : "Create new post";
 
-    // if(!currentPost) return navigate("/not-found")
+  let content;
+
+  const handleEditPage = async () => {
+    if(postId !== currentPost._id) {
+      await dispatch(fetchTags())
+      const data = await dispatch(fetchPostById({ category: category, postId: postId }))
+      setPostData(data.payload);
+      data.payload.postTags.forEach((tag) => {
+        dispatch(toggleTag(tag));
+      });
+    } else {
+      await dispatch(fetchTags())
+      setPostData(currentPost)
+      currentPost.postTags.forEach((tag) => {
+        dispatch(toggleTag(tag));
+      });
+    }
+  }
+
+  const handleNewPage = async () => {
+    await dispatch(fetchTags())
+    dispatch(setCurrentPost(""))
+    setPostData(initPostData());
+  }
 
   useEffect(() => {
-    dispatch(resetTags());
-    dispatch(fetchAllTags()).then(() => {
-      if (isEditPage) {
-        dispatch(fetchPostById(params.postId)).then((res) => {
-          setPostData(res.payload);
-          res.payload.postTags.forEach((tag) => {
-            dispatch(toggleTag(tag));
-          });
-        });
-      } else {
-        dispatch(setCurrentPost(""));
-        dispatch(resetTags());
-        setPostData({
-          title: "",
-          subtitle: "",
-          content: "",
-          media: [],
-          category: "",
-          postTags: [],
-        });
-      }
-    });
-  }, [isEditPage]);
+    dispatch(resetTags())
+    if (isEditPage) {
+      handleEditPage();
+    } else if(!isEditPage) {
+      handleNewPage();
+    }
+  }, [isEditPage, dispatch])
 
-  // create media preview
+
+  // Create media preview
   useEffect(() => {
     setMediaElements(
       postData.media.map((file, i) => {
@@ -83,15 +97,19 @@ export default function PostForm() {
             {file.type === "video/mp4"
               ? <video src={src} controls></video>
               : <img src={src} />}
-            <i id={file[mediaKey]} onClick={deleteMedia}></i>
+            <div className="delete-prev-container">
+              <Button hasIcon={true} id={file[mediaKey]} className="delete" title="Delete" onClick={deleteMedia} />
+            </div>
           </div>
         );
       })
     );
   }, [postData.media]);
 
-  // delete media from preview
+  // Delete media from preview
   const deleteMedia = (e) => {
+    e.preventDefault()
+    console.log(e.target)
     const { id } = e.target;
     const updatedMedia = postData.media.filter((file) => {
       const mediaKey = file.publicId ? "publicId" : "lastModified";
@@ -101,7 +119,7 @@ export default function PostForm() {
   };
 
   const handleChange = (e) => {
-    setError("");
+    setErrMsg("");
     const { name, value, files } = e.target;
 
     setPostData((prev) => {
@@ -113,91 +131,145 @@ export default function PostForm() {
     });
   };
 
-  // submit form
-  const handleSubmit = async (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
+    if (postStatus === "loading") return;
 
-    if (isLoading) {
-      return;
-    }
-
-    if (!postData.category) {
-      setError("Select a category");
-      return;
-    } else if (!postData.media.length) {
-      setError("A post with nada?");
+    const validationError = validatePostData(postData);
+    if (validationError) {
+      setErrMsg(validationError);
+      window.scrollTo(0, 0);
       return;
     }
 
     try {
-      const formData = new FormData();
-      Object.keys(postData).map((key) => {
-        if (key === "media") {
-          return postData.media.map((med) => formData.append("media", med));
-        } else if (key === "postTags") {
-          return selectedTags.map((tag) => formData.append("postTags", tag));
-        } else {
-          return formData.append(key, postData[key]);
-        }
-      });
-      const res = await dispatch(createPost(formData)); // await needed
-      navigate(`/${postData.category}/${res.payload._id}`);
+      const formData = prepareFormData(postData, selectedTags);
+      const action = isEditPage ? editPost({ formData, postId }) : createPost(formData);
+      const result = await dispatch(action);
+
+      if (editPost.fulfilled.match(result) || createPost.fulfilled.match(result)) {
+        dispatch(fetchTags());
+        navigate(`/${postData.category}/${result.payload._id}`);
+      }
     } catch (error) {
-      console.log(error);
+      console.error("Error submitting form:", error);
+      setErrMsg("An error occurred while saving the post.");
     }
   };
 
-  // edit post
-  const handleEdit = async (e) => {
-    e.preventDefault();
+  function validatePostData(postData) {
+    if (!postData.category) return "Select a category";
+    if (postData.media.length === 0) return "A post with nada?";
+    return null;
+  }
 
-    if (isLoading) {
-      return;
-    }
-
-    if (!postData.category) {
-      setEmptyCategory(true);
-      return;
-    } else if (!postData.media.length) {
-      setError("A post with no pictures?");
-      return;
-    }
+  function prepareFormData(postData, selectedTags) {
     const formData = new FormData();
+    Object.keys(postData).forEach(key => {
+      if (key === "media") {
+        postData.media.map((media) => {
+          media.name
+            ? formData.append("media", media)
+            : formData.append("media", JSON.stringify(media));
+        });
+      } else if (key === "postTags") {
+        selectedTags.forEach(tag => formData.append("postTags", tag));
+      } else {
+        formData.append(key, postData[key]);
+      }
+    });
+    return formData;
+  }
 
-    try {
-      Object.keys(postData).map((key) => {
-        if (key === "media") {
-          return postData.media.map((med) => {
-            med.name
-              ? formData.append("media", med)
-              : formData.append("media", JSON.stringify(med));
-          });
-        } else if (key === "postTags") {
-          return selectedTags.forEach((tag) =>
-            formData.append("postTags", tag)
-          );
-        } else {
-          return formData.append(key, postData[key]);
-        }
-      });
-      await dispatch(editPost({ formData, postId }));
-    } catch (error) {
-      console.log(error);
-    }
-    navigate(`/${postData.category}/${postId}`);
-  };
+  const handleTabMenu = (e) => {
+    const { value } = e.target.dataset
+    value && setCurrentFormTab(value)
+  }
 
-  return (
-    <div className="form-wrapper">
-      {error && <p className="error-msg">{error}</p>}
-      <form
-        className="post-form"
-        onSubmit={isEditPage ? handleEdit : handleSubmit}
-      >
-        <div className="post-form-layout">
+  if(isMediumScreen) {
+    content =
+      currentFormTab === "media" ? (
+        <div className="post-form-layout fullscreen">
           <label className="custom-file-button" htmlFor="media">
             Choose media
           </label>
+          <input
+            className="hidden-file-input"
+            type="file"
+            id="media"
+            onChange={handleChange}
+            name="media"
+            title="upload media"
+            multiple
+          />
+          <div className="media-preview-container">{mediaElements}</div>
+        </div>
+      ) : (
+        <div className="post-form-layout fullscreen">
+          <ErrorMsg errMsg={errMsg} />
+          <fieldset>
+            <input
+              className="title"
+              type="text"
+              placeholder="ADD A TITLE"
+              value={postData.title}
+              name="title"
+              onChange={handleChange}
+            />
+            <input
+              type="text"
+              className="subtitle"
+              placeholder="Add a subtitle"
+              value={postData.subtitle}
+              name="subtitle"
+              onChange={handleChange}
+            />
+            <textarea
+              className="content"
+              rows="2"
+              placeholder="Add content ..."
+              value={postData.content}
+              name="content"
+              onChange={handleChange}
+            />
+
+            <hr />
+
+            <select
+              value={postData.category}
+              name="category"
+              id="categories"
+              onChange={handleChange}
+            >
+              <option disabled hidden value="">
+                Please choose a category
+              </option>
+              <option value="Walls">Walls</option>
+              <option value="Paintings">Paintings</option>
+              <option value="Sketchbooks">Sketchbooks</option>
+              <option value="Video">Video</option>
+              <option value="Sculptures">Sculptures</option>
+            </select>
+          </fieldset>
+
+          <TagsInputForm />
+
+          <Button
+            hasIcon={false}
+            disabled={arePostsLoading}
+            className={btnStyles}
+            type="submit"
+          >
+            {submitBtnValue}
+          </Button>
+        </div>
+      )
+  } else {
+    content =
+      <>
+        <div className="post-form-layout">
+          <ErrorMsg errMsg={errMsg} />
+          <label className="custom-file-button" htmlFor="media">Choose media</label>
           <input
             className="hidden-file-input"
             type="file"
@@ -230,7 +302,7 @@ export default function PostForm() {
             />
             <textarea
               className="content"
-              rows="6"
+              rows="4"
               placeholder="Add content ..."
               value={postData.content}
               name="content"
@@ -258,14 +330,46 @@ export default function PostForm() {
 
           <TagsInputForm />
 
-          <input
-            disabled={isLoading}
+          <Button
+            hasIcon={false}
+            disabled={arePostsLoading}
             className={btnStyles}
             type="submit"
-            value={submitBtnValue}
-          />
+          >
+            {submitBtnValue}
+          </Button>
         </div>
+      </>
+  }
+
+  const tabsMenu =
+    <menu ref={tabMenuRef} className="tabsMenu" onClick={(e) => handleTabMenu(e)}>
+      <Button
+        hasIcon={false}
+        dataValue="media"
+        className={currentFormTab === "media" ? "tab is-selected" : "tab"}
+      >
+        Media
+      </Button>
+      <Button
+        hasIcon={false}
+        dataValue="postDetails"
+        className={currentFormTab === "postDetails" ? "tab is-selected" : "tab"}
+      >
+        Post details
+      </Button>
+      <div className="highlight"></div>
+    </menu >
+
+  return (
+    <main className="form-wrapper">
+      {isMediumScreen && tabsMenu}
+      <form
+        className="post-form"
+        onSubmit={handleFormSubmit}
+      >
+        {content}
       </form>
-    </div>
+    </main>
   );
 }
