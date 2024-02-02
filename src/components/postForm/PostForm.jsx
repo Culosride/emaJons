@@ -29,7 +29,6 @@ export default function PostForm() {
   const currentPost = useSelector((state) => state.posts.currentPost);
 
   const postStatus = useSelector((state) => state.posts.status);
-  const tagsStatus = useSelector((state) => state.tags.status);
   const isMediumScreen = useScreenSize(["xs", "s", "m"])
   const tabMenuRef = useRef(null)
   useScroll(tabMenuRef, _, { threshold: 40, scrollClass: "fade-top" })
@@ -42,7 +41,6 @@ export default function PostForm() {
   // Derived state
   const isEditPage = pathname.includes("edit");
   const arePostsLoading = postStatus === "loading"
-  const areTagsLoaded = tagsStatus === "succeeded"
 
   const btnStyles = arePostsLoading ? "submit disabled" : "submit";
   const submitBtnValue = arePostsLoading

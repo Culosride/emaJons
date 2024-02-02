@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import Tag from "../tag/Tag";
 import { deleteTag, createTag, toggleTag, fetchTags } from "../../features/tags/tagsSlice";
 import { useSelector, useDispatch } from "react-redux";
@@ -16,6 +16,8 @@ const TagsInputForm = () => {
   const modals = useSelector((state) => state.ui.modals);
   const [tagToDelete, setTagToDelete] = useState("");
 
+  const inputRef = useRef(null)
+
   useKeyPress("Escape", () =>
     dispatch(setModal({ key: "tagDelete", state: false }))
   );
@@ -31,7 +33,6 @@ const TagsInputForm = () => {
     setTag("");
   };
 
-  useKeyPress("Tab", createNewTag);
 
   const handleTagDelete = (tag) => {
     dispatch(setModal({ key: "tagDelete", state: true }));
@@ -57,6 +58,13 @@ const TagsInputForm = () => {
     }
   };
 
+  const handleTagKeyDown = (e) => {
+    if (e.key === "Tab" || e.key === "Enter") {
+      e.preventDefault();
+      createNewTag();
+      inputRef.current.focus()
+    }
+  }
   // Render Tag Elements
   const tagElements = [...availableTags]
     .sort((a, b) => a.localeCompare(b))
@@ -102,6 +110,8 @@ const TagsInputForm = () => {
           placeholder="Search tags or add a new tag"
           name="postTags"
           onChange={handleTag}
+          onKeyDown={handleTagKeyDown}
+          ref={inputRef}
           className="search-tags"
         />
         {tag &&

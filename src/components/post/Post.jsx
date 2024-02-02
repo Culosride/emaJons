@@ -29,7 +29,6 @@ export default function Post() {
     }
   }, [])
 
-
   const escapeFullscreen = () => {
     if (isFullscreen) {
       dispatch(toggleFullscreen(false));

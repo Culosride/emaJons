@@ -1,5 +1,5 @@
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import useAuth from "../../hooks/useAuth";
 import useLogout from '../../hooks/useLogout';
 import useScreenSize from '../../hooks/useScreenSize';
