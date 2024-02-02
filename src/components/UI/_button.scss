@@ -8,7 +8,7 @@
   align-items: center;
   justify-content: center;
 
-  &--logout, &--edit, &--delete, &--submit {
+  &--logout, &--edit, &--delete, &--basic {
     width: 100%;
   }
 
@@ -16,11 +16,15 @@
     height: 48px;
   }
 
-  &--submit {
+  &--basic {
     background-color: rgb(200, 200, 200);
     font-size: 24px;
     height: auto;
-    padding: 4px;
+    padding: 12px;
+  }
+
+  &--basic:hover {
+    background-color: rgb(219, 219, 219);
   }
 
   &--next-post, &--prev-post {

@@ -4,8 +4,6 @@ function Button({ children, id, hasIcon, dataValue, disabled, type = "button", c
 
   const btnContent = hasIcon ? <span id={id} className={`icon icon--${className}`} >{children}</span> : children
 
-
-
   return (
     <button
       onClick={onClick}

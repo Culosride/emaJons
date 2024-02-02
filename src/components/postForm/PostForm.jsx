@@ -42,7 +42,7 @@ export default function PostForm() {
   const isEditPage = pathname.includes("edit");
   const arePostsLoading = postStatus === "loading"
 
-  const btnStyles = arePostsLoading ? "submit disabled" : "submit";
+  const btnStyles = arePostsLoading ? "basic disabled" : "basic";
   const submitBtnValue = arePostsLoading
     ? "Submitting..."
     :  isEditPage
@@ -367,7 +367,6 @@ export default function PostForm() {
       <form
         className="post-form"
         onSubmit={handleFormSubmit}
-        // onSubmit={isEditPage ? handleEdit : handleSubmit}
       >
         {content}
       </form>
