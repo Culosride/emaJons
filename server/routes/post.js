@@ -13,7 +13,7 @@ const {
   removeFromCloudinary,
   removeVideoFromCloudinary,
   generatePreview,
-} = require("../services/cloudinary.config");
+} = require("../config/cloudinary.config");
 require("dotenv").config();
 
 //////////////////////////// routes for BasicUsers /////////////////////////////

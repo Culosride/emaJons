@@ -1,0 +1,58 @@
+.
+├── client
+│   ├── package.json
+│   ├── package-lock.json
+│   ├── public
+│   │   ├── css
+│   │   ├── icons
+│   │   ├── images
+│   │   └── index.html
+│   ├── src
+│   │   ├── API
+│   │   ├── app
+│   │   ├── App.js
+│   │   ├── components
+│   │   ├── config
+│   │   ├── features
+│   │   ├── hocs
+│   │   ├── hooks
+│   │   ├── index.js
+│   │   └── styles
+├── package.json
+├── package-lock.json
+├── README.md
+└── server
+    ├── config
+    │   ├── cloudinary.config.js
+    │   └── roles.js
+    ├── controllers
+    │   └── authController.js
+    ├── db
+    │   └── mongoose.js
+    ├── middleware
+    │   ├── deleteTagFromPost.js
+    │   ├── errorHandler.js
+    │   ├── pathValidation.js
+    │   ├── saveAuthToken.js
+    │   ├── tagValidation.js
+    │   ├── upload.js
+    │   ├── verifyJWT.js
+    │   └── verifyRoles.js
+    ├── models
+    │   ├── category.js
+    │   ├── media.js
+    │   ├── post.js
+    │   ├── tag.js
+    │   └── user.js
+    ├── routes
+    │   ├── auth.js
+    │   ├── category.js
+    │   ├── post.js
+    │   ├── register.js
+    │   ├── routers.js
+    │   └── tag.js
+    ├── seed.js
+    ├── server-compiled.js
+    └── server.js
+
+21 directories, 36 files

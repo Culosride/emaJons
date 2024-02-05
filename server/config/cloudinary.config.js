@@ -14,7 +14,7 @@ const uploadToCloudinary = async (path, folder, resourceType) => {
         folder,
         resource_type: resourceType,
     });
-    console.log("dataaaaaaaaaaaaaaa", data)
+    console.log("data uploading:", data)
     return { url: data.url, public_id: data.public_id };
   } catch (e) {
     console.log(e.message, e.status);

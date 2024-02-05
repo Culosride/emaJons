@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import Tag from "../tag/Tag";
+import Tag from "./Tag";
 import { deleteTag, createTag, toggleTag, fetchTags } from "../../features/tags/tagsSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { setModal } from "../../features/UI/uiSlice";
