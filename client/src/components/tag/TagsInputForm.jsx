@@ -6,6 +6,7 @@ import { setModal } from "../../features/UI/uiSlice";
 import Modal from "../UI/Modal";
 import useKeyPress from "../../hooks/useKeyPress";
 import { fetchPostsByCategory } from "../../features/posts/postsSlice";
+import _ from 'lodash';
 
 const TagsInputForm = () => {
   const dispatch = useDispatch();

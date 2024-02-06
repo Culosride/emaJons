@@ -12,7 +12,7 @@ import Draggable from "../UI/Draggable";
 import ErrorMsg from "../UI/ErrorMsg";
 import { POSTS_TO_LOAD } from "../../config/roles";
 import TagsContainer from "../tag/TagsContainer";
-const _ = require("lodash");
+import _ from 'lodash';
 
 export default function AllPosts() {
   const dispatch = useDispatch();
@@ -50,7 +50,7 @@ export default function AllPosts() {
 
   const { setPageNum } = usePosts(category);
 
-  useScroll(tagsContainerRef, _, { threshold: 40, scrollClass: "fade-top" });
+  useScroll(tagsContainerRef, undefined, { threshold: 40, scrollClass: "fade-top" });
 
   let postElements = [];
 

@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { CATEGORIES } from "../../config/categories";
+import _ from 'lodash';
 
 const Home = () => {
   const navLinks = CATEGORIES.concat(["About", "Contact"]);

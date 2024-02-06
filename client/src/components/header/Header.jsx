@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Link, useLocation, matchPath, useNavigate, useParams } from "react-router-dom";
-import _ from "lodash";
 import { useDispatch, useSelector } from "react-redux";
 import { deletePost, fetchPosts, } from "../../features/posts/postsSlice";
 import { fetchTags, selectTag } from "../../features/tags/tagsSlice";

@@ -8,7 +8,6 @@ import Button from "../UI/Button";
 import ErrorMsg from "../UI/ErrorMsg";
 import { useScroll } from "../../hooks/useScroll";
 import useScreenSize from "../../hooks/useScreenSize";
-const _ = require("lodash");
 
 const initPostData = () => ({
   title: "",
@@ -31,7 +30,7 @@ export default function PostForm() {
   const postStatus = useSelector((state) => state.posts.status);
   const isMediumScreen = useScreenSize(["xs", "s", "m"])
   const tabMenuRef = useRef(null)
-  useScroll(tabMenuRef, _, { threshold: 40, scrollClass: "fade-top" })
+  useScroll(tabMenuRef, undefined , { threshold: 40, scrollClass: "fade-top" })
 
   const [errMsg, setErrMsg] = useState(null);
   const [currentFormTab, setCurrentFormTab] = useState("media")

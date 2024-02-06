@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import Button from "../UI/Button.jsx";
 import useScreenSize from "../../hooks/useScreenSize.jsx";
+import _ from 'lodash';
 
 const NavMenu = ({ handleNewCategory, toggleNavMenu, isNavMenuExpanded }) => {
   let currentCategory = useSelector((state) => state.posts.currentCategory);
