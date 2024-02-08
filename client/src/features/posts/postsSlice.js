@@ -51,6 +51,9 @@ const postsSlice = createSlice({
   name: "posts",
   initialState,
   reducers: {
+    setPosts(state,action) {
+      state.posts = action.payload
+    },
     setCurrentPost(state, action) {
       const currentPost = state.posts.find(post => post._id === action.payload)
       if (currentPost) {
@@ -200,6 +203,7 @@ export const {
   setCurrentPost,
   setCurrentCategory,
   setCurrentMedia,
+  setPosts,
 } = postsSlice.actions;
 
 export const selectPostsByCategory = (state, category) => {

@@ -4,13 +4,9 @@
   "description": "Client for Emajons application",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "serve": "vite preview",
-    "start": "vite",
     "client-dev": "vite",
-    "client-build": "vite build",
-    "client-serve": "vite preview"
+    "build": "vite build",
+    "serve": "vite preview"
   },
   "author": "Culosride",
   "license": "ISC",

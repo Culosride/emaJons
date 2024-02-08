@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { redirect, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import { login } from '../../features/auth/authSlice';
 import Button from '../UI/Button';
 import ErrorMsg from '../UI/ErrorMsg';
@@ -75,4 +75,12 @@ export default function Login() {
     </div>
   )
   return content
+}
+
+export async function loader()  {
+  const token = localStorage.getItem("access-token")
+  if (token) {
+    return redirect("/")
+  }
+  return null
 }

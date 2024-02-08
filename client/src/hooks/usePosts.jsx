@@ -5,15 +5,13 @@ import { useDispatch, useSelector } from "react-redux";
 const usePosts = (category) => {
   const dispatch = useDispatch();
   const [pageNum, setPageNum] = useState(1);
-  const posts = useSelector((state) => selectPostsByCategory(state, category));
 
   useEffect(() => {
-    if (posts.length === 0 || (posts && pageNum > 1)) {
+    if (pageNum > 1) {
       const controller = new AbortController();
       const { signal } = controller;
 
-      const pageNumber = posts.length === 1 ? 1 : pageNum
-      dispatch(fetchPostsByCategory({ category, pageNum: pageNumber}, { signal }));
+      dispatch(fetchPostsByCategory({ category, pageNum}, { signal }));
 
       return () => controller.abort();
     }

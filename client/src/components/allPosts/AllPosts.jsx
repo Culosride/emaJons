@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState, useRef, useMemo } from "react";
-import { useParams } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux"; // hook to select data from redux store
-import { setCurrentCategory, setCurrentPost } from "../../features/posts/postsSlice";
+import { useLoaderData, useParams } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { setCurrentCategory, setCurrentPost, setPosts } from "../../features/posts/postsSlice";
 import { setScrollPosition } from "../../features/UI/uiSlice";
 import { selectTag } from "../../features/tags/tagsSlice";
 import PostPreview from "../post/PostPreview";
@@ -13,17 +13,20 @@ import ErrorMsg from "../UI/ErrorMsg";
 import { POSTS_TO_LOAD } from "../../config/roles";
 import TagsContainer from "../tag/TagsContainer";
 import _ from 'lodash';
+import { fetchPosts } from "../../API";
 
 export default function AllPosts() {
   const dispatch = useDispatch();
   const { category } = useParams()
+  const preLoadedPosts = useLoaderData()
 
   const status = useSelector((state) => state.posts.status);
   const error = useSelector((state) => state.posts.error);
   const posts = useSelector((state) => state.posts.posts);
   const hasMorePosts = useSelector((state) => state.posts.loadMore[category]);
-  const scrollPosition = useSelector((state) => state.ui.scrollPosition);
   const activeTag = useSelector((state) => state.tags.activeTag);
+
+  const scrollPosition = useSelector((state) => state.ui.scrollPosition);
   const isMediumScreen = useScreenSize(["xs", "s", "m"])
 
   useEffect(() => {
@@ -31,6 +34,12 @@ export default function AllPosts() {
     dispatch(setCurrentPost(""))
     window.scrollTo(0, scrollPosition);
   }, []);
+
+  useEffect(() => {
+    if (status === "idle") {
+      dispatch(setPosts(preLoadedPosts))
+    }
+  }, [dispatch])
 
   const postsByCategory = useMemo(() => {
     return posts.filter(post => post.category === _.capitalize(category));
@@ -66,34 +75,9 @@ export default function AllPosts() {
     dispatch(setCurrentPost(id))
   };
 
-  const displayPosts = (posts) => {
-    if(posts.length < 1) return <p style={{textWrap: "nowrap"}}>EmaJons is too shy to show his {category.toLowerCase()}.</p>
-
-    return posts.map((post, i) => {
-      const { mediaType, url } = post.media[0];
-      const previewURL = mediaType === "video" ? post.media[0].preview : url;
-
-      return (
-        post.media.length > 0 && (
-          <PostPreview
-            key={post._id}
-            mediaType={post.media[0].mediaType}
-            id={post._id}
-            ref={(i === posts.length - 1 && lastPostRef) || undefined}
-            linkUrl={`/${category}/${post._id}`}
-            src={previewURL}
-            handleClick={() => handleClick(post._id)}
-            alt={post.title}
-            hoverContent={post.title.split(",").join("").toUpperCase()}
-          />
-        )
-      );
-    });
-  };
-
   // loads more posts (infinite scroll)
   const lastPostRef = useCallback((post) => {
-    if (status !== "succeeded") return;
+    if (status === "loading") return;
     if (observer.current) observer.current.disconnect();
     observer.current = new IntersectionObserver(
       (entries) => {
@@ -104,6 +88,31 @@ export default function AllPosts() {
       );
       if (post) observer.current.observe(post);
   }, [status, hasMorePosts, activeTag]);
+
+  const displayPosts = useMemo(() => {
+    if (filteredPosts.length < 1) return <p style={{textWrap: "nowrap"}}>EmaJons is too shy to show his {category.toLowerCase()}.</p>;
+
+    return filteredPosts.map((post, i) => {
+      const { mediaType, url } = post.media[0];
+      const previewURL = mediaType === "video" ? post.media[0].preview : url;
+
+      return (
+        post.media.length > 0 && (
+          <PostPreview
+            key={post._id}
+            mediaType={post.media[0].mediaType}
+            id={post._id}
+            ref={(i === filteredPosts.length - 1 && lastPostRef) || undefined}
+            linkUrl={`/${category}/${post._id}`}
+            src={previewURL}
+            handleClick={() => handleClick(post._id)}
+            alt={post.title}
+            hoverContent={post.title.split(",").join("").toUpperCase()}
+          />
+        )
+      );
+    });
+  }, [filteredPosts, category, lastPostRef, handleClick]);
 
   // filter posts on tag click
   const handleSelectTag = (e) => {
@@ -143,8 +152,8 @@ export default function AllPosts() {
   };
 
   postElements =
-    (filteredPosts.length && displayPosts(filteredPosts)) ||
-    displayPosts(postsByCategory);
+    (filteredPosts.length && displayPosts) ||
+    displayPosts;
 
   return (
     <>
@@ -165,4 +174,9 @@ export default function AllPosts() {
       )}
     </>
   );
+}
+
+export async function loader({ params }) {
+  const posts = await fetchPosts({ params, pageNum: 1})
+  return posts.data
 }

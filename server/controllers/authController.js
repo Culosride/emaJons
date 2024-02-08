@@ -91,13 +91,17 @@ const validatePath = async (req, res) => {
 
   const catExists = await Category.findOne({name: _.capitalize(category)})
   if(!catExists) {
-    console.log("category does not exist")
     return res.status(404).json({ message: "Category not found." });
   };
 
   // mongoose only accepts 24 chars, without this the app just breaks
   if (postId && postId.length === 24) {
     const postExists = await Post.findById(postId)
+
+    if (postExists.category !== category) {
+      return res.status(404).json({message: "This resource doesn't exist"});
+    }
+
     if(!postExists) {
       console.log("Post does not exist")
       return res.status(404).json({message: "This resource doesn't exist"});

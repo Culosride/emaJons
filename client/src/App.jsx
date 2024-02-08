@@ -1,36 +1,18 @@
 import React, { useEffect } from "react";
-import { Routes, Route, Navigate, } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import Layout from "./components/layout/Layout";
-import Login from "./components/login/Login";
-import AllPosts from "./components/allPosts/AllPosts";
-import PostForm from "./components/postForm/PostForm";
-import Post from "./components/post/Post";
-import About from "./components/about/About";
-import Contact from "./components/contact/Contact";
-import Home from "./components/home/Home";
-import NotFound from "./components/404/NotFound";
-import withRouteValidation from "./hocs/RouteValidation";
-import RequireAuth from "./hocs/RequireAuth";
-import { ROLES } from "./config/roles";
+import { RouterProvider } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { setScreenSize } from "./features/UI/uiSlice";
-import { setIsLogged } from "./features/auth/authSlice";
+import { router } from "./routes/router";
 import { fetchTags } from "./features/tags/tagsSlice";
-
-const AllPostsRouteValidated = withRouteValidation(AllPosts);
-const PostRouteValidated = withRouteValidation(Post);
-const EditRouteValidated = withRouteValidation(PostForm);
 
 export default function App() {
   const dispatch = useDispatch();
-  const isLoggedIn = useSelector(state => state.auth.isLogged)
 
   useEffect(() => {
     dispatch(fetchTags())
-    const token = localStorage.getItem("access-token")
-    if(token) dispatch(setIsLogged(true))
   }, [])
 
+  ////////////////////////// Checks screensize for UI //////////////////////////
   useEffect(() => {
     const breakpoints = [
       { size: "xs", minWidth: 0, maxWidth: 599 },
@@ -62,25 +44,5 @@ export default function App() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  return (
-      <Routes>
-        {/* public */}
-        <Route index path="/" element={<Home />} />
-        <Route path="/" element={<Layout />}>
-          <Route path="/login" element={isLoggedIn ? <Navigate to="/"/> : <Login />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/:category" element={<AllPostsRouteValidated />} />
-          <Route path="/:category/:postId" element={<PostRouteValidated />} />
-          {/* protected */}
-          <Route element={<RequireAuth allowedRoles={[ROLES.Admin]}/>}>
-            <Route path="/posts/new" element={<PostForm />} />
-            <Route path="/:category/:postId/edit" element={<EditRouteValidated />} />
-          </Route>
-          {/*end protected */}
-          <Route path="/not-found" element={<NotFound />} />
-          <Route path="*" element={<NotFound />} />
-        </Route>
-      </Routes>
-  );
+  return <RouterProvider router={router} />;
 }
