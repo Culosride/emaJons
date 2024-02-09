@@ -4,7 +4,7 @@ import Layout from "../components/layout/Layout";
 import Login, { loader as loginLoader } from "../components/login/Login";
 import AllPosts, { loader as getPostsLoader } from "../components/allPosts/AllPosts";
 import PostForm from "../components/postForm/PostForm";
-import Post from "../components/post/Post";
+import Post, { loader as getPostLoader } from "../components/post/Post";
 import About from "../components/about/About";
 import Contact from "../components/contact/Contact";
 import Home from "../components/home/Home";
@@ -26,18 +26,19 @@ export const router = createBrowserRouter([
   },
   {
     element: <Layout />,
+    errorElement: <ErrorPage />,
     children: [
       { path: "login", element: <Login />, loader: loginLoader},
       { path: "contact", element: <Contact /> },
       { path: "about", element: <About /> },
       { path: ":category", element: <AllPostsRouteValidated />, loader: getPostsLoader, },
-      { path: ":category/:postId", element: <PostRouteValidated /> },
+      { path: ":category/:postId", element: <PostRouteValidated />, loader: getPostLoader },
 
       //////////////////////////// PROTECTED ROUTES ////////////////////////////
       { element: <RequireAuth allowedRoles={[ROLES.Admin]} />,
         children: [
           { path: "posts/new", element: <PostForm /> },
-          { path: ":category/:postId/edit", element: <EditRouteValidated /> },
+          { path: ":category/:postId/edit", element: <EditRouteValidated />, loader: getPostLoader },
         ],
       },
     ],

@@ -14,7 +14,7 @@ const {
   removeVideoFromCloudinary,
   generatePreview,
 } = require("../config/cloudinary.config");
-require("dotenv").config();
+// require("dotenv").config();
 
 //////////////////////////// routes for BasicUsers /////////////////////////////
 postRouter.get("/api/posts", async (req, res) => {

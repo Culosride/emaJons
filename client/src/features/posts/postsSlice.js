@@ -55,12 +55,11 @@ const postsSlice = createSlice({
       state.posts = action.payload
     },
     setCurrentPost(state, action) {
-      const currentPost = state.posts.find(post => post._id === action.payload)
-      if (currentPost) {
+      if (action.payload) {
         return state = {
           ...state,
-          currentPost: currentPost,
-          currentCategory: currentPost.category,
+          currentPost: action.payload,
+          currentCategory: action.payload.category,
         };
       } else {
         return state = {

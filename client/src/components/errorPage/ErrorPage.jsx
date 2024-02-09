@@ -3,7 +3,6 @@ import React from "react";
 
 export default function ErrorPage() {
   const error = useRouteError();
-  console.log('error is', error)
 
   return (
     <div className="container-errorPage">

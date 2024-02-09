@@ -23,6 +23,7 @@ export default function AllPosts() {
   const status = useSelector((state) => state.posts.status);
   const error = useSelector((state) => state.posts.error);
   const posts = useSelector((state) => state.posts.posts);
+  const currentPost = useSelector((state) => state.posts.currentPost);
   const hasMorePosts = useSelector((state) => state.posts.loadMore[category]);
   const activeTag = useSelector((state) => state.tags.activeTag);
 
@@ -30,16 +31,16 @@ export default function AllPosts() {
   const isMediumScreen = useScreenSize(["xs", "s", "m"])
 
   useEffect(() => {
-    dispatch(setCurrentCategory(category));
-    dispatch(setCurrentPost(""))
-    window.scrollTo(0, scrollPosition);
-  }, []);
-
-  useEffect(() => {
-    if (status === "idle") {
+    if (currentPost) dispatch(setCurrentPost(""))
+    if (status === "idle" || posts.length === 0) {
       dispatch(setPosts(preLoadedPosts))
     }
-  }, [dispatch])
+  }, [dispatch, preLoadedPosts]);
+
+  useEffect(() => {
+    window.scrollTo(0, scrollPosition);
+    dispatch(setCurrentCategory(category));
+  }, [dispatch, category])
 
   const postsByCategory = useMemo(() => {
     return posts.filter(post => post.category === _.capitalize(category));
@@ -57,7 +58,7 @@ export default function AllPosts() {
   const maskTagsRef = useRef(null);
   const tagsContainerRef = useRef(null);
 
-  const { setPageNum } = usePosts(category);
+  const { setPageNum } = usePosts(category, postsByCategory.length);
 
   useScroll(tagsContainerRef, undefined, { threshold: 40, scrollClass: "fade-top" });
 
@@ -67,15 +68,16 @@ export default function AllPosts() {
     const filtered = activeTag
       ? postsByCategory.filter((post) => post.postTags.includes(activeTag))
       : postsByCategory;
-    setFilteredPosts(filtered);
+
+    // If no posts for the activeTag filter, render all the posts
+    setFilteredPosts(filtered.length ? filtered : postsByCategory);
   }, [activeTag, posts]);
 
-  const handleClick = (id) => {
+  const handleClick = () => {
     dispatch(setScrollPosition(window.scrollY));
-    dispatch(setCurrentPost(id))
   };
 
-  // loads more posts (infinite scroll)
+  // Loads more posts (infinite scroll)
   const lastPostRef = useCallback((post) => {
     if (status === "loading") return;
     if (observer.current) observer.current.disconnect();
@@ -105,7 +107,7 @@ export default function AllPosts() {
             ref={(i === filteredPosts.length - 1 && lastPostRef) || undefined}
             linkUrl={`/${category}/${post._id}`}
             src={previewURL}
-            handleClick={() => handleClick(post._id)}
+            handleClick={handleClick}
             alt={post.title}
             hoverContent={post.title.split(",").join("").toUpperCase()}
           />
@@ -114,7 +116,7 @@ export default function AllPosts() {
     });
   }, [filteredPosts, category, lastPostRef, handleClick]);
 
-  // filter posts on tag click
+  // Filter posts on tag click
   const handleSelectTag = (e) => {
     window.scrollTo(0, 0);
 
@@ -176,7 +178,12 @@ export default function AllPosts() {
   );
 }
 
-export async function loader({ params }) {
-  const posts = await fetchPosts({ params, pageNum: 1})
+export async function loader() {
+  const posts = await fetchPosts()
+
+  if (posts.status === 404) {
+    throw new Response("Not Found", { status: 404 });
+  }
+
   return posts.data
 }

@@ -1,20 +1,22 @@
 import React, { useEffect, useRef } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLoaderData } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchPostById } from '../../features/posts/postsSlice';
+import { fetchPostById } from '../../API';
 import { toggleFullscreen } from '../../features/UI/uiSlice';
 import Slider from '../slider/Slider';
 import useKeyPress from "../../hooks/useKeyPress";
 import Button from '../UI/Button';
+import { setCurrentPost } from '../../features/posts/postsSlice';
 
 export default function Post() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const { postId, category } = useParams()
+  const { category } = useParams()
+  const post = useLoaderData()
 
   const currentPost = useSelector(state => state.posts.currentPost)
-  const nextPostId = useSelector(state => state)
-  console.log('nextPostId', nextPostId)
+  // const nextPostId = useSelector(state => state)
+  // console.log('nextPostId', nextPostId)
 
   const status = useSelector(state => state.posts.status)
   const error = useSelector(state => state.posts.error)
@@ -25,7 +27,7 @@ export default function Post() {
 
   useEffect(() => {
     if(status === "idle" || !currentPost) {
-      dispatch(fetchPostById({ category: category, postId: postId }))
+      dispatch(setCurrentPost(post))
     }
   }, [])
 
@@ -101,4 +103,15 @@ export default function Post() {
         </main>
       )
   )
+}
+
+export async function loader({params}) {
+  const { category, postId } = params;
+  const post = await fetchPostById({ category, postId });
+
+  if (post.status === 404) {
+    throw new Response("Not Found", { status: 404 });
+  }
+
+  return post.data
 }

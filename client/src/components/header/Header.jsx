@@ -67,7 +67,6 @@ export default function Header() {
   useScroll(headerRef, menuOff, { threshold: 40, scrollClass: "fade-top" })
 
   const handleNewCategory = () => {
-    if(activeTag) dispatch(selectTag(""));
     setIsNavMenuExpanded(false);
     dispatch(setScrollPosition(0));
   };

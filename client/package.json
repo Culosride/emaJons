@@ -6,7 +6,8 @@
   "scripts": {
     "client-dev": "vite",
     "build": "vite build",
-    "serve": "vite preview"
+    "serve": "vite preview",
+    "sass": "sass --watch src/styles/styles.scss:public/css/styles.css src/components:src/styles"
   },
   "author": "Culosride",
   "license": "ISC",

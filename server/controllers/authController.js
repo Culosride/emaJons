@@ -98,7 +98,7 @@ const validatePath = async (req, res) => {
   if (postId && postId.length === 24) {
     const postExists = await Post.findById(postId)
 
-    if (postExists.category !== category) {
+    if (postExists.category !== _.capitalize(category)) {
       return res.status(404).json({message: "This resource doesn't exist"});
     }
 

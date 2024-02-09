@@ -76,7 +76,8 @@ const tagsSlice = createSlice({
       })
       .addCase(createTag.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.selectedTags = state.selectedTags.concat(action.payload)
+        state.selectedTags = state.selectedTags.concat(action.payload);
+        state.activeTag = "";
       })
       .addCase(createTag.rejected, (state, action) => {
         state.status = "failed";
@@ -90,7 +91,8 @@ const tagsSlice = createSlice({
         return state = {
           ...state,
           availableTags: filteredTags,
-          status: 'succeeded',
+          status: "succeeded",
+          activeTag: ""
         }
       })
       .addCase(deleteTag.rejected, (state, action) => {

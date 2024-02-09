@@ -4,7 +4,7 @@ const Post = require('../models/post');
 const Category = require('../models/category');
 const tagValidation = require("../middleware/tagValidation")
 const _ = require('lodash');
-require("dotenv").config()
+// require("dotenv").config()
 
 tagRouter.get('/api/tags', async (req, res) => {
   try {

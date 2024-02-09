@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useNavigate, useParams, useLocation } from "react-router-dom";
-import { createPost, editPost, fetchPostById, setCurrentPost } from "../../features/posts/postsSlice";
+import { useNavigate, useParams, useLocation, useLoaderData } from "react-router-dom";
+import { createPost, editPost, setCurrentPost } from "../../features/posts/postsSlice";
 import { fetchTags, toggleTag, resetTags } from "../../features/tags/tagsSlice";
 import { useSelector, useDispatch } from "react-redux";
 import TagsInputForm from "../tag/TagsInputForm";
@@ -22,10 +22,12 @@ export default function PostForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const { category, postId } = useParams();
+  const { postId } = useParams();
 
   const selectedTags = useSelector((state) => state.tags.selectedTags);
   const currentPost = useSelector((state) => state.posts.currentPost);
+
+  const post = useLoaderData()
 
   const postStatus = useSelector((state) => state.posts.status);
   const isMediumScreen = useScreenSize(["xs", "s", "m"])
@@ -51,26 +53,17 @@ export default function PostForm() {
   let content;
 
   const handleEditPage = async () => {
-    if(postId !== currentPost._id) {
-      await dispatch(fetchTags())
-      const data = await dispatch(fetchPostById({ category: category, postId: postId }))
-      setPostData(data.payload);
-      data.payload.postTags.forEach((tag) => {
-        dispatch(toggleTag(tag));
-      });
-    } else {
-      await dispatch(fetchTags())
-      setPostData(currentPost)
-      currentPost.postTags.forEach((tag) => {
-        dispatch(toggleTag(tag));
-      });
+    if(!currentPost) {
+      dispatch(setCurrentPost(post))
     }
+    setPostData(post);
+    post.postTags.forEach((tag) => {
+      dispatch(toggleTag(tag));
+    });
   }
 
   const handleNewPage = async () => {
-    await dispatch(fetchTags())
     dispatch(setCurrentPost(""))
-    setPostData(initPostData());
   }
 
   useEffect(() => {
@@ -108,7 +101,6 @@ export default function PostForm() {
   // Delete media from preview
   const deleteMedia = (e) => {
     e.preventDefault()
-    console.log(e.target)
     const { id } = e.target;
     const updatedMedia = postData.media.filter((file) => {
       const mediaKey = file.publicId ? "publicId" : "lastModified";

@@ -4,9 +4,10 @@
   "description": "Server for Emajons application",
   "main": "server.js",
   "scripts": {
-    "dev": "concurrently \"npm run server-dev\" \"npm run client-dev\"",
+    "dev": "concurrently \"npm run server-dev\" \"npm run client-dev\" \"npm run sass\" ",
     "server-dev": "nodemon -r dotenv/config server/server.js",
     "client-dev": "npm run client-dev --prefix client",
+    "sass": "npm run sass --prefix client",
     "install-client": "cd client && npm install"
   },
   "author": "Culosride",
