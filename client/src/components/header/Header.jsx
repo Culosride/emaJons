@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Link, useLocation, matchPath, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, matchPath, useNavigate, useParams, useLoaderData } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { deletePost, fetchPosts, } from "../../features/posts/postsSlice";
-import { fetchTags, selectTag } from "../../features/tags/tagsSlice";
+import { deletePost, fetchPosts, setPosts, } from "../../features/posts/postsSlice";
+import { fetchTags, setTags } from "../../features/tags/tagsSlice";
 import { setModal, setScrollPosition } from "../../features/UI/uiSlice";
 import NavMenu from "../navigation/NavMenu";
 import Modal from "../UI/Modal";
@@ -16,14 +16,22 @@ export default function Header() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
+  const { posts, availableTags, categoryTags } = useLoaderData()
+
+  useEffect(() => {
+    dispatch(setPosts(posts))
+    dispatch(setTags({ availableTags, categoryTags }))
+  }, [posts, availableTags, categoryTags])
+
   let { category } = useParams()
   const { postId } = useParams()
 
   const isFullscreen = useSelector((state) => state.ui.isFullscreen);
-  const hasContent = useSelector((state) => state.posts.currentPost.content?.length > 500);
+  const currentPost = useSelector((state) => state.posts.posts.find(post => post._id === postId));
+  const hasContent = currentPost?.content?.length > 500;
   const modals = useSelector(state => state.ui.modals);
   const error = useSelector((state) => state.posts.error);
-  const activeTag = useSelector(state => state.tags.activeTag)
+
   const [isNavMenuExpanded, setIsNavMenuExpanded] = useState(false);
   const [isAdminMenuActive, setIsAdminMenuActive] = useState(false);
 

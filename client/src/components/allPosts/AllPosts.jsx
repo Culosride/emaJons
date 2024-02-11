@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState, useRef, useMemo } from "react";
-import { useLoaderData, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { setCurrentCategory, setCurrentPost, setPosts } from "../../features/posts/postsSlice";
+import { setCurrentCategory } from "../../features/posts/postsSlice";
 import { setScrollPosition } from "../../features/UI/uiSlice";
 import { selectTag } from "../../features/tags/tagsSlice";
 import PostPreview from "../post/PostPreview";
@@ -13,17 +13,14 @@ import ErrorMsg from "../UI/ErrorMsg";
 import { POSTS_TO_LOAD } from "../../config/roles";
 import TagsContainer from "../tag/TagsContainer";
 import _ from 'lodash';
-import { fetchPosts } from "../../API";
 
 export default function AllPosts() {
   const dispatch = useDispatch();
   const { category } = useParams()
-  const preLoadedPosts = useLoaderData()
 
   const status = useSelector((state) => state.posts.status);
   const error = useSelector((state) => state.posts.error);
   const posts = useSelector((state) => state.posts.posts);
-  const currentPost = useSelector((state) => state.posts.currentPost);
   const hasMorePosts = useSelector((state) => state.posts.loadMore[category]);
   const activeTag = useSelector((state) => state.tags.activeTag);
 
@@ -31,28 +28,15 @@ export default function AllPosts() {
   const isMediumScreen = useScreenSize(["xs", "s", "m"])
 
   useEffect(() => {
-    if (currentPost) dispatch(setCurrentPost(""))
-    if (status === "idle" || posts.length === 0) {
-      dispatch(setPosts(preLoadedPosts))
-    }
-  }, [dispatch, preLoadedPosts]);
-
-  useEffect(() => {
     window.scrollTo(0, scrollPosition);
     dispatch(setCurrentCategory(category));
-  }, [dispatch, category])
+  }, [])
 
   const postsByCategory = useMemo(() => {
     return posts.filter(post => post.category === _.capitalize(category));
   }, [posts, category]);
 
   const [filteredPosts, setFilteredPosts] = useState(postsByCategory);
-
-  useEffect(() => {
-    if (filteredPosts.length < POSTS_TO_LOAD && activeTag && hasMorePosts) {
-      setPageNum((pageNum) => pageNum + 1);
-    }
-  }, [filteredPosts]);
 
   const observer = useRef(null);
   const maskTagsRef = useRef(null);
@@ -68,6 +52,10 @@ export default function AllPosts() {
     const filtered = activeTag
       ? postsByCategory.filter((post) => post.postTags.includes(activeTag))
       : postsByCategory;
+
+      if (filtered.length < POSTS_TO_LOAD && activeTag && hasMorePosts) {
+        setPageNum((pageNum) => pageNum + 1);
+      }
 
     // If no posts for the activeTag filter, render all the posts
     setFilteredPosts(filtered.length ? filtered : postsByCategory);
@@ -176,14 +164,4 @@ export default function AllPosts() {
       )}
     </>
   );
-}
-
-export async function loader() {
-  const posts = await fetchPosts()
-
-  if (posts.status === 404) {
-    throw new Response("Not Found", { status: 404 });
-  }
-
-  return posts.data
 }

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useNavigate, useParams, useLocation, useLoaderData } from "react-router-dom";
-import { createPost, editPost, setCurrentPost } from "../../features/posts/postsSlice";
-import { fetchTags, toggleTag, resetTags } from "../../features/tags/tagsSlice";
+import { useLoaderData, useNavigate, useParams } from "react-router-dom";
+import { createPost, editPost } from "../../features/posts/postsSlice";
+import { fetchTags } from "../../features/tags/tagsSlice";
 import { useSelector, useDispatch } from "react-redux";
 import TagsInputForm from "../tag/TagsInputForm";
 import Button from "../UI/Button";
@@ -21,30 +21,34 @@ const initPostData = () => ({
 export default function PostForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { pathname } = useLocation();
+
   const { postId } = useParams();
+  const preLoadedPost = useLoaderData()
+  const post = useSelector(state => state.posts.posts.find(post => post._id === postId)) || preLoadedPost || initPostData()
 
-  const selectedTags = useSelector((state) => state.tags.selectedTags);
-  const currentPost = useSelector((state) => state.posts.currentPost);
-
-  const post = useLoaderData()
+  const availableTags = useSelector((state) => state.tags.availableTags)
+  const filteredTags =  availableTags.filter(tag => !post.postTags.includes(tag));
 
   const postStatus = useSelector((state) => state.posts.status);
+  const postsAreLoading = postStatus === "loading"
+
+  // UI
   const isMediumScreen = useScreenSize(["xs", "s", "m"])
   const tabMenuRef = useRef(null)
   useScroll(tabMenuRef, undefined , { threshold: 40, scrollClass: "fade-top" })
 
-  const [errMsg, setErrMsg] = useState(null);
-  const [currentFormTab, setCurrentFormTab] = useState("media")
-  const [mediaElements, setMediaElements] = useState([]);
+  // Local state //
   const [postData, setPostData] = useState(initPostData());
+  const [errMsg, setErrMsg] = useState(null);
+  const [mediaElements, setMediaElements] = useState([]);
+  const [currentFormTab, setCurrentFormTab] = useState("media")
+  const [selectedTags, setSelectedTags] = useState(post.postTags)
+  const [unselectedTags, setUnselectedTags] = useState(filteredTags)
 
-  // Derived state
-  const isEditPage = pathname.includes("edit");
-  const arePostsLoading = postStatus === "loading"
+  const isEditPage = Boolean(postId)
 
-  const btnStyles = arePostsLoading ? "basic disabled" : "basic";
-  const submitBtnValue = arePostsLoading
+  const btnStyles = postsAreLoading ? "basic disabled" : "basic";
+  const submitBtnValue = postsAreLoading
     ? "Submitting..."
     :  isEditPage
       ? "Save changes"
@@ -53,28 +57,21 @@ export default function PostForm() {
   let content;
 
   const handleEditPage = async () => {
-    if(!currentPost) {
-      dispatch(setCurrentPost(post))
-    }
     setPostData(post);
-    post.postTags.forEach((tag) => {
-      dispatch(toggleTag(tag));
-    });
   }
 
   const handleNewPage = async () => {
-    dispatch(setCurrentPost(""))
+    setSelectedTags([])
+    setUnselectedTags(availableTags)
   }
 
   useEffect(() => {
-    dispatch(resetTags())
     if (isEditPage) {
       handleEditPage();
     } else if(!isEditPage) {
       handleNewPage();
     }
-  }, [isEditPage, dispatch])
-
+  }, [isEditPage, availableTags])
 
   // Create media preview
   useEffect(() => {
@@ -243,11 +240,16 @@ export default function PostForm() {
             </select>
           </fieldset>
 
-          <TagsInputForm />
+          <TagsInputForm
+            selectedTags={selectedTags}
+            setSelectedTags={setSelectedTags}
+            unselectedTags={unselectedTags}
+            setUnselectedTags={setUnselectedTags}
+          />
 
           <Button
             hasIcon={false}
-            disabled={arePostsLoading}
+            disabled={postsAreLoading}
             className={btnStyles}
             type="submit"
           >
@@ -319,11 +321,16 @@ export default function PostForm() {
             </select>
           </fieldset>
 
-          <TagsInputForm />
+          <TagsInputForm
+            selectedTags={selectedTags}
+            setSelectedTags={setSelectedTags}
+            unselectedTags={unselectedTags}
+            setUnselectedTags={setUnselectedTags}
+          />
 
           <Button
             hasIcon={false}
-            disabled={arePostsLoading}
+            disabled={postsAreLoading}
             className={btnStyles}
             type="submit"
           >

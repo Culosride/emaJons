@@ -3,7 +3,6 @@ import * as api from "../../API/index"
 
 const initialState = {
   availableTags: [],
-  selectedTags: [],
   categoryTags: {},
   activeTag: "",
   status: 'idle' || 'loading' || 'succeeded' || 'failed',
@@ -33,30 +32,14 @@ const tagsSlice = createSlice({
   name: 'tags',
   initialState,
   reducers: {
-    resetTags: (state) => {
-      state.availableTags = [...state.availableTags, ...state.selectedTags]
-      state.selectedTags = []
+    setTags: (state, action) => {
+      const { availableTags, categoryTags } = action.payload
+      state.categoryTags = categoryTags;
+      state.availableTags = availableTags;
     },
     selectTag: (state, action) => {
       state.activeTag = action.payload
     },
-    toggleTag: (state, action) => {
-      if(state.selectedTags.includes(action.payload)) {
-        const filteredTags = state.selectedTags.filter(tag => tag !== action.payload)
-          return state = {
-            ...state,
-            selectedTags: [...filteredTags],
-            availableTags: state.availableTags.concat(action.payload),
-          }
-      } else {
-        const filteredTags = state.availableTags.filter(tag => tag !== action.payload)
-          return state = {
-            ...state,
-            availableTags: filteredTags,
-            selectedTags: state.selectedTags.concat(action.payload),
-          }
-      }
-    }
   },
   extraReducers(builder) {
     builder
@@ -67,17 +50,18 @@ const tagsSlice = createSlice({
         state.status = 'succeeded';
         state.categoryTags = action.payload.categoryTags
         state.availableTags = action.payload.availableTags
+        state.error = "";
       })
-      .addCase(fetchTags.rejected, (state, action) => {
+      .addCase(fetchTags.rejected, (state) => {
         state.status = "failed";
       })
       .addCase(createTag.pending, (state) => {
         state.status = 'loading'
       })
-      .addCase(createTag.fulfilled, (state, action) => {
+      .addCase(createTag.fulfilled, (state) => {
         state.status = 'succeeded';
-        state.selectedTags = state.selectedTags.concat(action.payload);
         state.activeTag = "";
+        state.error = "";
       })
       .addCase(createTag.rejected, (state, action) => {
         state.status = "failed";
@@ -86,14 +70,10 @@ const tagsSlice = createSlice({
       .addCase(deleteTag.pending, (state) => {
         state.status = 'loading'
       })
-      .addCase(deleteTag.fulfilled, (state, { payload }) => {
-        const filteredTags = state.availableTags.filter(tag => tag !== payload.deletedTag)
-        return state = {
-          ...state,
-          availableTags: filteredTags,
-          status: "succeeded",
-          activeTag: ""
-        }
+      .addCase(deleteTag.fulfilled, (state) => {
+        state.activeTag = "";
+        state.status = 'succeeded';
+        state.error = "";
       })
       .addCase(deleteTag.rejected, (state, action) => {
         state.status = "failed";
@@ -102,6 +82,6 @@ const tagsSlice = createSlice({
   }
 })
 
-export const { toggleTag, selectTag, resetTags } = tagsSlice.actions
+export const { setTags, selectTag } = tagsSlice.actions
 
 export default tagsSlice.reducer

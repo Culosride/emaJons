@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import Tag from "./Tag";
-import { deleteTag, createTag, toggleTag, fetchTags } from "../../features/tags/tagsSlice";
+import { deleteTag, createTag, fetchTags } from "../../features/tags/tagsSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { setModal } from "../../features/UI/uiSlice";
 import Modal from "../UI/Modal";
@@ -8,13 +8,14 @@ import useKeyPress from "../../hooks/useKeyPress";
 import { fetchPostsByCategory } from "../../features/posts/postsSlice";
 import _ from 'lodash';
 
-const TagsInputForm = () => {
+const TagsInputForm = ({ selectedTags, setSelectedTags, unselectedTags, setUnselectedTags }) => {
   const dispatch = useDispatch();
   const [tag, setTag] = useState("");
-  const selectedTags = useSelector((state) => state.tags.selectedTags);
+
   const currentCategory = useSelector((state) => state.posts.currentCategory);
-  const availableTags = useSelector((state) => state.tags.availableTags);
   const modals = useSelector((state) => state.ui.modals);
+  const tagStatus = useSelector((state) => state.tags.status)
+
   const [tagToDelete, setTagToDelete] = useState("");
 
   const inputRef = useRef(null)
@@ -24,16 +25,16 @@ const TagsInputForm = () => {
   );
 
   const createNewTag = () => {
-    if (selectedTags.includes(tag)) {
-      setTag("");
-    } else if (availableTags.includes(tag)) {
-      dispatch(toggleTag(tag));
+    if (tagStatus === "loading") return
+
+    if (selectedTags.includes(tag) || unselectedTags.includes(tag)) {
+      handleTagToggle(tag)
     } else {
       dispatch(createTag(tag));
+      setSelectedTags(prev => [...prev, tag])
     }
     setTag("");
   };
-
 
   const handleTagDelete = (tag) => {
     dispatch(setModal({ key: "tagDelete", state: true }));
@@ -41,6 +42,10 @@ const TagsInputForm = () => {
   };
 
   const confirmTagDelete = () => {
+    if (tagStatus === "loading") return
+
+    const filteredTags = filterTags(unselectedTags, tagToDelete)
+    setUnselectedTags(filteredTags);
     dispatch(deleteTag(tagToDelete));
     dispatch(setModal({ key: "tagDelete", state: false }));
     dispatch(fetchPostsByCategory({ currentCategory, pageNum: 1 }));
@@ -48,7 +53,16 @@ const TagsInputForm = () => {
   };
 
   const handleTagToggle = (tag) => {
-    dispatch(toggleTag(tag));
+    const isTagAvailable = unselectedTags.includes(tag);
+    const newUnselectedTags = isTagAvailable
+      ? filterTags(unselectedTags, tag)
+      : [...unselectedTags, tag];
+    const newSelectedTags = isTagAvailable
+      ? [...selectedTags, tag]
+      : filterTags(selectedTags, tag)
+
+    setUnselectedTags(newUnselectedTags);
+    setSelectedTags(newSelectedTags);
   };
 
   // Set tag in useState
@@ -67,7 +81,7 @@ const TagsInputForm = () => {
     }
   }
   // Render Tag Elements
-  const tagElements = [...availableTags]
+  const tagElements = [...unselectedTags]
     .sort((a, b) => a.localeCompare(b))
     .map((t, i) => {
       // Fix auto suggestion
@@ -101,6 +115,10 @@ const TagsInputForm = () => {
         );
       }
     });
+
+  function filterTags(tagArray, tagToFilter) {
+    return tagArray.filter(tag => tag !== tagToFilter);
+  }
 
   return (
     <fieldset className="tags-container">

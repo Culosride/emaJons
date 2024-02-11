@@ -20,7 +20,7 @@ const usePosts = (category, postsLength) => {
 
       return () => controller.abort();
     }
-  }, [pageNum, dispatch]);
+  }, [pageNum]);
 
   return { setPageNum };
 };

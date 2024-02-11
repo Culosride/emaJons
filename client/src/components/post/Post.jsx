@@ -1,21 +1,21 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import { useParams, useNavigate, useLoaderData } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchPostById } from '../../API';
 import { toggleFullscreen } from '../../features/UI/uiSlice';
 import Slider from '../slider/Slider';
 import useKeyPress from "../../hooks/useKeyPress";
 import Button from '../UI/Button';
-import { setCurrentPost } from '../../features/posts/postsSlice';
+import { fetchPostById } from '../../API';
 
 export default function Post() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const { category } = useParams()
-  const post = useLoaderData()
 
-  const currentPost = useSelector(state => state.posts.currentPost)
-  // const nextPostId = useSelector(state => state)
+  const { postId, category } = useParams()
+  const preLoadedPost = useLoaderData()
+  const post = useSelector(state => state.posts.posts.find(post => post._id === postId)) || preLoadedPost
+
+  // const nextPostId = posts[posts.indexOf(post) + 1]
   // console.log('nextPostId', nextPostId)
 
   const status = useSelector(state => state.posts.status)
@@ -24,12 +24,6 @@ export default function Post() {
 
   let mediaElements = []
   const headlineRef = useRef(null)
-
-  useEffect(() => {
-    if(status === "idle" || !currentPost) {
-      dispatch(setCurrentPost(post))
-    }
-  }, [])
 
   const escapeFullscreen = () => {
     if (isFullscreen) {
@@ -50,7 +44,7 @@ export default function Post() {
   if (status === 'loading') {
     mediaElements = <p>Loading...</p>
   } else if (status === 'succeeded') {
-    currentPost && displayMedia(currentPost)
+    post && displayMedia(post)
   } else if (status === 'failed') {
     mediaElements = <div>{error}</div>
   }
@@ -75,21 +69,21 @@ export default function Post() {
 
   }
 
-  const content = currentPost?.content && currentPost.content.length > 500
+  const content = post?.content && post.content.length > 500
   const cursorColor = isFullscreen ? "white" : ""
 
   return (
-    currentPost &&
+    post &&
       (
         <main id={"post"} className={`post-container ${content ? "layout-50" : ""} ${isFullscreen ? "layout-100 fullscreen" : ""}`}>
-          {currentPost.media && <Slider content={content} cursorColor={cursorColor} slides={currentPost.media}/>}
+          {post.media && <Slider content={content} cursorColor={cursorColor} slides={post.media}/>}
           {!isFullscreen && <div className="text-container" onScroll={handleScroll}>
             <section className="description-container">
               <div ref={headlineRef} className="headline">
-                <h1 className="title">{currentPost.title}</h1>
-                {currentPost.subtitle && <p className="subtitle">{currentPost.subtitle}</p>}
+                <h1 className="title">{post.title}</h1>
+                {post.subtitle && <p className="subtitle">{post.subtitle}</p>}
               </div>
-              {currentPost.content && <p className="content">{currentPost.content}</p>}
+              {post.content && <p className="content">{post.content}</p>}
               <div className="posts-navigation">
                 <Button hasIcon={false} className="prev-post" handlePreviousPost={handlePreviousPost}>
                   PREVIOUS
@@ -105,7 +99,7 @@ export default function Post() {
   )
 }
 
-export async function loader({params}) {
+export async function loader({ params }) {
   const { category, postId } = params;
   const post = await fetchPostById({ category, postId });
 

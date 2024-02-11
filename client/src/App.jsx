@@ -3,14 +3,10 @@ import { RouterProvider } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setScreenSize } from "./features/UI/uiSlice";
 import { router } from "./routes/router";
-import { fetchTags } from "./features/tags/tagsSlice";
+import { fetchPosts, fetchTags } from "./API";
 
 export default function App() {
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(fetchTags())
-  }, [])
 
   ////////////////////////// Checks screensize for UI //////////////////////////
   useEffect(() => {
@@ -45,4 +41,15 @@ export default function App() {
   }, []);
 
   return <RouterProvider router={router} />;
+}
+
+export async function loader() {
+  const { data } = await fetchTags();
+  const posts = await fetchPosts()
+
+  return {
+    availableTags: data.availableTags,
+    categoryTags: data.categoryTags,
+    posts: posts.data,
+  }
 }
