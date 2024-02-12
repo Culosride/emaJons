@@ -52,8 +52,8 @@ const Slider = ({ slides, cursorColor }) => {
     }
   }, [currentSlide, isFullscreen]);
 
-  useEffect(() => {
-    if (!isTransitioning && isVideo && mediaRefs[currentSlide].current) {
+  const calculateButtonStyles = () => {
+    if (isVideo && mediaRefs[currentSlide].current) {
       const videoElement = mediaRefs[currentSlide].current;
       const rect = videoElement.getBoundingClientRect();
       const parentRect = videoElement.parentElement.getBoundingClientRect()
@@ -74,7 +74,31 @@ const Slider = ({ slides, cursorColor }) => {
 
       setButtonStyles(updateButtonStyles);
     }
-  }, [isTransitioning])
+  }
+
+  useEffect(() => {
+    const debounce = (func, delay) => {
+      let timerId;
+      return (...args) => {
+        if (timerId) {
+          clearTimeout(timerId);
+        }
+        timerId = setTimeout(() => {
+          func(...args);
+        }, delay);
+      };
+    };
+
+    const debouncedCalculateButtonStyles = debounce(calculateButtonStyles, 300);
+
+    !isTransitioning && debouncedCalculateButtonStyles()
+
+    window.addEventListener('resize', debouncedCalculateButtonStyles);
+
+    return () => {
+      window.removeEventListener('resize', debouncedCalculateButtonStyles);
+    };
+  }, [isTransitioning, isVideo, isMediumScreen, currentSlide]);
 
 
   const renderVideoNavigationButtons = () => (
