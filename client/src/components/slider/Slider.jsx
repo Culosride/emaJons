@@ -3,60 +3,99 @@ import { useDispatch, useSelector } from "react-redux";
 import { toggleFullscreen } from "../../features/UI/uiSlice";
 import useKeyPress from "../../hooks/useKeyPress";
 import Button from "../UI/Button"
+import useScreenSize from "../../hooks/useScreenSize";
 
 const Slider = ({ slides, cursorColor }) => {
   const dispatch = useDispatch()
   const isSingleSlide = slides.length === 1
   const infiniteSlides = isSingleSlide ? slides : [slides[slides.length -1], ...slides, slides[0]]
 
-  const fullscreen = useSelector(state => state.ui.isFullscreen)
-  const isFullscreen = fullscreen || Boolean(document.fullscreenElement)
-
-  // slider state
+  // Slider (derived) state
   const [currentSlide, setCurrentSlide] = useState(isSingleSlide ? 0 : 1);
   const [translation, setTranslation] = useState(0)
   const [transition, setTransition] = useState("none")
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const isLastSlide = currentSlide === infiniteSlides.length - 1
+  const isFirstSlide = currentSlide === 0
+  const currentDot = isLastSlide ? 0 : isFirstSlide ? slides.length - 1 : currentSlide - 1;
+  const mediaRefs = infiniteSlides.map(() => useRef(null)); // Create a ref for each slide
+  const observer = useRef(null);
 
-  // touch events state
+  // UI (derived) state
+  const fullscreen = useSelector(state => state.ui.isFullscreen)
+  const isFullscreen = fullscreen || Boolean(document.fullscreenElement)
+  const isMediumScreen = useScreenSize(["xs", "s", "m"])
+  const isVideo = infiniteSlides[currentSlide]?.mediaType === "video"
+  const [buttonStyles, setButtonStyles] = useState({
+    top: {},
+    middle: {},
+    bottom: {},
+  });
+
+  // Touch events state
   const [isDragging, setIsDragging] = useState(false)
   const [startingPositionX, setStartingPositionX] = useState(0)
   const [startingPositionY, setStartingPositionY] = useState(0)
   const [deltaX, setDeltaX] = useState(0)
   const [deltaY, setDeltaY] = useState(0)
-
-  // derived state
-  const isVideo = infiniteSlides[currentSlide]?.mediaType === "video"
-  const isLastSlide = currentSlide === infiniteSlides.length - 1
-  const isFirstSlide = currentSlide === 0
-  const currentDot = isLastSlide ? 0 : isFirstSlide ? slides.length - 1 : currentSlide - 1;
   document.body.style.overflowY = (deltaY === null) ? 'hidden' : "auto"
-
-  const mediaRefs = slides.map(() => useRef(null)); // Create a ref for each video
-  const observer = useRef(null);
 
   useEffect(() => {
     mediaRefs.forEach((ref, index) => {
       if (ref.current?.localName === "video" && index !== currentSlide) {
         ref.current.pause();
       }
-      if (ref.current?.localName === "video" && index === currentSlide) {
-        console.log('ref.current', ref.current)
-        calcBtnSize(ref.current)
-      }
     });
 
     if(document.fullscreenElement) {
       dispatch(toggleFullscreen(true))
     }
-
   }, [currentSlide, isFullscreen]);
 
-  const calcBtnSize = (node) => {
-    console.log(node)
-    const videoheight = node.getBoundingClientRect()
-    console.log('videoheight', videoheight)
-  }
+  useEffect(() => {
+    if (!isTransitioning && isVideo && mediaRefs[currentSlide].current) {
+      const videoElement = mediaRefs[currentSlide].current;
+      const rect = videoElement.getBoundingClientRect();
+      const parentRect = videoElement.parentElement.getBoundingClientRect()
+      const btnHeight = (parentRect.height - rect.height) / 2
+
+      const updateButtonStyles = {
+        top: {
+          height: isMediumScreen ? `${btnHeight}px` : `${rect.top}px`,
+        },
+        middle: {
+          height: `${rect.height}px`,
+          width: `${rect.left}px`,
+        },
+        bottom: {
+          height: isMediumScreen ? `${btnHeight}px` : `calc(100vh - ${rect.bottom}px`,
+        },
+      };
+
+      setButtonStyles(updateButtonStyles);
+    }
+  }, [isTransitioning])
+
+
+  const renderVideoNavigationButtons = () => (
+    <>
+      <Button style={buttonStyles.top} className={`${cursorColor} prev-video top`} onClick={handlePrev} />
+      <Button style={buttonStyles.middle} className={`${cursorColor} prev-video middle`} onClick={handlePrev} />
+      <Button style={buttonStyles.bottom} className={`${cursorColor} prev-video bottom`} onClick={handlePrev} />
+
+      <Button style={buttonStyles.top} className={`${cursorColor} next-video top`} onClick={handleNext} />
+      <Button style={buttonStyles.middle} className={`${cursorColor} next-video middle`} onClick={handleNext} />
+      <Button style={buttonStyles.bottom} className={`${cursorColor} next-video bottom`} onClick={handleNext} />
+    </>
+  );
+
+  const renderImageNavigationButtons = () => (
+    <>
+      <Button hasIcon={false} className={`${cursorColor} prev`} onClick={handlePrev} />
+      <Button hasIcon={false} className={`${cursorColor} next`} onClick={handleNext} />
+    </>
+  );
+
 
   const calcTranslation = (node) => {
     if(node) {
@@ -89,8 +128,16 @@ const Slider = ({ slides, cursorColor }) => {
     transition: transition,
   }
 
-  const btnStyles = {
-    height: ""
+  const slideStyle = {
+    alignItems: alignSlide(),
+  }
+
+  function alignSlide() {
+    if(screen.orientation.angle === 90 && screen.orientation.type.includes("landscape")) {
+      return "flex-start"
+    } else {
+      return "center"
+    }
   }
 
   const handleNavigation = (direction) => {
@@ -177,7 +224,7 @@ const Slider = ({ slides, cursorColor }) => {
     <div className="slider slider-infinite" onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd}>
       <div ref={draggableRef} style={isSingleSlide ? {} : draggableStyles} className="draggable">
         {infiniteSlides.map((slide, index) => (
-          <div key={index} className={`slide ${index === currentSlide ? "active" : ""}`} >
+          <div key={index} style={slideStyle} className={`slide ${index === currentSlide ? "active" : ""}`} >
             {slide.mediaType === "video" ?
               <div className="video-container">
                 <video ref={mediaRefs[index]} muted controls>
@@ -189,12 +236,7 @@ const Slider = ({ slides, cursorColor }) => {
           </div>
         ))}
       </div>
-      {!isSingleSlide &&
-        <>
-          <Button hasIcon={false} style={btnStyles} className={`${cursorColor} ${isVideo ? "prev-video" : "prev"}`} onClick={handlePrev} />
-          <Button hasIcon={false} style={btnStyles} className={`${cursorColor} ${isVideo ? "next-video" : "next"}`} onClick={handleNext} />
-        </>
-      }
+      {!isSingleSlide && (isVideo ? renderVideoNavigationButtons() : renderImageNavigationButtons())}
       {slides.length &&
         <div className="page">
           {slides.map((_, index) => (

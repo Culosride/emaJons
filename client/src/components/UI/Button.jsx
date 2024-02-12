@@ -1,6 +1,6 @@
 import React from "react";
 
-function Button({ children, id, hasIcon, dataValue, disabled, type = "button", className = "", onClick }) {
+function Button({ children, style, id, hasIcon, dataValue, disabled, type = "button", className = "", onClick }) {
 
   const btnContent = hasIcon ? <span id={id} className={`icon icon--${className}`} >{children}</span> : children
 
@@ -8,6 +8,7 @@ function Button({ children, id, hasIcon, dataValue, disabled, type = "button", c
     <button
       onClick={onClick}
       disabled={disabled}
+      style={style}
       id={id}
       data-value={dataValue}
       type={type}
