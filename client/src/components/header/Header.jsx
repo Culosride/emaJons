@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { Link, useLocation, matchPath, useNavigate, useParams, useLoaderData } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { deletePost, fetchPosts, setPosts, } from "../../features/posts/postsSlice";
-import { fetchTags, setTags } from "../../features/tags/tagsSlice";
+import { fetchTags, selectTag, setTags } from "../../features/tags/tagsSlice";
 import { setModal, setScrollPosition } from "../../features/UI/uiSlice";
 import NavMenu from "../navigation/NavMenu";
 import Modal from "../UI/Modal";
@@ -21,7 +21,7 @@ export default function Header() {
   useEffect(() => {
     dispatch(setPosts(posts))
     dispatch(setTags({ availableTags, categoryTags }))
-  }, [posts, availableTags, categoryTags])
+  }, [])
 
   let { category } = useParams()
   const { postId } = useParams()
@@ -76,6 +76,7 @@ export default function Header() {
 
   const handleNewCategory = () => {
     setIsNavMenuExpanded(false);
+    dispatch(selectTag(""))
     dispatch(setScrollPosition(0));
   };
 
@@ -102,7 +103,7 @@ export default function Header() {
         </Link>
         <span className="nav-main__divider"></span>
         {(isPostPage || isMediumScreen) &&
-          <Link className="nav-main__link txt-black sm is-selected" to={isPostPage && `/${category}`}>
+          <Link className="nav-main__link txt-black sm is-selected" to={`/${category}`}>
             {category}
           </Link>}
         {!isPostPage &&

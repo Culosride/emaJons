@@ -21,9 +21,13 @@ export const logout = createAsyncThunk("/auth/logout", async (token) => {
   return response.data
 })
 
-export const checkPath = createAsyncThunk("/auth/validate-path", async (path) => {
-  const response = await api.checkPath(path)
-  return response.data
+export const checkPath = createAsyncThunk("/auth/validate-path", async (path, { rejectWithValue }) => {
+  try {
+    const response = await api.checkPath(path)
+    return response.data
+  } catch (error) {
+    return rejectWithValue(error.response.data.message);
+  }
 })
 
 const authSlice = createSlice({
@@ -50,7 +54,7 @@ const authSlice = createSlice({
       })
       .addCase(checkPath.rejected, (state, action) => {
         state.status = "failed";
-        state.error = action.error.message
+        state.error = action.payload
       })
       .addCase(login.pending, (state) => {
         state.status = 'loading'
