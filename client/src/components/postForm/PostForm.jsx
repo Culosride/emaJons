@@ -121,7 +121,7 @@ export default function PostForm() {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    if (postStatus === "loading") return;
+    if (postsAreLoading) return;
 
     const validationError = validatePostData(postData);
     if (validationError) {

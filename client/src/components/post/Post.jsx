@@ -15,9 +15,6 @@ export default function Post() {
   const preLoadedPost = useLoaderData()
   const post = useSelector(state => state.posts.posts.find(post => post._id === postId)) || preLoadedPost
 
-  // const nextPostId = posts[posts.indexOf(post) + 1]
-  // console.log('nextPostId', nextPostId)
-
   const status = useSelector(state => state.posts.status)
   const error = useSelector(state => state.posts.error)
   const isFullscreen = useSelector(state => state.ui.isFullscreen)
@@ -84,14 +81,6 @@ export default function Post() {
                 {post.subtitle && <p className="subtitle">{post.subtitle}</p>}
               </div>
               {post.content && <p className="content">{post.content}</p>}
-              <div className="posts-navigation">
-                <Button hasIcon={false} className="prev-post" handlePreviousPost={handlePreviousPost}>
-                  PREVIOUS
-                </Button>
-                <Button hasIcon={false} className="next-post" handleNextPost={handleNextPost}>
-                  NEXT
-                </Button>
-              </div>
             </section>
           </div>}
         </main>

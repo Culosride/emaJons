@@ -18,7 +18,9 @@
   position: fixed;
   width: 170px;
   text-wrap: nowrap;
+  overflow-y: auto;
   background-color: white;
+  height: 100%;
 
   .mask {
     display: flex;
@@ -26,6 +28,7 @@
     gap: 10px;
     overflow-x: clip;
     scroll-behavior: smooth;
+    height: fit-content;
   }
 
   .tag-link {

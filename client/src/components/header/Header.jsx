@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Link, useLocation, matchPath, useNavigate, useParams, useLoaderData } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { deletePost, fetchPosts, setPosts, } from "../../features/posts/postsSlice";
+import { deletePost, fetchPosts, setCurrentCategory, setPosts, } from "../../features/posts/postsSlice";
 import { fetchTags, selectTag, setTags } from "../../features/tags/tagsSlice";
 import { setModal, setScrollPosition } from "../../features/UI/uiSlice";
 import NavMenu from "../navigation/NavMenu";
@@ -15,6 +15,8 @@ export default function Header() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { pathname } = useLocation();
+  const { postId } = useParams()
+  let { category } = useParams()
 
   const { posts, availableTags, categoryTags } = useLoaderData()
 
@@ -23,8 +25,9 @@ export default function Header() {
     dispatch(setTags({ availableTags, categoryTags }))
   }, [])
 
-  let { category } = useParams()
-  const { postId } = useParams()
+  useEffect(() => {
+    dispatch(setCurrentCategory(category));
+  }, [category])
 
   const isFullscreen = useSelector((state) => state.ui.isFullscreen);
   const currentPost = useSelector((state) => state.posts.posts.find(post => post._id === postId));
@@ -42,12 +45,11 @@ export default function Header() {
 
   const isAdminPath = matchPath("/posts/*", pathname)
   const postExists = !isAdminPath && matchPath("/:categories/:postId", pathname);
+
   const isPostPage = Boolean(postExists);
 
   if (matchPath("/posts/new", pathname)) {
     category = "new post";
-  } else if (matchPath("/:category/:postId/edit", pathname)) {
-    category = "edit";
   }
 
   useEffect(() => {
@@ -55,7 +57,6 @@ export default function Header() {
       handleLogout();
     }
   }, [error, handleLogout]);
-
 
   useEffect(() => {
     setIsNavMenuExpanded(false);
@@ -94,6 +95,10 @@ export default function Header() {
 
   const headerClass = `header ${isHeader30 || isHeader50 || isHeader100}`
 
+  const currentCategoryStyle = {
+    pointerEvents: category === "new post" ? "none" : "unset"
+  }
+
   return (
     !isFullscreen &&
     <header ref={headerRef} className={headerClass}>
@@ -103,16 +108,18 @@ export default function Header() {
         </Link>
         <span className="nav-main__divider"></span>
         {(isPostPage || isMediumScreen) &&
-          <Link className="nav-main__link txt-black sm is-selected" to={`/${category}`}>
+          <Link className="nav-main__link txt-black sm is-selected" style={currentCategoryStyle} to={`/${category}`}>
             {category}
-          </Link>}
-        {!isPostPage &&
+          </Link>
+        }
+        {(!isPostPage || isMediumScreen) &&
           <NavMenu
             isNavMenuExpanded={isNavMenuExpanded}
             setIsNavMenuExpanded={setIsNavMenuExpanded}
             toggleNavMenu={toggleNavMenu}
             handleNewCategory={handleNewCategory}
-          />}
+          />
+        }
       </nav>
       <AdminMenu
         headerSize={headerClass}
@@ -127,7 +134,8 @@ export default function Header() {
           modalKey="postDelete"
           description="Delete this post?"
           confirmDelete={confirmPostDelete}
-        />}
+        />
+      }
     </header>
   );
 }

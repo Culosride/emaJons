@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState, useRef, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { setCurrentCategory } from "../../features/posts/postsSlice";
 import { setScrollPosition } from "../../features/UI/uiSlice";
 import { selectTag } from "../../features/tags/tagsSlice";
 import PostPreview from "../post/PostPreview";
@@ -29,7 +28,6 @@ export default function AllPosts() {
 
   useEffect(() => {
     window.scrollTo(0, scrollPosition);
-    dispatch(setCurrentCategory(category));
   }, [])
 
   const postsByCategory = useMemo(() => {
@@ -160,7 +158,7 @@ export default function AllPosts() {
         <div className="posts-grid">{postElements}</div>
       </main>
       {status === "loading" && (
-        <div className="loading-spinner">Loading more posts</div>
+        <div className="loading-spinner">Loading more posts...</div>
       )}
     </>
   );
