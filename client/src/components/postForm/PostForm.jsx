@@ -41,7 +41,7 @@ export default function PostForm() {
   const [postData, setPostData] = useState(initPostData());
   const [errMsg, setErrMsg] = useState(null);
   const [mediaElements, setMediaElements] = useState([]);
-  const [currentFormTab, setCurrentFormTab] = useState("media")
+  const [currentFormTab, setCurrentFormTab] = useState("postDetails")
   const [selectedTags, setSelectedTags] = useState(post.postTags)
   const [unselectedTags, setUnselectedTags] = useState(filteredTags)
 
@@ -344,17 +344,17 @@ export default function PostForm() {
     <menu ref={tabMenuRef} className="tabsMenu" onClick={(e) => handleTabMenu(e)}>
       <Button
         hasIcon={false}
-        dataValue="media"
-        className={currentFormTab === "media" ? "tab is-selected" : "tab"}
-      >
-        Media
-      </Button>
-      <Button
-        hasIcon={false}
         dataValue="postDetails"
         className={currentFormTab === "postDetails" ? "tab is-selected" : "tab"}
       >
         Post details
+      </Button>
+      <Button
+        hasIcon={false}
+        dataValue="media"
+        className={currentFormTab === "media" ? "tab is-selected" : "tab"}
+      >
+        Media
       </Button>
       <div className="highlight"></div>
     </menu >
