@@ -38,6 +38,7 @@
     color: black;
     margin: 0;
     cursor: pointer;
+    transition: transform 0.15s ease;
   }
 
   .is-selected {
@@ -47,7 +48,9 @@
     text-wrap: balance;
 
     @media (min-width: 992px) {
-        &::before {
+      transform: translateX(2px);
+
+      &::before {
         content: "";
         display: inline-block;
         background-image: url("../icons/ArrowIcon.svg");
