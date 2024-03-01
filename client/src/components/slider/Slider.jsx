@@ -152,18 +152,6 @@ const Slider = ({ slides, cursorColor }) => {
     transition: transition,
   }
 
-  const slideStyle = {
-    alignItems: alignSlide(),
-  }
-
-  function alignSlide() {
-    if(screen.orientation.angle === 90 && screen.orientation.type.includes("landscape")) {
-      return "flex-start"
-    } else {
-      return "center"
-    }
-  }
-
   const handleNavigation = (direction) => {
     if (!isTransitioning) {
       setIsTransitioning(true);
@@ -248,7 +236,7 @@ const Slider = ({ slides, cursorColor }) => {
     <div className="slider slider-infinite" onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd}>
       <div ref={draggableRef} style={isSingleSlide ? {} : draggableStyles} className="draggable">
         {infiniteSlides.map((slide, index) => (
-          <div key={index} style={slideStyle} className={`slide ${index === currentSlide ? "active" : ""}`} >
+          <div key={index} className={`slide ${index === currentSlide ? "active" : ""}`} >
             {slide.mediaType === "video" ?
               <div className="video-container">
                 <video ref={mediaRefs[index]} muted controls>

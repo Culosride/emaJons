@@ -71,8 +71,6 @@
   align-self: flex-start;
   z-index: 10;
   background-color: white;
-  // display: flex;
-  // align-items: center;
   padding: 30px;
   width: 100%;
   box-sizing: border-box;
@@ -113,7 +111,7 @@
   }
 }
 
-// full screen
+// Fullscreen
 .layout-100 {
   grid-template-columns: 100vw 0;
   transition: all ease-out .25s;
@@ -180,20 +178,7 @@
       min-height: 100vh;
     }
   }
-  .layout-100 {
-    // .header--50 {
-    //   right: 0;
-    //   top: -74px;
-    // }
-  }
   .images-container {
     margin-top: 74px;
-  }
-  .header--50, .layout-50 .header--50 {
-    // width: calc(100vw - $slider-padding-mobile);
-    // background-color: white;
-    // margin: 0 30px;
-    // left: 0;
-    // right: auto;
   }
 }

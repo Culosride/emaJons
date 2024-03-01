@@ -4,7 +4,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { toggleFullscreen } from '../../features/UI/uiSlice';
 import Slider from '../slider/Slider';
 import useKeyPress from "../../hooks/useKeyPress";
-import Button from '../UI/Button';
 import { fetchPostById } from '../../API';
 
 export default function Post() {
@@ -58,21 +57,13 @@ export default function Post() {
     }
   }
 
-  const handlePreviousPost = () => {
-
-  }
-
-  const handleNextPost = () => {
-
-  }
-
   const content = post?.content && post.content.length > 500
   const cursorColor = isFullscreen ? "white" : ""
 
   return (
     post &&
       (
-        <main id={"post"} className={`post-container ${content ? "layout-50" : ""} ${isFullscreen ? "layout-100 fullscreen" : ""}`}>
+        <main id={"post"} className={`post-container ${content ? "layout-50" : ""} ${isFullscreen ? "layout-100 fullscreen" : ""}`.trim()}>
           {post.media && <Slider content={content} cursorColor={cursorColor} slides={post.media}/>}
           {!isFullscreen && <div className="text-container" onScroll={handleScroll}>
             <section className="description-container">

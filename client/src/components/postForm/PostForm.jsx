@@ -213,6 +213,7 @@ export default function PostForm() {
               value={postData.title}
               name="title"
               onChange={handleChange}
+              maxLength="14"
             />
             <input
               type="text"
@@ -294,6 +295,7 @@ export default function PostForm() {
               value={postData.title}
               name="title"
               onChange={handleChange}
+              maxLength="14"
             />
             <input
               type="text"

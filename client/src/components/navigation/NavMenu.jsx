@@ -27,7 +27,6 @@ const NavMenu = ({ handleNewCategory, toggleNavMenu, isNavMenuExpanded }) => {
   const isDropdown = isMediumScreen ? "nav-main__menu--dropdown" : "";
   const isDropDownActive = isNavMenuExpanded && isMediumScreen ? "is-active" : "";
   const navbarClass = `nav-main__menu ${isDropdown} ${isDropDownActive}`.trim();
-
   const btnClass = `dropdown ${isNavMenuExpanded ? "is-active" : ""}`.trim();
 
   const navElements = () =>
