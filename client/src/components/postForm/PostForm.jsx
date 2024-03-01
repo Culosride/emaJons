@@ -47,12 +47,11 @@ export default function PostForm() {
 
   const isEditPage = Boolean(postId)
 
-  const btnStyles = postsAreLoading ? "basic disabled" : "basic";
   const submitBtnValue = postsAreLoading
     ? "Submitting..."
     :  isEditPage
-      ? "Save changes"
-      : "Create new post";
+      ? "SAVE"
+      : "NEW POST";
 
   let content;
 
@@ -177,21 +176,32 @@ export default function PostForm() {
   if(isMediumScreen) {
     content =
       currentFormTab === "media" ? (
-        <div className="post-form-layout fullscreen">
-          <label className="custom-file-button" htmlFor="media">
-            Choose media
-          </label>
-          <input
-            className="hidden-file-input"
-            type="file"
-            id="media"
-            onChange={handleChange}
-            name="media"
-            title="upload media"
-            multiple
-          />
-          <div className="media-preview-container">{mediaElements}</div>
-        </div>
+        <>
+          <div className="post-form-layout fullscreen">
+          <ErrorMsg errMsg={errMsg} />
+            <label className="custom-file-button" htmlFor="media">
+              Choose media
+            </label>
+            <input
+              className="hidden-file-input"
+              type="file"
+              id="media"
+              onChange={handleChange}
+              name="media"
+              title="upload media"
+              multiple
+              />
+            <div className="media-preview-container">{mediaElements}</div>
+            <Button
+              hasIcon={false}
+              disabled={postsAreLoading}
+              className="basic"
+              type="submit"
+              >
+              {submitBtnValue}
+            </Button>
+          </div>
+        </>
       ) : (
         <div className="post-form-layout fullscreen">
           <ErrorMsg errMsg={errMsg} />
@@ -250,7 +260,7 @@ export default function PostForm() {
           <Button
             hasIcon={false}
             disabled={postsAreLoading}
-            className={btnStyles}
+            className="basic"
             type="submit"
           >
             {submitBtnValue}
@@ -331,7 +341,7 @@ export default function PostForm() {
           <Button
             hasIcon={false}
             disabled={postsAreLoading}
-            className={btnStyles}
+            className="basic"
             type="submit"
           >
             {submitBtnValue}

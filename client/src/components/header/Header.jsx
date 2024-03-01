@@ -10,15 +10,18 @@ import AdminMenu from "../navigation/AdminMenu.jsx";
 import useLogout from '../../hooks/useLogout';
 import { useScroll } from "../../hooks/useScroll";
 import useScreenSize from "../../hooks/useScreenSize.jsx";
+import { CATEGORIES } from "../../config/categories.js";
 
 export default function Header() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const { postId } = useParams()
-  let { category } = useParams()
+  const { category } = useParams()
 
   const { posts, availableTags, categoryTags } = useLoaderData()
+
+  let currentCategoryValidated = CATEGORIES.find(cat => cat === category)
 
   useEffect(() => {
     dispatch(setPosts(posts))
@@ -49,7 +52,9 @@ export default function Header() {
   const isPostPage = Boolean(postExists);
 
   if (matchPath("/posts/new", pathname)) {
-    category = "new post";
+    currentCategoryValidated = "new post";
+  } else if (matchPath("/login", pathname)) {
+    currentCategoryValidated = "login"
   }
 
   useEffect(() => {
@@ -85,7 +90,7 @@ export default function Header() {
     await Promise.resolve(dispatch(deletePost({ postId, category })));
     dispatch(fetchTags());
     dispatch(fetchPosts());
-    navigate(`/${category}`);
+    navigate(`/${currentCategoryValidated}`);
     dispatch(setModal({ key: "postDelete", state: false }));
   }
 
@@ -96,7 +101,7 @@ export default function Header() {
   const headerClass = `header ${isHeader30 || isHeader50 || isHeader100}`
 
   const currentCategoryStyle = {
-    pointerEvents: category === "new post" ? "none" : "unset"
+    pointerEvents: category === undefined ? "none" : "unset"
   }
 
   return (
@@ -108,8 +113,8 @@ export default function Header() {
         </Link>
         <span className="nav-main__divider"></span>
         {(isPostPage || isMediumScreen) &&
-          <Link className="nav-main__link txt-black sm is-selected" style={currentCategoryStyle} to={`/${category}`}>
-            {category}
+          <Link className="nav-main__link txt-black sm is-selected" style={currentCategoryStyle} to={`/${currentCategoryValidated}`}>
+            {currentCategoryValidated}
           </Link>
         }
         {(!isPostPage || isMediumScreen) &&

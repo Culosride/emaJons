@@ -17,14 +17,33 @@
   }
 
   &--basic {
-    background-color: rgb(200, 200, 200);
+    background-color: rgb(179, 230, 255);
+    font-weight: 600;
     font-size: 24px;
-    height: auto;
-    padding: 12px;
+    max-height: 44px;
+    padding: 24px;
+    position: sticky;
+    bottom: -20px;
+    border: 5px solid white;
+    border-width: 5px 0;
+
+    @media (max-width: 991px) {
+      border: 12px solid white;
+      border-width: 12px 40px;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      color: #505050;
+    }
+
   }
 
   &--basic:hover {
-    background-color: rgb(219, 219, 219);
+    // (pointer: fine) = desktop
+    @media (pointer: fine) {
+      filter: saturate(140%);
+    }
   }
 
   &--next-post, &--prev-post {
@@ -55,8 +74,10 @@
     }
   }
 
-  &.disabled {
+  &:disabled {
     pointer-events: none;
+    filter: saturate(50%);
+    color: rgb(60, 60, 60);
   }
 }
 
