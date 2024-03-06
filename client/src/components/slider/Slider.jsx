@@ -103,20 +103,20 @@ const Slider = ({ slides, cursorColor }) => {
 
   const renderVideoNavigationButtons = () => (
     <>
-      <Button style={buttonStyles.top} className={`${cursorColor} prev-video top`} onClick={handlePrev} />
-      <Button style={buttonStyles.middle} className={`${cursorColor} prev-video middle`} onClick={handlePrev} />
-      <Button style={buttonStyles.bottom} className={`${cursorColor} prev-video bottom`} onClick={handlePrev} />
+      <Button style={buttonStyles.top} className={`prev-video top ${cursorColor}`.trim()} onClick={handlePrev} />
+      <Button style={buttonStyles.middle} className={`prev-video middle ${cursorColor}`.trim()} onClick={handlePrev} />
+      <Button style={buttonStyles.bottom} className={`prev-video bottom ${cursorColor}`.trim()} onClick={handlePrev} />
 
-      <Button style={buttonStyles.top} className={`${cursorColor} next-video top`} onClick={handleNext} />
-      <Button style={buttonStyles.middle} className={`${cursorColor} next-video middle`} onClick={handleNext} />
-      <Button style={buttonStyles.bottom} className={`${cursorColor} next-video bottom`} onClick={handleNext} />
+      <Button style={buttonStyles.top} className={`next-video top ${cursorColor}`.trim()} onClick={handleNext} />
+      <Button style={buttonStyles.middle} className={`next-video middle ${cursorColor}`.trim()} onClick={handleNext} />
+      <Button style={buttonStyles.bottom} className={`next-video bottom ${cursorColor}`.trim()} onClick={handleNext} />
     </>
   );
 
   const renderImageNavigationButtons = () => (
     <>
-      <Button hasIcon={false} className={`${cursorColor} prev`} onClick={handlePrev} />
-      <Button hasIcon={false} className={`${cursorColor} next`} onClick={handleNext} />
+      <Button hasIcon={false} className={`prev ${cursorColor}`.trim()} onClick={handlePrev} />
+      <Button hasIcon={false} className={`next ${cursorColor}`.trim()} onClick={handleNext} />
     </>
   );
 

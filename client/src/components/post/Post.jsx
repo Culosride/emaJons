@@ -63,7 +63,7 @@ export default function Post() {
   return (
     post &&
       (
-        <main id={"post"} className={`post-container ${content ? "layout-50" : ""} ${isFullscreen ? "layout-100 fullscreen" : ""}`.trim()}>
+        <main className={`post-container ${content ? "layout-50" : ""} ${isFullscreen ? "layout-100 fullscreen" : ""}`.trim()}>
           {post.media && <Slider content={content} cursorColor={cursorColor} slides={post.media}/>}
           {!isFullscreen && <div className="text-container" onScroll={handleScroll}>
             <section className="description-container">

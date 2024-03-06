@@ -8,7 +8,10 @@
   align-items: center;
   justify-content: center;
 
-  &--logout, &--edit, &--delete, &--basic {
+  &--logout,
+  &--edit,
+  &--delete,
+  &--basic {
     width: 100%;
   }
 
@@ -16,8 +19,63 @@
     height: 48px;
   }
 
+  &--prev,
+  &--next,
+  &--prev-video,
+  &--next-video {
+    border: 0;
+    font-size: 20px;
+    z-index: 5;
+    position: absolute;
+    height: 100vh;
+    width: 20%;
+
+    &.top {
+      top: 0;
+    }
+    &.bottom {
+      bottom: 0;
+    }
+  }
+
+  &--prev,
+  &--prev-video {
+    left: 0;
+  }
+  &--next,
+  &--next-video {
+    right: 0;
+  }
+
+  &--next:before,
+  &--next-video:hover,
+  &--prev:before,
+  &--prev-video:hover {
+    content: "";
+  }
+
+  &--next:hover,
+  &--next-video:hover {
+    cursor: url("../icons/ArrowIcon.svg"), auto;
+  }
+
+  &--next.white:hover,
+  &--next-video.white:hover {
+    cursor: url("../icons/ArrowIconWhite.svg"), auto;
+  }
+
+  &--prev:hover,
+  &--prev-video:hover {
+    cursor: url("../icons/ArrowBack.svg"), auto;
+  }
+
+  &--prev.white:hover,
+  &--prev-video.white:hover {
+    cursor: url("../icons/ArrowBackWhite.svg"), auto;
+  }
+
   &--basic {
-    background-color: rgb(146,181,217);
+    background-color: rgb(146, 181, 217);
     font-weight: 600;
     font-size: 24px;
     max-height: 44px;
@@ -36,7 +94,6 @@
       left: 0;
       width: 100%;
     }
-
   }
 
   &--basic:hover {
@@ -46,11 +103,13 @@
     }
   }
 
-  &--next-post, &--prev-post {
+  &--next-post,
+  &--prev-post {
     color: rgb(146, 146, 146);
   }
 
-  &--next-post:hover, &--prev-post:hover {
+  &--next-post:hover,
+  &--prev-post:hover {
     color: black;
   }
 
@@ -123,22 +182,22 @@
   }
 
   &--login {
-    background-image: url('../icons/Login.svg');
+    background-image: url("../icons/Login.svg");
   }
 
   &--logout {
-    background-image: url('../icons/Logout.svg');
+    background-image: url("../icons/Logout.svg");
   }
 
   &--new-post {
-    background-image: url('../icons/New.svg');
+    background-image: url("../icons/New.svg");
   }
 
   &--edit {
-    background-image: url('../icons/Edit.svg');
+    background-image: url("../icons/Edit.svg");
   }
 
   &--delete {
-    background-image: url('../icons/Delete.svg');
+    background-image: url("../icons/Delete.svg");
   }
 }

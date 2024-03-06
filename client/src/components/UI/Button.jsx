@@ -6,13 +6,13 @@ function Button({ children, style, id, hasIcon, dataValue, disabled, type = "but
 
   return (
     <button
+      className={`btn btn--${className}`}
       onClick={onClick}
       disabled={disabled}
       style={style}
       id={id}
       data-value={dataValue}
       type={type}
-      className={`btn btn--${className}`}
     >
       {btnContent}
     </button>
