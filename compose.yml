@@ -1,0 +1,34 @@
+services:
+  mongo:
+    image: mongo
+    container_name: mongo_c
+    volumes:
+      - mongo-data:/data/db
+    ports:
+      - "27017:27017"
+  server:
+    build: ./server
+    container_name: server_c
+    ports:
+      - "5173:5173"
+    depends_on:
+      - mongo
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+    environment:
+      - MONGODB_URL=mongodb://mongo:27017/emaJonsDB
+  client:
+    build: ./client
+    container_name: client_c
+    ports:
+      - "3000:3000"
+    stdin_open: true
+    tty: true
+    depends_on:
+      - server
+    volumes:
+      - ./client:/client
+      - /client/node_modules
+volumes:
+  mongo-data:

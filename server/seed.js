@@ -1,6 +1,6 @@
 const mongoose = require("mongoose")
-const User = require("./src/models/user")
-const Category = require("./src/models/category");
+const User = require("./models/user")
+const Category = require("./models/category");
 const bcrypt = require("bcrypt")
 
 require("dotenv").config()

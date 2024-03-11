@@ -7,6 +7,7 @@
     "dev": "concurrently \"npm run server-dev\" \"npm run client-dev\" \"npm run sass\" ",
     "server-dev": "nodemon -r dotenv/config server/server.js",
     "client-dev": "npm run client-dev --prefix client",
+    "start": "nodemon -r -L dotenv/config server.js",
     "sass": "npm run sass --prefix client",
     "install-client": "cd client && npm install"
   },
@@ -18,7 +19,6 @@
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
-    "ejs": "^3.1.8",
     "express": "^4.18.2",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.7.2",

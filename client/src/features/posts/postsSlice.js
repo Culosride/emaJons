@@ -97,17 +97,20 @@ const postsSlice = createSlice({
         let index;
 
         const filteredPosts = state.posts.filter((post, i) => {
-          if (post._id === action.payload._id) index = i; // stores updated post previous index
+          // Stores updated post previous index
+          if (post._id === action.payload._id) index = i;
+
           return post._id !== action.payload._id;
         });
 
+        // Injects the updated post at the original position (index)
         filteredPosts.splice(index, 0, action.payload);
 
-        const updatedPosts = filteredPosts.length === 1 ? [] : filteredPosts
+        // const updatedPosts = filteredPosts.length === 1 ? [] : filteredPosts
 
         return state = {
           ...state,
-          posts: [...updatedPosts],
+          posts: [...filteredPosts],
           status: "succeeded",
           currentPost: action.payload,
           error: "",
