@@ -4,7 +4,7 @@
   "description": "Client for Emajons application",
   "type": "module",
   "scripts": {
-    "client-dev": "vite",
+    "client-dev": "vite --host",
     "build": "vite build",
     "serve": "vite preview",
     "sass": "sass --watch src/styles/styles.scss:public/css/styles.css src/components:src/styles"

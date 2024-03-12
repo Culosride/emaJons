@@ -27,8 +27,8 @@ export const editPost = createAsyncThunk("updatePost", async (payload) => {
   return response.data;
 });
 
-export const deletePost = createAsyncThunk("deletePost", async (args) => {
-    const response = await api.deletePost(args);
+export const deletePost = createAsyncThunk("deletePost", async (postId) => {
+    const response = await api.deletePost(postId);
     return response.data;
 });
 

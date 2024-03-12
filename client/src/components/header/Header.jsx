@@ -87,7 +87,7 @@ export default function Header() {
   };
 
   const confirmPostDelete = async () => {
-    await Promise.resolve(dispatch(deletePost({ postId, category })));
+    await Promise.resolve(dispatch(deletePost(postId)));
     dispatch(fetchTags());
     dispatch(fetchPosts());
     navigate(`/${currentCategoryValidated}`);
