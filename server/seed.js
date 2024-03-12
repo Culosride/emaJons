@@ -6,7 +6,7 @@ const bcrypt = require("bcrypt")
 require("dotenv").config()
 
 const main = async () => {
-  await mongoose.connect("mongodb://localhost:27017/emaJonsDB")
+  await mongoose.connect("mongodb://mongo:27017/emaJonsDB")
   const categories = [
     { name: "dummy", allTags: ["India", "Messico", "Palermo", "2020", "2016"]},
     { name: 'Walls'},

@@ -7,7 +7,8 @@ export default defineConfig({
     proxy: {
       // Proxying API requests
       '/api': {
-        target: 'http://localhost:3000',
+        target: 'http://server:3000',
+        changeOrigin: true,
       },
     },
   },

@@ -10,7 +10,7 @@ services:
     build: ./server
     container_name: server_c
     ports:
-      - "5173:5173"
+      - "3000:3000"
     depends_on:
       - mongo
     volumes:
@@ -22,7 +22,7 @@ services:
     build: ./client
     container_name: client_c
     ports:
-      - "3000:3000"
+      - "5173:5173"
     stdin_open: true
     tty: true
     depends_on:
