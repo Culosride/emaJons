@@ -38,7 +38,6 @@ const fetchTags = async (req, res) => {
 };
 
 // PROTECTED ROUTES
-// Create tag
 const newTag = async (req, res) => {
   const { newTag } = req.body;
   const capitalizedTag = _.capitalize(newTag);
@@ -53,7 +52,7 @@ const newTag = async (req, res) => {
   }
 };
 
-// Delete tag
+
 const deleteTag =  async (req, res) => {
   const { tag: tagToDelete } = req.params;
 

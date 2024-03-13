@@ -5,10 +5,10 @@
   "main": "server.js",
   "scripts": {
     "dev": "concurrently \"npm run server-dev\" \"npm run client-dev\" \"npm run sass\" ",
-    "server-dev": "nodemon -r dotenv/config server/server.js",
-    "client-dev": "npm run client-dev --prefix client",
+    "server-dev": "nodemon -r dotenv/config server.js",
+    "client-dev": "cd ../client && npm run client-dev",
     "start": "nodemon -r -L dotenv/config server.js",
-    "sass": "npm run sass --prefix client",
+    "sass": "cd ../client && npm run sass",
     "install-client": "cd client && npm install"
   },
   "author": "Culosride",

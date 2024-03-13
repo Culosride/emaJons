@@ -41,15 +41,16 @@ const TagsInputForm = ({ selectedTags, setSelectedTags, unselectedTags, setUnsel
     setTagToDelete(tag);
   };
 
-  const confirmTagDelete = () => {
+  const confirmTagDelete = async () => {
     if (tagStatus === "loading") return
 
     const filteredTags = filterTags(unselectedTags, tagToDelete)
     setUnselectedTags(filteredTags);
-    dispatch(deleteTag(tagToDelete));
+
+    await dispatch(deleteTag(tagToDelete));
+    await dispatch(fetchPostsByCategory({ currentCategory, pageNum: 1 }));
+    await dispatch(fetchTags())
     dispatch(setModal({ key: "tagDelete", state: false }));
-    dispatch(fetchPostsByCategory({ currentCategory, pageNum: 1 }));
-    dispatch(fetchTags())
   };
 
   const handleTagToggle = (tag) => {
@@ -158,6 +159,8 @@ const TagsInputForm = ({ selectedTags, setSelectedTags, unselectedTags, setUnsel
           modalKey="tagDelete"
           description={`Globally delete the tag: ${tagToDelete}?`}
           confirmDelete={confirmTagDelete}
+          isLoading={tagStatus === "loading"}
+          loadingMessage={"Deleting tag.."}
         />
       )}
     </fieldset>

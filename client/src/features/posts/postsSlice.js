@@ -106,8 +106,6 @@ const postsSlice = createSlice({
         // Injects the updated post at the original position (index)
         filteredPosts.splice(index, 0, action.payload);
 
-        // const updatedPosts = filteredPosts.length === 1 ? [] : filteredPosts
-
         return state = {
           ...state,
           posts: [...filteredPosts],

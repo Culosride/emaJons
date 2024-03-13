@@ -31,7 +31,8 @@ export default function AllPosts() {
   }, [])
 
   const postsByCategory = useMemo(() => {
-    return posts.filter(post => post.category === _.capitalize(category));
+    const sortedPosts = [...posts].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+    return sortedPosts.filter(post => post.category === _.capitalize(category));
   }, [posts, category]);
 
   const [filteredPosts, setFilteredPosts] = useState(postsByCategory);

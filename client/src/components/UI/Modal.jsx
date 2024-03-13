@@ -6,7 +6,7 @@ import Button from "./Button";
 
 const modalRoot = document.getElementById("modal");
 
-export default function Modal({ children, description, confirmDelete, modalKey, className = "" }) {
+export default function Modal({ isLoading, loadingMessage, description, confirmDelete, modalKey, className = "" }) {
   const dialogRef = useRef(null);
   const dispatch = useDispatch()
   const modals = useSelector(state => state.ui.modals)
@@ -35,10 +35,14 @@ export default function Modal({ children, description, confirmDelete, modalKey, 
     <dialog className={`modal ${className}`} ref={dialogRef}>
       <div>
         <p>{description}</p>
-        <div className="modal-actions-container">
-          <Button hasIcon={false} className="modal-action" onClick={() => dispatch(setModal({ key: modalKey, state: false }))}>No</Button>
-          <Button hasIcon={false} className="modal-action" onClick={confirmDelete}>Yes</Button>
-        </div>
+        { isLoading ?
+          <p>{loadingMessage}</p>
+          :
+          <div className="modal-actions-container">
+            <Button hasIcon={false} className="modal-action" onClick={() => dispatch(setModal({ key: modalKey, state: false }))}>No</Button>
+            <Button hasIcon={false} className="modal-action" onClick={confirmDelete}>Yes</Button>
+          </div>
+        }
       </div>
     </dialog>
 

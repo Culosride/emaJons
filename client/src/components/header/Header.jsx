@@ -34,8 +34,9 @@ export default function Header() {
 
   const isFullscreen = useSelector((state) => state.ui.isFullscreen);
   const currentPost = useSelector((state) => state.posts.posts.find(post => post._id === postId));
+  const postStatus = useSelector((state) => state.posts.status)
   const hasContent = currentPost?.content?.length > 500;
-  const modals = useSelector(state => state.ui.modals);
+  const modals = useSelector((state) => state.ui.modals);
   const error = useSelector((state) => state.posts.error);
 
   const [isNavMenuExpanded, setIsNavMenuExpanded] = useState(false);
@@ -87,11 +88,14 @@ export default function Header() {
   };
 
   const confirmPostDelete = async () => {
+    if (postStatus === "loading") return
+
     await Promise.resolve(dispatch(deletePost(postId)));
-    dispatch(fetchTags());
-    dispatch(fetchPosts());
-    navigate(`/${currentCategoryValidated}`);
+    await dispatch(fetchPosts());
+    await dispatch(fetchTags());
     dispatch(setModal({ key: "postDelete", state: false }));
+
+    navigate(`/${currentCategoryValidated}`);
   }
 
   const isHeader30 = isPostPage && !hasContent ? "header--30" : ""
@@ -139,6 +143,8 @@ export default function Header() {
           modalKey="postDelete"
           description="Delete this post?"
           confirmDelete={confirmPostDelete}
+          isLoading={postStatus === "loading"}
+          loadingMessage={"Deleting post.."}
         />
       }
     </header>
