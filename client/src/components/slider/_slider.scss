@@ -1,0 +1,132 @@
+.slider {
+  position: relative;
+  height: 100vh;
+  padding: 30px;
+  width: 100%;
+  box-sizing: border-box;
+  border-right: 1px solid black;
+  z-index: 1;
+}
+
+.slider-infinite {
+  display: flex;
+  overflow: hidden;
+  padding: 0;
+  align-items: center;
+
+  @media (max-width: 991px) {
+    height: 76vh;
+    margin-top: 74px;
+    border: none;
+  }
+
+  @media (max-width: 767px) {
+    padding-bottom: 16px;
+  }
+
+  .draggable {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    height: 100%;
+
+    @media (max-width: 991px) {
+      padding: 0;
+
+      @media (orientation: landscape) {
+        height: 100%;
+      }
+    }
+  }
+
+  .slide {
+    flex: none;
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    @media (max-width: 991px) {
+      width: 100vw;
+    }
+
+    .video-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      max-width: 90vh;
+      max-height: 100%;
+      width: 100%;
+      width: 90%;
+
+      @media (max-width: 991px) {
+        width: 100%;
+        height: 100%;
+      }
+
+      video {
+        object-fit: contain;
+        width: 100%;
+      }
+    }
+  }
+
+  img {
+    width: 90%;
+    height: 90%;
+    object-fit: contain;
+
+    @media (max-width: 767px) {
+      width: 100%;
+      height: 100%;
+    }
+  }
+}
+
+.slider:hover {
+  img {
+    cursor: url("../icons/PlusBold.svg"), auto;
+  }
+}
+
+.slide.active {
+  opacity: 1;
+  z-index: 1;
+}
+
+.dot,
+.dot-active {
+  cursor: pointer;
+  height: 2px;
+  width: 16px;
+  margin: 0 2px;
+  background-color: #ddd;
+  display: inline-flex;
+  transition: background-color 0.25s ease-in;
+}
+
+.dot:hover,
+.dot-active {
+  background-color: #717171;
+  opacity: 1;
+}
+
+.page {
+  position: absolute;
+  width: 100%;
+  transform: translateX(-50%);
+  left: 50%;
+  z-index: 2;
+  bottom: 32px;
+
+  @media (orientation: landscape) {
+    bottom: 20px;
+  }
+
+  @media (max-width: 991px) {
+    bottom: 0;
+
+  }
+}

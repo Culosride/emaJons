@@ -1,0 +1,27 @@
+.modal {
+  border-radius: 6px;
+  border: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+  padding: 1rem;
+  width: 300px;
+  height: max-content;
+  max-width: 40rem;
+}
+
+dialog p {
+  margin: 0;
+  margin-bottom: 20px;
+}
+
+.modal::backdrop {
+  background-color: rgba(0, 0, 0, 0.55);
+}
+
+.modal-actions-container {
+  display: flex;
+  place-content: space-between;
+}
+
+.modal-action:hover {
+  background-color: rgb(240, 240, 240);
+}
