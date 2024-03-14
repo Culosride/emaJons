@@ -1,6 +1,6 @@
 ## EmaJons ##
 ### Introduction: ###
-This is a portfolio website for artist EmaJons built using the *MERN* stack.
+This is a portfolio website for artist EmaJons built using the *MERN* stack.  
 I have used this project as a gym to try out new technologies and learn different approaches.
 
 ### Requirements: ###
