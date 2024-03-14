@@ -1,3 +1,4 @@
+# Docker setup for testing in development
 FROM node:18-alpine
 
 RUN npm install -g nodemon
