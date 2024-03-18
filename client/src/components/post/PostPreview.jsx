@@ -11,9 +11,9 @@ const PostPreview = forwardRef(({ mediaType, handleClick, src, alt, hoverContent
 
   return (
     <Link onClick={handleClick} to={linkUrl} ref={ref} className="post-preview__link">
-      {mediaType === "image" && <img className="post-preview__image" src={src} alt={alt} />}
+      {mediaType === "image" && <img aria-label="image-preview" className="post-preview__image" src={src} alt={alt} />}
       {mediaType === "video" && (
-        <video className="post-preview__video" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} loop muted>
+        <video aria-label="video-preview" className="post-preview__video" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} loop muted>
           <source src={src} type="video/mp4"/>
           <source src={src} type="video/mov"/>
         </video>

@@ -27,7 +27,7 @@ export default function AllPosts() {
   const isMediumScreen = useScreenSize(["xs", "s", "m"])
 
   useEffect(() => {
-    // window.scrollTo(0, scrollPosition);
+    window.scrollTo(0, scrollPosition);
   }, [])
 
   const postsByCategory = useMemo(() => {
@@ -79,7 +79,7 @@ export default function AllPosts() {
   }, [status, hasMorePosts, activeTag]);
 
   const displayPosts = useMemo(() => {
-    if (filteredPosts.length < 1) return <p style={{textWrap: "nowrap"}}>EmaJons is too shy to show his {category.toLowerCase()}.</p>;
+    if (filteredPosts.length < 1) return <p aria-label="no-posts" style={{textWrap: "nowrap"}}>EmaJons is too shy to show his {category.toLowerCase()}.</p>;
 
     return filteredPosts.map((post, i) => {
       const { mediaType, url } = post.media[0];
@@ -105,7 +105,7 @@ export default function AllPosts() {
 
   // Filter posts on tag click
   const handleSelectTag = (e) => {
-    // window.scrollTo(0, 0);
+    window.scrollTo(0, 0);
 
     const selectedTag = e.target.getAttribute("data-value");
     isMediumScreen && centerTag(e.target);

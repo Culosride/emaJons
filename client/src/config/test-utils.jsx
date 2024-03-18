@@ -13,6 +13,7 @@ export function renderWithProviders( ui, { preloadedState = {}, store = setupSto
         <MemoryRouter initialEntries={routes}>
           <Routes>
             <Route path={"/:category"} element={children} />
+            <Route path={"/:category/:postId"} element={children} />
           </Routes>
         </MemoryRouter>
       </Provider>
