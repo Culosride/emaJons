@@ -27,7 +27,7 @@ export default function AllPosts() {
   const isMediumScreen = useScreenSize(["xs", "s", "m"])
 
   useEffect(() => {
-    window.scrollTo(0, scrollPosition);
+    // window.scrollTo(0, scrollPosition);
   }, [])
 
   const postsByCategory = useMemo(() => {
@@ -105,7 +105,7 @@ export default function AllPosts() {
 
   // Filter posts on tag click
   const handleSelectTag = (e) => {
-    window.scrollTo(0, 0);
+    // window.scrollTo(0, 0);
 
     const selectedTag = e.target.getAttribute("data-value");
     isMediumScreen && centerTag(e.target);
