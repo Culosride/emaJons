@@ -110,11 +110,7 @@ export default function AllPosts() {
     const selectedTag = e.target.getAttribute("data-value");
     isMediumScreen && centerTag(e.target);
 
-    if (activeTag === selectedTag) {
-      dispatch(selectTag(""));
-    } else {
-      dispatch(selectTag(selectedTag));
-    }
+    dispatch(selectTag(selectedTag));
 
     updateTagsClass(e.target);
   };
