@@ -1,27 +1,34 @@
 import React from "react";
 import PostPreview from "../../src/components/post/PostPreview";
-import { renderWithProviders } from "../../src/config/test-utils";
+import { render } from "@testing-library/react";
+import { BrowserRouter } from "react-router-dom";
 
 describe("PostPreview", () => {
-  test("should display an image preview if mediaType is image", async () => {
-    const mediaTypeTest = "image";
+  describe('Render', () => {
+    test("should render an image preview if mediaType is image", async () => {
+      const mediaTypeTest = "image";
+      
+      const { getByLabelText } = render(
+        <BrowserRouter>
+          <PostPreview mediaType={mediaTypeTest} />
+        </BrowserRouter>
+      );
 
-    const { getByLabelText } = renderWithProviders(
-      <PostPreview mediaType={mediaTypeTest} />
-    );
+      const image = getByLabelText(new RegExp(mediaTypeTest, "i"));
+      expect(image).toBeInTheDocument();
+    });
 
-    const image = getByLabelText(new RegExp(mediaTypeTest, "i"));
-    expect(image).toBeInTheDocument();
-  });
+    test("should render a video preview if mediaType is video", async () => {
+      const mediaTypeTest = "video";
 
-  test("should display a video preview if mediaType is video", async () => {
-    const mediaTypeTest = "video";
+      const { getByLabelText } = render(
+        <BrowserRouter>
+          <PostPreview mediaType={mediaTypeTest} />
+        </BrowserRouter>
+      );
 
-    const { getByLabelText } = renderWithProviders(
-      <PostPreview mediaType={mediaTypeTest} />
-    );
-
-    const element = getByLabelText(new RegExp(mediaTypeTest, "i"));
-    expect(element).toBeInTheDocument();
-  });
+      const element = getByLabelText(new RegExp(mediaTypeTest, "i"));
+      expect(element).toBeInTheDocument();
+    });
+  })
 });

@@ -1,8 +1,7 @@
 import React from "react";
 import { render } from "@testing-library/react";
 import { Provider } from "react-redux";
-import { MemoryRouter, Route, Routes } from "react-router-dom";
-
+import { RouterProvider, createMemoryRouter} from "react-router-dom";
 import { setupStore } from "../app/store";
 
 export function renderWithProviders(
@@ -10,21 +9,28 @@ export function renderWithProviders(
   {
     preloadedState = {},
     store = setupStore(preloadedState),
-    routes,
+    testRouter = [{}],
+    routes = ["/"],
     ...renderOptions
   } = {}
 ) {
   function Wrapper({ children }) {
+    const memoryRouter = createMemoryRouter(testRouter, {
+      initialEntries: routes,
+      initialIndex: 0,
+    });
+
     return (
       <Provider store={store}>
-        <MemoryRouter initialEntries={routes}>
+        <RouterProvider router={memoryRouter}>
           {children}
-        </MemoryRouter>
+        </RouterProvider>
       </Provider>
     );
   }
   return { store, ...render(ui, { wrapper: Wrapper, ...renderOptions }) };
 }
+
 const initialPosts = [
   {
     _id: "v1",
