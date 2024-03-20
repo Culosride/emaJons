@@ -10,7 +10,7 @@ export function renderWithProviders(
   {
     preloadedState = {},
     store = setupStore(preloadedState),
-    routes = ["/Walls", "/Walls/w1"],
+    routes,
     ...renderOptions
   } = {}
 ) {
@@ -18,10 +18,7 @@ export function renderWithProviders(
     return (
       <Provider store={store}>
         <MemoryRouter initialEntries={routes}>
-          <Routes>
-            <Route path={"/:category"} element={children} />
-            <Route path={"/:category/:postId"} element={children} />
-          </Routes>
+          {children}
         </MemoryRouter>
       </Provider>
     );
@@ -79,7 +76,7 @@ const initialPosts = [
   },
 ];
 
-export const initalStateTest = {
+export const initialStateTest = {
   posts: {
     posts: initialPosts,
     currentCategory: "Walls",
