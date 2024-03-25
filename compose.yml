@@ -18,7 +18,7 @@ services:
       - ./server:/app
       - /app/node_modules
     environment:
-      - MONGODB_URL=mongodb://mongo:27017/emaJonsDB
+      - MONGODB_URI=mongodb://mongo:27017/emaJonsDB
   client:
     build: ./client
     container_name: client_c
