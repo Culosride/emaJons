@@ -9,34 +9,31 @@ import Contact from "../../src/components/contact/Contact";
 import ErrorPage from "../../src/components/errorPage/ErrorPage";
 
 describe("Home", () => {
-  beforeEach(() => {
-    // Mocks intersectionObserver, which isn't available in test environment
-    const mockIntersectionObserver = vi.fn();
-    mockIntersectionObserver.mockReturnValue({
-      observe: () => null,
-      unobserve: () => null,
-      disconnect: () => null,
-    });
-    window.IntersectionObserver = mockIntersectionObserver;
-  });
-
   describe("Render", () => {
     test("should render the error page when path does not match", () => {
-      const { getByText } = renderWithProviders({}, {
-        preloadedState: initialStateTest,
-        testRouter: [{ path: "/", element: <Home />, errorElement: <ErrorPage /> }],
-        routes: ["/invalidPath"]
-      });
+      const { getByText } = renderWithProviders(
+        {},
+        {
+          preloadedState: initialStateTest,
+          testRouter: [
+            { path: "/", element: <Home />, errorElement: <ErrorPage /> },
+          ],
+          routes: ["/invalidPath"],
+        }
+      );
 
-      const errorMsg = getByText(/404/)
-      expect(errorMsg).toBeInTheDocument()
+      const errorMsg = getByText(/404/);
+      expect(errorMsg).toBeInTheDocument();
     });
 
     test("should render a heading", () => {
-      const { getByRole } = renderWithProviders({}, {
-        preloadedState: initialStateTest,
-        testRouter: [{path: "/", element: <Home />}],
-      });
+      const { getByRole } = renderWithProviders(
+        {},
+        {
+          preloadedState: initialStateTest,
+          testRouter: [{ path: "/", element: <Home /> }],
+        }
+      );
 
       expect(getByRole("heading")).toBeInTheDocument();
     });
@@ -44,22 +41,36 @@ describe("Home", () => {
     test("should render a list of category links", () => {
       const linkItems = CATEGORIES.concat(["About", "Contact"]);
 
-      const { getAllByRole } = renderWithProviders({}, {
-        preloadedState: initialStateTest,
-        testRouter: [{path: "/", element: <Home />}],
-      });
+      const { getAllByRole } = renderWithProviders(
+        {},
+        {
+          preloadedState: initialStateTest,
+          testRouter: [{ path: "/", element: <Home /> }],
+        }
+      );
 
       const categoryLinks = getAllByRole("link");
 
       // Asserts that every category (inc. About and Contact) is present in the rendered component as a link
       linkItems.forEach((item) => {
-        expect(categoryLinks.some((link) => link.textContent === item)).toBe(true);
+        expect(categoryLinks.some((link) => link.textContent === item)).toBe(
+          true
+        );
       });
     });
   });
 
   describe("Navigation", () => {
     test("should navigate to clicked category", async () => {
+      // Mocks intersectionObserver, which isn't available in test environment
+      const mockIntersectionObserver = vi.fn();
+      mockIntersectionObserver.mockReturnValue({
+        observe: () => null,
+        unobserve: () => null,
+        disconnect: () => null,
+      });
+      window.IntersectionObserver = mockIntersectionObserver;
+      
       // Test a category containing only posts with images
       const testCategory = "Video";
 
@@ -69,8 +80,8 @@ describe("Home", () => {
           preloadedState: initialStateTest,
           testRouter: [
             { path: "/", element: <Home /> },
-            { path: "/:category", element: <AllPosts /> }
-          ]
+            { path: "/:category", element: <AllPosts /> },
+          ],
         }
       );
 
@@ -80,9 +91,9 @@ describe("Home", () => {
 
       // Change RegEx to /image-preview/i when checking for images
       const postsByCategory = getAllByLabelText(/video-preview/i);
-      postsByCategory.forEach(post => {
-        expect(post).toBeInTheDocument()
-      })
+      postsByCategory.forEach((post) => {
+        expect(post).toBeInTheDocument();
+      });
     });
 
     test("should navigate to the about page", async () => {
@@ -92,8 +103,8 @@ describe("Home", () => {
           preloadedState: initialStateTest,
           testRouter: [
             { path: "/", element: <Home /> },
-            { path: "/About", element: <About /> }
-          ]
+            { path: "/About", element: <About /> },
+          ],
         }
       );
 
@@ -111,8 +122,8 @@ describe("Home", () => {
           preloadedState: initialStateTest,
           testRouter: [
             { path: "/", element: <Home /> },
-            { path: "/Contact", element: <Contact /> }
-          ]
+            { path: "/Contact", element: <Contact /> },
+          ],
         }
       );
 

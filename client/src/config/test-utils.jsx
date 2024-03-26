@@ -4,10 +4,32 @@ import { Provider } from "react-redux";
 import { RouterProvider, createMemoryRouter} from "react-router-dom";
 import { setupStore } from "../app/store";
 
+vi.mock("axios", () => {
+  return {
+    default: {
+      post: vi.fn(),
+      get: vi.fn(),
+      delete: vi.fn(),
+      put: vi.fn(),
+      create: vi.fn().mockReturnThis(),
+      interceptors: {
+        request: {
+          use: vi.fn(),
+          eject: vi.fn(),
+        },
+        response: {
+          use: vi.fn(),
+          eject: vi.fn(),
+        },
+      },
+    },
+  };
+});
+
 export function renderWithProviders(
   ui,
   {
-    preloadedState = {},
+    preloadedState = initialStateTest,
     store = setupStore(preloadedState),
     testRouter = [{}],
     routes = ["/"],
@@ -118,4 +140,7 @@ export const initialStateTest = {
     status: "idle" || "loading" || "succeeded" || "failed",
     error: "" || null,
   },
+  auth: {
+    isLogged: "false",
+  }
 };
