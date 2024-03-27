@@ -79,7 +79,7 @@ export default function AllPosts() {
   }, [status, hasMorePosts, activeTag]);
 
   const displayPosts = useMemo(() => {
-    if (filteredPosts.length < 1) return <p style={{textWrap: "nowrap"}}>EmaJons is too shy to show his {category.toLowerCase()}.</p>;
+    if (filteredPosts.length < 1) return <p aria-label="no-posts" style={{textWrap: "nowrap"}}>EmaJons is too shy to show his {category.toLowerCase()}.</p>;
 
     return filteredPosts.map((post, i) => {
       const { mediaType, url } = post.media[0];
@@ -110,11 +110,7 @@ export default function AllPosts() {
     const selectedTag = e.target.getAttribute("data-value");
     isMediumScreen && centerTag(e.target);
 
-    if (activeTag === selectedTag) {
-      dispatch(selectTag(""));
-    } else {
-      dispatch(selectTag(selectedTag));
-    }
+    dispatch(selectTag(selectedTag));
 
     updateTagsClass(e.target);
   };

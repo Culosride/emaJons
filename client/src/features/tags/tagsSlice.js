@@ -1,11 +1,11 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import * as api from "../../API/index"
 
 const initialState = {
   availableTags: [],
   categoryTags: {},
   activeTag: "",
-  status: 'idle' || 'loading' || 'succeeded' || 'failed',
+  status: "idle" || "loading" || "succeeded" || "failed",
   error: "" || null
 }
 
@@ -29,7 +29,7 @@ export const fetchTags = createAsyncThunk("fetchTags", async () => {
 })
 
 const tagsSlice = createSlice({
-  name: 'tags',
+  name: "tags",
   initialState,
   reducers: {
     setTags: (state, action) => {
@@ -38,16 +38,24 @@ const tagsSlice = createSlice({
       state.availableTags = availableTags;
     },
     selectTag: (state, action) => {
-      state.activeTag = action.payload
+      let updatedTag;
+
+      if(action.payload === state.activeTag) {
+        updatedTag = "";
+      } else {
+        updatedTag = action.payload;
+      }
+
+      state.activeTag = updatedTag
     },
   },
   extraReducers(builder) {
     builder
       .addCase(fetchTags.pending, (state) => {
-        state.status = 'loading'
+        state.status = "loading"
       })
       .addCase(fetchTags.fulfilled, (state, action) => {
-        state.status = 'succeeded';
+        state.status = "succeeded";
         state.categoryTags = action.payload.categoryTags
         state.availableTags = action.payload.availableTags
         state.error = "";
@@ -56,10 +64,10 @@ const tagsSlice = createSlice({
         state.status = "failed";
       })
       .addCase(createTag.pending, (state) => {
-        state.status = 'loading'
+        state.status = "loading"
       })
       .addCase(createTag.fulfilled, (state) => {
-        state.status = 'succeeded';
+        state.status = "succeeded";
         state.activeTag = "";
         state.error = "";
       })
@@ -68,11 +76,11 @@ const tagsSlice = createSlice({
         state.error = action.error.message
       })
       .addCase(deleteTag.pending, (state) => {
-        state.status = 'loading'
+        state.status = "loading"
       })
       .addCase(deleteTag.fulfilled, (state) => {
         state.activeTag = "";
-        state.status = 'succeeded';
+        state.status = "succeeded";
         state.error = "";
       })
       .addCase(deleteTag.rejected, (state, action) => {

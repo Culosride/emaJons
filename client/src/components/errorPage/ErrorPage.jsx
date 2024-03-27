@@ -8,8 +8,8 @@ export default function ErrorPage() {
   return (
     <div className="container-errorPage">
       <div>
-        <h1 className="error-header">An error occured</h1>
-        <p className="error-message">{error}</p>
+        <h1 className="error-header">An error occured.</h1>
+        <p className="error-message">404 Page Not Found</p>
       </div>
       <Link className="btn btn--basic txt-black sm" to="/">
         Home

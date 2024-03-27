@@ -18,7 +18,7 @@ const AllPostsRouteValidated = withRouteValidation(AllPosts);
 const PostRouteValidated = withRouteValidation(Post);
 const EditRouteValidated = withRouteValidation(PostForm);
 
-export const router = createBrowserRouter([
+export const appRoutes = [
   {
     path: "/",
     element: <Home />,
@@ -57,4 +57,6 @@ export const router = createBrowserRouter([
       },
     ],
   },
-]);
+]
+
+export const router = createBrowserRouter(appRoutes);

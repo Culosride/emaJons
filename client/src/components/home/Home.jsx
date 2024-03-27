@@ -19,8 +19,8 @@ const Home = () => {
   return (
     <div className="home">
       <nav className="nav-main">
-        <Link className="nav-main__link txt-black xl" to={"/about"}>
-          EmaJons
+        <Link className="nav-main__link txt-black lg" to={"/about"}>
+          <h1>EmaJons</h1>
         </Link>
 
         <menu className="nav-main__menu">{navElements}</menu>

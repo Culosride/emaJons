@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "concurrently \"npm run server-dev\" \"npm run client-dev\" \"npm run sass\" ",
     "server-dev": "nodemon -r dotenv/config server.js",
-    "client-dev": "cd ../client && npm run client-dev",
+    "client-dev": "cd ../client && npm run dev",
     "start": "nodemon -r -L dotenv/config server.js",
     "sass": "cd ../client && npm run sass",
     "install-client": "cd client && npm install"

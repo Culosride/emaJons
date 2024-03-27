@@ -11,8 +11,14 @@ const reducer = combineReducers({
   ui: uiReducer,
 })
 
-// should turn off dev tools for production
 export const store = configureStore({
   reducer,
   devTools: process.env.NODE_ENV !== 'production',
 })
+
+// should turn off dev tools for production
+export const setupStore = (preloadedState = {}) => {
+  return configureStore({
+    reducer,
+    preloadedState,
+})}
