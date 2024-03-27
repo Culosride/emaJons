@@ -141,6 +141,6 @@ export const initialStateTest = {
     error: "" || null,
   },
   auth: {
-    isLogged: "false",
+    isLogged: false,
   }
 };

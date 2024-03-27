@@ -32,7 +32,7 @@ export default function Login() {
       navigate(-1);
       resetInfo();
     } catch (error) {
-      setErrMsg(error)
+      setErrMsg(error);
     }
   }
 
